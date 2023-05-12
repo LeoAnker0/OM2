@@ -4,6 +4,9 @@ import './style.css'
 //import { setupCounter } from './counter.js'
 
 import { hydrateNav } from './js/hydrateNav.js';
+import { getUsersProfilePicAddress } from './js/loadAccountImage.js';
+import { inputDetect } from './js/inputDetect.js';
+//import { hydrateExpandedMusicObjects } from './js/hydrateExpandedMusicObject.js';
 
 
 function includeJs(jsFilePath) {
@@ -25,7 +28,7 @@ function loadInMyJS() {
     //includeJs("menu.js");
 
     //the logic for retrieving the account picture
-    includeJs("loadAccountImage.js");
+    //includeJs("loadAccountImage.js");
 
     //for the main library view
     window.LoadedMusicObjects = 0
@@ -34,7 +37,7 @@ function loadInMyJS() {
     //deals with fleshing out the playlists dropdown, as well as the search bar
     //includeJs("hydrateNav.js");
     includeJs("search.js");
-    includeJs("inputDetect.js")
+    //includeJs("inputDetect.js")
 
     //for the music object view
     includeJs("hydrateExpandedMusicObject.js");
@@ -458,6 +461,9 @@ document.querySelector('#app').innerHTML = `
     </div>`
 
 hydrateNav();
+getUsersProfilePicAddress("uuid");
+inputDetect();
+//hydrateExpandedMusicObjects();
 
 
 //setupCounter(document.querySelector('#counter'))

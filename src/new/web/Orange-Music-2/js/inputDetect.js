@@ -1,11 +1,12 @@
 //responsible for checking if there was an input made in the search bar, and then making sure that 
+export function inputDetect() {
+    window.GLOBALuserHasTyped = false;
+    window.GLOBALtimeSinceLastType = "";
 
-window.GLOBALuserHasTyped = false;
-window.GLOBALtimeSinceLastType = "";
+    const inputElement = document.getElementById("searchBar");
 
-const inputElement = document.getElementById("searchBar");
-
-inputElement.addEventListener('input', (event) => {
-  GLOBALuserHasTyped = true;
-  GLOBALtimeSinceLastType = Date.now();
-});
+    inputElement.addEventListener('input', (event) => {
+        GLOBALuserHasTyped = true;
+        GLOBALtimeSinceLastType = Date.now();
+    });
+}
