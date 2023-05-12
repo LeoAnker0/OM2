@@ -1,0 +1,2 @@
+# Orange Music 2
+I am going to be remaking Orange Music, and while I might reuse some of the front end code, I have a number of things that I would like to change with how the old one worked, and here I would like to outlay what these things are
