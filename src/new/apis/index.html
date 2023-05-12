@@ -8,7 +8,7 @@
     <script type="text/javascript">
     async function fetchData() {
         try {
-            const response = await fetch('http://localhost:8000/items/5?q=cheese'); // Perform the fetch request
+            const response = await fetch('https://apis.lanker.one/items/5?q=cheese'); // Perform the fetch request
             const data = await response.json(); // Extract JSON data from the response
             console.log(data); // Process the retrieved data
         } catch (error) {
