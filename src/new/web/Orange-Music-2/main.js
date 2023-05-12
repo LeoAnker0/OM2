@@ -3,6 +3,9 @@ import './style.css'
 //import viteLogo from '/vite.svg'
 //import { setupCounter } from './counter.js'
 
+import { hydrateNav } from './js/hydrateNav.js';
+
+
 function includeJs(jsFilePath) {
     var js = document.createElement("script");
 
@@ -29,7 +32,7 @@ function loadInMyJS() {
     includeJs("musicObjects.js");
 
     //deals with fleshing out the playlists dropdown, as well as the search bar
-    includeJs("hydrateNav.js");
+    //includeJs("hydrateNav.js");
     includeJs("search.js");
     includeJs("inputDetect.js")
 
@@ -452,8 +455,9 @@ document.querySelector('#app').innerHTML = `
         <div id="shadowDOM" onclick="hideShadowDOM()"></div>
         <div id="shadowMenuPopup"></div>
         <div id="shadowMenuPopupPlaylist"></div>
-    </div>
+    </div>`
 
-`
+hydrateNav();
+
 
 //setupCounter(document.querySelector('#counter'))

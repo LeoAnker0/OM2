@@ -1,4 +1,4 @@
-function hydrateNav() {
+export function hydrateNav() {
 
     //counter here is valid, but the counter target should be the amount of playlists that there are in the users library, rather than a set number like 30
 
@@ -36,4 +36,5 @@ function hydrateNav() {
     }
 }
 
-hydrateNav()
+//hydrateNav()
+//export { hydrateNav };
