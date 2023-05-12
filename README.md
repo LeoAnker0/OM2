@@ -17,6 +17,8 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 * In the expanded album view, take the image, and then take a lower resolution one behind it and blur it outside of it's container, so there's a slight blur shadow behind the image which is on top of that layer.
 
 ### New Features
+* Amend the database so that songs have their own individual entrances in the database, since this is not something that we had before...
+
 * Ability to upload multiple takes/versions of a songs as the same song in the library
 
 * Ability to crop images properly (1/1) on the front end, as well as enforcing that on the backend.
