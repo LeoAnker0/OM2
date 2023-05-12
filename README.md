@@ -1,6 +1,8 @@
 # Orange Music 2
 I am going to be remaking Orange Music, and while I might reuse some of the front end code, I have a number of things that I would like to change with how the old one worked, and here I would like to outlay what those things are:
 
+<hr>
+
 ### Visuals
 * I would like to clean up how the website looks, particularly making some aspects less muddy as well as brining in new fresh colours, rather than the current orange/yellow toned ones which I don't think are looking as good as they ought to have. So rather I will be going for a salmon pink / light blue scheme for the highlights, and then I will be getting a new batch of greys.
 
