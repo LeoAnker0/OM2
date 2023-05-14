@@ -31,6 +31,8 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 
 * Add in different images (or different resolutions), which means that when loading in the image's load in quicker, and also webp variants and such, this is something that when i am making it will be a pain, but when it's all being loaded in by JS it won't be a problem at all since it can all sit inside of a picture tag.
 
+* For accounts create the ability to reset passwords, as well as making a confirm email feature, since it's the main way of establishing uniqueness when signing up.
+
 ### Tech Stack
 * Move away from xampp
 
