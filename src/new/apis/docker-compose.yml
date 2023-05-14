@@ -8,6 +8,8 @@ services:
       - "80:80"
     networks:
       - tunnel
+    env_file:
+      - .env
     restart: always
 
   cloudflared:
@@ -21,7 +23,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - /Users/Leo/Documents/programming/web/orange-music-2/database/
+      - pgdata:/var/lib/postgresql/data
     networks:
       - tunnel
 
@@ -32,9 +34,16 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
     ports:
       - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     networks:
       - tunnel
 
 networks:
   tunnel:
     driver: bridge
+
+volumes:
+  pgdata:
+
+  pgadmin_data:
