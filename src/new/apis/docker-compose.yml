@@ -8,6 +8,7 @@ services:
       - "80:80"
     networks:
       - tunnel
+    restart: always
 
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -20,7 +21,17 @@ services:
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - /Users/Leo/Documents/programming/web/orange-music-2/database
+      - /Users/Leo/Documents/programming/web/orange-music-2/database/
+    networks:
+      - tunnel
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
     networks:
       - tunnel
 
