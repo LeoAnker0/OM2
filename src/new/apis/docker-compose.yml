@@ -15,6 +15,15 @@ services:
     networks:
       - tunnel
 
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - /Users/Leo/Documents/programming/web/orange-music-2/database
+    networks:
+      - tunnel
+
 networks:
   tunnel:
     driver: bridge
