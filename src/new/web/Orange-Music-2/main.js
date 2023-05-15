@@ -3,7 +3,7 @@ import './style.css';
 //import viteLogo from '/vite.svg'
 //import { setupCounter } from './counter.js'
 
-import main from './html/main.html';
+import main from './html/main.html?raw';
 document.getElementById('app').innerHTML = main;
 
 
