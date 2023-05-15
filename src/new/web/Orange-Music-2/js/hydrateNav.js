@@ -20,7 +20,7 @@ export function hydrateNav() {
           <div class="svg-image-buttons-relative-container">
               <div class="svg-image-buttons-absolute-container">
                 <img
-                     src="assets/icons/playlist.svg"
+                     src="./assets/icons/playlist.svg"
                      height="15"
                      alt="playlist icon"
                  />

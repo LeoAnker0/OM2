@@ -47,7 +47,57 @@ import icons_browse2V2 from './assets/iconsv2/browse.2.svg';
 
 
 import main from './html/main.html?raw';
-document.getElementById('app').innerHTML = main;
+
+const imports = {
+    icons_volumeNull,
+    icons_recentlyAdded,
+    icons_volume3,
+    icons_orangeMusicTextLogoBlack,
+    icons_volume2,
+    icons_browse2,
+    icons_volume1,
+    icons_orangeMusicLogoWhite,
+    icons_searchIcon,
+    icons_orangeMusicTextLogoBlackPng,
+    icons_upNextQueueButton,
+    icons_orangeMusicLogoYellow,
+    icons_playlist,
+    icons_loopButton,
+    icons_helpIcon,
+    icons_playButton,
+    icons_browse,
+    icons_menuOptionsButton,
+    icons_orangeMusicTextLogoWhite,
+    icons_backButton,
+    icons_Albums,
+    icons_songs,
+    icons_orangeMusicLogoBlack,
+    icons_yourUploadedSongs,
+    icons_artist,
+    icons_shuffleButton,
+    icons_orangeMusicTextLogoWhitePng,
+    icons_listenNow,
+    icons_derpy,
+    icons_nextButton,
+    icons_recentlyAddedV2,
+    icons_playButtonV2,
+    icons_browseV2,
+    icons_albumsV2,
+    icons_listenNow2V2,
+    icons_yourUploads,
+    icons_playButton2,
+    icons_listenNowV2,
+    icons_browse2V2
+};
+
+let replacedContent = main;
+for (const [placeholder, value] of Object.entries(imports)) {
+    const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+    replacedContent = replacedContent.replace(regex, value);
+}
+
+
+document.getElementById('app').innerHTML = replacedContent;
 
 
 import { hydrateNav } from './js/hydrateNav.js';
