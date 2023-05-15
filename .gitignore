@@ -4,3 +4,4 @@ venv
 !app
 !main.py
 .env
+fonts

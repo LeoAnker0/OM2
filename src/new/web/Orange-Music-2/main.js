@@ -100,7 +100,7 @@ for (const [placeholder, value] of Object.entries(imports)) {
 document.getElementById('app').innerHTML = replacedContent;
 
 
-import { hydrateNav } from './js/hydrateNav.js';
+//import { hydrateNav } from './js/hydrateNav.js';
 import { getUsersProfilePicAddress } from './js/loadAccountImage.js';
 import { inputDetect } from './js/inputDetect.js';
 //import { hydrateExpandedMusicObjects } from './js/hydrateExpandedMusicObject.js';
@@ -155,7 +155,7 @@ function loadInMyJS() {
 loadInMyJS()
 
 
-hydrateNav();
+//hydrateNav();
 getUsersProfilePicAddress("uuid");
 inputDetect();
 //hydrateExpandedMusicObjects();

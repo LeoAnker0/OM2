@@ -16,6 +16,22 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 
 * In the expanded album view, take the image, and then take a lower resolution one behind it and blur it outside of it's container, so there's a slight blur shadow behind the image which is on top of that layer.
 
+<hr>
+
+###### *new stuff*
+
+* Figure out a way to remove the side bar, i don't see it as being particularly crucial to how this site will be working in the future, people won't be consuming music on here, they will be listening to their own silly little tunes.
+
+* Remove our god awful logo from the top left hand corner and shove the search box up there, and come up with some small tabs or something for accessing the different areas when the side bar is gone
+
+* I've already said it, but colours, could make such a big difference
+
+* Get some noise and texture involved in making this design good, figure out how to get feTurbulence noise working
+
+* Make more aspects of the design curvy, make that top left square corner circular in nature
+
+* Turn all of the clunky scroll bars, if we still have any, into 1px wide affairs, and then make them have gradients, so that they slide into appearence.
+
 ### New Features
 * Amend the database so that songs have their own individual entrances in the database, since this is not something that we had before...
 
