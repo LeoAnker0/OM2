@@ -1,0 +1,34 @@
+/* shadow dom -------------------------------------------------------------------------------------------------------------- */
+#shadowDOM {
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+#shadowMenuPopup {
+    position: absolute;
+    z-index: 1000000;
+}
+
+#shadowMenuPopupPlaylist {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1000000;
+}
+
+/* hover declartions which are being scrapped in place of robust javacscipt -- upadte, no they are not, thanks to flaky javascript, my user will just have to not be so picky*/
+
+#shadowMenuPopupPlaylist:hover {
+    visibility: visible;
+}
+
+#shadowMenuPopup:hover {}
+
+#shadowMenuPopup:hover~#shadowMenuPopupPlaylist {
+    visibility: visible;
+}

@@ -12,6 +12,13 @@ loadMAINmusBar();
 import './css/topMusicBar.css';
 loadMAINcontent();
 
+import './css/musicObjects.css';
+import './css/shadowDOM.css';
+import './css/popupContextMenu.css';
+import './css/upNextQueue.css';
+import './css/mediaQuery.css';
+import './css/expandedMusicObject.css';
+
 
 //specific logic for making things work
 
