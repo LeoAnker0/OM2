@@ -6,8 +6,10 @@ import main from './html/main.html?raw';
 document.getElementById('app').innerHTML = main;
 
 import { loadMAINnav, loadMAINmusBar, loadMAINcontent /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
-//loadMAINnav();
+loadMAINnav();
+import './css/navbar.css';
 loadMAINmusBar();
+import './css/topMusicBar.css';
 loadMAINcontent();
 
 
