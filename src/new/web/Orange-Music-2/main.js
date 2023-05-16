@@ -1,22 +1,14 @@
-import './style.css';
+import './css/style.css';
 
 //logic for loading content into the dom
 
 import main from './html/main.html?raw';
 document.getElementById('app').innerHTML = main;
 
-import { loadMAINnav } from './js/exportHTMLchunks.js';
-loadMAINnav()
-
-/*
-import { svgImports } from './js/importAssets.js';
-let replacedContent = main;
-for (const [placeholder, value] of Object.entries(svgImports)) {
-    const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-    replacedContent = replacedContent.replace(regex, value);
-}*/
-
-
+import { loadMAINnav, loadMAINmusBar, loadMAINcontent /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
+//loadMAINnav();
+loadMAINmusBar();
+loadMAINcontent();
 
 
 //specific logic for making things work
@@ -25,6 +17,8 @@ for (const [placeholder, value] of Object.entries(svgImports)) {
 import { getUsersProfilePicAddress } from './js/loadAccountImage.js';
 import { inputDetect } from './js/inputDetect.js';
 //import { hydrateExpandedMusicObjects } from './js/hydrateExpandedMusicObject.js';
+getUsersProfilePicAddress("uuid");
+inputDetect();
 
 
 function includeJs(jsFilePath) {
@@ -73,13 +67,4 @@ function loadInMyJS() {
 }
 
 
-loadInMyJS()
-
-
-//hydrateNav();
-getUsersProfilePicAddress("uuid");
-inputDetect();
-//hydrateExpandedMusicObjects();
-
-
-//setupCounter(document.querySelector('#counter'))
+//loadInMyJS()
