@@ -1,21 +1,25 @@
 import './style.css';
-//import javascriptLogo from './javascript.svg'
-//import viteLogo from '/vite.svg'
-//import { setupCounter } from './counter.js'
 
+//logic for loading content into the dom
 
-import { svgImports } from './js/importAssets.js';
 import main from './html/main.html?raw';
+document.getElementById('app').innerHTML = main;
 
+import { loadMAINnav } from './js/exportHTMLchunks.js';
+loadMAINnav()
+
+/*
+import { svgImports } from './js/importAssets.js';
 let replacedContent = main;
 for (const [placeholder, value] of Object.entries(svgImports)) {
     const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
     replacedContent = replacedContent.replace(regex, value);
-}
+}*/
 
 
-document.getElementById('app').innerHTML = replacedContent;
 
+
+//specific logic for making things work
 
 //import { hydrateNav } from './js/hydrateNav.js';
 import { getUsersProfilePicAddress } from './js/loadAccountImage.js';
