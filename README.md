@@ -32,6 +32,13 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 
 * Turn all of the clunky scroll bars, if we still have any, into 1px wide affairs, and then make them have gradients, so that they slide into appearence.
 
+<hr>
+
+##### *even newer stuff...*
+
+* Perhaps make the side bar a slide out / sliding affair, where the user can choose to hide it, which would give more space for things. And then it could be slid out permeanantly, or it could be a thing where if you hover over in the left hand side, it will appear, but then hide itself. Or perhaps what would be even more interesting would be that in some views/states it's hidden, so when you're up in the song editor and such it would be hidden. But then when viewing your library or some other future actions it could be out, since it would be more useful in those places.
+
+
 ### New Features
 * Amend the database so that songs have their own individual entrances in the database, since this is not something that we had before...
 
@@ -48,6 +55,11 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 * Add in different images (or different resolutions), which means that when loading in the image's load in quicker, and also webp variants and such, this is something that when i am making it will be a pain, but when it's all being loaded in by JS it won't be a problem at all since it can all sit inside of a picture tag.
 
 * For accounts create the ability to reset passwords, as well as making a confirm email feature, since it's the main way of establishing uniqueness when signing up.
+
+<hr>
+
+* This would be far in the future, but creating a setting sort of like a community campfire, where people could play their demos or other things, little snippets, would be really cool, since it would give the feeling that it was this small thing.
+We could even go as far as making that section of the website decidedly seperate, Perhaps creating a 3d environment with some of the different libraries that support that, and just making it a really nice and boutique experience for people to experience when trying to share their music with other people, which can at times be daunting. (The aesthetic would sort of be organic 3d pixels, so that it hopefully would be performant across the board, but also pretty)
 
 ### Tech Stack
 * Move away from xampp
