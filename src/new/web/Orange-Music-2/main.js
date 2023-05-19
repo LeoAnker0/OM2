@@ -7,17 +7,17 @@ document.getElementById('app').innerHTML = main;
 
 import { loadMAINnav, loadMAINmusBar, loadMAINcontent /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
 loadMAINnav();
-import './css/navbar.css';
 loadMAINmusBar();
-import './css/topMusicBar.css';
 loadMAINcontent();
 
-import './css/musicObjects.css';
-import './css/shadowDOM.css';
-import './css/popupContextMenu.css';
-import './css/upNextQueue.css';
-import './css/mediaQuery.css';
 import './css/expandedMusicObject.css';
+import './css/mediaQuery.css';
+import './css/musicObjects.css';
+import './css/navbar.css';
+import './css/popupContextMenu.css';
+import './css/shadowDOM.css';
+import './css/topMusicBar.css';
+import './css/upNextQueue.css';
 
 
 //specific logic for making things work
@@ -25,11 +25,13 @@ import './css/expandedMusicObject.css';
 //import { hydrateNav } from './js/hydrateNav.js';
 import { getUsersProfilePicAddress } from './js/loadAccountImage.js';
 import { inputDetect } from './js/inputDetect.js';
-//import { hydrateExpandedMusicObjects } from './js/hydrateExpandedMusicObject.js';
 getUsersProfilePicAddress("uuid");
 inputDetect();
 
 
+
+
+/*
 function includeJs(jsFilePath) {
     var js = document.createElement("script");
 
@@ -37,8 +39,9 @@ function includeJs(jsFilePath) {
     js.src = "js/" + jsFilePath;
 
     document.body.appendChild(js);
-}
+}*/
 
+/*
 function loadInMyJS() {
     //the logic for signingin/up and staying logged in as well
     //includeJs("login.js");
@@ -74,6 +77,4 @@ function loadInMyJS() {
     includeJs("addOrRemoveFromLibrary.js");
 
 }
-
-
-//loadInMyJS()
+//loadInMyJS()*/
