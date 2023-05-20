@@ -1,23 +1,17 @@
 import './css/style.css';
+import './css/sketch.css';
+import './css/materials.css';
+import './css/layout.css';
 
 //logic for loading content into the dom
 
 import main from './html/main.html?raw';
 document.getElementById('app').innerHTML = main;
 
-import { loadMAINnav, loadMAINmusBar, loadMAINcontent /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
-loadMAINnav();
-loadMAINmusBar();
-loadMAINcontent();
+import { /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
 
-import './css/expandedMusicObject.css';
-import './css/mediaQuery.css';
-import './css/musicObjects.css';
-import './css/navbar.css';
-import './css/popupContextMenu.css';
-import './css/shadowDOM.css';
-import './css/topMusicBar.css';
-import './css/upNextQueue.css';
+
+
 
 
 //specific logic for making things work

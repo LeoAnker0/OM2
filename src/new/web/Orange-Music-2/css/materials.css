@@ -1,0 +1,12 @@
+.MATERIAL-blur-1 {
+    background-color: rgba(256, 256, 256, 0.1);
+    backdrop-filter: blur(20px) contrast(0.6);
+}
+
+.MATERIAL-black {
+    background-color: blueviolet;
+}
+
+.MATERIAL-SVG-corner-colour {
+    fill: var(--grey);
+}

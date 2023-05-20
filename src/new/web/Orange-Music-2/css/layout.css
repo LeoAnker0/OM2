@@ -1,0 +1,144 @@
+:root {
+    --width-of-left-bar: 18rem;
+    --height-of-top: 5rem;
+    --cutout-left: 10%;
+    --cutout-top: 10%;
+    --cutout-width: 80%;
+    --cutout-height: 80%;
+    --cutout-border-radius: 10px;
+
+}
+
+main {
+    background-color: black;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.contentContainer {
+    position: relative;
+    width: calc(100% - var(--width-of-left-bar));
+    height: 100%;
+    background-color: dimgray;
+    float: right;
+    overflow-y: scroll;
+
+}
+
+nav {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    //background-color: black;
+    z-index: 10;
+}
+
+.nav-topHalf {
+    position: relative;
+    width: 100%;
+    height: var(--height-of-top);
+    //background-color: var(--darkest-grey);
+    display: flex;
+}
+
+.nav-topHalf-left {
+    position: relative;
+    height: 100%;
+    width: var(--width-of-left-bar);
+    background-color: var(--light-grey);
+}
+
+.nav-topHalf-right {
+    position: relative;
+    height: 100%;
+    width: calc(100% - var(--width-of-left-bar));
+    background-color: var(--grey);
+    clip-path: polygon(0% 0%,
+        0% 100%,
+        var(--cutout-left) 100%,
+        var(--cutout-left) var(--cutout-top),
+        calc(var(--cutout-left) + var(--cutout-width)) var(--cutout-top),
+        calc(var(--cutout-left) + var(--cutout-width)) calc(var(--cutout-top) + var(--cutout-height)),
+        var(--cutout-left) calc(var(--cutout-top) + var(--cutout-height)),
+        var(--cutout-left) 100%,
+        100% 100%,
+        100% 0%);
+    //z-index: 10;
+}
+
+.nav-topHalf-right-playerControls-container {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - var(--width-of-left-bar));
+    //background-color: blue;
+    margin-left: var(--width-of-left-bar);
+
+    //outline: 2px solid red;
+
+}
+
+.nav-topHalf-right-blurbox {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+}
+
+.nav-topHalf-right-playerControls {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    //background-color: red;
+    z-index: 10;
+    overflow-y: hidden;
+    border-radius: 8px;
+
+    outline: 1px solid white;
+}
+
+.nav-topHalf-right-corners {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    overflow: hidden;
+}
+
+.nav-topHalf-right-corners-toTopLeft {
+    position: absolute;
+    top: -27%;
+    left: -25%;
+    z-index: 2;
+}
+
+.nav-topHalf-right-corners-toBottomLeft {
+    position: absolute;
+    top: 77%;
+    left: -25%;
+    z-index: 2;
+    transform: rotate(270deg);
+}
+
+.nav-topHalf-right-corners-toTopRight {
+    position: absolute;
+    top: -27%;
+    left: 75%;
+    z-index: 2;
+    transform: rotate(90deg);
+}
+
+.nav-topHalf-right-corners-toBottomRight {
+    position: absolute;
+    top: 77%;
+    left: 75%;
+    z-index: 2;
+    transform: rotate(180deg);
+}
