@@ -31,6 +31,11 @@
 
 }
 
+*::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
 main {
     height: 100%;
     width: 100%;
@@ -71,8 +76,8 @@ main {
     content: "";
     height: var(--height-of-self);
     width: 100%;
-    background-color: var(--content-inset-colour);
     top: calc(var(--height-of-top) - var(--height-of-self));
+    background-color: var(--content-inset-colour);
 }
 
 /* creates an outline that creates the rounded inset that we are after  */
@@ -83,8 +88,8 @@ main {
     width: 100%;
     outline: var(--border-radius-top) solid var(--content-inset-colour);
     border-radius: var(--border-radius-top);
-
     top: 5rem;
+    pointer-events: none;
 }
 
 .content {
@@ -94,7 +99,8 @@ main {
     overflow-y: scroll;
     overflow-x: hidden;
     background-color: var(--background-bottom-right-back);
-    z-index: 1;
+    border-radius: var(--border-radius-top);
+    //z-index: 1;
 }
 
 
