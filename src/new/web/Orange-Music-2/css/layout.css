@@ -7,6 +7,11 @@
     --cutout-height: 80%;
     --cutout-border-radius: 10px;
 
+    --border-radius-top: 8px;
+
+    --background-top-right-back: var(--grey);
+    --background-top-left-back: var(--grey);
+
 }
 
 main {
@@ -27,11 +32,10 @@ main {
 
 }
 
-nav {
+.nav-topHalf-container {
     position: absolute;
-    height: 100%;
+    height: var(--height-of-top);
     width: 100%;
-    //background-color: black;
     z-index: 10;
 }
 
@@ -39,22 +43,24 @@ nav {
     position: relative;
     width: 100%;
     height: var(--height-of-top);
-    //background-color: var(--darkest-grey);
     display: flex;
+
 }
 
 .nav-topHalf-left {
     position: relative;
     height: 100%;
     width: var(--width-of-left-bar);
-    background-color: var(--light-grey);
+    background-color: var(--background-top-left-back);
+    outline: 1px solid white;
+    z-index: 10;
 }
 
 .nav-topHalf-right {
     position: relative;
     height: 100%;
     width: calc(100% - var(--width-of-left-bar));
-    background-color: var(--grey);
+    background-color: var(--background-top-right-back);
     clip-path: polygon(0% 0%,
         0% 100%,
         var(--cutout-left) 100%,
@@ -72,10 +78,7 @@ nav {
     position: absolute;
     height: 100%;
     width: calc(100% - var(--width-of-left-bar));
-    //background-color: blue;
     margin-left: var(--width-of-left-bar);
-
-    //outline: 2px solid red;
 
 }
 
@@ -95,50 +98,35 @@ nav {
     left: 10%;
     width: 80%;
     height: 80%;
-    //background-color: red;
     z-index: 10;
-    overflow-y: hidden;
-    border-radius: 8px;
+    border-radius: var(--border-radius-top);
 
     outline: 1px solid white;
 }
 
-.nav-topHalf-right-corners {
+.nav-topHalf-right-playerControls:before {
+    height: 100%;
+    width: 100%;
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    overflow: hidden;
+    content: "";
+    outline: 4px solid var(--background-top-right-back);
+    border-radius: var(--border-radius-top);
+    outline-offset: 1px;
 }
 
-.nav-topHalf-right-corners-toTopLeft {
-    position: absolute;
-    top: -27%;
-    left: -25%;
-    z-index: 2;
+.nav-topHalf-right-playerControls-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: blue;
+    border-radius: var(--border-radius-top);
 }
 
-.nav-topHalf-right-corners-toBottomLeft {
+.nav-topHalf-right-account-container {
     position: absolute;
-    top: 77%;
-    left: -25%;
-    z-index: 2;
-    transform: rotate(270deg);
-}
-
-.nav-topHalf-right-corners-toTopRight {
-    position: absolute;
-    top: -27%;
-    left: 75%;
-    z-index: 2;
-    transform: rotate(90deg);
-}
-
-.nav-topHalf-right-corners-toBottomRight {
-    position: absolute;
-    top: 77%;
-    left: 75%;
-    z-index: 2;
-    transform: rotate(180deg);
+    right: 0%;
+    width: 10%;
+    height: 100%;
+    outline: 1px solid white;
+    z-index: 10;
 }
