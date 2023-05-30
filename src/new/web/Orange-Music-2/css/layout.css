@@ -1,5 +1,8 @@
+/* the left bar is currently hidden, but it is something that should not be forgotten  */
+
 :root {
-    --width-of-left-bar: 18rem;
+    --width-of-left-bar: 0rem;
+    --width-of-left-bar-fortop: 16rem;
     --height-of-top: 5rem;
     --cutout-left: 10%;
     --cutout-top: 10%;
@@ -11,35 +14,99 @@
 
     --background-top-right-back: var(--grey);
     --background-top-left-back: var(--grey);
+    --background-bottom-left-back: var(--grey);
+    --background-bottom-right-back: var(--black);
+
+
+    --content-inset: 0.4rem;
+    --content-inset-colour: var(--grey);
+
+}
+
+@media (max-width: 750px) {
+    :root {
+        --width-of-left-bar-fortop: 0rem;
+
+    }
 
 }
 
 main {
-    background-color: black;
     height: 100%;
     width: 100%;
     overflow: hidden;
     position: relative;
 }
 
+.botHalf-left {
+    position: relative;
+    width: var(--width-of-left-bar);
+    height: calc(100% - var(--height-of-top));
+    top: var(--height-of-top);
+
+    background-color: var(--background-bottom-left-back);
+    z-index: 10;
+    float: left;
+}
+
 .contentContainer {
     position: relative;
-    width: calc(100% - var(--width-of-left-bar));
-    height: 100%;
-    background-color: dimgray;
+    width: calc((100% - var(--width-of-left-bar)) - (2* var(--content-inset)));
+    height: calc(100% - (2* var(--content-inset)) + 0.5rem);
+
     float: right;
-    overflow-y: scroll;
+    overflow: hidden;
+
+    /* the borders are done in this clunky way because we can't have one on the top, because open to the top */
+    border-left: var(--content-inset) solid var(--content-inset-colour);
+    border-right: var(--content-inset) solid var(--content-inset-colour);
+    border-bottom: var(--content-inset) solid var(--content-inset-colour);
 
 }
 
-.nav-topHalf-container {
+/* creates the top bar of the outline, since this one needs to be placed seperatly  */
+.contentContainer:before {
+    --height-of-self: var(--content-inset);
+    position: absolute;
+    content: "";
+    height: var(--height-of-self);
+    width: 100%;
+    background-color: var(--content-inset-colour);
+    top: calc(var(--height-of-top) - var(--height-of-self));
+}
+
+/* creates an outline that creates the rounded inset that we are after  */
+.contentContainer:after {
+    position: absolute;
+    content: "";
+    height: calc(100% - 5rem);
+    width: 100%;
+    outline: var(--border-radius-top) solid var(--content-inset-colour);
+    border-radius: var(--border-radius-top);
+
+    top: 5rem;
+}
+
+.content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: var(--background-bottom-right-back);
+    z-index: 1;
+}
+
+
+
+.topHalf-container {
     position: absolute;
     height: var(--height-of-top);
     width: 100%;
     z-index: 10;
 }
 
-.nav-topHalf {
+.topHalf {
     position: relative;
     width: 100%;
     height: var(--height-of-top);
@@ -47,19 +114,18 @@ main {
 
 }
 
-.nav-topHalf-left {
+.topHalf-left {
     position: relative;
     height: 100%;
-    width: var(--width-of-left-bar);
+    width: var(--width-of-left-bar-fortop);
     background-color: var(--background-top-left-back);
-    outline: 1px solid white;
     z-index: 10;
 }
 
-.nav-topHalf-right {
+.topHalf-right {
     position: relative;
     height: 100%;
-    width: calc(100% - var(--width-of-left-bar));
+    width: calc(100% - var(--width-of-left-bar-fortop));
     background-color: var(--background-top-right-back);
     clip-path: polygon(0% 0%,
         0% 100%,
@@ -71,28 +137,27 @@ main {
         var(--cutout-left) 100%,
         100% 100%,
         100% 0%);
-    //z-index: 10;
 }
 
-.nav-topHalf-right-playerControls-container {
+.topHalf-right-playerControls-container {
     position: absolute;
     height: 100%;
-    width: calc(100% - var(--width-of-left-bar));
-    margin-left: var(--width-of-left-bar);
+    width: calc(100% - var(--width-of-left-bar-fortop));
+    margin-left: var(--width-of-left-bar-fortop);
 
 }
 
-.nav-topHalf-right-blurbox {
+.topHalf-right-blurbox {
     position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 100%;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
     z-index: -1;
 
 }
 
-.nav-topHalf-right-playerControls {
+.topHalf-right-playerControls {
     position: absolute;
     top: 10%;
     left: 10%;
@@ -104,7 +169,7 @@ main {
     outline: 1px solid white;
 }
 
-.nav-topHalf-right-playerControls:before {
+.topHalf-right-playerControls:before {
     height: 100%;
     width: 100%;
     position: absolute;
@@ -114,19 +179,17 @@ main {
     outline-offset: 1px;
 }
 
-.nav-topHalf-right-playerControls-content {
+.topHalf-right-playerControls-content {
     position: relative;
     height: 100%;
     width: 100%;
-    background-color: blue;
     border-radius: var(--border-radius-top);
 }
 
-.nav-topHalf-right-account-container {
+.topHalf-right-account-container {
     position: absolute;
     right: 0%;
     width: 10%;
     height: 100%;
-    outline: 1px solid white;
     z-index: 10;
 }
