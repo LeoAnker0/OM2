@@ -12,14 +12,19 @@
 
     --border-radius-top: 8px;
 
-    --background-top-right-back: var(--grey);
-    --background-top-left-back: var(--grey);
-    --background-bottom-left-back: var(--grey);
-    --background-bottom-right-back: var(--black);
+
+    --outline-and-back: var(--dgrey-7);
+
+    --background-top-right-back: var(--outline-and-back);
+    --background-top-left-back: var(--outline-and-back);
+    --background-bottom-left-back: var(--outline-and-back);
+    --background-bottom-right-back: var(--dgrey-6);
 
 
     --content-inset: 0.4rem;
-    --content-inset-colour: var(--grey);
+    --content-inset-colour: var(--outline-and-back);
+
+    --playercontrols-outline-colour: var(--lgrey-0);
 
 }
 
@@ -66,7 +71,6 @@ main {
     border-left: var(--content-inset) solid var(--content-inset-colour);
     border-right: var(--content-inset) solid var(--content-inset-colour);
     border-bottom: var(--content-inset) solid var(--content-inset-colour);
-
 }
 
 /* creates the top bar of the outline, since this one needs to be placed seperatly  */
@@ -172,7 +176,7 @@ main {
     z-index: 10;
     border-radius: var(--border-radius-top);
 
-    outline: 1px solid white;
+    outline: 1px solid var(--playercontrols-outline-colour);
 }
 
 .topHalf-right-playerControls:before {

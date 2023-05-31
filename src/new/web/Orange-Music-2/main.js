@@ -2,11 +2,15 @@ import './css/style.css';
 import './css/sketch.css';
 import './css/materials.css';
 import './css/layout.css';
+import './css/searchbar.css';
 
 //logic for loading content into the dom
 
 import main from './html/main.html?raw';
 document.getElementById('app').innerHTML = main;
+
+import searchbar from './html/searchbar.html?raw';
+document.getElementById('searchbarContainer').innerHTML = searchbar;
 
 import { /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
 
