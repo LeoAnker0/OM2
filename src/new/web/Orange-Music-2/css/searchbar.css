@@ -1,0 +1,73 @@
+:root {
+    --searchbar-container-height: 100%;
+    --searchbar-container-width: 100%;
+
+    --searchbar-borderradius: 8px;
+    --searchbar-container-after-height: 45%;
+    --searchbar-container-after-width: 80%;
+    --searchbar-container-after-topoffset: 10%;
+    --searchbar-container-after-leftoffset: 10%;
+
+    --searchbar-container-after-background-colour: var(--dgrey-8);
+    --searchbar-container-after-outline-colour: var(--lgrey-8);
+
+
+    --searchbar-search-colour-unfocused: var(--dgrey-4);
+    --searchbar-search-colour-focused: var(--lgrey-4);
+}
+
+.searchbarContainer {
+    position: relative;
+    height: var(--searchbar-container-height);
+    width: var(--searchbar-container-width);
+
+
+}
+
+.searchbarContainerL2 {
+    position: relative;
+    height: var(--searchbar-container-after-height);
+    width: var(--searchbar-container-after-width);
+
+    top: var(--searchbar-container-after-topoffset);
+    left: var(--searchbar-container-after-leftoffset);
+
+    border-radius: var(--searchbar-borderradius);
+
+    background-color: var(--searchbar-container-after-background-colour);
+
+    outline: 1px solid var(--searchbar-container-after-outline-colour);
+
+}
+
+.searchbar-hideLabels {
+    position: absolute;
+    opacity: 0%;
+    user-select: none;
+
+}
+
+.searchbar-input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    position: relative;
+    width: 72.5%;
+    left: 12.5%;
+    height: 100%;
+    color: var(--searchbar-search-colour-unfocused);
+
+}
+
+.searchbar-input:focus {
+    color: var(--searchbar-search-colour-focused);
+}
+
+
+
+
+
+
+
+
+/**/
