@@ -136,65 +136,31 @@ main {
     position: relative;
     height: 100%;
     width: calc(100% - var(--width-of-left-bar-fortop));
-    background-color: var(--background-top-right-back);
-    clip-path: polygon(0% 0%,
-        0% 100%,
-        var(--cutout-left) 100%,
-        var(--cutout-left) var(--cutout-top),
-        calc(var(--cutout-left) + var(--cutout-width)) var(--cutout-top),
-        calc(var(--cutout-left) + var(--cutout-width)) calc(var(--cutout-top) + var(--cutout-height)),
-        var(--cutout-left) calc(var(--cutout-top) + var(--cutout-height)),
-        var(--cutout-left) 100%,
-        100% 100%,
-        100% 0%);
+    overflow: hidden;
 }
 
-.topHalf-right-playerControls-container {
-    position: absolute;
-    height: 100%;
-    width: calc(100% - var(--width-of-left-bar-fortop));
-    margin-left: var(--width-of-left-bar-fortop);
+.topHalf-right-content-container {
+    position: relative;
 
-}
-
-.topHalf-right-blurbox {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 80%;
     height: 80%;
-    z-index: -1;
+    width: 80%;
 
+    border-radius: var(--border-radius-top);
+
+    outline: 100vw solid var(--background-top-right-back);
+
+    inset: 10%;
 }
+
 
 .topHalf-right-playerControls {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    z-index: 10;
-    border-radius: var(--border-radius-top);
-
-    outline: 1px solid var(--playercontrols-outline-colour);
-}
-
-.topHalf-right-playerControls:before {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    content: "";
-    outline: 4px solid var(--background-top-right-back);
-    border-radius: var(--border-radius-top);
-    outline-offset: 1px;
-}
-
-.topHalf-right-playerControls-content {
     position: relative;
     height: 100%;
     width: 100%;
     border-radius: var(--border-radius-top);
+    outline: 1px solid var(--playercontrols-outline-colour);
 }
+
 
 .topHalf-right-account-container {
     position: absolute;
