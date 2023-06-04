@@ -40,7 +40,7 @@ I am going to be remaking Orange Music, and while I might reuse some of the fron
 
 ...
 
-* With the background opacity element in MATERIAL-blur-1, make it so that when no song has been selected it is a sort of greyish colour, but that then changes to being a many coloured multi gradient (which is based on colours extracted from the current songs image), but which is static when no music is playing, but that then when music is playing mooves/grooves along with the rhythm (at a much reduced rate) like in apple music's lyrics for mobile, this feature will most likely require some more server side stuff, to calculate colours (maybe not???), but definetly for calculating the bpm and the rhythm, or perhaps there is an even easier way to make it appear as though it is responding to the rhythm of the music, only time will tell.
+* With the background opacity element in *MATERIAL-blur-1*, make it so that when no song has been selected it is a sort of greyish colour, but that then changes to being a many coloured multi gradient (which is based on colours extracted from the current songs image), but which is static when no music is playing, but that then when music is playing mooves/grooves along with the rhythm (at a much reduced rate) like in apple music's lyrics for mobile, this feature will most likely require some more server side stuff, to calculate colours (maybe not???), but definetly for calculating the bpm and the rhythm, or perhaps there is an even easier way to make it appear as though it is responding to the rhythm of the music, only time will tell.
 
 ### New Features
 * Amend the database so that songs have their own individual entrances in the database, since this is not something that we had before...
