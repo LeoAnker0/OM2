@@ -6,8 +6,8 @@ import './css/searchbar.css';
 
 //logic for loading content into the dom
 
-import main from './html/main.html?raw';
-document.getElementById('app').innerHTML = main;
+import layout from './html/layout.html.html?raw';
+document.getElementById('app').innerHTML = layout;
 
 import searchbar from './html/searchbar.html?raw';
 document.getElementById('searchbarContainer').innerHTML = searchbar;
