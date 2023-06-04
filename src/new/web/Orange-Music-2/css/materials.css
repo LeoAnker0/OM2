@@ -6,7 +6,3 @@
 .MATERIAL-black {
     background-color: blueviolet;
 }
-
-.MATERIAL-SVG-corner-colour {
-    fill: var(--grey);
-}
