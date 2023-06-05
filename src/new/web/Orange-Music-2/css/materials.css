@@ -1,5 +1,6 @@
 .MATERIAL-blur-1 {
     background-color: rgba(256, 256, 256, 0.2);
+    background-color: rgba(21, 20, 22, 0.85);
     backdrop-filter: blur(5px) contrast(0.6);
 }
 

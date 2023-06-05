@@ -34,6 +34,12 @@
 
     }
 
+    .topHalf-left {
+        visibility: hidden;
+    }
+
+
+
 }
 
 *::-webkit-scrollbar {
@@ -143,13 +149,13 @@ main {
     position: relative;
 
     height: 80%;
-    width: 80%;
+    width: 89%;
 
     border-radius: var(--border-radius-top);
 
     outline: 100vw solid var(--background-top-right-back);
 
-    inset: 10%;
+    inset: 10% 10% 10% 001%;
 }
 
 
