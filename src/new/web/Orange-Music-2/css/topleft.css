@@ -4,7 +4,7 @@
 
     --searchbar-borderradius: 8px;
     --searchbar-container-after-height: 38%;
-    --searchbar-container-after-width: calc(100% - (2 * 0.4rem));
+    --searchbar-container-after-width: calc(100% - (1 * 0.4rem));
     --searchbar-container-after-topoffset: 10%;
     --searchbar-container-after-leftoffset: 0.4rem;
 
@@ -14,17 +14,23 @@
 
     --searchbar-search-colour-unfocused: var(--dgrey-4);
     --searchbar-search-colour-focused: var(--lgrey-4);
+
+    --topleft-button-containers-width: calc(100% - (1 * 0.4rem));
+    --topleft-button-containers-height: calc(100% - 56%);
+    --topleft-button-containers-topoffset: calc(100% - (38% + 10%));
+    --topleft-button-containers-leftoffset: 0.4rem;
 }
 
 .topleft-searchbarContainer {
     position: relative;
     height: var(--searchbar-container-height);
     width: var(--searchbar-container-width);
+
 }
 
 
 .topleft-searchbarContainerL2 {
-    position: relative;
+    position: absolute;
     height: var(--searchbar-container-after-height);
     width: var(--searchbar-container-after-width);
 
@@ -78,10 +84,51 @@
 }
 
 
+.topleft-button-containers {
+    position: relative;
+    height: var(--topleft-button-containers-height);
+    width: var(--topleft-button-containers-width);
+    top: var(--topleft-button-containers-topoffset);
+    left: var(--topleft-button-containers-leftoffset);
 
+}
 
+.topleft-button-containersL2 {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-content: flex-start;
+}
 
+.topleft-button-container-button {
+    position: relative;
+    height: 70%;
+    top: 15%;
+    width: 3.5rem;
+    background-color: black;
+    //outline: 1px solid lightgrey;
+    margin-right: 0.7rem;
+    border-radius: 2px;
+}
 
+.topleft-button-container-button:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin: -1px;
+    /* !importanté */
+    border-radius: inherit;
+    /* !importanté */
+
+    background: rgb(199, 0, 52);
+    background: linear-gradient(130deg, rgba(199, 0, 52, 1) 0%, rgba(4, 233, 182, 1) 32%, rgba(3, 0, 215, 1) 41%, rgba(197, 3, 65, 1) 72%, rgba(5, 5, 184, 1) 93%, rgba(0, 212, 255, 1) 100%);
+
+}
 
 
 /**/
