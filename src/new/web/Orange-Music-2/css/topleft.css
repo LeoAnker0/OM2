@@ -16,14 +16,14 @@
     --searchbar-search-colour-focused: var(--lgrey-4);
 }
 
-.searchbarContainer {
+.topleft-searchbarContainer {
     position: relative;
     height: var(--searchbar-container-height);
     width: var(--searchbar-container-width);
 }
 
 
-.searchbarContainerL2 {
+.topleft-searchbarContainerL2 {
     position: relative;
     height: var(--searchbar-container-after-height);
     width: var(--searchbar-container-after-width);
@@ -53,14 +53,14 @@
     border-radius: 2px;
 }
 */
-.searchbar-hideLabels {
+.topleft-searchbar-hideLabels {
     position: absolute;
     opacity: 0%;
     user-select: none;
 
 }
 
-.searchbar-input {
+.topleft-searchbar-input {
     border: none;
     outline: none;
     background-color: transparent;
@@ -72,7 +72,7 @@
     font-style: italic;
 }
 
-.searchbar-input:focus {
+.topleft-searchbar-input:focus {
     color: var(--searchbar-search-colour-focused);
     font-style: normal;
 }

@@ -10,7 +10,7 @@ import layout from './html/layout.html?raw';
 document.getElementById('app').innerHTML = layout;
 
 import topleft from './html/topleft.html?raw';
-document.getElementById('searchbarContainer').innerHTML = topleft;
+document.getElementById('topleftContentArea').innerHTML = topleft;
 
 import { /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
 
