@@ -2,15 +2,15 @@ import './css/style.css';
 import './css/sketch.css';
 import './css/materials.css';
 import './css/layout.css';
-import './css/searchbar.css';
+import './css/topleft.css';
 
 //logic for loading content into the dom
 
 import layout from './html/layout.html?raw';
 document.getElementById('app').innerHTML = layout;
 
-import searchbar from './html/searchbar.html?raw';
-document.getElementById('searchbarContainer').innerHTML = searchbar;
+import topleft from './html/topleft.html?raw';
+document.getElementById('searchbarContainer').innerHTML = topleft;
 
 import { /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
 

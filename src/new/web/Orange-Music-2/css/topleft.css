@@ -3,8 +3,8 @@
     --searchbar-container-width: 100%;
 
     --searchbar-borderradius: 8px;
-    --searchbar-container-after-height: 40%;
-    --searchbar-container-after-width: 90%;
+    --searchbar-container-after-height: 38%;
+    --searchbar-container-after-width: calc(100% - (2 * 0.4rem));
     --searchbar-container-after-topoffset: 10%;
     --searchbar-container-after-leftoffset: 0.4rem;
 
