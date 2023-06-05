@@ -6,7 +6,7 @@
     --searchbar-container-after-height: 40%;
     --searchbar-container-after-width: 90%;
     --searchbar-container-after-topoffset: 10%;
-    --searchbar-container-after-leftoffset: 3%;
+    --searchbar-container-after-leftoffset: 0.4rem;
 
     --searchbar-container-after-background-colour: var(--dgrey-8);
     --searchbar-container-after-outline-colour: var(--lgrey-8);
@@ -39,7 +39,7 @@
 
 }
 
-
+/*
 .searchbarContainer:before {
     position: absolute;
     content: "";
@@ -52,7 +52,7 @@
 
     border-radius: 2px;
 }
-
+*/
 .searchbar-hideLabels {
     position: absolute;
     opacity: 0%;
