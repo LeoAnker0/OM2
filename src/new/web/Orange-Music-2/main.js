@@ -13,6 +13,9 @@ document.getElementById('app').innerHTML = layout;
 import { loadMAINtopleft } from './js/exportHTMLchunks.js';
 loadMAINtopleft();
 
+import { setEventListenersForSearchbar } from './js/search.js';
+setEventListenersForSearchbar();
+
 
 
 /*
