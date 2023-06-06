@@ -9,15 +9,13 @@ import './css/topleft.css';
 import layout from './html/layout.html?raw';
 document.getElementById('app').innerHTML = layout;
 
-import topleft from './html/topleft.html?raw';
-document.getElementById('topleftContentArea').innerHTML = topleft;
 
-import { /*,loadMAINmobile*/ } from './js/exportHTMLchunks.js';
-
+import { loadMAINtopleft } from './js/exportHTMLchunks.js';
+loadMAINtopleft();
 
 
 
-
+/*
 //specific logic for making things work
 
 //import { hydrateNav } from './js/hydrateNav.js';
@@ -26,7 +24,7 @@ import { inputDetect } from './js/inputDetect.js';
 getUsersProfilePicAddress("uuid");
 inputDetect();
 
-
+*/
 
 
 /*
