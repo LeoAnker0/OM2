@@ -4,7 +4,7 @@
 
     --searchbar-borderradius: 8px;
     --searchbar-container-after-height: 38%;
-    --searchbar-container-after-width: calc(100% - (1 * 0.4rem));
+    --searchbar-container-after-width: calc(100% - (2 * 0.4rem));
     --searchbar-container-after-topoffset: 10%;
     --searchbar-container-after-leftoffset: 0.4rem;
 
@@ -186,9 +186,9 @@
 
 .topleft-button-container-button:nth-child(2):before {
     background-color: hsla(162, 50%, 69%, 1);
-background-image: radial-gradient(at 60% 30%, hsla(230, 60%, 60%, 1) 0px, transparent 100%),
-radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 1) 0px, transparent 100%),
-radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 1) 0px, transparent 100%);
+    background-image: radial-gradient(at 60% 30%, hsla(230, 60%, 60%, 1) 0px, transparent 100%),
+        radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 1) 0px, transparent 100%),
+        radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 1) 0px, transparent 100%);
 }
 
 .topleft-button-container-button:nth-child(3):before {

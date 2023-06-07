@@ -1,17 +1,25 @@
 <audio id="audio" preload>
     <source id="PLAYERsource" src=""></audio>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="2" result="turbulence" />
+        <feColorMatrix type="saturate" in="turbulence" values="0" />
+        <feBlend in2="SourceGraphic" mode="multiply" />
+    </filter>
+</svg>
 <div class="topHalf-container">
-    <div class="topHalf">
+    <div class="topHalf MATERIAL-blur-1">
         <div class="topHalf-left" id="topleftContentArea"></div>
         <div class="topHalf-right">
-            <div class="topHalf-right-content-container MATERIAL-blur-1">
+            <div class="topHalf-right-content-container 
+            ">
                 <div class="topHalf-right-playerControls"></div>
             </div>
         </div>
     </div>
 </div>
 <main>
-    <div class="botHalf-left">
+    <div class="botHalf-left MATERIAL-blur-1">
     </div>
     <div class="contentContainer">
         <div class="content">

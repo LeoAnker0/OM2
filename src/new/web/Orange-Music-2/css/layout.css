@@ -60,46 +60,15 @@ main {
     height: calc(100% - var(--height-of-top));
     top: var(--height-of-top);
 
-    background-color: var(--background-bottom-left-back);
     z-index: 10;
     float: left;
 }
 
 .contentContainer {
     position: relative;
-    width: calc((100% - var(--width-of-left-bar)) - (2* var(--content-inset)));
-    height: calc(100% - (2* var(--content-inset)) + 0.5rem);
-
-    float: right;
+    width: calc((100% - var(--width-of-left-bar)));
+    height: 100%;
     overflow: hidden;
-
-    /* the borders are done in this clunky way because we can't have one on the top, because open to the top */
-    border-left: var(--content-inset) solid var(--content-inset-colour);
-    border-right: var(--content-inset) solid var(--content-inset-colour);
-    border-bottom: var(--content-inset) solid var(--content-inset-colour);
-}
-
-/* creates the top bar of the outline, since this one needs to be placed seperatly  */
-.contentContainer:before {
-    --height-of-self: var(--content-inset);
-    position: absolute;
-    content: "";
-    height: var(--height-of-self);
-    width: 100%;
-    top: calc(var(--height-of-top) - var(--height-of-self));
-    background-color: var(--content-inset-colour);
-}
-
-/* creates an outline that creates the rounded inset that we are after  */
-.contentContainer:after {
-    position: absolute;
-    content: "";
-    height: calc(100% - 5rem);
-    width: 100%;
-    outline: var(--border-radius-top) solid var(--content-inset-colour);
-    border-radius: var(--border-radius-top);
-    top: 5rem;
-    pointer-events: none;
 }
 
 .content {
@@ -108,9 +77,6 @@ main {
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    background-color: var(--background-bottom-right-back);
-    border-radius: var(--border-radius-top);
-    //z-index: 1;
 }
 
 
@@ -120,6 +86,7 @@ main {
     height: var(--height-of-top);
     width: 100%;
     z-index: 10;
+
 }
 
 .topHalf {
@@ -134,8 +101,32 @@ main {
     position: relative;
     height: 100%;
     width: var(--width-of-left-bar-fortop);
-    background-color: var(--background-top-left-back);
+    //background-color: var(--background-top-left-back);
     z-index: 10;
+}
+
+.topHalf-left:before {
+    position: absolute;
+    z-index: 1;
+    width: 1px;
+    height: 100%;
+    background-color: white;
+    opacity: 0.2;
+    right: 0;
+    content: "";
+    top: 0;
+}
+
+.topHalf-left:after {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    opacity: 0.2;
+    right: 0;
+    content: "";
+    bottom: 0;
 }
 
 .topHalf-right {
@@ -145,15 +136,27 @@ main {
     overflow: hidden;
 }
 
+.topHalf-right:after {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    opacity: 0.2;
+    right: 0;
+    content: "";
+    bottom: 0;
+}
+
 .topHalf-right-content-container {
     position: relative;
 
     height: 80%;
     width: 89%;
 
-    border-radius: var(--border-radius-top);
+    //border-radius: var(--border-radius-top);
 
-    outline: 100vw solid var(--background-top-right-back);
+    //outline: 100vw solid var(--background-top-right-back);
 
     inset: 10% 10% 10% 001%;
 }
@@ -163,15 +166,8 @@ main {
     position: relative;
     height: 100%;
     width: 100%;
-    border-radius: var(--border-radius-top);
-    outline: 1px solid var(--playercontrols-outline-colour);
-}
+    //border-radius: var(--border-radius-top);
+    //outline: 1px solid var(--playercontrols-outline-colour);
 
-
-.topHalf-right-account-container {
-    position: absolute;
-    right: 0%;
-    width: 10%;
-    height: 100%;
-    z-index: 10;
+    //background-color: red;
 }
