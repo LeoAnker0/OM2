@@ -97,6 +97,18 @@ main {
 
 }
 
+.topHalf:after {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    opacity: 0.2;
+    right: 0;
+    content: "";
+    bottom: 0;
+}
+
 .topHalf-left {
     position: relative;
     height: 100%;
@@ -117,17 +129,6 @@ main {
     top: 0;
 }
 
-.topHalf-left:after {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 1px;
-    background-color: white;
-    opacity: 0.2;
-    right: 0;
-    content: "";
-    bottom: 0;
-}
 
 .topHalf-right {
     position: relative;
@@ -136,17 +137,6 @@ main {
     overflow: hidden;
 }
 
-.topHalf-right:after {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 1px;
-    background-color: white;
-    opacity: 0.2;
-    right: 0;
-    content: "";
-    bottom: 0;
-}
 
 .topHalf-right-content-container {
     position: relative;
