@@ -22,7 +22,13 @@
     pointer-events: none;
     opacity: 0.4;
     filter: url(#noise);
+}
 
+
+.MATERIAL-blur-2 {
+    background-color: rgba(256, 256, 256, 0.2);
+    backdrop-filter: blur(2px) contrast(0.6) brightness(0.8);
+    overflow: hidden;
 
 }
 

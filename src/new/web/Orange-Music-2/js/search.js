@@ -4,6 +4,7 @@ export function setEventListenersForSearchbar() {
     const clearIcon = document.getElementById("topleftClearIcon");
     const searchBar = document.getElementById("searchBar");
 
+
     /* detects if the searchbar has been typed in */
     searchBar.addEventListener("keyup", () => {
         if (searchBar.value && clearIcon.style.visibility != "visible") {
@@ -37,8 +38,8 @@ export function setEventListenersForSearchbar() {
 
     /* detect when being focusued, rather than typed */
     searchBar.addEventListener('focus', () => {
-        outlineForSearchbar.classList.remove('default');
-        outlineForSearchbar.classList.add('updated')
+        outlineForSearchbar.style.outline = "1px solid var(--lgrey-5)";
+        ''
 
         /* if searchBar.value is greater than 0*/
         if (searchBar.value.length > 0) {
@@ -48,8 +49,7 @@ export function setEventListenersForSearchbar() {
     });
 
     searchBar.addEventListener('blur', () => {
-        outlineForSearchbar.classList.remove('updated');
-        outlineForSearchbar.classList.add('default')
+        outlineForSearchbar.style.outline = "1px solid transparent";
 
         /* hide the clear icon (we changed over to using opacity so that it was always clickable) */
         clearIcon.style.opacity = "0%";
