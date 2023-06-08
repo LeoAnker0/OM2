@@ -38,7 +38,7 @@ export function setEventListenersForSearchbar() {
 
     /* detect when being focusued, rather than typed */
     searchBar.addEventListener('focus', () => {
-        outlineForSearchbar.style.outline = "1px solid var(--lgrey-5)";
+        outlineForSearchbar.style.outline = "1px solid var(--lgrey-4)";
         ''
 
         /* if searchBar.value is greater than 0*/

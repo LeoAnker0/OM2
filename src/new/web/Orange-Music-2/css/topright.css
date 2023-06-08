@@ -1,0 +1,99 @@
+:root {
+
+    --TOPRIGHT-playbackcontrols-width: 10rem;
+    --TOPRIGHT-playbackcontrols-leftoffset: calc((100% - var(--TOPRIGHT-playbackcontrols-width)) / 2);
+}
+
+.TOPRIGHT-topHalf-right-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* playback controls : left  */
+.TOPRIGHT-playbackcontrols-container {
+    position: relative;
+    height: 100%;
+    width: 30%;
+}
+
+.TOPRIGHT-playbackcontrols-displacement {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    left: var(--TOPRIGHT-playbackcontrols-leftoffset);
+    width: var(--TOPRIGHT-playbackcontrols-width);
+    height: 100%;
+}
+
+
+#PLAYERplayButton,
+#PLAYERshuffleButton,
+#PLAYERlastButton,
+#PLAYERnextButton,
+#PLAYERloopButton {
+    filter: var(--make-svg-grey);
+}
+
+#PLAYERplayButton:hover,
+#PLAYERshuffleButton:hover,
+#PLAYERlastButton:hover,
+#PLAYERnextButton:hover,
+#PLAYERloopButton:hover {
+    filter: none;
+}
+
+.svg-image-buttons-relative-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    filter: none;
+}
+
+.svg-image-buttons-absolute-container {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: none;
+}
+
+
+/* lcd  : middle  */
+.TOPRIGHT-lcd-container {
+    position: relative;
+    height: 100%;
+    width: 40%;
+    //background-color: blue;
+}
+
+/* account controls : right  */
+.TOPRIGHT-accountcontrols-container {
+    position: relative;
+    height: 100%;
+    width: 30%;
+    //background-color: green;
+}
+
+
+/*
+#upNextQueueButtonBackground {
+    position: absolute;
+    height: 1.6rem;
+    width: 2rem;
+    background-color: var(--off-white);
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+#queueIcon {
+    position: relative;
+    top: 10%;
+    left: 24%;
+    filter: var(--make-svg-grey);
+}
+*/

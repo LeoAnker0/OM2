@@ -1,5 +1,7 @@
+<!-- audio tag -->
 <audio id="audio" preload>
     <source id="PLAYERsource" src=""></audio>
+<!-- noise *generator* -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <filter id="noise">
         <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="2" result="turbulence" />
@@ -7,14 +9,11 @@
         <feBlend in2="SourceGraphic" mode="multiply" />
     </filter>
 </svg>
+<!-- layout htmls -->
 <div class="topHalf-container">
     <div class="topHalf MATERIAL-blur-1">
         <div class="topHalf-left" id="topleftContentArea"></div>
-        <div class="topHalf-right">
-            <div class="topHalf-right-content-container 
-            ">
-                <div class="topHalf-right-playerControls"></div>
-            </div>
+        <div class="topHalf-right" id="toprightContentArea">
         </div>
     </div>
 </div>

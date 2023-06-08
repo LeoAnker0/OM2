@@ -70,7 +70,6 @@
 }
 
 .topleft-searchbar-input::placeholder {
-    /* Most modern browsers support this now. */
     color: var(--searchbar-search-colour-unfocused);
 }
 

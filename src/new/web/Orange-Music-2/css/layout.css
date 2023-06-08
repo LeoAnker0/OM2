@@ -136,28 +136,3 @@ main {
     width: calc(100% - var(--width-of-left-bar-fortop));
     overflow: hidden;
 }
-
-
-.topHalf-right-content-container {
-    position: relative;
-
-    height: 80%;
-    width: 89%;
-
-    //border-radius: var(--border-radius-top);
-
-    //outline: 100vw solid var(--background-top-right-back);
-
-    inset: 10% 10% 10% 001%;
-}
-
-
-.topHalf-right-playerControls {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    //border-radius: var(--border-radius-top);
-    //outline: 1px solid var(--playercontrols-outline-colour);
-
-    //background-color: red;
-}
