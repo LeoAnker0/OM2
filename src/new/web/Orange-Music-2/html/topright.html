@@ -39,5 +39,19 @@
     <div class="TOPRIGHT-lcd-container"></div>
     <!-- account controls -->
     <div class="TOPRIGHT-accountcontrols-container">
+        <div class="TOPRIGHT-accountcontrols-volumeslider-container">
+            <div class="TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container">
+                <img src="{icons_volumeNull}" alt="volume null" id="volumeControlZero" height="10" />
+                <img src="{icons_volume1}" alt="volume quiet" id="volumeControlOne" height="10" />
+                <img src="{icons_volume2}" alt="volume medium" id="volumeControlTwo" height="10" />
+                <img src="{icons_volume3}" alt="volume loud" id="volumeControlThree" height="10" />
+            </div>
+            <!-- volume slider -->
+            <label for="volumeRangeSlider" class="hideLabels">Range Slider</label>
+            <div id="volumeSliderID">
+                <input type="range" min="1" max="100" value="100" id="volumeRangeSlider">
+            </div>
+        </div>
+        <div class="TOPRIGHT-accountcontrols-buttonarea-container"> </div>
     </div>
 </div>

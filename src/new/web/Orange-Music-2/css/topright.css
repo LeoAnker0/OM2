@@ -2,6 +2,8 @@
 
     --TOPRIGHT-playbackcontrols-width: 10rem;
     --TOPRIGHT-playbackcontrols-leftoffset: calc((100% - var(--TOPRIGHT-playbackcontrols-width)) / 2);
+
+    --TOPRIGHT-accountcontrols-volumeslider-width: 8rem;
 }
 
 .TOPRIGHT-topHalf-right-content {
@@ -12,11 +14,11 @@
     justify-content: space-evenly;
 }
 
-/* playback controls : left  */
+/* playback controls : left ------------------------------------------------- */
 .TOPRIGHT-playbackcontrols-container {
     position: relative;
     height: 100%;
-    width: 30%;
+    width: 25%;
 }
 
 .TOPRIGHT-playbackcontrols-displacement {
@@ -24,7 +26,8 @@
     display: flex;
     justify-content: space-evenly;
     left: var(--TOPRIGHT-playbackcontrols-leftoffset);
-    width: var(--TOPRIGHT-playbackcontrols-width);
+    width: 100%;
+    max-width: var(--TOPRIGHT-playbackcontrols-width);
     height: 100%;
 }
 
@@ -63,7 +66,7 @@
 }
 
 
-/* lcd  : middle  */
+/* lcd  : middle -------------------------------------------------  */
 .TOPRIGHT-lcd-container {
     position: relative;
     height: 100%;
@@ -71,14 +74,100 @@
     //background-color: blue;
 }
 
-/* account controls : right  */
+/* account controls : right ------------------------------------------------- */
 .TOPRIGHT-accountcontrols-container {
     position: relative;
     height: 100%;
-    width: 30%;
-    //background-color: green;
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
 }
 
+.TOPRIGHT-accountcontrols-volumeslider-container {
+    position: relative;
+    height: 100%;
+    width: var(--TOPRIGHT-accountcontrols-volumeslider-width);
+    display: flex;
+    justify-content: space-apart;
+}
+
+/* volume icons */
+.TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container {
+    display: grid;
+    place-items: center;
+
+    position: relative;
+    height: 100%;
+    width: 15%;
+    margin-left: 5%;
+}
+
+.TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container img {
+    position: absolute;
+}
+
+#volumeControlZero,
+#volumeControlOne,
+#volumeControlTwo {
+    visibility: hidden;
+}
+
+/* volume slider */
+#volumeSliderID {
+    /* the parent container of the slider */
+    position: relative;
+    width: 100%;
+
+    height: 100%;
+
+    display: grid;
+    place-items: center;
+}
+
+/* the actual slider */
+#volumeSliderID input[type="range"] {
+    -webkit-appearance: none;
+    position: relative;
+    width: 70%;
+    height: 0.15rem;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    background: transparent;
+    backdrop-filter: contrast(0.2) brightness(4);
+
+
+
+}
+
+#volumeSliderID input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 0.7rem;
+    width: 0.7rem;
+    border-radius: 50%;
+    cursor: pointer;
+
+    background: var(--indigo-0);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 0px 1px inset, rgba(64, 61, 57, 0.4) 0px 0px 0px 01px;
+}
+
+#volumeSliderID input[type=range]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+
+.TOPRIGHT-accountcontrols-buttonarea-container {
+    position: relative;
+    height: 100%;
+    background-color: red;
+    width: calc(100% - var(--TOPRIGHT-accountcontrols-volumeslider-width));
+
+}
 
 /*
 #upNextQueueButtonBackground {
