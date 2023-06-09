@@ -31,7 +31,7 @@
 
 #PLAYERplayButton,
 #PLAYERshuffleButton,
-#PLAYERlastButton,
+#PLAYERbackButton,
 #PLAYERnextButton,
 #PLAYERloopButton {
     filter: var(--make-svg-grey);
@@ -39,7 +39,7 @@
 
 #PLAYERplayButton:hover,
 #PLAYERshuffleButton:hover,
-#PLAYERlastButton:hover,
+#PLAYERbackButton:hover,
 #PLAYERnextButton:hover,
 #PLAYERloopButton:hover {
     filter: none;
