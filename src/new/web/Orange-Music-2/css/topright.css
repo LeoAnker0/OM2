@@ -42,7 +42,7 @@
 #PLAYERbackButton:hover,
 #PLAYERnextButton:hover,
 #PLAYERloopButton:hover {
-    filter: none;
+    filter: none !important;
 }
 
 .svg-image-buttons-relative-container {

@@ -6,6 +6,13 @@ import './css/layout.css';
 import './css/topleft.css';
 import './css/topright.css';
 
+/* immediate priority 
+
+we need real icons for loop song, and also pause
+
+*/
+
+
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
 document.getElementById('app').innerHTML = layout;
@@ -21,8 +28,9 @@ loadMAINtopright();
 creating functions that set the different states of the playback buttons,
 so fx: changing the filter of the buttons, or changing out the button for a different one
 */
-import { setEventListenersForPlaybackcontrols } from './js/playbackControls.js';
+import { setEventListenersForPlaybackcontrols /*these probably shouldn't be imported here, but oh well..., shuffleStateChange, loopStateChange, playStateChange*/ } from './js/playbackControls.js';
 setEventListenersForPlaybackcontrols();
+
 
 /* starts the event listeners for the search bar */
 import { setEventListenersForSearchbar } from './js/search.js';
