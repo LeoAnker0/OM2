@@ -19,6 +19,7 @@ export function setEventListenersForPlaybackcontrols() {
     playButton.addEventListener('click', playClicked);
     nextButton.addEventListener('click', nextClicked);
     loopButton.addEventListener('click', loopClicked);
+    return
 
 
 }
@@ -26,22 +27,27 @@ export function setEventListenersForPlaybackcontrols() {
 /* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
 function shuffleClicked() {
     console.log("shuffleClicked");
+    return
 }
 
 function backClicked() {
     console.log("backClicked");
+    return
 }
 
 function playClicked() {
     console.log("playClicked");
+    return
 }
 
 function nextClicked() {
     console.log("nextClicked");
+    return
 }
 
 function loopClicked() {
     console.log("loopClicked");
+    return
 }
 
 
@@ -49,7 +55,6 @@ function loopClicked() {
 export function shuffleStateChange(state) {
     /* takes in two possible values: on or off */
     const shuffleButton = document.getElementById("PLAYERshuffleButton");
-
 
     if (state === "on") {
         //console.log("filter was added");
@@ -109,14 +114,3 @@ export function playStateChange(state) {
     return
 
 }
-
-
-
-
-
-
-
-
-
-
-/**/

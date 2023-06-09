@@ -1,3 +1,4 @@
+/* a darkening blur with added grain noise */
 .MATERIAL-blur-1 {
     background-color: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(5px) contrast(0.8) brightness(0.80);
@@ -21,18 +22,33 @@
     height: 100%;
     pointer-events: none;
     opacity: 0.4;
-    filter: url(#noise);
+    filter: url(#noise1);
 }
 
-
+/* a simple lightening blur */
 .MATERIAL-blur-2 {
     background-color: rgba(256, 256, 256, 0.2);
-    backdrop-filter: blur(2px) contrast(0.6) brightness(0.8);
+    backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
     overflow: hidden;
 
 }
 
+/* a darkening blur with added mushroom noise  */
+.MATERIAL-blur-3 {
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(5px) contrast(0.8) brightness(0.80);
 
-.MATERIAL-black {
-    background-color: blueviolet;
+    overflow: hidden;
+}
+
+.MATERIAL-blur-3:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.4;
+    filter: url(#noise2);
 }

@@ -1,16 +1,5 @@
 import { svgImports } from './importAssets.js';
 
-/*
-export function loadMAINnav() {
-    let replacedContent = navBar;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-
-    document.getElementById('MAINnav').innerHTML = replacedContent;
-}*/
-
 import topleft from '../html/topleft.html?raw';
 import topright from '../html/topright.html?raw';
 
@@ -23,6 +12,7 @@ export function loadMAINtopleft() {
     }
 
     document.getElementById(IDofElement).innerHTML = replacedContent;
+    return
 }
 export function loadMAINtopright() {
     let IDofElement = "toprightContentArea";
@@ -34,4 +24,5 @@ export function loadMAINtopright() {
     }
 
     document.getElementById(IDofElement).innerHTML = replacedContent;
+    return
 }
