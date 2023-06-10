@@ -8,7 +8,7 @@ import icons_volume1 from '../assets/icons/volume_1.svg';
 import icons_orangeMusicLogoWhite from '../assets/icons/orange_music_logo_white.svg';
 import icons_searchIcon from '../assets/icons/search_icon.svg';
 import icons_orangeMusicTextLogoBlackPng from '../assets/icons/orange_music_text_logo_black.png';
-import icons_upNextQueueButton from '../assets/icons/up_next_queue_button.svg';
+import icons_queueButton from '../assets/icons/up_next_queue_button.svg';
 import icons_orangeMusicLogoYellow from '../assets/icons/orange_music_logo_yellow.svg';
 import icons_playlist from '../assets/icons/playlist.svg';
 import icons_loopButton from '../assets/icons/loop_button.svg';
@@ -49,7 +49,7 @@ export const svgImports = {
     icons_orangeMusicLogoWhite,
     icons_searchIcon,
     icons_orangeMusicTextLogoBlackPng,
-    icons_upNextQueueButton,
+    icons_queueButton,
     icons_orangeMusicLogoYellow,
     icons_playlist,
     icons_loopButton,

@@ -165,25 +165,28 @@
 .TOPRIGHT-accountcontrols-buttonarea-container {
     position: relative;
     height: 100%;
-    background-color: red;
+    //background-color: red;
     width: calc(100% - var(--TOPRIGHT-accountcontrols-volumeslider-width));
+    display: flex;
+    justify-content: space-apart;
+}
+
+.TOPRIGHT-accountcontrols-buttonarea-queue-container {
+    position: relative;
+    height: 100%;
+    width: 4rem;
 
 }
 
-/*
-#upNextQueueButtonBackground {
-    position: absolute;
-    height: 1.6rem;
-    width: 2rem;
-    background-color: var(--off-white);
-    border-radius: 5px;
-    background-color: transparent;
+.TOPRIGHT-accountcontrols-buttonarea-queue-positioner {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
 }
 
 #queueIcon {
     position: relative;
-    top: 10%;
-    left: 24%;
     filter: var(--make-svg-grey);
 }
-*/
