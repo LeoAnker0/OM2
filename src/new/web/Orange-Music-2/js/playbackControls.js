@@ -114,3 +114,71 @@ export function playStateChange(state) {
     return
 
 }
+
+
+
+/* volume controls, i figure they can be lumped in here as well? */
+export function setEventListenersForVolume() {
+    const rangeInputs = document.querySelectorAll('input[type="range"]')
+
+    rangeInputs.forEach(input => {
+        input.addEventListener('input', handleInputChange)
+    })
+}
+
+function handleInputChange(e) {
+    function between(x, min, max) {
+        return x >= min && x <= max;
+    }
+
+    function showVolumeIcon(state) {
+        /* the only valid inputs are of the four ids below*/
+        const volumeStates = ['volumeControlZero', 'volumeControlOne', 'volumeControlTwo', 'volumeControlThree'];
+
+        for (let i = 0; i < 4; i++) {
+            let currentState = volumeStates[i]
+            if (currentState != state) {
+                document.getElementById(currentState).style.visibility = 'hidden';
+            }
+        }
+        document.getElementById(state).style.visibility = "visible";
+        return
+    }
+
+    let target = e.target
+    if (e.target.type !== 'range') {
+        target = document.getElementById('volumeRangeSlider')
+    }
+    const volume = target.value
+
+
+    if (between(volume, 0, 1)) {
+        showVolumeIcon('volumeControlZero');
+        return
+    }
+    if (between(volume, 2, 33)) {
+        showVolumeIcon('volumeControlOne');
+        return
+    }
+    if (between(volume, 34, 66)) {
+        showVolumeIcon('volumeControlTwo');
+        return
+    }
+    if (between(volume, 67, 100)) {
+        showVolumeIcon('volumeControlThree');
+        return
+    }
+    return
+
+}
+
+
+
+
+
+
+
+
+
+
+/**/

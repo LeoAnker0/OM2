@@ -48,7 +48,7 @@
     filter: none !important;
 }
 
-.svg-image-buttons-relative-container {
+.TOPRIGHT-svg-image-buttons-relative-container {
     position: relative;
     width: 100%;
     height: 100%;
@@ -56,7 +56,7 @@
     filter: none;
 }
 
-.svg-image-buttons-absolute-container {
+.TOPRIGHT-svg-image-buttons-absolute-container {
     position: absolute;
     margin: 0;
     top: 50%;
@@ -104,6 +104,7 @@
 
 .TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container img {
     position: absolute;
+    left: -03%;
 }
 
 #volumeControlZero,
@@ -111,6 +112,7 @@
 #volumeControlTwo {
     visibility: hidden;
 }
+
 
 /* volume slider */
 #volumeSliderID {
@@ -136,9 +138,6 @@
 
     background: transparent;
     backdrop-filter: contrast(0.2) brightness(4);
-
-
-
 }
 
 #volumeSliderID input[type="range"]::-webkit-slider-thumb {
@@ -159,6 +158,8 @@
     background: transparent;
     cursor: pointer;
 }
+
+
 
 
 .TOPRIGHT-accountcontrols-buttonarea-container {

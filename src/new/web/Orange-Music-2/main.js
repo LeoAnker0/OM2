@@ -28,8 +28,9 @@ loadMAINtopright();
 creating functions that set the different states of the playback buttons,
 so fx: changing the filter of the buttons, or changing out the button for a different one
 */
-import { setEventListenersForPlaybackcontrols /*these probably shouldn't be imported here, but oh well..., shuffleStateChange, loopStateChange, playStateChange*/ } from './js/playbackControls.js';
+import { setEventListenersForPlaybackcontrols, setEventListenersForVolume /*these probably shouldn't be imported here, but oh well..., shuffleStateChange, loopStateChange, playStateChange*/ } from './js/playbackControls.js';
 setEventListenersForPlaybackcontrols();
+setEventListenersForVolume();
 
 
 /* starts the event listeners for the search bar */
