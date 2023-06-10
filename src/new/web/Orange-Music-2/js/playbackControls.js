@@ -172,17 +172,6 @@ function handleInputChange(e) {
 
 }
 
-/* toggle the queue background */
-export function queueStateChange(state) {
-    /* takes two possible values of visible or hidden */
-
-    console.log(state);
-}
-
-
-
-
-
 
 
 

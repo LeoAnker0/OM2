@@ -4,6 +4,7 @@
     --TOPRIGHT-playbackcontrols-leftoffset: calc((100% - var(--TOPRIGHT-playbackcontrols-width)) / 2);
 
     --TOPRIGHT-accountcontrols-volumeslider-width: 8rem;
+    --TOPRIGHT-accountcontrols-queue-opacity: 0%;
 }
 
 .TOPRIGHT-topHalf-right-content {
@@ -184,6 +185,19 @@
     place-items: center;
     height: 100%;
     width: 100%;
+}
+
+.TOPRIGHT-accountcontrols-buttonarea-queue-positioner::before {
+    --height-of-queueBackground: 2rem;
+    content: "";
+    position: absolute;
+    height: var(--height-of-queueBackground);
+    aspect-ratio: 1/1;
+    background-color: white;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    opacity: var(--TOPRIGHT-accountcontrols-queue-opacity);
 }
 
 #queueIcon {
