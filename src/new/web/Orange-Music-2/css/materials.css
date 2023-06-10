@@ -23,6 +23,7 @@
     pointer-events: none;
     opacity: 0.4;
     filter: url(#noise1);
+    z-index: -1;
 }
 
 /* a simple lightening blur */
@@ -51,4 +52,42 @@
     pointer-events: none;
     opacity: 0.4;
     filter: url(#noise2);
+    z-index: -1;
+}
+
+/* a lightening blur with added mushroom noise  */
+.MATERIAL-blur-4 {
+    background-color: rgba(256, 256, 256, 0.25);
+    backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
+    background-image:
+        radial-gradient(at 50% 50%, hsla(230, 100%, 80%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 100% 00%, hsla(255, 100%, 75%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 00% 100%, hsla(162, 100%, 80%, 0.5) 0px, transparent 100%);
+
+    overflow: hidden;
+}
+
+
+.MATERIAL-blur-4::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    /* Adjust the top and left values to position the pattern */
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.MATERIAL-blur-4::before {
+    --circle-size: 5px;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
+    background-size: var(--circle-size) var(--circle-size);
+    /* Adjust the size of the dots */
+    background-position: 0 0, 5px 5px;
+    /* Adjust the position of the dots */
+    z-index: -1;
+
+
 }

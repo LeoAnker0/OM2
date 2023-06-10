@@ -1,16 +1,21 @@
 let queueState = "hidden";
 
+import { loadQUEUEbody } from './exportHTMLchunks.js';
 
 export function initialiseQueue() {
     const queueButton = document.getElementById("queueButton");
     queueStateChange(queueState);
+    queueButton.addEventListener('click', queueToggle);
 
-    queueButton.addEventListener('click', queueClicked);
+    /* load in the html for loading in the queue */
+    loadQUEUEbody();
 
+
+    return
 }
 
 /* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
-function queueClicked() {
+function queueToggle() {
     if (queueState === "hidden") {
         queueState = "visible";
         queueStateChange(queueState);
@@ -27,9 +32,6 @@ function queueClicked() {
 
         return
     }
-    //queueState = "hidden";
-
-
     return
 }
 

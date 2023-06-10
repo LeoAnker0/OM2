@@ -5,6 +5,7 @@ import './css/materials.css';
 import './css/layout.css';
 import './css/topleft.css';
 import './css/topright.css';
+import './css/queue.css';
 
 /* immediate priority 
 
