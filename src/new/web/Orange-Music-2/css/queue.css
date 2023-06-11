@@ -4,17 +4,19 @@
 
 }
 
+/* queue body */
 .QUEUE-environment {
     position: absolute;
     height: 100%;
     width: 100%;
     z-index: 20;
     top: 0;
-    left: calc(100% + var(--width-of-left-bar-fortop));
+    right: calc((var(--width-of-left-bar-fortop) + 5rem) * -1);
     pointer-events: none;
 
-    transition-property: left;
+    transition-property: right;
     transition-duration: var(--transition-speed);
+    transition-timing-function: ease-in-out;
 }
 
 

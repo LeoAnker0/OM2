@@ -46,14 +46,14 @@ function queueStateChange(state) {
     if (state == "visible") {
         queueIcon.style.filter = "var(--make-svg-black)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 100%";
-        queueEnvironment.style.left = "0%";
+        queueEnvironment.style.right = "0%";
 
         return
     }
     if (state == "hidden") {
         queueIcon.style.filter = "var(--make-svg-grey)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 0%";
-        queueEnvironment.style.left = "calc(100% + var(--width-of-left-bar-fortop))";;
+        queueEnvironment.style.right = "calc((var(--width-of-left-bar-fortop) + 5rem) * -1)";
 
         return
     }

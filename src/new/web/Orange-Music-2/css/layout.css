@@ -28,7 +28,9 @@
 
 }
 
-@media (max-width: 750px) {
+@media (max-width: 850px) {
+
+    /*
     :root {
         --width-of-left-bar-fortop: 0rem;
 
@@ -36,6 +38,15 @@
 
     .topHalf-left {
         visibility: hidden;
+    }
+    */
+    .TOPRIGHT-accountcontrols-container,
+    .TOPRIGHT-playbackcontrols-container {
+        visibility: hidden;
+    }
+
+    .TOPRIGHT-lcd-container {
+        width: 100%;
     }
 
 
