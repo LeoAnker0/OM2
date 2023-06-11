@@ -1,14 +1,14 @@
-let queueState = "hidden";
+let queueState = "visible";
 
 import { loadQUEUEbody } from './exportHTMLchunks.js';
 
 export function initialiseQueue() {
+    loadQUEUEbody();
     const queueButton = document.getElementById("queueButton");
     queueStateChange(queueState);
     queueButton.addEventListener('click', queueToggle);
 
     /* load in the html for loading in the queue */
-    loadQUEUEbody();
 
 
     return
@@ -41,15 +41,19 @@ function queueStateChange(state) {
     /* takes two possible values of visible or hidden */
     const queueButton = document.getElementById("queueButton");
     const queueIcon = document.getElementById("queueIcon");
+    const queueEnvironment = document.getElementById("QUEUEenvironment");
 
     if (state == "visible") {
         queueIcon.style.filter = "var(--make-svg-black)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 100%";
+        queueEnvironment.style.left = "0%";
+
         return
     }
     if (state == "hidden") {
         queueIcon.style.filter = "var(--make-svg-grey)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 0%";
+        queueEnvironment.style.left = "calc(100% + var(--width-of-left-bar-fortop))";;
 
         return
     }

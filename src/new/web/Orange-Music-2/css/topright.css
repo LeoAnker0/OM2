@@ -166,8 +166,10 @@
 .TOPRIGHT-accountcontrols-buttonarea-container {
     position: relative;
     height: 100%;
-    //background-color: red;
-    width: calc(100% - var(--TOPRIGHT-accountcontrols-volumeslider-width));
+    //width: calc(100% - var(--TOPRIGHT-accountcontrols-volumeslider-width));
+    //max-width: 6rem;
+    width: 6rem;
+    right: 0;
     display: flex;
     justify-content: space-apart;
 }

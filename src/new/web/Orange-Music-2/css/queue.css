@@ -1,24 +1,63 @@
-:root {}
+:root {
+    --QUEUE-outline-colour: white;
+    --QUEUE-width: 0.2rem;
+
+}
+
+.QUEUE-environment {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 20;
+    top: 0;
+    left: calc(100% + var(--width-of-left-bar-fortop));
+    pointer-events: none;
+
+    transition-property: left;
+    transition-duration: var(--transition-speed);
+}
+
 
 .QUEUE-container {
     position: absolute;
-    height: 100%;
-    width: 30%;
 
     width: var(--width-of-left-bar-fortop);
-    //height: calc(100% - var(--height-of-top));
-    height: 100%;
+    height: calc((100% - var(--height-of-top)) - 1rem);
 
-    z-index: 1;
-    bottom: 0;
-    right: 0;
+    z-index: 20;
+    top: calc((var(--height-of-top) / 2) + 2.1rem);
+    right: 1.5rem;
+    border-radius: 8px;
+    outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
+
 }
+
+.QUEUE-container-pointer {
+    --normal: 0.8rem;
+    --half: calc(var(--normal) / 2);
+
+
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: var(--half) solid transparent;
+    border-right: var(--half) solid transparent;
+    border-bottom: var(--normal) solid var(--QUEUE-outline-colour);
+    /* Adjust the color as desired */
+
+    z-index: 19;
+    top: calc(((var(--height-of-top) / 2) + 2.1rem) - var(--normal));
+    left: calc(100% - 4.3rem);
+
+
+}
+
 
 .QUEUE-containerL2 {
     position: absolute;
     height: calc(100% - var(--height-of-top));
     width: 100%;
     bottom: 0%;
-    background-color: red;    opacity: 0.5;
+    //background-color: red;    opacity: 0.5;
 
 }
