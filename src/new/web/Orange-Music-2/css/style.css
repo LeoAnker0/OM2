@@ -1,5 +1,5 @@
 :root {
-    font-family: '';
+    font-family: 'Libre Franklin';
     font-weight: 400;
 
 
@@ -32,12 +32,12 @@
     --grape-6: hsl(288, 80%, 41%);
     --grape-7: hsl(288, 80%, 32%);
     --grape-8: hsl(288, 80%, 23%);
-    --violet-0: hsl(255, 80%, 90%);
+    --violet-0: hsl(255, 80%, 95%);
     --violet-1: hsl(255, 80%, 86%);
     --violet-2: hsl(255, 80%, 77%);
     --violet-3: hsl(255, 80%, 68%);
     --violet-4: hsl(255, 80%, 59%);
-    --violet-5: hsl(255, 80%, 50%);
+    --violet-5: hsl(255, 80%, 48%);
     --violet-6: hsl(255, 80%, 41%);
     --violet-7: hsl(255, 80%, 32%);
     --violet-8: hsl(255, 80%, 23%);

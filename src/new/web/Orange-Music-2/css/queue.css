@@ -1,6 +1,8 @@
 :root {
-    --QUEUE-outline-colour: white;
+    --QUEUE-outline-colour: var(--violet-5);
     --QUEUE-width: 0.2rem;
+
+    --QUEUE-top-width: 3rem;
 
 }
 
@@ -56,27 +58,45 @@
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
-
 
 .QUEUE-top {
     position: relative;
-    background-color: white;
-    height: 4rem;
+    background-color: hsla(255, 80%, 46%, 0.5);
+    height: var(--QUEUE-top-width);
     width: 100%;
 }
+
+.QUEUE-top-text {
+    position: relative;
+    width: 100%;
+    height: 2rem;
+    padding-left: 0.8rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+}
+
+.QUEUE-top-text-title {
+    font-size: 1.4rem;
+    color: var(--violet-0);
+    font-weight: 600;
+    filter: drop-shadow(1px 1px 0px var(--violet-6));
+}
+
+
+
+
+
 
 .QUEUE-bottom {
     position: relative;
     width: 100%;
-    height: calc(100% - 4rem);
+    height: calc(100% - var(--QUEUE-top-width));
     bottom: 0;
     border-radius: 8px;
-    outline: 4px solid white;
+    outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
 }
-
-
-
 
 
 

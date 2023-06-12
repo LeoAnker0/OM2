@@ -4,9 +4,9 @@
 
     --searchbar-borderradius: 8px;
     --searchbar-container-after-height: 38%;
-    --searchbar-container-after-width: calc(100% - (2 * 0.4rem));
-    --searchbar-container-after-topoffset: 10%;
-    --searchbar-container-after-leftoffset: 0.4rem;
+    --searchbar-container-after-leftoffset: 0.6rem;
+    --searchbar-container-after-width: calc(100% - (2 * var(--searchbar-container-after-leftoffset)));
+    --searchbar-container-after-topoffset: 15%;
 
     --searchbar-container-after-background-colour: var(--dgrey-8);
     --searchbar-container-after-outline-colour: var(--lgrey-8);
