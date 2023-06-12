@@ -38,28 +38,49 @@
     --normal: 0.8rem;
     --half: calc(var(--normal) / 2);
 
-
     position: absolute;
     width: 0;
     height: 0;
+
+    /* triangle maker */
     border-left: var(--half) solid transparent;
     border-right: var(--half) solid transparent;
     border-bottom: var(--normal) solid var(--QUEUE-outline-colour);
-    /* Adjust the color as desired */
 
     z-index: 19;
     top: calc(((var(--height-of-top) / 2) + 2.1rem) - var(--normal));
     left: calc(100% - 4.3rem);
-
-
 }
-
 
 .QUEUE-containerL2 {
-    position: absolute;
-    height: calc(100% - var(--height-of-top));
+    position: relative;
     width: 100%;
-    bottom: 0%;
-    //background-color: red;    opacity: 0.5;
-
+    height: 100%;
 }
+
+
+.QUEUE-top {
+    position: relative;
+    background-color: white;
+    height: 4rem;
+    width: 100%;
+}
+
+.QUEUE-bottom {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 4rem);
+    bottom: 0;
+    border-radius: 8px;
+    outline: 4px solid white;
+}
+
+
+
+
+
+
+
+
+
+/**/
