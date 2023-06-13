@@ -1,5 +1,6 @@
 :root {
     --QUEUE-outline-colour: var(--violet-5);
+    --QUEUE-outline-colour: white;
     --QUEUE-width: 0.2rem;
 
     --QUEUE-top-width: 3rem;
@@ -34,6 +35,8 @@
     border-radius: 8px;
     outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
 
+    pointer-events: visible;
+
 }
 
 .QUEUE-container-pointer {
@@ -64,6 +67,7 @@
 .QUEUE-top {
     position: relative;
     background-color: hsla(255, 80%, 46%, 0.5);
+    background-color: hsla(0, 0%, 100%, 0.5);
     height: var(--QUEUE-top-width);
     width: 100%;
 }
@@ -74,16 +78,18 @@
     height: 2rem;
     padding-left: 0.8rem;
     padding-right: 1rem;
-    padding-top: 0.5rem;
+    padding-top: 0.7rem;
 }
 
 .QUEUE-top-text-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--violet-0);
     font-weight: 600;
     filter: drop-shadow(1px 1px 0px var(--violet-6));
-}
 
+    color: black;
+    filter: none;
+}
 
 
 
@@ -96,6 +102,155 @@
     bottom: 0;
     border-radius: 8px;
     outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
+    overflow: scroll;
+}
+
+
+
+/* queue item ------------------------------- */
+.QUEUE-item-container {
+    position: relative;
+    height: 2rem;
+    width: 100%;
+}
+
+
+
+.up-next-queue-list {
+    position: relative;
+    width: 100%;
+}
+
+.up-next-queue-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.absolute-remove-from-queue {
+    position: absolute;
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-color: var(--orange-2);
+    //background-color: red;
+    top: 0.3rem;
+    left: 0.7rem;
+    z-index: 10;
+    display: none;
+    cursor: pointer;
+}
+
+.up-next-queue-item:hover .absolute-remove-from-queue {
+    display: block;
+}
+
+.white-line {
+    position: relative;
+    top: 42%;
+    height: 2px;
+    width: 50%;
+    left: 25%;
+    background-color: white;
+}
+
+.up-next-queue-item-box {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.up-next-queue-image-container {
+    position: relative;
+    height: 2.3rem;
+    width: 2.3rem;
+    margin-left: 1.2rem;
+}
+
+.up-next-queue-image {
+    height: 100%;
+    width: 100%;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.up-next-queue-text-container {
+    position: relative;
+    height: 2.3rem;
+    width: 55%;
+    //background-color: orange;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.up-next-queue-text-song-title {
+    position: relative;
+    height: 50%;
+    font-size: 0.85rem;
+    color: var(--off-white);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.up-next-queue-text-song-artist {
+    position: relative;
+    font-size: 0.85rem;
+    height: 50%;
+    color: var(--pale-grey);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.up-next-queue-time-container {
+    position: relative;
+    height: 2.3rem;
+    width: 2.3rem;
+    margin-right: 0.5rem;
+    //background-color: rebeccapurple;
+    cursor: pointer;
+}
+
+.up-next-queue-time-span {
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: var(--pale-grey);
+    font-size: 0.85rem;
+}
+
+.up-next-queue-item:hover .up-next-queue-time-span {
+    display: none;
+}
+
+.up-next-queue-item-context-call {
+    display: none;
+    position: relative;
+    top: 18%;
+    left: 15%;
+    //-ms-transform: translateY(-50%);
+    //transform: translateY(-50%);
+    //margin-bottom: 1rem;
+    filter: var(--make-svg-orange);
+
+}
+
+.up-next-queue-item:hover .up-next-queue-item-context-call {
+    display: block;
+}
+
+.up-next-queue-item-underline {
+    position: relative;
+    width: 65%;
+    left: 25%;
+    height: 0.05rem;
+    background-color: var(--up-next-queue-item-underline);
 }
 
 
@@ -103,4 +258,17 @@
 
 
 
-/**/
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+*/

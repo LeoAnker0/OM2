@@ -158,3 +158,11 @@ body {
     opacity: 0;
 
 }
+
+
+/*
+*::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+*/

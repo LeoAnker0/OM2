@@ -10,7 +10,7 @@ export function initialiseQueue() {
 
     /* load in the html for loading in the queue */
 
-
+    hydrateQueue();
     return
 }
 
@@ -59,3 +59,75 @@ function queueStateChange(state) {
     }
     return
 }
+
+
+import queueItem from '../html/queueItem.html?raw';
+
+/* update the queue display blocks
+
+we want the only export here to be the update function
+ */
+function hydrateQueue() {
+    const queueContainer = document.getElementById("QUEUEbottomContainer");
+
+    let htmls = ""
+
+    let blocksNeeded = 25;
+
+    queueContainer.innerHTML = "";
+    for (let i = 0; i < blocksNeeded; i++) {
+        htmls = hydrateItem(i)
+        queueContainer.innerHTML += htmls;
+
+    }
+    return
+}
+
+
+function hydrateItem(thing) {
+    const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist'];
+
+    const imgSrc = "https://plus.unsplash.com/premium_photo-1664478250378-4afecb3f977c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hlZXNlJTIwc3F1YXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
+    const songTitle = "song title" + thing;
+    const songArtist = "song artist" + thing;
+
+
+
+    let replacedContent = queueItem;
+    for (let i = 0; i < listOfThings.length; i++) {
+        const placeholder = listOfThings[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = thing;
+
+        const currentThing = listOfThings[i];
+
+        if (currentThing == 'QUEUE_item_image') {
+            value = imgSrc;
+        }
+
+        if (currentThing == 'QUEUE_item_title') {
+            value = songTitle;
+        }
+
+        if (currentThing == 'QUEUE_item_artist') {
+            value = songArtist;
+        }
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
+    return replacedContent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*  */
