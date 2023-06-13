@@ -83,13 +83,15 @@ function hydrateQueue() {
     return
 }
 
+import icons_menuOptionsButton from '../assets/icons/menu_options_button.svg';
 
 function hydrateItem(thing) {
-    const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist'];
+    const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
 
     const imgSrc = "https://plus.unsplash.com/premium_photo-1664478250378-4afecb3f977c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hlZXNlJTIwc3F1YXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
     const songTitle = "song title" + thing;
     const songArtist = "song artist" + thing;
+    const songDuration = "1:32";
 
 
 
@@ -111,6 +113,14 @@ function hydrateItem(thing) {
 
         if (currentThing == 'QUEUE_item_artist') {
             value = songArtist;
+        }
+
+        if (currentThing == 'icons_menuOptionsButton') {
+            value = icons_menuOptionsButton;
+        }
+
+        if (currentThing == 'QUEUE_item_timeIndicator') {
+            value = songDuration;
         }
 
         replacedContent = replacedContent.replace(regex, value);

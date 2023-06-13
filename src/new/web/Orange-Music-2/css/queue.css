@@ -102,26 +102,19 @@
     bottom: 0;
     border-radius: 8px;
     outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
+
+.QUEUE-bottom::-webkit-scrollbar {
+    width: 0.5rem;
+
+}
 
 
 /* queue item ------------------------------- */
 .QUEUE-item-container {
-    position: relative;
-    height: 2rem;
-    width: 100%;
-}
-
-
-
-.up-next-queue-list {
-    position: relative;
-    width: 100%;
-}
-
-.up-next-queue-item {
     position: relative;
     width: 100%;
     display: flex;
@@ -130,33 +123,6 @@
     flex-wrap: wrap;
 }
 
-.absolute-remove-from-queue {
-    position: absolute;
-    height: 0.8rem;
-    width: 0.8rem;
-    border-radius: 50%;
-    border: 2px solid white;
-    background-color: var(--orange-2);
-    //background-color: red;
-    top: 0.3rem;
-    left: 0.7rem;
-    z-index: 10;
-    display: none;
-    cursor: pointer;
-}
-
-.up-next-queue-item:hover .absolute-remove-from-queue {
-    display: block;
-}
-
-.white-line {
-    position: relative;
-    top: 42%;
-    height: 2px;
-    width: 50%;
-    left: 25%;
-    background-color: white;
-}
 
 .up-next-queue-item-box {
     margin-top: 0.6rem;
@@ -191,7 +157,7 @@
     position: relative;
     height: 50%;
     font-size: 0.85rem;
-    color: var(--off-white);
+    color: white;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -201,7 +167,7 @@
     position: relative;
     font-size: 0.85rem;
     height: 50%;
-    color: var(--pale-grey);
+    color: white;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -212,7 +178,6 @@
     height: 2.3rem;
     width: 2.3rem;
     margin-right: 0.5rem;
-    //background-color: rebeccapurple;
     cursor: pointer;
 }
 
@@ -221,22 +186,19 @@
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    color: var(--pale-grey);
+    color: white;
     font-size: 0.85rem;
 }
 
 .up-next-queue-item:hover .up-next-queue-time-span {
-    display: none;
+    display: block;
 }
 
 .up-next-queue-item-context-call {
-    display: none;
+    display: block;
     position: relative;
     top: 18%;
     left: 15%;
-    //-ms-transform: translateY(-50%);
-    //transform: translateY(-50%);
-    //margin-bottom: 1rem;
     filter: var(--make-svg-orange);
 
 }
@@ -250,7 +212,7 @@
     width: 65%;
     left: 25%;
     height: 0.05rem;
-    background-color: var(--up-next-queue-item-underline);
+    background-color: white;
 }
 
 
