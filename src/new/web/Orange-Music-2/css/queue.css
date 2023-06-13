@@ -113,6 +113,13 @@
 }
 
 
+:root {
+    --QUEUE-toptext-colour: hsla(0, 0%, 100%, 1);
+    --QUEUE-bottomtext-colour: hsla(255, 45%, 95%, 1);
+    --QUEUE-righttext-colour: hsla(255, 65%, 85%, 1);
+}
+
+
 /* queue item ------------------------------- */
 .QUEUE-item-container {
     position: relative;
@@ -123,96 +130,107 @@
     flex-wrap: wrap;
 }
 
+/* item underline */
+.QUEUE-item-container::after {
+    content: "";
+    position: relative;
+    width: 65%;
+    left: 25%;
+    height: 0.05rem;
+    background-color: white;
+    opacity: 0.2;
+}
 
-.up-next-queue-item-box {
+/* image container */
+.QUEUE-item-up-next-queue-image-container {
+    position: relative;
+    height: 2.3rem;
+    width: 2.3rem;
+    object-fit: cover;
+    margin-left: 0.8rem;
+
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
 }
 
-.up-next-queue-image-container {
-    position: relative;
-    height: 2.3rem;
-    width: 2.3rem;
-    margin-left: 1.2rem;
-}
-
-.up-next-queue-image {
+.QUEUE-item-up-next-queue-image {
     height: 100%;
     width: 100%;
     border-radius: 2px;
     object-fit: cover;
 }
 
-.up-next-queue-text-container {
+/* text container */
+.QUEUE-item-up-next-queue-text-container {
     position: relative;
     height: 2.3rem;
     width: 55%;
-    //background-color: orange;
     display: flex;
     flex-direction: column;
 
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
 }
 
-.up-next-queue-text-song-title {
+.QUEUE-item-up-next-queue-text-song-title {
     position: relative;
     height: 50%;
-    font-size: 0.85rem;
-    color: white;
+    font-size: 0.95rem;
+    color: var(--QUEUE-toptext-colour);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.up-next-queue-text-song-artist {
+.QUEUE-item-up-next-queue-text-song-artist {
     position: relative;
     font-size: 0.85rem;
     height: 50%;
-    color: white;
+    color: var(--QUEUE-bottomtext-colour);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.up-next-queue-time-container {
+/* time and menu -- */
+.QUEUE-item-up-next-queue-time-container {
     position: relative;
     height: 2.3rem;
     width: 2.3rem;
     margin-right: 0.5rem;
     cursor: pointer;
+
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
 }
 
-.up-next-queue-time-span {
+/* the time indicator, and it's hover hidden */
+.QUEUE-item-up-next-queue-time-span {
     position: absolute;
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    color: white;
+    color: var(--QUEUE-righttext-colour);
     font-size: 0.85rem;
+
+    visibility: visible;
 }
 
-.up-next-queue-item:hover .up-next-queue-time-span {
-    display: block;
+.QUEUE-item-container:hover .QUEUE-item-up-next-queue-time-span {
+    visibility: hidden;
 }
 
-.up-next-queue-item-context-call {
-    display: block;
+/* the menu button, and it's hover visible */
+.QUEUE-item-up-next-queue-item-context-call {
+    visibility: hidden;
     position: relative;
     top: 18%;
     left: 15%;
     filter: var(--make-svg-orange);
-
 }
 
-.up-next-queue-item:hover .up-next-queue-item-context-call {
-    display: block;
-}
-
-.up-next-queue-item-underline {
-    position: relative;
-    width: 65%;
-    left: 25%;
-    height: 0.05rem;
-    background-color: white;
+.QUEUE-item-container:hover .QUEUE-item-up-next-queue-item-context-call {
+    visibility: visible;
 }
 
 

@@ -89,8 +89,8 @@ function hydrateItem(thing) {
     const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
 
     const imgSrc = "https://plus.unsplash.com/premium_photo-1664478250378-4afecb3f977c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hlZXNlJTIwc3F1YXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
-    const songTitle = "song title" + thing;
-    const songArtist = "song artist" + thing;
+    const songTitle = "song title " + thing;
+    const songArtist = "song artist " + thing;
     const songDuration = "1:32";
 
 
