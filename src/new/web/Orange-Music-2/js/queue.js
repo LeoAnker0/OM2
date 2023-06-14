@@ -173,6 +173,8 @@ function handleQueueItemRemove(event) {
     updateQueue();
 }
 
+import { MENUdisplay } from './menu.js';
+
 function handleQueueDisplayMenu(event) {
     event.stopPropagation();
     const clickedItem = event.target;
@@ -180,6 +182,17 @@ function handleQueueDisplayMenu(event) {
     console.log('Clicked show menu:', songId);
 
     /* call an imported function */
+    const params = [{
+        displayText: 'Play Next',
+        optionalSVG: 'playlistNext.svg',
+        function: 'callSomeFunction()',
+    }, {
+        displayText: 'Play Later',
+        optionalSVG: 'playlistLater.svg',
+        function: 'callSomeFunction()',
+    }]
+
+    MENUdisplay(params, event);
 }
 
 function handleQueueItemClick(songId) {
