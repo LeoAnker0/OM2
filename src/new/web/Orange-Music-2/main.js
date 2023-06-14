@@ -6,6 +6,7 @@ import './css/layout.css';
 import './css/topleft.css';
 import './css/topright.css';
 import './css/queue.css';
+import './css/menu.css';
 
 /* immediate priority 
 
@@ -41,3 +42,39 @@ setEventListenersForVolume();
 /* starts the event listeners for the search bar */
 import { setEventListenersForSearchbar } from './js/search.js';
 setEventListenersForSearchbar();
+
+
+/* starting menus: init */
+import { MENUdisplay } from './js/menu.js';
+const params = [{
+    displayText: 'Play Next',
+    optionalSVG: 'playlistNext.svg',
+    function: 'callSomeFunction()',
+}, {
+    displayText: 'Play Later',
+    optionalSVG: 'playlistLater.svg',
+    function: 'callSomeFunction()',
+}]
+event = "";
+
+/*
+MENUdisplay(params, event);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/

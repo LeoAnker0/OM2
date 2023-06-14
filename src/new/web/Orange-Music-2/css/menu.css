@@ -1,0 +1,30 @@
+.menuModalEnvironment {
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+
+    z-index: 100;
+
+    display: none;
+}
+
+.menuModalBackground {
+    /*background-color: hsla(130, 60%, 50%, 0.5);
+    backdrop-filter: blur(0px);*/
+}
+
+.MENUmodalBody {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 12rem;
+    height: 16rem;
+    //background-color: red;
+    border-radius: 8px;
+    z-index: 2;
+
+    outline: 1px solid white;
+}
