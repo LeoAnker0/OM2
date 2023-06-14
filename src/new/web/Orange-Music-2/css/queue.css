@@ -91,6 +91,18 @@
     filter: none;
 }
 
+.QUEUE-top-text-clear {
+    position: absolute;
+
+    font-size: 1rem;
+    color: var(--violet-6);
+    font-weight: 400;
+    right: 3rem;
+    top: 1rem;
+
+
+}
+
 
 
 

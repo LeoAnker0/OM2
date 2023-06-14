@@ -5,8 +5,10 @@ import { loadQUEUEbody } from './exportHTMLchunks.js';
 export function initialiseQueue() {
     loadQUEUEbody();
     const queueButton = document.getElementById("queueButton");
+    const queueClearButton = document.getElementById("QUEUEclearQueueButton");
     queueStateChange(queueState);
     queueButton.addEventListener('click', queueToggle);
+    queueClearButton.addEventListener('click', queueClear);
 
     /* load in the html for loading in the queue */
 
@@ -124,6 +126,12 @@ function updateQueue() {
     }
 }
 
+function queueClear() {
+    songs = [];
+    updateQueue();
+    return
+}
+
 function handleDragStart(event) {
     const dragSource = event.target;
     event.dataTransfer.setData("text/plain", dragSource.dataset.songId);
@@ -233,7 +241,6 @@ function hydrateItem(song) {
 
 
 
-/* QUEUE item reomve from queue */
 
 
 
