@@ -69,9 +69,9 @@ we want the only export here to be the update function
  */
 
 const songs = [
-    { id: 1, name: "Song 1", artist: "Artist 1", duration: "3:45", coverImage: "song1.jpg" },
-    { id: 2, name: "Song 2", artist: "Artist 2", duration: "4:20", coverImage: "song2.jpg" },
-    { id: 3, name: "Song 3", artist: "Artist 3", duration: "2:55", coverImage: "song3.jpg" }
+    { id: 1, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 2, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 3, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://images.unsplash.com/photo-1603208636124-a12f78c1bb6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" }
 ];
 
 function hydrateQueue() {
@@ -82,8 +82,33 @@ function hydrateQueue() {
     for (let i = 0; i < songs.length; i++) {
         const song = songs[i];
         const html = hydrateItem(song);
-        queueContainer.innerHTML += html;
+        const div = document.createElement('div');
+        div.innerHTML = html;
+
+        // Add click event listener and set the song ID as a data attribute
+        div.addEventListener('click', function(event) {
+            const clickedItem = event.target;
+            const songId = clickedItem.dataset.songId;
+            handleQueueItemClick(songId);
+        });
+        div.dataset.songId = song.id;
+
+        queueContainer.appendChild(div);
     }
+}
+
+function handleQueueItemClick(songId) {
+    // Find the song object based on the song ID
+    const clickedSong = songs.find(song => song.id === parseInt(songId));
+
+    // Perform actions based on the clicked song
+    if (clickedSong) {
+        console.log('Clicked song:', clickedSong);
+        // Perform additional actions with the clicked song
+
+        return
+    }
+    return
 }
 
 import icons_menuOptionsButton from '../assets/icons/menu_options_button.svg';
@@ -116,6 +141,9 @@ function hydrateItem(song) {
 
         replacedContent = replacedContent.replace(regex, value);
     }
+    replacedContent = replacedContent.replace('<div', `<div data-song-id="${song.id}"`);
+
+
 
     return replacedContent;
 }

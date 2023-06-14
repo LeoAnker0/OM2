@@ -151,6 +151,8 @@
 
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
+
+    pointer-events: none;
 }
 
 .QUEUE-item-up-next-queue-image {
@@ -176,6 +178,8 @@
     outline: 2px solid white;
 
     visibility: hidden;
+
+    pointer-events: all;
 }
 
 /* le remove indicator */
@@ -209,6 +213,8 @@
 
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
+
+    pointer-events: none;
 }
 
 .QUEUE-item-up-next-queue-text-song-title {
