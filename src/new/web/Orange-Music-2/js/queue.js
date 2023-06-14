@@ -71,9 +71,11 @@ we want the only export here to be the update function
  */
 
 let songs = [
-    { id: 1, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
-    { id: 2, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
-    { id: 3, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://images.unsplash.com/photo-1603208636124-a12f78c1bb6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" }
+    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://images.unsplash.com/photo-1549357957-99ab8644c268?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://images.unsplash.com/photo-1665911177191-a0ae109c7401?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHNxdWFyZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" },
+    { id: 0, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://images.unsplash.com/photo-1603208636124-a12f78c1bb6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" }
 ];
 
 function updateQueue() {
@@ -151,15 +153,22 @@ function handleDrop(event) {
     const dragSourceSong = songs.find(song => song.id === parseInt(dragSourceId));
     const dropTargetSong = songs.find(song => song.id === parseInt(dropTarget.dataset.songId));
 
-    // Swap the positions of the songs in the array
+    // Get the indexes of the songs in the array
     const dragSourceIndex = songs.indexOf(dragSourceSong);
     const dropTargetIndex = songs.indexOf(dropTargetSong);
-    [songs[dragSourceIndex], songs[dropTargetIndex]] = [songs[dropTargetIndex], songs[dragSourceIndex]];
 
-    // Re-render the queue to reflect the new order
-    updateQueue();
+    if (dragSourceIndex !== -1 && dropTargetIndex !== -1) {
+        // Remove the drag source song from the array
+        songs.splice(dragSourceIndex, 1);
 
-    console.log(songs);
+        // Insert the drag source song at the drop target index
+        songs.splice(dropTargetIndex, 0, dragSourceSong);
+
+        // Re-render the queue to reflect the new order
+        updateQueue();
+
+        console.log(songs);
+    }
 }
 
 function handleQueueItemRemove(event) {
