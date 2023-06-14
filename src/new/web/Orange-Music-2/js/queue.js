@@ -68,60 +68,49 @@ import queueItem from '../html/queueItem.html?raw';
 we want the only export here to be the update function
  */
 
+const songs = [
+    { id: 1, name: "Song 1", artist: "Artist 1", duration: "3:45", coverImage: "song1.jpg" },
+    { id: 2, name: "Song 2", artist: "Artist 2", duration: "4:20", coverImage: "song2.jpg" },
+    { id: 3, name: "Song 3", artist: "Artist 3", duration: "2:55", coverImage: "song3.jpg" }
+];
 
 function hydrateQueue() {
     const queueContainer = document.getElementById("QUEUEbottomContainer");
 
-    let htmls = ""
-
-    let blocksNeeded = 25;
-
     queueContainer.innerHTML = "";
-    for (let i = 0; i < blocksNeeded; i++) {
-        htmls = hydrateItem(i)
-        queueContainer.innerHTML += htmls;
 
+    for (let i = 0; i < songs.length; i++) {
+        const song = songs[i];
+        const html = hydrateItem(song);
+        queueContainer.innerHTML += html;
     }
-    return
 }
 
 import icons_menuOptionsButton from '../assets/icons/menu_options_button.svg';
 
-function hydrateItem(thing) {
+function hydrateItem(song) {
     const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
-
-    const imgSrc = "https://plus.unsplash.com/premium_photo-1664478250378-4afecb3f977c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hlZXNlJTIwc3F1YXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
-    const songTitle = "song title " + thing;
-    const songArtist = "song artist " + thing;
-    const songDuration = "1:32";
-
-
+    const imgSrc = song.coverImage;
+    const songTitle = song.name;
+    const songArtist = song.artist;
+    const songDuration = song.duration;
 
     let replacedContent = queueItem;
+
     for (let i = 0; i < listOfThings.length; i++) {
         const placeholder = listOfThings[i].toString();
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        let value = thing;
+        let value = '';
 
-        const currentThing = listOfThings[i];
-
-        if (currentThing == 'QUEUE_item_image') {
+        if (placeholder === 'QUEUE_item_image') {
             value = imgSrc;
-        }
-
-        if (currentThing == 'QUEUE_item_title') {
+        } else if (placeholder === 'QUEUE_item_title') {
             value = songTitle;
-        }
-
-        if (currentThing == 'QUEUE_item_artist') {
+        } else if (placeholder === 'QUEUE_item_artist') {
             value = songArtist;
-        }
-
-        if (currentThing == 'icons_menuOptionsButton') {
+        } else if (placeholder === 'icons_menuOptionsButton') {
             value = icons_menuOptionsButton;
-        }
-
-        if (currentThing == 'QUEUE_item_timeIndicator') {
+        } else if (placeholder === 'QUEUE_item_timeIndicator') {
             value = songDuration;
         }
 
@@ -130,6 +119,7 @@ function hydrateItem(thing) {
 
     return replacedContent;
 }
+
 
 
 /* QUEUE item reomve from queue */
