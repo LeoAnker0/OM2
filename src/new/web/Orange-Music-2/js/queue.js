@@ -67,6 +67,8 @@ import queueItem from '../html/queueItem.html?raw';
 
 we want the only export here to be the update function
  */
+
+
 function hydrateQueue() {
     const queueContainer = document.getElementById("QUEUEbottomContainer");
 
@@ -130,7 +132,7 @@ function hydrateItem(thing) {
 }
 
 
-
+/* QUEUE item reomve from queue */
 
 
 
