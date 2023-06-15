@@ -1,10 +1,6 @@
 import menuModal from '../html/menuModal.html?raw';
 
 export function MENUdisplay(params, event) {
-    console.log(params);
-
-
-
     var x = event.clientX;
     var y = event.clientY;
 
@@ -32,7 +28,46 @@ export function MENUdisplay(params, event) {
     MENUmodalBody.style.top = y;
     MENUmodalBody.style.left = x;
 
+
+    for (let i = 0; i < params.length; i++) {
+        addModalItem(params[i]);
+    }
+
 }
+
+import menuItem from '../html/menuModalItem.html?raw';
+
+import { svgImports } from './importAssets.js';
+
+function addModalItem(param) {
+    const displayText = param.displayText
+    const displayImage = param.optionalSVG
+
+    const MENUmodalBody = document.getElementById('MENUmodalBody');
+
+    let regex = new RegExp(`\\{${"MENU_item_text"}\\}`, 'g');
+    let replacedContent = menuItem.replace(regex, displayText);
+
+    if (displayImage !== "None") {
+        regex = new RegExp(`\\{${"MENU_item_image"}\\}`, 'g');
+        const imageReplacement = "{" + displayImage + "}";
+        replacedContent = replacedContent.replace(regex, imageReplacement);
+
+        for (const [placeholder, value] of Object.entries(svgImports)) {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            replacedContent = replacedContent.replace(regex, value);
+        }
+        MENUmodalBody.innerHTML += replacedContent;
+        return;
+    } else {
+        replacedContent = replacedContent.replace(/<img[^>]+>/g, '');
+        MENUmodalBody.innerHTML += replacedContent;
+        return;
+    }
+    return;
+}
+
+
 
 function menuHide(event) {
     const background = document.getElementById('MENUmodalEnvironment');

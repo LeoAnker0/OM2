@@ -192,12 +192,24 @@ function handleQueueDisplayMenu(event) {
 
     /* call an imported function */
     const params = [{
-        displayText: 'Play Next',
-        optionalSVG: 'playlistNext.svg',
+        displayText: 'Play next',
+        optionalSVG: 'icons_playlist',
         function: 'callSomeFunction()',
     }, {
-        displayText: 'Play Later',
-        optionalSVG: 'playlistLater.svg',
+        displayText: 'Play later',
+        optionalSVG: 'icons_backButton',
+        function: 'callSomeFunction()',
+    }, {
+        displayText: 'Love',
+        optionalSVG: 'None',
+        function: 'callSomeFunction()',
+    }, {
+        displayText: 'Less like this',
+        optionalSVG: 'None',
+        function: 'callSomeFunction()',
+    }, {
+        displayText: 'Rate',
+        optionalSVG: 'None',
         function: 'callSomeFunction()',
     }]
 
