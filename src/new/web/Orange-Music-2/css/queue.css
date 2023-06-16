@@ -83,12 +83,11 @@
 
 .QUEUE-top-text-title {
     font-size: 1.2rem;
-    color: var(--violet-0);
     font-weight: 600;
-    filter: drop-shadow(1px 1px 0px var(--violet-6));
+    /*filter: drop-shadow(1px 1px 0px var(--violet-6));*/
 
     color: black;
-    filter: none;
+    color: var(--violet-9);
 }
 
 .QUEUE-top-text-clear {

@@ -2,8 +2,6 @@
     font-family: 'Libre Franklin';
     font-weight: 400;
 
-
-
     /* colour variables */
     --red-0: hsl(0, 80%, 90%);
     --red-1: hsl(0, 80%, 86%);
@@ -41,6 +39,7 @@
     --violet-6: hsl(255, 80%, 41%);
     --violet-7: hsl(255, 80%, 32%);
     --violet-8: hsl(255, 80%, 23%);
+    --violet-9: hsl(255, 100%, 13%);
     --indigo-0: hsl(230, 80%, 90%);
     --indigo-1: hsl(230, 80%, 86%);
     --indigo-2: hsl(230, 80%, 77%);
@@ -116,9 +115,6 @@
     --dgrey-8: hsl(188, 1%, 2%);
     --dgrey-9: hsl(188, 1%, 1%);
 
-
-
-
     /* svg filters */
     --make-svg-grey: invert(1) invert(37%) sepia(10%) saturate(302%) hue-rotate(357deg) brightness(200%) contrast(89%);
     --make-svg-light-grey: invert(1) invert(91%) sepia(12%) saturate(216%) hue-rotate(359deg) brightness(89%) contrast(83%);
@@ -128,9 +124,7 @@
     --make-svg-grey-2: invert(1) invert(21%) sepia(5%) saturate(742%) hue-rotate(355deg) brightness(92%) contrast(86%);
     --make-svg-grey-3: invert(1) invert(37%) sepia(10%) saturate(302%) hue-rotate(357deg) brightness(95%) contrast(89%);
 
-
     /* animations ? */
-
     --transition-speed: 18ms;
 }
 

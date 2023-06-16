@@ -26,6 +26,7 @@
     z-index: 2;
 
     outline: 1px solid white;
+    pointer-events: none;
 }
 
 .MENUmodalItemContainer {
@@ -35,6 +36,7 @@
 
     display: flex;
     align-items: center;
+    pointer-events: all;
 }
 
 .MENUmodalItemContainer::after {
@@ -62,6 +64,8 @@
 
     font-weight: 400;
     font-size: 0.8rem;
+
+    pointer-events: none;
 }
 
 .MENUmodalSVGcontainer {
@@ -71,12 +75,16 @@
     width: 1rem;
 
     right: 0.5rem;
+    pointer-events: none;
+
 
 }
 
 .MENUmodalSVG {
     height: 90%;
     aspect-ratio: 1/1;
+    pointer-events: none;
+
 }
 
 
