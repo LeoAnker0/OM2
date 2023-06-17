@@ -71,7 +71,7 @@ we want the only export here to be the update function
  */
 
 let songs = [
-    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
+    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8? ixlib = rb - 4.0 .3 & ixid = M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww & auto = format & fit = crop & w = 800 & q = 60" },
     { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
     { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://images.unsplash.com/photo-1549357957-99ab8644c268?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
     { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://images.unsplash.com/photo-1665911177191-a0ae109c7401?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHNxdWFyZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" },
@@ -111,8 +111,14 @@ function updateQueue() {
 
         // Find the "QUEUE-item-up-next-queue-item-context-call" element and attach a click event listener
         const menuPopupIcon = div.querySelector('.QUEUE-item-up-next-queue-item-context-call');
-        menuPopupIcon.addEventListener('click', handleQueueDisplayMenu);
-        menuPopupIcon.dataset.songID = song.id;
+        menuPopupIcon.dataset.songSet = song.id;
+
+        menuPopupIcon.addEventListener('click', function(event) {
+            if (event.target === menuPopupIcon) {
+                // Action to be performed when the specific div is clicked
+                handleQueueDisplayMenu(event);
+            }
+        });
 
         // Add dragstart event listener for starting the drag
         div.addEventListener("dragstart", handleDragStart);
@@ -187,14 +193,16 @@ import { MENUdisplay } from './menu.js';
 function handleQueueDisplayMenu(event) {
     event.stopPropagation();
     const clickedItem = event.target;
-    const songId = clickedItem.dataset.songId;
-    console.log('Clicked show menu:', songId);
+    const songId = clickedItem.getAttribute('data-song-set');
 
-    /* call an imported function */
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
         function: 'MENU_ACTION_playNext',
+        optionalParams: {
+            queueID: songId
+        }
+
     }, {
         displayText: 'Play later',
         optionalSVG: 'icons_backButton',
@@ -214,6 +222,7 @@ function handleQueueDisplayMenu(event) {
     }]
 
     MENUdisplay(params, event);
+    return;
 }
 
 function handleQueueItemClick(songId) {

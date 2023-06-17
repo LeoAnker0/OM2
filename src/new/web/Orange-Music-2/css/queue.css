@@ -270,6 +270,10 @@
     font-size: 0.85rem;
 
     visibility: visible;
+
+    pointer-events: none;
+
+    z-index: 0;
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-time-span {
@@ -283,6 +287,7 @@
     top: 18%;
     left: 15%;
     filter: var(--make-svg-orange);
+    z-index: 1;
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-item-context-call {

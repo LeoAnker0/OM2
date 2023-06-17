@@ -29,33 +29,6 @@ export function MENUdisplay(params, event) {
         addModalItem(params[i]);
     }
 
-    let debounceTimer = null;
-    const debounceDelay = 15;
-
-    function debounceAction(event) {
-        // Perform the action here using the parameters
-        const clickedElement = event.target;
-        const menuItemId = clickedElement.getAttribute('data-menu-item-id');
-        const functionToCall = params[menuItemId].function;
-
-        if (functionToCall != "None") {
-            MENU_ACTION_FUNCTIONS[functionToCall]();
-            return;
-        }
-        return;
-
-
-
-
-
-
-        const currentTime = new Date();
-        const milliseconds = currentTime.getTime();
-
-        console.log('Current time in milliseconds:', milliseconds);
-
-
-    }
 
 
     // Attach event listeners to all the dynamically generated divs
@@ -65,12 +38,19 @@ export function MENUdisplay(params, event) {
         menuItem.setAttribute('data-menu-item-id', i);
 
         menuItem.addEventListener('click', function(event) {
-            if (debounceTimer) {
-                clearTimeout(debounceTimer);
+            event.stopPropagation();
+
+            // Perform the action here using the parameters
+            const clickedElement = event.target;
+            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
+            const functionToCall = params[menuItemId].function;
+            const optionalParams = params[menuItemId].optionalParams;
+
+            if (functionToCall != "None") {
+                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
+                return;
             }
-            debounceTimer = setTimeout(function() {
-                debounceAction(event);
-            }, debounceDelay);
+            return;
         });
     }
 
@@ -121,8 +101,8 @@ export function menuHide(event) {
 
 /* making the buttons inside the menu modal do something nice and specific ------------ */
 const MENU_ACTION_FUNCTIONS = {
-    MENU_ACTION_playNext() {
-        console.log("meny aacction play next");
+    MENU_ACTION_playNext(params) {
+        console.log(params);
         return;
     },
     MENU_ACTION_playLast() {
