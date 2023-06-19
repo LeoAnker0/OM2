@@ -225,6 +225,8 @@
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
 
+    pointer-events: all;
+
 }
 
 .QUEUE-item-up-next-queue-text-song-title {
@@ -235,6 +237,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    pointer-events: all;
 }
 
 .QUEUE-item-up-next-queue-text-song-artist {
@@ -245,6 +249,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    pointer-events: all;
 }
 
 /* time and menu -- */
@@ -257,8 +263,6 @@
 
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
-
-
 }
 
 /* the time indicator, and it's hover hidden */

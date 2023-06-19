@@ -1,8 +1,8 @@
 /* loading in the menu modal, and that alone ------------ */
 import menuModal from '../html/menuModal.html?raw';
 export function MENUdisplay(params, event) {
-    var x = event.clientX;
-    var y = event.clientY;
+    const X = event.clientX;
+    const Y = event.clientY;
 
 
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
@@ -13,25 +13,30 @@ export function MENUdisplay(params, event) {
     const MENUmodalBody = document.getElementById('MENUmodalBody');
     MENUmodalEnvironment.addEventListener('click', menuHide);
 
+    let x = (X) + "px";
+    let y = (Y) + "px";
 
-    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
-    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
-
-
-
-    //x = (x - MENUmodalBodyWidth) + "px";
-    x = (x) + "px";
-    y = (y) + "px";
-
-
-    MENUmodalBody.style.top = y;
     MENUmodalBody.style.left = x;
-
+    MENUmodalBody.style.top = y;
 
     for (let i = 0; i < params.length; i++) {
         addModalItem(params[i]);
     }
 
+    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
+    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
+
+    const overflowStates = showElementDetails('MENUmodalBody');
+    console.log(overflowStates);
+
+    if (overflowStates.xOverflow == true) {
+        x = (X - MENUmodalBodyWidth) + "px";
+        MENUmodalBody.style.left = x;
+    }
+    if (overflowStates.yOverflow == true) {
+        y = (Y - MENUmodalBodyHeight) + "px";
+        MENUmodalBody.style.top = y;
+    }
 
 
     // Attach event listeners to all the dynamically generated divs
@@ -56,9 +61,38 @@ export function MENUdisplay(params, event) {
             return;
         });
     }
-
 }
 
+function showElementDetails(elementId) {
+    const element = document.getElementById(elementId);
+    const clientWidth = document.documentElement.clientWidth;
+    const clientHeight = document.documentElement.clientHeight;
+
+    const width = element.offsetWidth;
+    const currentPositionLeft = element.getBoundingClientRect().left;
+    const currentPositionTop = element.getBoundingClientRect().top;
+
+
+    const height = element.getBoundingClientRect().height;
+
+
+
+    const overflowingLeft = width + currentPositionLeft;
+    const overflowingTop = height + currentPositionTop;
+
+    let IsOverflowingLeft = false;
+    let IsOverflowingTop = false
+    if (overflowingLeft > clientWidth) {
+        IsOverflowingLeft = true;
+    }
+    if (overflowingTop > clientHeight) {
+        IsOverflowingTop = true
+    }
+    return {
+        xOverflow: IsOverflowingLeft,
+        yOverflow: IsOverflowingTop
+    }
+}
 
 
 import menuItem from '../html/menuModalItem.html?raw';
