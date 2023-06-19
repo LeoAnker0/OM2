@@ -38,7 +38,8 @@ function displayMenu(event) {
 }
 ```
 
-##### Values Breakdown
+#### Values Breakdown
+
 
 * *import {...} from '...': required to be able to then call this function again*
 

@@ -17,7 +17,10 @@ export function MENUdisplay(params, event) {
     const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
     const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
 
-    x = (x - MENUmodalBodyWidth) + "px";
+
+
+    //x = (x - MENUmodalBodyWidth) + "px";
+    x = (x) + "px";
     y = (y) + "px";
 
 
@@ -55,6 +58,8 @@ export function MENUdisplay(params, event) {
     }
 
 }
+
+
 
 import menuItem from '../html/menuModalItem.html?raw';
 

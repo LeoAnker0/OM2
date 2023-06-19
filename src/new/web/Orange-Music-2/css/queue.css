@@ -225,7 +225,6 @@
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
 
-    pointer-events: none;
 }
 
 .QUEUE-item-up-next-queue-text-song-title {
@@ -258,6 +257,8 @@
 
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
+
+
 }
 
 /* the time indicator, and it's hover hidden */
@@ -287,6 +288,8 @@
     top: 18%;
     left: 15%;
     filter: var(--make-svg-orange);
+    cursor: pointer;
+
     z-index: 1;
 }
 

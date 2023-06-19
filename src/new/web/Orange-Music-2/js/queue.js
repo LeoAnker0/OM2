@@ -11,7 +11,6 @@ export function initialiseQueue() {
     queueClearButton.addEventListener('click', queueClear);
 
     /* load in the html for loading in the queue */
-
     updateQueue();
     return
 }
@@ -173,7 +172,7 @@ function handleDrop(event) {
         // Re-render the queue to reflect the new order
         updateQueue();
 
-        console.log(songs);
+        //console.log(songs);
     }
 }
 
