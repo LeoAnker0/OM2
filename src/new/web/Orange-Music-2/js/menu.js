@@ -27,7 +27,7 @@ export function MENUdisplay(params, event) {
     const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
 
     const overflowStates = showElementDetails('MENUmodalBody');
-    console.log(overflowStates);
+    //console.log(overflowStates);
 
     if (overflowStates.xOverflow == true) {
         x = (X - MENUmodalBodyWidth) + "px";
