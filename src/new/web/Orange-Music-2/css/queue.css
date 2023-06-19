@@ -225,7 +225,7 @@
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
 
-    pointer-events: all;
+    pointer-events: none;
 
 }
 
@@ -238,7 +238,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
-    pointer-events: all;
+    pointer-events: none;
 }
 
 .QUEUE-item-up-next-queue-text-song-artist {
@@ -250,7 +250,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
-    pointer-events: all;
+    pointer-events: none;
 }
 
 /* time and menu -- */
