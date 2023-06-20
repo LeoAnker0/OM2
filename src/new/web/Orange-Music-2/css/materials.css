@@ -125,7 +125,7 @@
     */
     /* Replace the background image URL or use 'linear-gradient' for a pure CSS solution */
 
-    background-color: hsla(230, 90%, 9%);
+    background-color: hsla(255, 90%, 9%);
 
     background-blur: 10px;
     /* Adjust the blur strength as desired */
@@ -136,6 +136,7 @@
 
 .MATERIAL-meshBackground::after {
     --splash-color: var(--cyan-7);
+    --splash-colour: var(--violet-2);
     content: "";
     position: absolute;
     top: 50%;
@@ -145,7 +146,7 @@
     /* Adjust the size of the color orb */
     height: 200px;
     border-radius: 50%;
-    background-image: radial-gradient(circle at center, var(--splash-color) 0%, rgba(0, 0, 0, 0) 100%);
+    background-image: radial-gradient(circle at center, var(--splash-colour) 0%, rgba(0, 0, 0, 0) 100%);
     /* Apply a radial gradient */
     z-index: 1;
 

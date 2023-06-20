@@ -1,9 +1,10 @@
 # Using Menus
 
-The menus in this system are created by passing in params, and the event. Event is used to get the location of the click, since this is used to get the position of the click, which in turn helps position the menu properly. Params is the way that the system knows what should be 
+Menu's are created by first: initialising some params, which contain all the data needed to hydrate the menu; next the menu system loads in the menu, and adds event listeners to all of the buttons, and then when those buttons are clicked, they go through and trigger functions that need to be defined by the user as well, which just call back to a function from the file in which that menu was originally called.
 
+<hr>
 
-### Calling the function that will Create the menu
+To get a menu going, you'll need a function which is able to get the position of the mouse click, as well as creating the params array of objects, that will then be passed through to the code that will actually load in the menu.
 
 ```
 import { MENUdisplay } from './menu.js';

@@ -294,7 +294,7 @@
     filter: var(--make-svg-orange);
     cursor: pointer;
 
-    z-index: 1;
+    z-index: 10;
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-item-context-call {
