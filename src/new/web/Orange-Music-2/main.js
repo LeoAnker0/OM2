@@ -7,6 +7,7 @@ import './css/topleft.css';
 import './css/topright.css';
 import './css/queue.css';
 import './css/menu.css';
+import './css/lcd.css';
 
 /* immediate priority 
 
@@ -25,9 +26,9 @@ import { loadMAINtopleft, loadMAINtopright } from './js/exportHTMLchunks.js';
 loadMAINtopleft();
 loadMAINtopright();
 
-/* queue display code */
-import { initialiseQueue } from './js/queue.js';
-initialiseQueue();
+/* load in the lcd and related items */
+import { intialiseLCD } from './js/lcd.js';
+intialiseLCD();
 
 
 /* creates event listeners for the playback controls as well as
@@ -44,22 +45,9 @@ import { setEventListenersForSearchbar } from './js/search.js';
 setEventListenersForSearchbar();
 
 
-/* starting menus: init */
-import { MENUdisplay } from './js/menu.js';
-const params = [{
-    displayText: 'Play Next',
-    optionalSVG: 'playlistNext.svg',
-    function: 'callSomeFunction()',
-}, {
-    displayText: 'Play Later',
-    optionalSVG: 'playlistLater.svg',
-    function: 'callSomeFunction()',
-}]
-event = "";
-
-/*
-MENUdisplay(params, event);
-*/
+/* queue display code */
+import { initialiseQueue } from './js/queue.js';
+initialiseQueue();
 
 
 
