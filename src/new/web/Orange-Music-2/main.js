@@ -27,8 +27,8 @@ loadMAINtopleft();
 loadMAINtopright();
 
 /* load in the lcd and related items */
-import { intialiseLCD } from './js/lcd.js';
-intialiseLCD();
+import { initialiseLCD } from './js/lcd.js';
+initialiseLCD();
 
 
 /* creates event listeners for the playback controls as well as

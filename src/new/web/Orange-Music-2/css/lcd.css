@@ -1,0 +1,32 @@
+.LCDbody {
+    position: relative;
+    width: 98%;
+    height: 80%;
+    top: 10%;
+    left: 1%;
+}
+
+.LCDcontentContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+
+    display: flex;
+
+}
+
+.LCDleftImage {
+    aspect-ratio: 1/1;
+    background-color: red;
+    flex: 0 0 auto;
+    position: relative;
+}
+
+.LCDrightContent {
+    background-color: blue;
+    flex: 1 1 auto;
+
+
+}

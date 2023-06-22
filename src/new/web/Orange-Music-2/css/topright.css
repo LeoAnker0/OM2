@@ -5,7 +5,26 @@
 
     --TOPRIGHT-accountcontrols-volumeslider-width: 8rem;
     --TOPRIGHT-accountcontrols-queue-opacity: 0%;
+
+
+    --TOPRIGHT-playbackcontrols-width: 10rem;
+    --TOPRIGHT-playbackcontrols-width2: 25%;
+    --TOPRIGHT-lcd-width: 40%;
+    --TOPRIGHT-accountcontrols-width: 35%;
 }
+
+
+@media (max-width: 850px) {
+    :root {
+        --TOPRIGHT-playbackcontrols-width2: 0px;
+        --TOPRIGHT-lcd-width: 100%;
+        --TOPRIGHT-accountcontrols-width: 0px;
+
+    }
+}
+
+
+
 
 .TOPRIGHT-topHalf-right-content {
     position: relative;
@@ -19,7 +38,8 @@
 .TOPRIGHT-playbackcontrols-container {
     position: relative;
     height: 100%;
-    width: 25%;
+    width: var(--TOPRIGHT-playbackcontrols-width2);
+
 }
 
 .TOPRIGHT-playbackcontrols-displacement {
@@ -71,7 +91,7 @@
 .TOPRIGHT-lcd-container {
     position: relative;
     height: 100%;
-    width: 40%;
+    width: var(--TOPRIGHT-lcd-width);
     //background-color: blue;
 }
 
@@ -79,7 +99,7 @@
 .TOPRIGHT-accountcontrols-container {
     position: relative;
     height: 100%;
-    width: 35%;
+    width: var(--TOPRIGHT-accountcontrols-width);
     display: flex;
     justify-content: space-between;
 }

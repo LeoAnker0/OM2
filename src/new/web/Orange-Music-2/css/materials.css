@@ -1,7 +1,7 @@
 /* a darkening blur with added grain noise */
 .MATERIAL-blur-1 {
     background-color: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(8px) contrast(0.8) brightness(0.80);
+    backdrop-filter: blur(8px) contrast(0.3) brightness(0.60);
 
     /*
     background-image:
@@ -21,7 +21,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.3;
     filter: url(#noise1);
     z-index: -1;
 }
@@ -29,7 +29,15 @@
 /* a simple lightening blur */
 .MATERIAL-blur-2 {
     background-color: rgba(256, 256, 256, 0.2);
-    backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
+    backdrop-filter: blur(5px) contrast(0.2) brightness(0.8);
+    overflow: hidden;
+
+}
+
+/* a simple lightening blur */
+.MATERIAL-blur-22 {
+    background-color: rgba(256, 256, 256, 0.2);
+    backdrop-filter: blur(10px) contrast(0.2) brightness(0.8);
     overflow: hidden;
 
 }
@@ -94,7 +102,7 @@
 
 .MATERIAL-blur-5 {
     background-color: rgba(256, 256, 256, 0.2);
-    backdrop-filter: blur(5px) contrast(0.8) brightness(0.7);
+    backdrop-filter: blur(5px) contrast(0.8) brightness(0.4);
     overflow: hidden;
 }
 
@@ -118,6 +126,7 @@
     z-index: -1;
 }
 
+
 .MATERIAL-meshBackground {
     /*
     background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url(path/to/your/background-image.jpg);
@@ -131,12 +140,15 @@
     /* Adjust the blur strength as desired */
     overflow: hidden;
 
+    background-color: white;
+
+
 
 }
 
-.MATERIAL-meshBackground::after {
-    --splash-color: var(--cyan-7);
+.MATERIAL-meshBackground::before {
     --splash-colour: var(--violet-2);
+    --splash-colour: var(--cyan-2);
     content: "";
     position: absolute;
     top: 50%;
