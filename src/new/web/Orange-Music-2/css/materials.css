@@ -36,8 +36,8 @@
 
 /* a simple lightening blur */
 .MATERIAL-blur-22 {
-    background-color: rgba(256, 256, 256, 0.2);
-    backdrop-filter: blur(10px) contrast(0.2) brightness(0.8);
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px) contrast(0.6);
     overflow: hidden;
 
 }

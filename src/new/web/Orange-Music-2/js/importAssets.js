@@ -37,6 +37,7 @@ import icons_yourUploads from '../assets/iconsv2/your_uploads.svg';
 import icons_playButton2 from '../assets/iconsv2/play_button.2.svg';
 import icons_listenNowV2 from '../assets/iconsv2/listen_now.svg';
 import icons_browse2V2 from '../assets/iconsv2/browse.2.svg';
+import v3_placeholder from '../assets/v3/place_holder_image.svg'
 
 export const svgImports = {
     icons_volumeNull,
@@ -77,5 +78,6 @@ export const svgImports = {
     icons_yourUploads,
     icons_playButton2,
     icons_listenNowV2,
-    icons_browse2V2
+    icons_browse2V2,
+    v3_placeholder
 }

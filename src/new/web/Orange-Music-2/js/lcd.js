@@ -1,6 +1,6 @@
 export function initialiseLCD() {
-    console.log("initilaise lcd");
     loadLCDbody();
+    resizeTitleText();
 }
 
 import LCDbody from '../html/LCDbody.html?raw';
@@ -16,4 +16,32 @@ function loadLCDbody() {
 
     document.getElementById(IDofElement).innerHTML = replacedContent;
     return
+}
+
+function resizeTitleText() {
+    let elementWidth;
+    const LCDtitleText = document.getElementById("LCDtitleText");
+    const LCDcontentContainer = document.getElementById("LCDrightcontent");
+    const widthFactor = 1.3;
+
+    function handleResize() {
+        elementWidth = LCDcontentContainer.clientWidth;
+        console.log('Element width:', elementWidth);
+        LCDtitleText.style.width = (elementWidth / widthFactor) + "px";
+    }
+
+    function throttledResize() {
+        let resizeTimer;
+
+        return function() {
+            cancelAnimationFrame(resizeTimer);
+            resizeTimer = requestAnimationFrame(handleResize);
+        };
+    }
+
+    const throttledHandleResize = throttledResize();
+    window.addEventListener('resize', throttledHandleResize);
+
+    // Call the handleResize function once on initial load
+    handleResize();
 }

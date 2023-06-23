@@ -1,3 +1,7 @@
+:root {
+    --LCD-widthOfMenuContainer: 1rem;
+}
+
 .LCDbody {
     position: relative;
     width: 98%;
@@ -12,21 +16,63 @@
     width: 100%;
     border-radius: 5px;
     overflow: hidden;
-
     display: flex;
-
 }
 
 .LCDleftImage {
     aspect-ratio: 1/1;
-    background-color: red;
     flex: 0 0 auto;
     position: relative;
+    overflow: hidden;
+}
+
+.LCDleftImage img {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: relative;
+    object-fit: cover;
 }
 
 .LCDrightContent {
-    background-color: blue;
     flex: 1 1 auto;
+}
 
+.LCDright-titleTextAndMenuContainer {
+    width: 100%;
+    height: 2rem;
+    //background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.LCDrightTitleText-centreBox {
+    height: auto;
+    display: flex;
+    align-items: center;
+    width: auto;
+    overflow: hidden;
+}
+
+.LCDrightTitleText-leftSpacer {
+    flex: 0 0 var(--LCD-widthOfMenuContainer);
+    height: 1rem;
+    //background-color: hsla(180, 100%, 60%, 0.5);
+}
+
+.LCDrightTitleText-text {
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 1rem;
+
+    color: white;
+}
+
+.LCDrightTitleText-menuContainer {
+    flex: 0 0 var(--LCD-widthOfMenuContainer);
+    height: 1rem;
+    //background-color: hsla(180, 100%, 60%, 0.5);
 }
