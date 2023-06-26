@@ -1,5 +1,7 @@
 :root {
     --LCD-widthOfMenuContainer: 1rem;
+
+    --LCD-widthOfTimeIndicators: 2rem;
 }
 
 .LCDbody {
@@ -70,7 +72,9 @@
     overflow: hidden;
     height: 1rem;
     font-size: 0.8rem;
+
     color: white;
+    font-weight: 600;
 }
 
 
@@ -101,12 +105,72 @@
     position: relative;
     height: 1.6rem;
     width: 100%;
-    background-color: red;
+    display: flex;
 }
 
 
+.LCDright-bottomTextTimeIndicatorsLeft {
+    position: relative;
+    width: var(--LCD-widthOfTimeIndicators);
+    height: 100%;
+
+    font-size: 0.7rem;
+}
+
+.LCDright-bottomTextTimeIndicatorsLeft::after {
+    content: "2:43";
+    position: absolute;
+    bottom: 0.1rem;
+    left: 0.3rem;
+
+    color: var(--lgrey-4);
+    opacity: 0%;
+    transition: opacity 30ms ease-in-out;
 
 
+}
+
+.LCDbody:hover .LCDright-bottomTextTimeIndicatorsLeft::after {
+    opacity: 100%;
+}
+
+.LCDright-bottomTextTimeIndicatorsRight {
+    position: relative;
+    width: var(--LCD-widthOfTimeIndicators);
+    height: 100%;
+
+    font-size: 0.7rem;
+}
+
+.LCDright-bottomTextTimeIndicatorsRight::after {
+    content: "-0:43";
+    position: absolute;
+    bottom: 0.1rem;
+    right: 0.3rem;
+
+    color: var(--lgrey-4);
+    opacity: 0%;
+    transition: opacity 30ms ease-in-out;
+}
+
+.LCDbody:hover .LCDright-bottomTextTimeIndicatorsRight::after {
+    opacity: 100%;
+}
+
+
+.LCDright-bottomText-text {
+    position: relative;
+    width: calc(100% - (2 * var(--LCD-widthOfTimeIndicators)));
+    height: 100%;
+    overflow: hidden;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    font-weight: 400;
+}
 
 
 
