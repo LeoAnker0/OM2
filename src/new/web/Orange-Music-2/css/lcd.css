@@ -63,16 +63,33 @@
 
 .LCDrightTitleText-text {
     position: relative;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
     overflow: hidden;
     height: 1rem;
-
+    font-size: 0.8rem;
     color: white;
 }
 
+
 .LCDrightTitleText-menuContainer {
+    position: relative;
     flex: 0 0 var(--LCD-widthOfMenuContainer);
     height: 1rem;
+    aspect-ratio: 1/1;
     //background-color: hsla(180, 100%, 60%, 0.5);
+    cursor: pointer;
+}
+
+.LCDrightTitleText-menuContainer img {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 2/3;
+    filter: var(--make-svg-orange);
+    opacity: 0%;
+    transition: opacity 150ms ease-in-out;
+}
+
+.LCDbody:hover img {
+    opacity: 100%;
 }
