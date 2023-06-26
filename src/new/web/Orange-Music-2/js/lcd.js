@@ -35,7 +35,7 @@ function resizeTitleText() {
     let elementWidth;
     const LCDtitleText = document.getElementById("LCDtitleText");
     const LCDcontentContainer = document.getElementById("LCDrightcontent");
-    const widthFactor = 1.5;
+    const widthFactor = 1.3;
 
     function handleResize() {
         let newWidth;
