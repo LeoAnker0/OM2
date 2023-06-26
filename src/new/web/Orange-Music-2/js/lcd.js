@@ -27,6 +27,23 @@ function loadLCDbody() {
         replacedContent = replacedContent.replace(regex, value);
     }
 
+    const listOfThings = ['LCD_titleText_placeholder', 'LCD_bottomText_placeholder'];
+
+    for (let i = 0; i < listOfThings.length; i++) {
+        const placeholder = listOfThings[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'LCD_titleText_placeholder') {
+            value = "And then we were Three and four and five";
+        } else if (placeholder === 'LCD_bottomText_placeholder') {
+            value = "Another thing to change";
+        }
+
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
     document.getElementById(IDofElement).innerHTML = replacedContent;
     return
 }
@@ -35,7 +52,7 @@ function resizeTitleText() {
     let elementWidth;
     const LCDtitleText = document.getElementById("LCDtitleText");
     const LCDcontentContainer = document.getElementById("LCDrightcontent");
-    const widthFactor = 1.3;
+    const widthFactor = 1.4;
 
     function handleResize() {
         let newWidth;
