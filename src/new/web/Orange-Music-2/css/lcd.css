@@ -2,6 +2,9 @@
     --LCD-widthOfMenuContainer: 1rem;
 
     --LCD-widthOfTimeIndicators: 2rem;
+
+    --LCD-afterContent-bottom-left: "2:24";
+    --LCD-afterContent-bottom-right: "-0:53";
 }
 
 .LCDbody {
@@ -118,7 +121,7 @@
 }
 
 .LCDright-bottomTextTimeIndicatorsLeft::after {
-    content: "2:43";
+    content: var(--LCD-afterContent-bottom-left);
     position: absolute;
     bottom: 0.1rem;
     left: 0.3rem;
@@ -143,7 +146,7 @@
 }
 
 .LCDright-bottomTextTimeIndicatorsRight::after {
-    content: "-0:43";
+    content: var(--LCD-afterContent-bottom-right);
     position: absolute;
     bottom: 0.1rem;
     right: 0.3rem;
