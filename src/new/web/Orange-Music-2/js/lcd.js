@@ -48,7 +48,7 @@ function resizeTitleText() {
 
         if (WidthPlusFactor > textWidth) {
             newWidth = textWidth;
-            newWidth = (newWidth / 1.17) + 10;
+            newWidth = (newWidth / 1.17);
         } else {
             newWidth = WidthPlusFactor;
         }

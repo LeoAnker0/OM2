@@ -59,6 +59,8 @@
     flex: 0 0 var(--LCD-widthOfMenuContainer);
     height: 1rem;
     //background-color: hsla(180, 100%, 60%, 0.5);
+    padding-left: 0.3rem;
+
 }
 
 .LCDrightTitleText-text {
@@ -79,6 +81,7 @@
     aspect-ratio: 1/1;
     //background-color: hsla(180, 100%, 60%, 0.5);
     cursor: pointer;
+    padding-left: 0.3rem;
 }
 
 .LCDrightTitleText-menuContainer img {
