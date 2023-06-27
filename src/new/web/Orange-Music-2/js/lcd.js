@@ -37,7 +37,7 @@ function loadLCDbody() {
         if (placeholder === 'LCD_titleText_placeholder') {
             value = "And then we were Three and four and five";
         } else if (placeholder === 'LCD_bottomText_placeholder') {
-            value = "Another thing to change";
+            value = "Another thing to change and nroie and john the ripper";
         }
 
 

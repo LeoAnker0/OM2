@@ -98,6 +98,7 @@
     filter: var(--make-svg-orange);
     opacity: 0%;
     transition: opacity 150ms ease-in-out;
+    transition: opacity 30ms ease-in-out;
 }
 
 .LCDbody:hover img {
@@ -161,21 +162,28 @@
 }
 
 
-.LCDright-bottomText-text {
+.LCDright-bottomText-text-container {
     position: relative;
     width: calc(100% - (2 * var(--LCD-widthOfTimeIndicators)));
-    height: 100%;
+    height: 1rem;
     overflow: hidden;
     font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
 
     color: white;
     font-weight: 400;
+
 }
 
-
+.LCDright-bottomText-text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 
 
