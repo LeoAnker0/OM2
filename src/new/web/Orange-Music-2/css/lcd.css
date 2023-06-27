@@ -5,6 +5,8 @@
 
     --LCD-afterContent-bottom-left: "2:24";
     --LCD-afterContent-bottom-right: "-0:53";
+
+    --LCD-seekbar-width: 50%;
 }
 
 .LCDbody {
@@ -184,13 +186,13 @@
     text-overflow: ellipsis;
 }
 
+/* LCD seek bar code ----------------------------------------- */
 .LCDright-bottom-seekBar {
     position: absolute;
     width: 100%;
     height: 1rem;
     bottom: 0;
 }
-
 
 .LCDright-bottom-seekBar input[type="range"] {
     position: relative;
@@ -213,9 +215,11 @@
     width: 0.13rem;
     top: 60%;
 
+    /*
     --border-radius: 5px;
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
+    */
 
     background: grey;
     background: var(--teal-3);
@@ -226,6 +230,8 @@
     cursor: grabbing;
 
     opacity: 0%;
+
+    z-index: 2;
 }
 
 .LCDbody:hover input[type="range"]::-webkit-slider-thumb {
@@ -245,7 +251,27 @@
     top: 0;
 }
 
+.LCDright-bottom-seekBar-indicator::before {
+    content: "";
+    width: var(--LCD-seekbar-width);
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
 
+    background-color: var(--lgrey-5);
+
+
+}
+
+.LCDright-bottom-seekBar-indicator {
+    position: absolute;
+    width: 100%;
+    height: 0.1rem;
+    background-color: var(--dgrey-7);
+    bottom: 0;
+
+}
 
 
 

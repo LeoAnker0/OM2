@@ -119,7 +119,7 @@ export function playStateChange(state) {
 
 /* volume controls, i figure they can be lumped in here as well? */
 export function setEventListenersForVolume() {
-    const rangeInputs = document.querySelectorAll('input[type="range"]')
+    const rangeInputs = document.querySelectorAll('input[type="range"]#volumeRangeSlider')
 
     rangeInputs.forEach(input => {
         input.addEventListener('input', handleInputChange)
