@@ -8,6 +8,8 @@ export function initialiseLCD() {
         handleQueueDisplayMenu(event);
 
     });
+
+    setEventListenersForPlaybackSeek();
 }
 
 
@@ -138,6 +140,57 @@ function handleQueueDisplayMenu(event) {
     MENUdisplay(params, event);
     return;
 }
+
+
+/* seek bar codes */
+
+function setEventListenersForPlaybackSeek() {
+    const rangeInputs = document.querySelectorAll('input[type="range"]#LCDseekBar')
+
+    rangeInputs.forEach(input => {
+        input.addEventListener('input', handleInputChange)
+    })
+    return
+}
+
+function handleInputChange(e) {
+    function between(x, min, max) {
+        return x >= min && x <= max;
+    }
+
+    let target = e.target
+    if (e.target.type !== 'range') {
+        target = document.getElementById('LCDseekBar')
+    }
+    const progess = target.value + "%";
+
+    const root = document.documentElement;
+    root.style.setProperty('--LCD-seekbar-width', progess);
+
+    return
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

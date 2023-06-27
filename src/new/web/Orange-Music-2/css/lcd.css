@@ -6,7 +6,7 @@
     --LCD-afterContent-bottom-left: "2:24";
     --LCD-afterContent-bottom-right: "-0:53";
 
-    --LCD-seekbar-width: 50%;
+    --LCD-seekbar-width: 0%;
 }
 
 .LCDbody {
