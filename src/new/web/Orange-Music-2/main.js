@@ -49,6 +49,10 @@ setEventListenersForSearchbar();
 import { initialiseQueue } from './js/queue.js';
 initialiseQueue();
 
+/* account img and menu stuff */
+import { initAccountImg } from './js/loadAccountImage.js';
+initAccountImg();
+
 
 
 

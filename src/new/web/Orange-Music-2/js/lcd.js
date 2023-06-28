@@ -181,8 +181,6 @@ function updateTimeIndicators(timeLeft, timeRight) {
 
     root.style.setProperty('--LCD-afterContent-bottom-left', timeLeft);
     root.style.setProperty('--LCD-afterContent-bottom-right', timeRight);
-
-    console.log(timeLeft, timeRight);
 }
 
 export function updateTimeIndicatorsGlobal(left, right) {
