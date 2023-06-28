@@ -3,8 +3,9 @@
 
     --LCD-widthOfTimeIndicators: 2rem;
 
-    --LCD-afterContent-bottom-left: "2:24";
-    --LCD-afterContent-bottom-right: "-0:53";
+
+    --LCD-afterContent-bottom-left: "0:00";
+    --LCD-afterContent-bottom-right: "-0:00";
 
     --LCD-seekbar-width: 0%;
 }

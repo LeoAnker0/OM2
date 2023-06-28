@@ -10,6 +10,7 @@ export function initialiseLCD() {
     });
 
     setEventListenersForPlaybackSeek();
+
 }
 
 
@@ -173,6 +174,28 @@ function handleInputChange(e) {
 
 
 
+/* changing the values of the time indicators -------- */
+
+function updateTimeIndicators(timeLeft, timeRight) {
+    const root = document.documentElement;
+
+    root.style.setProperty('--LCD-afterContent-bottom-left', timeLeft);
+    root.style.setProperty('--LCD-afterContent-bottom-right', timeRight);
+
+    console.log(timeLeft, timeRight);
+}
+
+export function updateTimeIndicatorsGlobal(left, right) {
+    document.addEventListener('DOMContentLoaded', function() {
+        let newLeft = "" + left + "";
+        let newRight = "" + right + "";
+
+        updateTimeIndicators(newLeft, newRight);
+    });
+}
+
+
+updateTimeIndicatorsGlobal('"1:29"', '"-0:43"');
 
 
 
