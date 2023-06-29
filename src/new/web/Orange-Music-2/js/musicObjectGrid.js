@@ -3,11 +3,11 @@ JS for creating the music objects, and then hydrating them with dynamic data
 */
 
 export function initMusicObjectsGrid() {
-    console.log("init music objects grid");
-
     const contentEnvironment = document.getElementById("MAINcontentPages");
 
     loadInContainer();
+
+    loadObjects();
 
     return
 }
@@ -25,4 +25,20 @@ function loadInContainer() {
 
     document.getElementById(IDofElement).innerHTML = replacedContent;
     return;
+}
+
+
+import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
+
+function loadObjects() {
+    const loadEvents = 11;
+    const parentContainer = document.getElementById("MOGgridContainer");
+
+    parentContainer.innerHTML = "";
+
+    for (var i = 0; i <= loadEvents - 1; i++) {
+        parentContainer.innerHTML += musicObjetsGridItem;
+
+    }
+
 }

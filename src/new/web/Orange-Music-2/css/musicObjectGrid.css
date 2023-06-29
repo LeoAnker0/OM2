@@ -1,7 +1,41 @@
+:root {
+    --MOG-height-of-MOGitem: 12rem;
+}
+
 .MOG-container {
     height: 100%;
     width: 100%;
     position: relative;
-    background-color: red;
     z-index: 1;
+    top: var(--height-of-top);
+}
+
+.MOG-grid {
+    position: relative;
+    height: 100%;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 2fr));
+    grid-auto-rows: var(--MOG-height-of-MOGitem);
+    grid-gap: 1rem;
+
+
+}
+
+.MOG-itemContainer {
+    position: relative;
+
+    height: var(--MOG-height-of-MOGitem);
+    width: 100%;
+    max-width: 15rem;
+    background-color: red;
+    border: 2px solid black;
+
+
+}
+
+.MOG-itemContainer:nth-child(even) {
+    background-color: blue;
 }
