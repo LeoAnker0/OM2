@@ -31,7 +31,7 @@ function loadInContainer() {
 import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
 
 function loadObjects() {
-    const loadEvents = 16;
+    const loadEvents = 26;
     const parentContainer = document.getElementById("MOGgridContainer");
 
     parentContainer.innerHTML = "";
@@ -41,9 +41,15 @@ function loadObjects() {
         const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate'];
 
         const imgAddress = "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
-        const textTop = "top text top text top ext hello there more and cake and then i ate a all da spaghetti";
+        const textTop = "Top text top text top ext hello there more and cake and then i ate a all da spaghetti";
         const textBottom = "Bottom text, there shouldn't be that much of this";
-        const checkedIndicator = i + "d"
+
+        /* last checked display calculator */
+        const lastCheckedInDays = i * i;
+        const checkedIndicator = daysToDaysWeeksMonthsYears(lastCheckedInDays);
+
+
+
 
         for (let i = 0; i < listOfThings.length; i++) {
             const placeholder = listOfThings[i].toString();
@@ -66,4 +72,28 @@ function loadObjects() {
         }
         parentContainer.innerHTML += replacedContent;
     }
+}
+
+function daysToDaysWeeksMonthsYears(days) {
+    let checkedIndicator = days + "d";
+
+    if (days < 1) {
+        checkedIndicator = "Now";
+    }
+
+    if (days > 7) {
+        let noWeeks = Math.floor(days / 7);
+        checkedIndicator = noWeeks + "w";
+    }
+
+    if (days > 28) {
+        let noMonths = Math.floor(days / 28);
+        checkedIndicator = noMonths + "m";
+    }
+
+    if (days > 365) {
+        let noYears = Math.floor(days / 356);
+        checkedIndicator = noYears + "y";
+    }
+    return checkedIndicator;
 }
