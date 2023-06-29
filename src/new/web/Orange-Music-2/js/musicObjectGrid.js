@@ -31,7 +31,7 @@ function loadInContainer() {
 import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
 
 function loadObjects() {
-    const loadEvents = 11;
+    const loadEvents = 5;
     const parentContainer = document.getElementById("MOGgridContainer");
 
     parentContainer.innerHTML = "";
