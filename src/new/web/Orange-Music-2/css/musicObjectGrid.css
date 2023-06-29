@@ -1,5 +1,5 @@
 :root {
-    --MOG-height-of-MOGitem: 12rem;
+    --MOG-height-of-MOGitem: 18rem;
 }
 
 .MOG-container {
@@ -32,13 +32,36 @@
     width: 100%;
     max-width: 15rem;
 
-
-
-
     background-color: red;
-    border: 2px solid black
+
 }
 
+.MOG-itemImageContainer {
+    position: relative;
+    top: 0;
+    width: calc(100% - (2 * 1px));
+    inset: 1px;
+    aspect-ratio: 1/1;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+    background-color: blue;
+    outline: 1px solid white;
+}
+
+.MOG-itemImageContainer img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    position: relative;
+}
+
+
+/*
 .MOG-itemContainer:nth-child(even) {
     background-color: blue;
 }
+*/
