@@ -1,9 +1,8 @@
-import { svgImports } from './importAssets.js';
-
 import topleft from '../html/topleft.html?raw';
 import topright from '../html/topright.html?raw';
 import queueBody from '../html/queueBody.html?raw';
 
+import { svgImports } from './importAssets.js';
 export function loadMAINtopleft() {
     let IDofElement = "topleftContentArea";
     let replacedContent = topleft;

@@ -8,6 +8,7 @@ import './css/topright.css';
 import './css/queue.css';
 import './css/menu.css';
 import './css/lcd.css';
+import './css/musicObjectGrid.css';
 
 /* immediate priority 
 
@@ -53,6 +54,12 @@ initialiseQueue();
 import { initAccountImg } from './js/loadAccountImage.js';
 initAccountImg();
 
+
+/* PAGES --------------------  */
+
+/* music object grid */
+import { initMusicObjectsGrid } from './js/musicObjectGrid.js';
+initMusicObjectsGrid();
 
 
 

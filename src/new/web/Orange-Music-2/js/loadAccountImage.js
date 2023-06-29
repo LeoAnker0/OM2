@@ -11,7 +11,6 @@ export function initAccountImg() {
 
 function handleClick(event) {
     event.stopPropagation;
-    console.log("handleClick");
     handleQueueDisplayMenu(event)
 
     return
