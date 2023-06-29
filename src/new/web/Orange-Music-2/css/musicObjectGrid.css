@@ -1,5 +1,5 @@
 :root {
-    --MOG-height-of-MOGitem: 18rem;
+    --MOG-height-of-MOGitem: 19rem;
 }
 
 .MOG-container {
@@ -7,7 +7,7 @@
     width: 100%;
     position: relative;
     z-index: 1;
-    top: var(--height-of-top);
+    top: calc(var(--height-of-top) + 0.0rem);
 }
 
 .MOG-grid {
@@ -18,7 +18,7 @@
 
     /*	grid*/
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
     grid-auto-rows: var(--MOG-height-of-MOGitem);
     grid-gap: 1rem;
 
@@ -47,7 +47,7 @@
     overflow: hidden;
 
     background-color: blue;
-    outline: 1px solid white;
+    outline: 1px solid hsla(0, 100%, 100%, 0.5);
 }
 
 .MOG-itemImageContainer img {
@@ -61,8 +61,8 @@
 
 .MOG-itemTextContainer {
     position: relative;
-    height: auto;
     width: 100%;
+    margin-top: 0.3rem;
 }
 
 .MOG-itemTextTop {
@@ -73,18 +73,31 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    color: white;
 }
 
 .MOG-itemTextBottom {
+    position: relative;
     color: var(--lgrey-4);
     font-size: 0.8rem;
     overflow: hidden;
+    width: calc(100% - 1.5rem);
+
+
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
 
+.MOG-itemCheckedDate {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 0.8rem;
+
+    color: var(--lgrey-4);
+}
 
 /*
 .MOG-itemContainer:nth-child(even) {

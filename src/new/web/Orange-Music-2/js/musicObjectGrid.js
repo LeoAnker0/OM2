@@ -31,18 +31,19 @@ function loadInContainer() {
 import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
 
 function loadObjects() {
-    const loadEvents = 15;
+    const loadEvents = 16;
     const parentContainer = document.getElementById("MOGgridContainer");
 
     parentContainer.innerHTML = "";
 
     for (var i = 0; i <= loadEvents - 1; i++) {
         let replacedContent = musicObjetsGridItem
-        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2'];
+        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate'];
 
         const imgAddress = "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
         const textTop = "top text top text top ext hello there more and cake and then i ate a all da spaghetti";
-        const textBottom = "bottom text, there shouldn't be that much of this";
+        const textBottom = "Bottom text, there shouldn't be that much of this";
+        const checkedIndicator = i + "d"
 
         for (let i = 0; i < listOfThings.length; i++) {
             const placeholder = listOfThings[i].toString();
@@ -55,6 +56,8 @@ function loadObjects() {
                 value = textTop;
             } else if (placeholder === 'MOG_text2') {
                 value = textBottom;
+            } else if (placeholder === 'MOG_checkedDate') {
+                value = checkedIndicator;
             }
 
 
