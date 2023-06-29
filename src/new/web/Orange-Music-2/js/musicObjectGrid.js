@@ -75,25 +75,25 @@ function loadObjects() {
 }
 
 function daysToDaysWeeksMonthsYears(days) {
-    let checkedIndicator = days + "d";
+    let checkedIndicator;
 
     if (days < 1) {
         checkedIndicator = "Now";
-    }
-
-    if (days > 7) {
+        return checkedIndicator;
+    } else if (days > 0 && days < 7) {
+        checkedIndicator = days + "d";
+        return checkedIndicator;
+    } else if (days > 7 && days < 28) {
         let noWeeks = Math.floor(days / 7);
         checkedIndicator = noWeeks + "w";
-    }
-
-    if (days > 28) {
+        return checkedIndicator;
+    } else if (days > 28 && days < 365) {
         let noMonths = Math.floor(days / 28);
         checkedIndicator = noMonths + "m";
-    }
-
-    if (days > 365) {
+        return checkedIndicator;
+    } else {
         let noYears = Math.floor(days / 356);
         checkedIndicator = noYears + "y";
+        return checkedIndicator;
     }
-    return checkedIndicator;
 }
