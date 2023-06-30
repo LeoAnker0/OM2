@@ -50,6 +50,11 @@ function loadObjects() {
 
 
 
+        for (const [placeholder, value] of Object.entries(svgImports)) {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            replacedContent = replacedContent.replace(regex, value);
+        }
+
 
         for (let i = 0; i < listOfThings.length; i++) {
             const placeholder = listOfThings[i].toString();
@@ -65,8 +70,6 @@ function loadObjects() {
             } else if (placeholder === 'MOG_checkedDate') {
                 value = checkedIndicator;
             }
-
-
 
             replacedContent = replacedContent.replace(regex, value);
         }
