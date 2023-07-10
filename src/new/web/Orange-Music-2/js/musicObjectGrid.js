@@ -39,28 +39,18 @@ function loadObjects() {
 
     /* the add new project button */
     let replacedContent = musicObjectsGridAdd
-    const listOfThings = ['MOG_checkedDate'];
-
-    const imgAddress = "";
 
     for (const [placeholder, value] of Object.entries(svgImports)) {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
-
-    for (let i = 0; i < listOfThings.length; i++) {
-        const placeholder = listOfThings[i].toString();
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        let value = '';
-
-        if (placeholder === 'MOG_image') {
-            value = imgAddress
-        }
-
-
-        replacedContent = replacedContent.replace(regex, value);
-    }
     parentContainer.innerHTML += replacedContent;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Your code here
+        const addButton = document.getElementById("MOGaddNewItem");
+        addButton.addEventListener('click', addNewLibraryItem);
+    });
 
 
     /* from the users libraries */
@@ -127,4 +117,8 @@ function daysToDaysWeeksMonthsYears(days) {
         checkedIndicator = noYears + "y";
         return checkedIndicator;
     }
+}
+
+function addNewLibraryItem() {
+    console.log("add new");
 }
