@@ -29,6 +29,7 @@ function loadInContainer() {
 
 
 import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
+import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 
 function loadObjects() {
     const loadEvents = 26;
@@ -36,7 +37,34 @@ function loadObjects() {
 
     parentContainer.innerHTML = "";
 
-    for (var i = 0; i <= loadEvents - 1; i++) {
+    /* the add new project button */
+    let replacedContent = musicObjectsGridAdd
+    const listOfThings = ['MOG_checkedDate'];
+
+    const imgAddress = "";
+
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
+    for (let i = 0; i < listOfThings.length; i++) {
+        const placeholder = listOfThings[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'MOG_image') {
+            value = imgAddress
+        }
+
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
+    parentContainer.innerHTML += replacedContent;
+
+
+    /* from the users libraries */
+    for (var i = 1; i <= loadEvents - 1; i++) {
         let replacedContent = musicObjetsGridItem
         const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate'];
 
