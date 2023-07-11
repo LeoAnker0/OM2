@@ -7,10 +7,53 @@ export function initMusicObjectsGrid() {
 
     loadInContainer();
 
-    loadObjects();
+    const libraryData = getLibraryData();
+
+    loadObjects(libraryData);
 
     return
 }
+
+function getLibraryData() {
+    const libraryData = [{
+            days: 2,
+            bottom: "Billie Eilish",
+            top: "Bad Guy",
+            img: "https://images.unsplash.com/photo-1689045306229-5ecee1d55998?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=400&q=60",
+            OBJECTid: 1
+        },
+        {
+            days: 70,
+            bottom: "Aurora",
+            top: "Appletree",
+            img: "https://plus.unsplash.com/premium_photo-1683749805442-dd033af82294?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHx8&auto=format&fit=crop&w=400&q=60",
+            OBJECTid: 2
+        },
+        {
+            days: 1000,
+            bottom: "girl in red",
+            top: ".",
+            img: "https://images.unsplash.com/photo-1689028294160-e78a88abcb19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            OBJECTid: 3
+        },
+        {
+            days: 3,
+            bottom: "Joray",
+            top: "Beech please",
+            img: "https://plus.unsplash.com/premium_photo-1676654935682-249ebba42a3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            OBJECTid: 4
+        },
+        {
+            days: 15,
+            bottom: "Ghost",
+            top: "Monstrance Clock",
+            img: "https://plus.unsplash.com/premium_photo-1686878940830-9031355ec98c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            OBJECTid: 5
+        }
+    ];
+    return libraryData;
+}
+
 
 import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
 import { svgImports } from './importAssets.js';
@@ -28,11 +71,10 @@ function loadInContainer() {
 }
 
 
-import musicObjetsGridItem from '../html/musicObjectsGridItem.html?raw';
+import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
 import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 
-function loadObjects() {
-    const loadEvents = 26;
+function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
 
     parentContainer.innerHTML = "";
@@ -53,17 +95,23 @@ function loadObjects() {
     });
 
 
-    /* from the users libraries */
-    for (var i = 0; i <= loadEvents - 1; i++) {
-        let replacedContent = musicObjetsGridItem
-        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate'];
 
-        const imgAddress = "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
-        const textTop = "Top text top text top ext hello there more and cake and then i ate a all da spaghetti";
-        const textBottom = "Bottom text, there shouldn't be that much of this";
+
+    /* from the users libraries ----- */
+    const loadEvents = libraryData.length;
+
+
+    for (var i = 0; i <= loadEvents - 1; i++) {
+        let replacedContent = musicObjectsGridItem
+        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate', 'MOGI_placeholder_itemID'];
+        const temporaryIidentifier = i;
+
+        const imgAddress = libraryData[i].img;
+        const textTop = libraryData[i].top;
+        const textBottom = libraryData[i].bottom;
+        const lastCheckedInDays = libraryData[i].days;
 
         /* last checked display calculator */
-        const lastCheckedInDays = i * i;
         const checkedIndicator = daysToDaysWeeksMonthsYears(lastCheckedInDays);
 
 
@@ -87,12 +135,61 @@ function loadObjects() {
                 value = textBottom;
             } else if (placeholder === 'MOG_checkedDate') {
                 value = checkedIndicator;
+            } else if (placeholder === 'MOGI_placeholder_itemID') {
+                value = temporaryIidentifier;
             }
 
             replacedContent = replacedContent.replace(regex, value);
         }
         parentContainer.innerHTML += replacedContent;
     }
+
+
+    /* detecting when the items in the grid are clicked, and then doing something about it */
+    document.addEventListener('click', function(event) {
+        const clickedElement = event.target;
+
+        // for the play button"
+        if (clickedElement.classList.contains('MOG-item-controls-play')) {
+            const buttonID = clickedElement.id.split('-')[1];
+            const objectID = libraryData[buttonID].OBJECTid;
+
+
+            console.log('Play ' + objectID);
+            //console.log(libraryData[buttonID].top);
+        }
+
+        // for the menu button
+        if (clickedElement.classList.contains('MOG-item-controls-menu')) {
+            const buttonID = clickedElement.id.split('-')[1];
+            const objectID = libraryData[buttonID].OBJECTid;
+
+
+            console.log('Menu ' + objectID);
+            displayMenu(event);
+        }
+    });
+}
+
+import { MENUdisplay } from './menu.js';
+
+function displayMenu(event) {
+    event.stopPropagation();
+    const clickedItem = event.target;
+
+
+    const params = [{
+        displayText: 'Play next',
+        optionalSVG: 'icons_playlist',
+        function: 'None'
+    }, {
+        displayText: 'Play later',
+        optionalSVG: 'icons_derpy',
+        function: 'None'
+    }]
+
+    MENUdisplay(params, event);
+    return;
 }
 
 function daysToDaysWeeksMonthsYears(days) {
@@ -101,14 +198,14 @@ function daysToDaysWeeksMonthsYears(days) {
     if (days < 1) {
         checkedIndicator = "Now";
         return checkedIndicator;
-    } else if (days > 0 && days < 7) {
+    } else if (days > 0 && days < 8) {
         checkedIndicator = days + "d";
         return checkedIndicator;
-    } else if (days > 7 && days < 28) {
+    } else if (days > 7 && days < 29) {
         let noWeeks = Math.floor(days / 7);
         checkedIndicator = noWeeks + "w";
         return checkedIndicator;
-    } else if (days > 28 && days < 365) {
+    } else if (days > 28 && days < 366) {
         let noMonths = Math.floor(days / 28);
         checkedIndicator = noMonths + "m";
         return checkedIndicator;
