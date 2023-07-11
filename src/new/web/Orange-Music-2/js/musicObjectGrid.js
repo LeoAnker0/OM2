@@ -54,7 +54,7 @@ function loadObjects() {
 
 
     /* from the users libraries */
-    for (var i = 1; i <= loadEvents - 1; i++) {
+    for (var i = 0; i <= loadEvents - 1; i++) {
         let replacedContent = musicObjetsGridItem
         const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate'];
 

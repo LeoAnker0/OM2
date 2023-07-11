@@ -13,6 +13,7 @@
     overflow: hidden;
 }
 
+/*
 .MATERIAL-blur-1:before {
     content: "";
     position: absolute;
@@ -25,6 +26,7 @@
     filter: url(#noise1);
     z-index: -1;
 }
+*/
 
 /* a simple lightening blur */
 .MATERIAL-blur-2 {
