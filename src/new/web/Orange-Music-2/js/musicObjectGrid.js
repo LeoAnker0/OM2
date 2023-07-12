@@ -164,8 +164,6 @@ function loadObjects(libraryData) {
             const buttonID = clickedElement.id.split('-')[1];
             const objectID = libraryData[buttonID].OBJECTid;
 
-
-            console.log('Menu ' + objectID);
             displayMenu(event);
         }
     });
