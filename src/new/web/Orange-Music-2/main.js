@@ -9,6 +9,7 @@ import './css/queue.css';
 import './css/menu.css';
 import './css/lcd.css';
 import './css/musicObjectGrid.css';
+import './css/settings.css';
 
 /* immediate priority 
 
@@ -20,6 +21,10 @@ we need real icons for loop song, and also pause
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
 document.getElementById('app').innerHTML = layout;
+
+/* settings menu */
+import { initSettings } from './js/settings.js';
+initSettings();
 
 /* build in the different sections of the webpage, with modification of the src 
 names so that they point somewhere */

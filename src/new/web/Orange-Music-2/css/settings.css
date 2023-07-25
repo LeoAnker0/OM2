@@ -1,0 +1,85 @@
+:root {}
+
+.SETTINGSmodalEnvironment {
+    position: fixed;
+    z-index: 100000;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+
+    //background-color: hsla(0, 100%, 80%, 0.3);
+
+}
+
+/* the modal container /settings area */
+.SETTINGSmodalContainer {
+    position: relative;
+    width: 30rem;
+    height: 18rem;
+    border-radius: 8px;
+    overflow: hidden;
+    outline: 1px solid hsla(0, 0%, 100%, 0.3);
+
+}
+
+.SETTINGSmodalTopTextContainer {
+    margin: 1rem;
+    position: relative;
+    font-weight: 600;
+    font-size: 2rem;
+    color: white;
+
+}
+
+.SETTINGSmodalFormAreaContainer {
+    margin: 1rem;
+    position: relative;
+}
+
+.SETTINGSmodalFormAreaContainer input {
+    all: unset;
+    border-radius: 8px;
+    background-color: transparent;
+    color: white;
+    outline: 1px solid hsla(0, 0%, 100%, 0.30);
+    padding: 0.15rem;
+    padding-left: 0.3rem;
+    margin-top: 0.3rem;
+    font-size: 1rem;
+}
+
+.SETTINGSmodalFormAreaContainer input:focus {
+    outline: 2px solid red;
+    background-color: hsla(0, 0%, 20%, 0.5);
+}
+
+.SETTINGSmodalSubmit {
+    padding-right: 0.35rem !important;
+}
+
+.SETTINGSmodalSubmit:focus {
+    background-color: red !important;
+}
+
+.SETTINGSmodalFormAreaText {
+    color: white;
+}
+
+/* random image */
+.SETTINGSrandomImage {
+    position: absolute;
+    top: 4rem;
+    right: 2rem;
+    width: 10rem;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.SETTINGSrandomImage img {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}

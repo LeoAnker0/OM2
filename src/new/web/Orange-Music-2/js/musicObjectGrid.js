@@ -66,7 +66,7 @@ function loadInContainer() {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-    document.getElementById(IDofElement).innerHTML = replacedContent;
+    document.getElementById(IDofElement).innerHTML += replacedContent;
     return;
 }
 
