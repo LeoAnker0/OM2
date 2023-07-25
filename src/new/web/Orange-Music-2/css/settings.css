@@ -83,3 +83,93 @@
     width: 100%;
     object-fit: cover;
 }
+
+/* status indicator */
+.SETTINGSmodalStatusIndicatorContainer {
+    position: absolute;
+    width: 30rem;
+    height: 18rem;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: -1;
+    display: grid;
+    place-items: center
+}
+
+.SETTINGSmodalStatusIndicatorOuterCircle {
+    --objectSize: 0rem;
+    --objectOutline: 0rem;
+    position: absolute;
+    height: var(--objectSize);
+    width: var(--objectSize);
+    border-radius: 50%;
+    outline: var(--objectOutline) solid hsla(0, 100%, 50%, 1.0);
+
+}
+
+
+.SETTINGSanimateError {
+    animation-name: SettingsError;
+    animation-duration: 6s;
+}
+
+@keyframes SettingsError {
+    0% {
+        height: 0rem;
+        width: 0rem;
+        outline: 5rem solid hsla(0, 100%, 50%, 1.0);
+    }
+
+    25% {
+        outline: 20rem solid hsla(0, 100%, 50%, 1.0);
+    }
+
+    100% {
+        height: 40rem;
+        width: 40rem;
+        outline: 40rem solid hsla(0, 100%, 50%, 1.0);
+    }
+}
+
+.SETTINGSanimateGreen {
+    animation-name: SettingsGreen;
+    animation-duration: 6s;
+
+}
+
+
+@keyframes SettingsGreen {
+    0% {
+        height: 0rem;
+        width: 0rem;
+        outline: 5rem solid hsla(150, 100%, 40%, 1.0);
+    }
+
+    25% {
+        outline: 20rem solid hsla(150, 100%, 40%, 1.0);
+    }
+
+    100% {
+        height: 40rem;
+        width: 40rem;
+        outline: 40rem solid hsla(150, 100%, 40%, 1.0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/
