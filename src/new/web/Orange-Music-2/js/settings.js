@@ -1,24 +1,31 @@
+const signedIn = true
+
 export function initSettings() {
+    if (signedIn == false) {
+        loadInContainer();
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('SETTINGSloginForm');
 
+            // Add an event listener for the form's submit event
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
 
-    loadInContainer();
+                loginErrorAnimation();
 
+                const emailValue = event.target.email.value;
+                const passwordValue = event.target.password.value;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const loginForm = document.getElementById('SETTINGSloginForm');
+                console.log('Form submitted!', emailValue, passwordValue);
 
-        // Add an event listener for the form's submit event
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission behavior
+                setTimeout(hideContainer, 2000);
 
-            loginErrorAnimation();
-
-            const emailValue = event.target.email.value;
-            const passwordValue = event.target.password.value;
-
-            console.log('Form submitted!', emailValue, passwordValue);
+            });
         });
-    });
+
+    } else {
+        console.log("already signedIn");
+    }
+
 }
 
 import settingsModal from '../html/settingsModal.html?raw';
@@ -35,6 +42,13 @@ function loadInContainer() {
     document.getElementById(IDofElement).innerHTML += replacedContent;
     return;
 }
+
+function hideContainer() {
+    const settingsModal = document.getElementById("SETTINGSmodalID");
+    settingsModal.remove();
+    return
+}
+
 
 function loginSuccessAnimation() {
     const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");

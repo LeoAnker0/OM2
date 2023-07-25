@@ -117,10 +117,10 @@
     0% {
         height: 0rem;
         width: 0rem;
-        outline: 5rem solid hsla(0, 100%, 50%, 1.0);
+        outline: 0rem solid hsla(0, 100%, 50%, 1.0);
     }
 
-    25% {
+    35% {
         outline: 10rem solid hsla(0, 100%, 50%, 1.0);
     }
 
@@ -142,10 +142,10 @@
     0% {
         height: 0rem;
         width: 0rem;
-        outline: 5rem solid hsla(150, 100%, 40%, 1.0);
+        outline: 0rem solid hsla(150, 100%, 40%, 1.0);
     }
 
-    25% {
+    35% {
         outline: 10rem solid hsla(150, 100%, 40%, 1.0);
     }
 
