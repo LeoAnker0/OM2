@@ -110,7 +110,7 @@
 
 .SETTINGSanimateError {
     animation-name: SettingsError;
-    animation-duration: 6s;
+    animation-duration: 2s;
 }
 
 @keyframes SettingsError {
@@ -121,19 +121,19 @@
     }
 
     25% {
-        outline: 20rem solid hsla(0, 100%, 50%, 1.0);
+        outline: 10rem solid hsla(0, 100%, 50%, 1.0);
     }
 
     100% {
-        height: 40rem;
-        width: 40rem;
-        outline: 40rem solid hsla(0, 100%, 50%, 1.0);
+        height: 35rem;
+        width: 35rem;
+        outline: 30rem solid hsla(0, 100%, 50%, 1.0);
     }
 }
 
 .SETTINGSanimateGreen {
     animation-name: SettingsGreen;
-    animation-duration: 6s;
+    animation-duration: 2s;
 
 }
 
@@ -146,13 +146,13 @@
     }
 
     25% {
-        outline: 20rem solid hsla(150, 100%, 40%, 1.0);
+        outline: 10rem solid hsla(150, 100%, 40%, 1.0);
     }
 
     100% {
-        height: 40rem;
-        width: 40rem;
-        outline: 40rem solid hsla(150, 100%, 40%, 1.0);
+        height: 35rem;
+        width: 35rem;
+        outline: 30rem solid hsla(150, 100%, 40%, 1.0);
     }
 }
 

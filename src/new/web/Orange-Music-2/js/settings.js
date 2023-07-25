@@ -4,17 +4,20 @@ export function initSettings() {
     loadInContainer();
 
 
-    const loginForm = document.getElementById('SETTINGSloginForm');
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('SETTINGSloginForm');
 
-    // Add an event listener for the form's submit event
-    loginForm.addEventListener('submit', function(event) {
-        console.log("cheese day");
-        event.preventDefault(); // Prevent the default form submission behavior
+        // Add an event listener for the form's submit event
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
 
-        const emailValue = event.target.email.value;
-        const passwordValue = event.target.password.value;
+            loginErrorAnimation();
 
-        console.log('Form submitted!');
+            const emailValue = event.target.email.value;
+            const passwordValue = event.target.password.value;
+
+            console.log('Form submitted!', emailValue, passwordValue);
+        });
     });
 }
 
@@ -35,16 +38,36 @@ function loadInContainer() {
 
 function loginSuccessAnimation() {
     const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError');
-    element.classList.remove('SETTINGSanimateGreen');
+
+    // Remove the animation classes to reset the animation state
+    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
+
+    // Add the animation class to start the animation
     element.classList.add('SETTINGSanimateGreen');
-    return
+
+    // Add an event listener to detect when the animation ends
+    element.addEventListener('animationend', () => {
+        // Remove the animation class after the animation ends
+        element.classList.remove('SETTINGSanimateGreen');
+    });
+
+    return;
 }
 
 function loginErrorAnimation() {
     const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError');
-    element.classList.remove('SETTINGSanimateGreen');
+
+    // Remove the animation classes to reset the animation state
+    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
+
+    // Add the animation class to start the animation
     element.classList.add('SETTINGSanimateError');
-    return
+
+    // Add an event listener to detect when the animation ends
+    element.addEventListener('animationend', () => {
+        // Remove the animation class after the animation ends
+        element.classList.remove('SETTINGSanimateError');
+    });
+
+    return;
 }
