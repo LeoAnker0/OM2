@@ -1,0 +1,349 @@
+:root {
+    font-family: 'Libre Franklin';
+    font-weight: 400;
+
+    --settingsModal-height: 24rem;
+}
+
+.SETTINGSmodalEnvironment {
+    position: fixed;
+    z-index: 100000;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+
+    //background-color: hsla(0, 100%, 80%, 0.3);
+
+}
+
+/* the modal container /settings area */
+.SETTINGSmodalContainer {
+    position: relative;
+    width: 30rem;
+    height: var(--settingsModal-height);
+    border-radius: 8px;
+    overflow: hidden;
+    outline: 1px solid hsla(0, 0%, 100%, 0.3);
+
+}
+
+.SETTINGSmodalTopTextContainer {
+    margin: 1rem;
+    position: relative;
+    font-weight: 600;
+    font-size: 2rem;
+    color: white;
+
+}
+
+.SETTINGSmodalFormAreaContainer {
+    margin: 1rem;
+    position: relative;
+}
+
+.SETTINGSmodalFormAreaContainer input {
+    all: unset;
+    border-radius: 8px;
+    background-color: transparent;
+    color: white;
+    outline: 1px solid hsla(0, 0%, 100%, 0.30);
+    padding: 0.15rem;
+    padding-left: 0.3rem;
+    margin-top: 0.3rem;
+    font-size: 1rem;
+}
+
+.SETTINGSmodalFormAreaContainer input:focus {
+    outline: 2px solid red;
+    background-color: hsla(0, 0%, 20%, 0.5);
+}
+
+.SETTINGSmodalSubmit {
+    padding-right: 0.35rem !important;
+}
+
+.SETTINGSmodalSubmit:focus {
+    background-color: red !important;
+}
+
+.SETTINGSmodalFormAreaText {
+    color: white;
+}
+
+/* random image */
+.SETTINGSrandomImage {
+    position: absolute;
+    top: 4rem;
+    right: 2rem;
+    width: 10rem;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.SETTINGSrandomImage img {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* status indicator */
+.SETTINGSmodalStatusIndicatorContainer {
+    position: absolute;
+    width: 30rem;
+    height: var(--settingsModal-height);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: -1;
+    display: grid;
+    place-items: center
+}
+
+.SETTINGSmodalStatusIndicatorOuterCircle {
+    --objectSize: 0rem;
+    --objectOutline: 0rem;
+    position: absolute;
+    height: var(--objectSize);
+    width: var(--objectSize);
+    border-radius: 50%;
+    outline: var(--objectOutline) solid hsla(0, 100%, 50%, 1.0);
+
+}
+
+
+.SETTINGSanimateError {
+    animation-name: SettingsError;
+    animation-duration: 2s;
+}
+
+@keyframes SettingsError {
+    0% {
+        height: 0rem;
+        width: 0rem;
+        outline: 0rem solid hsla(0, 100%, 50%, 1.0);
+    }
+
+    35% {
+        outline: 10rem solid hsla(0, 100%, 50%, 1.0);
+    }
+
+    100% {
+        height: 35rem;
+        width: 35rem;
+        outline: 30rem solid hsla(0, 100%, 50%, 1.0);
+    }
+}
+
+.SETTINGSanimateGreen {
+    animation-name: SettingsGreen;
+    animation-duration: 2s;
+
+}
+
+
+@keyframes SettingsGreen {
+    0% {
+        height: 0rem;
+        width: 0rem;
+        outline: 0rem solid hsla(150, 100%, 40%, 1.0);
+    }
+
+    35% {
+        outline: 10rem solid hsla(150, 100%, 40%, 1.0);
+    }
+
+    100% {
+        height: 35rem;
+        width: 35rem;
+        outline: 30rem solid hsla(150, 100%, 40%, 1.0);
+    }
+}
+
+
+
+/* a darkening blur with added grain noise */
+.MATERIAL-blur-1 {
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px) contrast(0.6) brightness(0.6);
+
+    /*
+    background-image:
+        radial-gradient(at 60% 30%, hsla(230, 60%, 60%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 0.5) 0px, transparent 100%);
+    */
+
+    overflow: hidden;
+}
+
+/*
+.MATERIAL-blur-1:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.2;
+    filter: url(#noise1);
+    z-index: -1;
+}
+*/
+
+/* a simple lightening blur */
+.MATERIAL-blur-2 {
+    background-color: rgba(256, 256, 256, 0.2);
+    backdrop-filter: blur(5px) contrast(0.2) brightness(0.8);
+    overflow: hidden;
+
+}
+
+/* a simple lightening blur */
+.MATERIAL-blur-22 {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px) contrast(0.6);
+    overflow: hidden;
+
+}
+
+/* a darkening blur with added mushroom noise  */
+.MATERIAL-blur-3 {
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px) contrast(0.8) brightness(0.80);
+
+    overflow: hidden;
+}
+
+.MATERIAL-blur-3:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.4;
+    filter: url(#noise2);
+    z-index: -1;
+}
+
+/* a darkening blur with polka dots */
+.MATERIAL-blur-4 {
+    background-color: rgba(256, 256, 256, 0.25);
+    backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
+    /*
+    background-image:
+        radial-gradient(at 50% 50%, hsla(230, 100%, 80%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 100% 00%, hsla(255, 100%, 75%, 0.5) 0px, transparent 100%),
+        radial-gradient(at 00% 100%, hsla(162, 100%, 80%, 0.5) 0px, transparent 100%);
+
+    */
+    overflow: hidden;
+}
+
+
+.MATERIAL-blur-4::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    /* Adjust the top and left values to position the pattern */
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.MATERIAL-blur-4::before {
+    --circle-size: 5px;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
+    background-size: var(--circle-size) var(--circle-size);
+    /* Adjust the size of the dots */
+    background-position: 0 0, 5px 5px;
+    /* Adjust the position of the dots */
+    z-index: -1;
+}
+
+.MATERIAL-blur-5 {
+    background-color: rgba(256, 256, 256, 0.2);
+    backdrop-filter: blur(5px) contrast(0.8) brightness(0.4);
+    overflow: hidden;
+}
+
+.MATERIAL-blur-6 {
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px) contrast(0.8) brightness(0.7);
+    overflow: hidden;
+
+}
+
+.MATERIAL-blur-6::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.2;
+    filter: url(#noise1);
+    z-index: -1;
+}
+
+
+.MATERIAL-meshBackground {
+    /*
+    background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url(path/to/your/background-image.jpg);
+    
+    */
+    /* Replace the background image URL or use 'linear-gradient' for a pure CSS solution */
+
+    background-color: hsla(255, 90%, 9%);
+
+    background-blur: 10px;
+    /* Adjust the blur strength as desired */
+    overflow: hidden;
+
+    //background-color: white;
+
+
+
+}
+
+.MATERIAL-meshBackground::before {
+    --splash-colour: var(--violet-2);
+    --splash-colour: var(--cyan-2);
+    --splash-colour: var(--indigo-8);
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-5deg);
+    width: 1200px;
+    /* Adjust the size of the color orb */
+    height: 200px;
+    border-radius: 50%;
+    background-image: radial-gradient(circle at center, var(--splash-colour) 0%, rgba(0, 0, 0, 0) 100%);
+    /* Apply a radial gradient */
+    z-index: 1;
+
+    filter: blur(50px);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/
