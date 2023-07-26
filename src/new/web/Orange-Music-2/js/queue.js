@@ -70,11 +70,11 @@ we want the only export here to be the update function
  */
 
 let songs = [
-    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://plus.unsplash.com/premium_photo-1677087121676-2acaaae5b3c8? ixlib = rb - 4.0 .3 & ixid = M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww & auto = format & fit = crop & w = 800 & q = 60" },
-    { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
-    { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://images.unsplash.com/photo-1549357957-99ab8644c268?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" },
-    { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://images.unsplash.com/photo-1665911177191-a0ae109c7401?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHNxdWFyZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" },
-    { id: 0, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://images.unsplash.com/photo-1603208636124-a12f78c1bb6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" }
+    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://picsum.photos/400?random=1" },
+    { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://picsum.photos/400?random=2" },
+    { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://picsum.photos/400?random=3" },
+    { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://picsum.photos/400?random=4" },
+    { id: 0, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://picsum.photos/400?random=5" }
 ];
 
 function updateQueue() {

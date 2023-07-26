@@ -19,35 +19,75 @@ function getLibraryData() {
             days: 2,
             bottom: "Billie Eilish",
             top: "Bad Guy",
-            img: "https://images.unsplash.com/photo-1689045306229-5ecee1d55998?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=400&q=60",
+            img: "https://picsum.photos/400?random=6",
             OBJECTid: 1
         },
         {
             days: 70,
-            bottom: "Aurora",
+            bottom: "AURORA",
             top: "Appletree",
-            img: "https://plus.unsplash.com/premium_photo-1683749805442-dd033af82294?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHx8&auto=format&fit=crop&w=400&q=60",
+            img: "https://picsum.photos/400?random=7",
             OBJECTid: 2
         },
         {
             days: 1000,
             bottom: "girl in red",
             top: ".",
-            img: "https://images.unsplash.com/photo-1689028294160-e78a88abcb19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            img: "https://picsum.photos/400?random=8",
             OBJECTid: 3
         },
         {
             days: 3,
             bottom: "Joray",
             top: "Beech please",
-            img: "https://plus.unsplash.com/premium_photo-1676654935682-249ebba42a3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            img: "https://picsum.photos/400?random=9",
+            OBJECTid: 4
+        }, {
+            days: 70,
+            bottom: "Lena Raine",
+            top: "The Augural",
+            img: "https://picsum.photos/400?random=10",
+            OBJECTid: 2
+        },
+        {
+            days: 1000,
+            bottom: "Kuraine",
+            top: "Desc Here",
+            img: "https://picsum.photos/400?random=11",
+            OBJECTid: 3
+        },
+        {
+            days: 3,
+            bottom: "Mamacita",
+            top: "Machbeats",
+            img: "https://picsum.photos/400?random=12",
+            OBJECTid: 4
+        }, {
+            days: 70,
+            bottom: "AURORA",
+            top: "Little Boy In The Grass",
+            img: "https://picsum.photos/400?random=13",
+            OBJECTid: 2
+        },
+        {
+            days: 1000,
+            bottom: "girl in red",
+            top: "Serotonin",
+            img: "https://picsum.photos/400?random=14",
+            OBJECTid: 3
+        },
+        {
+            days: 3,
+            bottom: "Lena Rhaine",
+            top: "Out of Control (feat. Quentin featin-tino)",
+            img: "https://picsum.photos/400?random=15",
             OBJECTid: 4
         },
         {
             days: 15,
             bottom: "Ghost",
             top: "Monstrance Clock",
-            img: "https://plus.unsplash.com/premium_photo-1686878940830-9031355ec98c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
+            img: "https://picsum.photos/400?random=16",
             OBJECTid: 5
         }
     ];
