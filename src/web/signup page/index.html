@@ -17,10 +17,7 @@
             <div class="SETTINGSmodalTopTextContainer">Sign Up</div>
             <form class="SETTINGSmodalFormAreaContainer" id="SETTINGSloginForm">
                 <label for="username" class="SETTINGSmodalFormAreaText">Username</label><br>
-                <input type="username" name="username" id="username" required>
-                <br><br>
-                <label for="profilePicture" class="SETTINGSmodalFormAreaText">Profile Picture</label><br>
-                <input type="profilePicture" name="profilePicture" id="profilePicture" required>
+                <input type="text" name="username" id="username" required>
                 <br><br>
                 <label for="email" class="SETTINGSmodalFormAreaText">Email</label><br>
                 <input type="email" name="email" id="email" required>
@@ -28,17 +25,33 @@
                 <label for="password" class="SETTINGSmodalFormAreaText">Password</label><br>
                 <input type="password" name="password" id="password" required>
                 <br><br>
+                <label for="profilePicture" class="SETTINGSmodalFormAreaText">Profile Picture</label><br>
+                <input type="file" name="profilePicture" id="profilePicture" required onchange="previewImage(event)">
+                <br><br>
                 <input class="SETTINGSmodalSubmit" type="submit" name="Submit" value="Submit">
             </form>
             <div class="SETTINGSrandomImage">
-                <img src="https://picsum.photos/400">
-            </div>
-        </div>
-        <div class="SETTINGSmodalStatusIndicatorContainer">
-            <div class="SETTINGSmodalStatusIndicatorOuterCircle">
+                <img id="previewImage" src="https://picsum.photos/400">
             </div>
         </div>
     </div>
+    <script>
+    function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const preview = document.getElementById("previewImage");
+                preview.src = e.target.result;
+            };
+
+            // Read the image file as a data URL.
+            reader.readAsDataURL(file);
+        }
+    }
+    </script>
 </body>
 
 </html>
