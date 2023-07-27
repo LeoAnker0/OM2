@@ -88,6 +88,8 @@
                 // Handle error response from the server if needed
                 const errorData = await response.json();
                 console.error(errorData);
+
+                console.log("email error")
             } else {
                 // If the email is valid, continue with the second step
                 const responseData = await response.json();
@@ -128,11 +130,15 @@
                     const responseData = await secondResponse.json();
                     console.log("Second step response:", responseData);
                     // Do something with the response, e.g., show a success message to the user
+
+                    console.log("lets move to the normal site")
                 }
             }
         } catch (error) {
             // Handle network errors or other exceptions
             console.error(error);
+
+            console.log("there was an error, lets try again")
         }
     }
     </script>
