@@ -10,6 +10,9 @@ services:
       - tunnel
     env_file:
       - .env
+    volumes:
+      - om2data:/var/lib
+      - fastapi_code:/app
     restart: always
 
   cloudflared:
@@ -45,5 +48,11 @@ networks:
 
 volumes:
   pgdata:
-
   pgadmin_data:
+  om2data:
+  fastapi_code:
+    driver: local  # Use the local driver to map a local directory
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  # Replace this with the actual path to your FastAPI code
