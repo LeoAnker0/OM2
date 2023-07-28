@@ -85,7 +85,7 @@ async def is_email_unique(email):
 async def insert_user(data: dict):
     async with app.state.pool.acquire() as conn:
         data["description"] = "empty..."
-        data["date_joined"] = str(int(datetime.datetime.now().timestamp() * 1000))
+        data["date_joined"] = int(datetime.datetime.now().timestamp() * 1000)
 
         while True:
             # Generate a UUID
@@ -99,8 +99,8 @@ async def insert_user(data: dict):
                 break
 
 
-        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
-        await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"], "0")
+        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+        await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"], 0, 0, False)
 
 @app.post("/apis/signup/")
 async def signup(request: Request):
