@@ -46,7 +46,7 @@ services:
     build:
       context: ./chipmunk_processor
     volumes:
-      - ./chipmunk_processor/app:/
+      - ./chipmunk_processor/app:/app
       - om2data:/var/www/media
     networks:
       - tunnel
