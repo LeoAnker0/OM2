@@ -48,6 +48,7 @@ services:
     volumes:
       - ./chipmunk_processor/app:/app
       - chipmunk_data:/chipmunk_data
+      - om2data:/var/www/media
     networks:
       - tunnel
     restart: always

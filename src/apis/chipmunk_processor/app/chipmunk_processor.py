@@ -11,7 +11,6 @@ app = FastAPI()
 async def process_image(request: Request):
 	try:
 		data = await request.json()
-		print(f"Received data: {data.get('imgData')[:10]}")
 
 		image_base64 = data.get("imgData")
 
@@ -34,7 +33,7 @@ async def process_image(request: Request):
 		image = Image.open(io.BytesIO(image_data))
 
 		# Save the image to the volume (om2data)
-		image_path = "/var/www/media/processed_image." + image_type  # Change the extension as needed
+		image_path = "/var/www/media/processed_image2." + image_type  # Change the extension as needed
 		image.save(image_path)
 
 		return {"message": "Image processed and saved successfully."}
