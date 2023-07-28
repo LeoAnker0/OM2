@@ -103,7 +103,7 @@ async def insert_user(data: dict):
         query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
         await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"], 0, 0, False)
 
-@app.post("/apis/signup/")
+@app.post("/signup/")
 async def signup(request: Request):
 
     raw_data = await request.body()
@@ -128,7 +128,7 @@ async def signup(request: Request):
     # Return the token to the client-side
     return {"status": "email_validated", "token": token}
 
-@app.post("/apis/signup/complete/")
+@app.post("/signup/complete/")
 async def complete_signup(request: Request):
     # Retrieve the form data from the temporary data store using the token
     raw_data = await request.body()
