@@ -47,7 +47,7 @@ services:
       context: ./chipmunk_processor
     volumes:
       - ./chipmunk_processor/app:/app
-      - om2data:/var/www/media
+      - chipmunk_data:/chipmunk_data
     networks:
       - tunnel
     restart: always
@@ -57,7 +57,7 @@ services:
     ports:
       - "9000:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - om2data:/var/www/media
 
 networks:
@@ -73,4 +73,8 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  # Replace this with the actual path to your FastAPI code
+      device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  
+  chipmunk_data:
+
+
+

@@ -150,6 +150,21 @@ async def complete_signup(request: Request):
 
     #send the image to chipmunk_processor
     # Send a message to the chipmunk_processor container
+    chipmunk_processor_url = "http://chipmunk_processor:8001/process_image/base64/"
+    payload = {"imgData": profilePicture}
+    print("we are sending an image to chipmunk_processor")
+    response = requests.post(chipmunk_processor_url, json=payload)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Error sending message to chipmunk_processor.")
+
+    # Get the response from the chipmunk_processor container
+    response_data = response.json()
+    print(response_data)
+
+
+    """
+    # Send a message to the chipmunk_processor container
     chipmunk_processor_url = "http://chipmunk_processor:8001/send_message/"
     payload = {"message": "Hello from main.py!"}
     print("we are sending a message to chipmunk_processor")
@@ -162,6 +177,7 @@ async def complete_signup(request: Request):
     response_data = response.json()
     processed_message = response_data["response"]
     print(processed_message)
+    """
 
 
    
