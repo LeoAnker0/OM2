@@ -10,6 +10,9 @@ import secrets
 import uuid
 import datetime
 import bcrypt
+import html
+import re
+import email.utils
 
 load_dotenv()
 
@@ -53,6 +56,14 @@ def hash_password(password: str) -> str:
     # The hashed_password is a bytes object, so convert it to a string before returning
     return hashed_password.decode("utf-8")
 
+def is_valid_email(email_address):
+    # Use email.utils.parseaddr() to parse the email address
+    _, email_parsed = email.utils.parseaddr(email_address)
+    
+    # Check if the parsed email address is valid
+    return re.match(r"[^@]+@[^@]+\.[^@]+", email_parsed) is not None
+
+
 
 @app.on_event("startup")
 async def startup():
@@ -88,8 +99,8 @@ async def insert_user(data: dict):
                 break
 
 
-        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined) VALUES ($1, $2, $3, $4, $5, $6, $7)"
-        await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"])
+        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+        await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"], "0")
 
 @app.post("/apis/signup/")
 async def signup(request: Request):
@@ -97,14 +108,21 @@ async def signup(request: Request):
     raw_data = await request.body()
     data = json.loads(raw_data)
 
-    email_unique = await is_email_unique(data["email"])
+    email = html.escape(str(data["email"]))
+
+    email_unique = await is_email_unique(email)
 
     if not email_unique:
         raise HTTPException(status_code=400, detail="Email already exists")
 
+    email_valid = is_valid_email(email)
+
+    if not email_valid:
+        raise HTTPException(status_code=400, detail="Email invalid")
+
     # Step 2: Generate a unique token and store the form data in the temporary data store
     token = secrets.token_urlsafe(16)
-    signup_data_store[token] = data["email"]
+    signup_data_store[token] = email
 
     # Return the token to the client-side
     return {"status": "email_validated", "token": token}
@@ -115,9 +133,9 @@ async def complete_signup(request: Request):
     raw_data = await request.body()
     data = json.loads(raw_data);
     token = data["token"]
-    username = data["username"]
+    username = html.escape(str(data["username"]))
     password = hash_password(data["password"])
-    email = data["email"]
+    email = html.escape(str(data["email"]))
     profilePicture = data["profilePicture"]
 
     #print(f"token: {token} \t| username: {username} \t| password: {password} \t| email: {email}")
