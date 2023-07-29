@@ -4,8 +4,42 @@ from PIL import Image
 import io
 import os
 import imghdr
+import json
+import asyncpg
+import uuid
+import secrets
+import string
 
 app = FastAPI()
+
+async def create_db_pool():
+    pool = await asyncpg.create_pool(
+        database=str(os.environ.get("POSTGRES_DB")),
+        user=str(os.environ.get("POSTGRES_USER")),
+        password=str(os.environ.get("POSTGRES_PASSWORD")),
+        host="postgres",  # Replace with your actual database host
+        port="5432",      # Replace with your actual database port
+    )
+    return pool
+
+def generate_url():
+	url_length = 86  # You can adjust this value to make longer or shorter URLs as needed
+	url_characters = string.ascii_letters + string.digits + "-_"
+	return ''.join(secrets.choice(url_characters) for _ in range(url_length))
+
+
+
+
+@app.on_event("startup")
+async def startup():
+    app.state.pool = await create_db_pool()
+
+    url = generate_url()
+    print(url)
+
+@app.on_event("shutdown")
+async def shutdown():
+    await app.state.pool.close()
 
 @app.post("/process_image/base64/")
 async def process_image(request: Request):
@@ -42,14 +76,16 @@ async def process_image(request: Request):
 		# Convert bytes to megabytes
 		image_size_mbs = image_size_bytes / (1024 * 1024)
 
-		print(f"image size: {image_size_mbs}")
-
 		if image_size_mbs > 6:
 			raise HTTPException(status_code=400, detail="Image size exceeds 5 MB limit")
 
-
-
 		print(f"the image is real")
+
+
+		# Create a file ID and all of those things
+
+
+
 
 		# Save the image to the volume (om2data)
 		image_path = "/var/www/media/processed_image2." + image_type  # Change the extension as needed

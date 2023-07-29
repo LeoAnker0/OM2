@@ -22,13 +22,6 @@ app = FastAPI()
 # Temporary data store to store form data with tokens
 signup_data_store = {}
 
-class SignupData(BaseModel):
-    username: str
-    email: EmailStr
-    password: str
-    profile_picture: str  # You can store the image URL in the database
-
-
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
