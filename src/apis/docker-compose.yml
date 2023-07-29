@@ -1,6 +1,6 @@
-version: '3'
+version: '0.1'
 services:
-  web:
+  fastapi:
     build: 
       context: .
       dockerfile: Dockerfile
@@ -51,6 +51,8 @@ services:
       - om2data:/var/www/media
     networks:
       - tunnel
+    env_file:
+      - .env
     restart: always
 
   nginx:
