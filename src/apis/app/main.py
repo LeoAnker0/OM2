@@ -153,29 +153,13 @@ async def complete_signup(request: Request):
 
     # Get the response from the chipmunk_processor container
     response_data = response.json()
+    url = response_data["url"]
     print(response_data)
-
-
-    """
-    # Send a message to the chipmunk_processor container
-    chipmunk_processor_url = "http://chipmunk_processor:8001/send_message/"
-    payload = {"message": "Hello from main.py!"}
-    print("we are sending a message to chipmunk_processor")
-    response = requests.post(chipmunk_processor_url, json=payload)
-
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Error sending message to chipmunk_processor.")
-
-    # Get the response from the chipmunk_processor container
-    response_data = response.json()
-    processed_message = response_data["response"]
-    print(processed_message)
-    """
-
+    print(url)
 
    
     #add user to the db
-    user_dict = dict(username=username, password=password, email=email, profile_picture="cheese")
+    user_dict = dict(username=username, password=password, email=email, profile_picture=url)
     await insert_user(user_dict)
 
 
