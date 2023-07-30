@@ -22,20 +22,37 @@ async def create_db_pool():
     )
     return pool
 
+async def is_url_unique(url):
+	async with app.state.pool.acquire() as conn:
+		query = "SELECT COUNT(*) FROM files WHERE file_url = $1"
+		result = await conn.fetchval(query, url)
+		return result == 0
+
 def generate_url():
-	url_length = 86  # You can adjust this value to make longer or shorter URLs as needed
-	url_characters = string.ascii_letters + string.digits + "-_"
+	url_length = 96  # You can adjust this value to make longer or shorter URLs as needed
+	url_characters = string.ascii_letters
 	return ''.join(secrets.choice(url_characters) for _ in range(url_length))
 
+async def prepare_url():
+	async with app.state.pool.acquire() as conn:
+		print(f"\n\n")
+
+		while True:
+			url = generate_url()
+
+			query = "SELECT COUNT(*) FROM files WHERE file_url = $1"
+			result = await conn.fetchval(query, url)
+			if result == 0:
+				#unique url found
+				break
+
+		return url
 
 
 
 @app.on_event("startup")
 async def startup():
     app.state.pool = await create_db_pool()
-
-    url = generate_url()
-    print(url)
 
 @app.on_event("shutdown")
 async def shutdown():
@@ -83,15 +100,26 @@ async def process_image(request: Request):
 
 
 		# Create a file ID and all of those things
+		url = await prepare_url()
+
 
 
 
 
 		# Save the image to the volume (om2data)
-		image_path = "/var/www/media/processed_image2." + image_type  # Change the extension as needed
+		#image_path = "/var/www/media/processed_image2." + image_type  # Change the extension as needed
+		image_path = f"/var/www/media/{url}/0.{image_type}"
+
+		# Check if the directory exists, if not, create it
+		directory = os.path.dirname(image_path)
+		if not os.path.exists(directory):
+			os.makedirs(directory)
+
 		image.save(image_path)
+		print(url)
 
 		return {"message": "Image processed and saved successfully."}
+
 	except HTTPException as http_exc:
 		raise http_exc  # Re-raise the HTTPException with the appropriate status code and detail
 	except Exception as e:
