@@ -58,8 +58,6 @@ services:
       - tunnel
     env_file:
       - .env
-    environment:
-      - PYTHONASYNCIODEBUG=1
     restart: always
 
   # File Serving
@@ -79,14 +77,14 @@ services:
       context: ./admin_tools
     volumes:
       - ./admin_tools/app:/app
-      - admin_tools:/admin_tools
+      - admin_tools_data:/admin_tools_data
       - om2data:/var/www/media
+    ports:
+      - "10001:80"
     networks:
       - tunnel
     env_file:
       - .env
-    ports:
-      - "10000:80"
     restart: always
 
 
@@ -105,7 +103,7 @@ volumes:
       o: bind
       device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  
   chipmunk_data:
-  admin_tools:
+  admin_tools_data:
 
 
 

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Request
+from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 import base64
 from PIL import Image
 import io
@@ -15,6 +16,15 @@ import logging
 
 
 app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 async def create_db_pool():
     pool = await asyncpg.create_pool(
@@ -44,7 +54,7 @@ async def send_message(request: Request):
 	#process message
 	print("we have a message")
 
-	message = data.get("message")
+	message = data.get("user_to_delete")
 
 	if message is None:
 		return {"error": "Message field not found in JSON payload."}
@@ -58,4 +68,3 @@ async def send_message(request: Request):
 
 
 
-	

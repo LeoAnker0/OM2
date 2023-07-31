@@ -11,7 +11,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port for the HTTP API
-EXPOSE 10001
+EXPOSE 80
 
 # Use uvicorn as the development server with auto-reload
-CMD ["uvicorn", "--host", "0.0.0.0", "--port", "10001", "--reload", "delete_user:app"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "80", "--reload", "delete_user:app"]
