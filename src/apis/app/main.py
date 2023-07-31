@@ -144,7 +144,7 @@ async def complete_signup(request: Request):
     #send the image to chipmunk_processor
     # Send a message to the chipmunk_processor container
     chipmunk_processor_url = "http://chipmunk_processor:8001/process_image/base64/"
-    payload = {"imgData": profilePicture}
+    payload = {"imgData": profilePicture, "owner_email": email}
     print("we are sending an image to chipmunk_processor")
     response = requests.post(chipmunk_processor_url, json=payload)
 

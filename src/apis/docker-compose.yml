@@ -53,8 +53,10 @@ services:
       - tunnel
     env_file:
       - .env
+    environment:
+      - PYTHONASYNCIODEBUG=1
     restart: always
-
+ 
   nginx:
     image: nginx:latest
     ports:

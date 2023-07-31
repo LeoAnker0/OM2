@@ -10,6 +10,9 @@ import uuid
 import secrets
 import string
 import asyncio
+import datetime
+import logging
+
 
 app = FastAPI()
 
@@ -48,10 +51,57 @@ async def prepare_url():
 		return url
 
 
+async def init_file_in_database(data: dict):
+    async with app.state.pool.acquire() as conn:
+        data["file_created_time"] = int(datetime.datetime.now().timestamp() * 1000)
+
+        json_owner = {}
+        owner = json.dumps(json_owner)
+
+        query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
+        await conn.execute(query, "started", 0, data["url"], (owner,), "image", data["file_created_time"])
+
+
+async def get_uuid_by_email(email):
+	async with app.state.pool.acquire() as conn:
+		query = "SELECT uuid FROM users WHERE email = $1"
+		uuid = await conn.fetchval(query, email)
+		return uuid
+
+
+
+async def update_file_in_database(data:dict):
+    async with app.state.pool.acquire() as conn:
+        # get the id of the owner via their email.
+        url = data["url"]
+        email = data["owner_email"]
+        owner = await get_uuid_by_email(email)
+
+
+
+        json_owner = {"owner": owner, "permissions": "owner"}
+        owner = json.dumps(json_owner)
+
+
+        update_query = "UPDATE files SET processed_state = $1, file_size = $2, owner = $3 WHERE file_url = $4"
+        await conn.execute(update_query, "finished", data["file_size"], (owner,), url)
+
+
+def get_folder_size(folder_path):
+	total_size = 0
+
+	for dirpath, dirnames, filenames in os.walk(folder_path):
+		for filename in filenames:
+			file_path = os.path.join(dirpath, filename)
+			total_size += os.path.getsize(file_path)
+
+	return total_size
+
 
 @app.on_event("startup")
 async def startup():
     app.state.pool = await create_db_pool()
+    
 
 @app.on_event("shutdown")
 async def shutdown():
@@ -63,6 +113,7 @@ async def process_image(request: Request):
 		data = await request.json()
 
 		image_base64 = data.get("imgData")
+		owner_email = data.get("owner_email")
 
 		# Decode the base64 image data
 		try:
@@ -99,10 +150,13 @@ async def process_image(request: Request):
 		url = await prepare_url()
 
 
-		#return url to main.py
+		# Send details to our files database, saying that the current state is processing
+		files_dict = dict(url=url)
+		await init_file_in_database(files_dict)
 
 		# Enqueue the image processing task to run in the background
-		asyncio.create_task(process_and_save_image(image, url, image_type, image_data))
+		asyncio.create_task(process_and_save_image(image, url, image_type, image_data, owner_email))
+
 
 	    # Return the response to the client with the URL
 		return {"message": "Image processing started.", "url": url}
@@ -115,8 +169,10 @@ async def process_image(request: Request):
 		raise HTTPException(status_code=500, detail="Error processing image.")
 
 
-async def process_and_save_image(image, url, image_type, image_data):
+async def process_and_save_image(image, url, image_type, image_data, owner_email):
 	try:
+
+
 		# Save the image to the volume (om2data)
 		image_path = f"/var/www/media/{url}/0.{image_type}"
 
@@ -166,7 +222,17 @@ async def process_and_save_image(image, url, image_type, image_data):
 		image_path = f"/var/www/media/{url}/6.{image_type}"
 		compressed_6.save(image_path, format="webp", optimize=True, quality=96)
 
+		"""
+		Send details to our files database, saying that the current state is finished, 
+		and then also get the size of all of these files together and update the database
+		with how much storage space is being used with this file
 
+		"""
+
+		folder_size = get_folder_size(f"/var/www/media/{url}/")
+
+		files_dict = dict(url=url, owner_email=owner_email, file_size=folder_size)
+		await update_file_in_database(files_dict)
 
 
 
