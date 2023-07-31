@@ -1,5 +1,6 @@
 version: '0.1'
 services:
+  # Public facing API
   fastapi:
     build: 
       context: .
@@ -15,12 +16,14 @@ services:
       - fastapi_code:/app
     restart: always
 
+  # For Exposing apis and file hosting to the internet
   cloudflared:
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
     networks:
       - tunnel
 
+  # Database
   postgres:
     image: postgres
     environment:
@@ -30,6 +33,7 @@ services:
     networks:
       - tunnel
 
+  # Postgres admin - not for prod
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -42,6 +46,7 @@ services:
     networks:
       - tunnel
 
+  # File Processing
   chipmunk_processor:
     build:
       context: ./chipmunk_processor
@@ -56,7 +61,8 @@ services:
     environment:
       - PYTHONASYNCIODEBUG=1
     restart: always
- 
+
+  # File Serving
   nginx:
     image: nginx:latest
     ports:
@@ -66,6 +72,23 @@ services:
       - om2data:/var/www/media
     networks:
       - tunnel
+
+  # Admin Tools
+  admin_tools:
+    build:
+      context: ./admin_tools
+    volumes:
+      - ./admin_tools/app:/app
+      - admin_tools:/admin_tools
+      - om2data:/var/www/media
+    networks:
+      - tunnel
+    env_file:
+      - .env
+    ports:
+      - "10000:80"
+    restart: always
+
 
 networks:
   tunnel:
@@ -82,6 +105,7 @@ volumes:
       o: bind
       device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  
   chipmunk_data:
+  admin_tools:
 
 
 
