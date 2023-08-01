@@ -154,6 +154,8 @@ async def send_message(request: Request):
 async def retrieve_users_table():
 	users_table = await get_users_table()
 
+	# for users in users table, go to the files table and sum their space used
+
 	return {"response": users_table}
 
 
