@@ -74,10 +74,10 @@ async def get_files_table(uuid):
 def bytes_to_mb_gb(bytes_value):
 	gb_value = bytes_value / (1024 * 1024 * 1024)
 	if gb_value >=1:
-		return f"{gb_value:.2f}GB"
+		return f"{gb_value:.2f}gb"
 	else:
 		mb_value = bytes_value / (1024 * 1024)
-		return f"{mb_value:.2f}MB"
+		return f"{mb_value:.2f}mb"
 
 
 @app.on_event("startup")

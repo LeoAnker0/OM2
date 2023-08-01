@@ -71,6 +71,9 @@ async function loadTable() {
                         copyToClipboard(target.textContent.trim());
                     }
                 });
+
+                // clear the input field
+                clearUserToDeleteInput()
             }
         }
 
@@ -81,6 +84,12 @@ async function loadTable() {
         console.log("there was an error, lets try again")
     }
 }
+
+function clearUserToDeleteInput() {
+    const inputUserToDelete = document.getElementById('user_to_delete');
+    inputUserToDelete.value = '';
+}
+
 
 async function copyToClipboard(rowElement) {
     const textarea = document.createElement("textarea");
@@ -100,9 +109,9 @@ async function copyToClipboard(rowElement) {
 loadTable()
 
 const signupForm = document.getElementById("SETTINGSloginForm");
-signupForm.addEventListener("submit", signup);
+signupForm.addEventListener("submit", delete_user);
 
-async function signup(event) {
+async function delete_user(event) {
     event.preventDefault();
 
     const form = document.getElementById("SETTINGSloginForm");

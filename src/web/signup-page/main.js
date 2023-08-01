@@ -38,6 +38,7 @@ signupForm.addEventListener("submit", signup);
 
 async function signup(event) {
     event.preventDefault();
+    startSpinner();
 
     const form = document.getElementById("SETTINGSloginForm");
     const formData = {};
@@ -81,10 +82,12 @@ async function signup(event) {
             console.error(errorData);
 
             console.log("email error")
+            stopSpinner();
+            loginErrorAnimation()
+
         } else {
             // If the email is valid, continue with the second step
             const responseData = await response.json();
-            console.log("First step response:", responseData);
 
             // Step 2: Update formData with the received token and send the rest of the form data
             formData["token"] = responseData.token;
@@ -119,16 +122,75 @@ async function signup(event) {
             } else {
                 // Handle successful response from the server if needed
                 const responseData = await secondResponse.json();
-                console.log("Second step response:", responseData);
                 // Do something with the response, e.g., show a success message to the user
 
-                console.log("lets move to the normal site")
+                stopSpinner();
+                loginSuccessAnimation()
+
+                setTimeout(function() {
+                    redirectToPage("http://localhost:5175");
+                }, 3000);
+
             }
         }
     } catch (error) {
         // Handle network errors or other exceptions
         console.error(error);
+        stopSpinner();
+        loginErrorAnimation()
+
 
         console.log("there was an error, lets try again")
     }
+}
+
+function startSpinner() {
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "block";
+}
+
+function stopSpinner() {
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "none";
+}
+
+
+function loginSuccessAnimation() {
+    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
+
+    // Remove the animation classes to reset the animation state
+    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
+
+    // Add the animation class to start the animation
+    element.classList.add('SETTINGSanimateGreen');
+
+    // Add an event listener to detect when the animation ends
+    element.addEventListener('animationend', () => {
+        // Remove the animation class after the animation ends
+        element.classList.remove('SETTINGSanimateGreen');
+    });
+
+    return;
+}
+
+function loginErrorAnimation() {
+    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
+
+    // Remove the animation classes to reset the animation state
+    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
+
+    // Add the animation class to start the animation
+    element.classList.add('SETTINGSanimateError');
+
+    // Add an event listener to detect when the animation ends
+    element.addEventListener('animationend', () => {
+        // Remove the animation class after the animation ends
+        element.classList.remove('SETTINGSanimateError');
+    });
+
+    return;
+}
+
+function redirectToPage(url) {
+    window.location.href = url;
 }
