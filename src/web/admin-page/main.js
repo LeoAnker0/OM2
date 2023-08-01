@@ -131,8 +131,8 @@ async function signup(event) {
         } else {
             // If the email is valid, continue with the second step
             const responseData = await response.json();
-            console.log("First step response:", responseData);
-
+            console.log("Deletion response:", responseData);
+            loadTable()
 
         }
     } catch (error) {
