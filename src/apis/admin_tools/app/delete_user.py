@@ -66,5 +66,23 @@ async def send_message(request: Request):
 
 
 
+@app.post("/delete_user/")
+async def send_message(request: Request):
+	data = await request.json()
+	#process message
+
+	uuid = data.get("user_to_delete")
+	print(f"USER to delete {uuid}")
+
+	# check if uuid is in the db
+
+	if uuid is None:
+		return {"error": "Message field not found in JSON payload."}
+
+
+	processed_message = f"Processed: {uuid}"
+
+	return {"response": processed_message}
+
 
 

@@ -3,6 +3,42 @@ import form from './html/delete_user.html?raw';
 
 document.querySelector('#app').innerHTML = form
 
+import userRow from './html/usersTableRow.html?raw';
+
+const usersTable = document.getElementById("usersTableEnvironment")
+
+//get the list of users from the server
+//then for the no of users from the server add those  into the table via this here
+
+for (let i = 0; i < 6; i++) {
+    const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used'];
+
+    let replacedContent = userRow;
+
+    for (let i = 0; i < listOfThings.length; i++) {
+        const placeholder = listOfThings[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'Username') {
+            value = "leo";
+        } else if (placeholder === 'Email') {
+            value = "leo@loe.leo";
+        } else if (placeholder === 'UUID') {
+            value = "f0d686b0-25fc-4c8c-84c6-a66f23ca8a77";
+        } else if (placeholder === 'Verified') {
+            value = "False";
+        } else if (placeholder === 'Space_Used') {
+            value = "5mb";
+        }
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
+    usersTable.innerHTML += replacedContent
+}
+
+
+
 const signupForm = document.getElementById("SETTINGSloginForm");
 signupForm.addEventListener("submit", signup);
 
@@ -17,11 +53,9 @@ async function signup(event) {
         for (const element of form.elements) {
 
             formData[element.name] = element.value;
-            console.log(element.name, ":", element.value)
-
         }
 
-        const response = await fetch("http://localhost:10001/send_message/", {
+        const response = await fetch("http://localhost:10001/delete_user/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
