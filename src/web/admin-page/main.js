@@ -5,39 +5,98 @@ document.querySelector('#app').innerHTML = form
 
 import userRow from './html/usersTableRow.html?raw';
 
-const usersTable = document.getElementById("usersTableEnvironment")
+const usersTableEnvironment = document.getElementById("usersTableInforRowsContainer")
 
-//get the list of users from the server
-//then for the no of users from the server add those  into the table via this here
 
-for (let i = 0; i < 6; i++) {
-    const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used'];
+async function loadTable() {
+    //get the list of users from the server
+    try {
+        const response = await fetch("http://localhost:10001/retrieve_users_table/", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
 
-    let replacedContent = userRow;
+        if (!response.ok) {
+            // Handle error response from the server if needed
+            const errorData = await response.json();
+            console.error(errorData);
 
-    for (let i = 0; i < listOfThings.length; i++) {
-        const placeholder = listOfThings[i].toString();
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        let value = '';
+            console.log("error")
+        } else {
+            const responseData = await response.json();
+            const usersTable = responseData.response;
+            const usersTableLength = usersTable.length;
 
-        if (placeholder === 'Username') {
-            value = "leo";
-        } else if (placeholder === 'Email') {
-            value = "leo@loe.leo";
-        } else if (placeholder === 'UUID') {
-            value = "f0d686b0-25fc-4c8c-84c6-a66f23ca8a77";
-        } else if (placeholder === 'Verified') {
-            value = "False";
-        } else if (placeholder === 'Space_Used') {
-            value = "5mb";
+            usersTableEnvironment.innerHTML = "";
+            for (let i = 0; i < usersTableLength; i++) {
+                const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used'];
+
+                const username = usersTable[i].username;
+                const uuid = usersTable[i].uuid;
+                const verified = usersTable[i].verified;
+                const email = usersTable[i].email;
+
+
+                let replacedContent = userRow;
+
+                for (let i = 0; i < listOfThings.length; i++) {
+                    const placeholder = listOfThings[i].toString();
+                    const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+                    let value = '';
+
+                    if (placeholder === 'Username') {
+                        value = username;
+                    } else if (placeholder === 'Email') {
+                        value = email;
+                    } else if (placeholder === 'UUID') {
+                        value = uuid;
+                    } else if (placeholder === 'Verified') {
+                        value = verified;
+                    } else if (placeholder === 'Space_Used') {
+                        value = "5mb";
+                    }
+
+                    replacedContent = replacedContent.replace(regex, value);
+                }
+                usersTableEnvironment.innerHTML += replacedContent
+
+                // Add the event listener to the parent container <div>
+                usersTableEnvironment.addEventListener("dblclick", (event) => {
+                    const target = event.target.closest(".cell");
+                    if (target.classList.contains("cell")) {
+                        event.stopPropagation(); // Prevent event propagation
+                        copyToClipboard(target.textContent.trim());
+                    }
+                });
+            }
         }
 
-        replacedContent = replacedContent.replace(regex, value);
+    } catch (error) {
+        // Handle network errors or other exceptions
+        console.error(error);
+
+        console.log("there was an error, lets try again")
     }
-    usersTable.innerHTML += replacedContent
 }
 
+async function copyToClipboard(rowElement) {
+    const textarea = document.createElement("textarea");
+    textarea.value = rowElement;
+    document.body.appendChild(textarea);
 
+    // Select the text inside the textarea
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the selected text to clipboard
+    document.execCommand("copy");
+
+    // Remove the temporary textarea from the DOM
+    document.body.removeChild(textarea);
+}
+loadTable()
 
 const signupForm = document.getElementById("SETTINGSloginForm");
 signupForm.addEventListener("submit", signup);

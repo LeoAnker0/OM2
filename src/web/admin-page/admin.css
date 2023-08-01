@@ -172,6 +172,23 @@
     font-size: 1rem;
 }
 
+.SETTINGSmodalFormAreaContainer input[type="text"] {
+    all: unset;
+    border-radius: 8px;
+    background-color: transparent;
+    color: white;
+    outline: 1px solid hsla(0, 0%, 100%, 0.30);
+    padding: 0.15rem;
+    padding-left: 0.3rem;
+    margin-top: 0.3rem;
+    font-size: 1rem;
+
+    width: 30rem;
+}
+
+
+
+
 .SETTINGSmodalFormAreaContainer input:focus {
     outline: 2px solid red;
     background-color: hsla(0, 0%, 20%, 0.5);
@@ -458,17 +475,13 @@
     width: 95%;
     margin-left: 2.5%;
 
-    height: 60%;
-
-    overflow-y: scroll;
-
 
 }
 
 .ADMINusersTableTopRow {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr 30rem 1fr 1fr;
+    grid-template-columns: 2fr 2fr 23rem 1fr 1fr;
 
     border: 1px solid transparent;
     padding: 8px;
@@ -496,7 +509,7 @@
 
 .ADMINusersTableInfoRow {
     display: grid;
-    grid-template-columns: 1fr 1fr 30rem 1fr 1fr;
+    grid-template-columns: 2fr 2fr 23rem 1fr 1fr;
     padding: 8px;
     color: white;
 
@@ -515,7 +528,7 @@
 
 }
 
-.ADMINusersTableInfoRow:nth-child(2) {
+.ADMINusersTableInfoRow:nth-child(1) {
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
 }
@@ -533,10 +546,15 @@
 }
 
 
+.ADMINusersTableInforRowsContainer {
+    position: relative;
 
+    max-height: 20rem;
 
+    overflow: hidden;
+    overflow-y: scroll;
 
-
+}
 
 
 

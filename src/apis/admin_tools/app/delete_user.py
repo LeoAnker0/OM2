@@ -36,6 +36,13 @@ async def create_db_pool():
     )
     return pool
 
+async def get_users_table():
+	async with app.state.pool.acquire() as conn:
+		query = "SELECT email, verified, uuid, username FROM users LIMIT 100;"
+		users_table = await conn.fetch(query)
+
+		return users_table
+
 
 @app.on_event("startup")
 async def startup():
@@ -83,6 +90,20 @@ async def send_message(request: Request):
 	processed_message = f"Processed: {uuid}"
 
 	return {"response": processed_message}
+
+@app.get("/retrieve_users_table")
+async def retrieve_users_table():
+	users_table = await get_users_table()
+
+	return {"response": users_table}
+
+
+
+
+
+
+
+
 
 
 
