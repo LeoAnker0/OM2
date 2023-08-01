@@ -37,6 +37,7 @@ async function loadTable() {
                 const uuid = usersTable[i].uuid;
                 const verified = usersTable[i].verified;
                 const email = usersTable[i].email;
+                const space_used = usersTable[i].storage_used;
 
 
                 let replacedContent = userRow;
@@ -55,7 +56,7 @@ async function loadTable() {
                     } else if (placeholder === 'Verified') {
                         value = verified;
                     } else if (placeholder === 'Space_Used') {
-                        value = "5mb";
+                        value = space_used;
                     }
 
                     replacedContent = replacedContent.replace(regex, value);

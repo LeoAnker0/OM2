@@ -71,6 +71,14 @@ async def get_files_table(uuid):
 		result = await conn.fetch(query, uuid)
 		return result
 
+def bytes_to_mb_gb(bytes_value):
+	gb_value = bytes_value / (1024 * 1024 * 1024)
+	if gb_value >=1:
+		return f"{gb_value:.2f}GB"
+	else:
+		mb_value = bytes_value / (1024 * 1024)
+		return f"{mb_value:.2f}MB"
+
 
 @app.on_event("startup")
 async def startup():
@@ -152,11 +160,38 @@ async def send_message(request: Request):
 
 @app.get("/retrieve_users_table")
 async def retrieve_users_table():
-	users_table = await get_users_table()
+    users_table = await get_users_table()
+    updated_users_table = []
+    for user in users_table:
+        uuid = user['uuid']
+        print(uuid)
 
-	# for users in users table, go to the files table and sum their space used
+        users_files = await get_files_table(uuid)
+        storage_used = 0
 
-	return {"response": users_table}
+        for file in users_files:
+            storage_used += file['file_size']
+
+        # Calculate storage_used in MB or GB and store it as a string with one decimal place
+        storage_used_mb_gb = bytes_to_mb_gb(storage_used)
+
+        # Create a new dictionary with the existing user data
+        updated_user = dict(user)
+
+        # Add the 'storage_used' field to the new dictionary
+        updated_user["storage_used"] = storage_used_mb_gb
+
+        updated_users_table.append(updated_user)
+
+        # get all rows that belong to this user in files table
+
+    return {"response": updated_users_table}
+
+
+
+
+
+
 
 
 
