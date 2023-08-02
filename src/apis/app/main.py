@@ -14,6 +14,7 @@ import html
 import re
 import email.utils
 import requests
+import jwt
 
 load_dotenv()
 
@@ -96,6 +97,7 @@ async def insert_user(data: dict):
         query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
         await conn.execute(query, data["username"], data["email"], data["password"], data["profile_picture"], data["uuid"], data["description"], data["date_joined"], 0, 0, False)
 
+
 @app.post("/signup/")
 async def signup(request: Request):
 
@@ -154,9 +156,6 @@ async def complete_signup(request: Request):
     # Get the response from the chipmunk_processor container
     response_data = response.json()
     url = response_data["url"]
-    print(response_data)
-    print(url)
-
    
     #add user to the db
     user_dict = dict(username=username, password=password, email=email, profile_picture=url)
@@ -164,3 +163,88 @@ async def complete_signup(request: Request):
 
 
     return {"message": "Signup successful"}
+
+
+async def passwordHash_matches_email(password, email):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT password FROM users WHERE email = $1"
+        hashed_password = await conn.fetchval(query, email)
+
+        if hashed_password:
+            return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+        else:
+            return False
+
+
+def genenerate_jwt(uuid):
+    secret_key = str(os.environ.get("SECRET_JWT_KEY"))
+
+    payload = {
+        "uuid":uuid,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
+    }
+
+    token = jwt.encode(payload, secret_key, algorithm="HS256")
+
+    return token
+
+async def get_uuid_by_email(email):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT uuid FROM users WHERE email = $1"
+        uuid = await conn.fetchval(query, email)
+        return uuid
+
+
+
+@app.post("/login/")
+async def login(request: Request):
+    raw_data = await request.body()
+    data = json.loads(raw_data);
+
+    #validate that email is of valid form and is in database
+
+    email = html.escape(str(data["email"]))
+    email_unique = await is_email_unique(email)
+
+    if email_unique == True:
+        raise HTTPException(status_code=400, detail="Email doesn't exists")
+
+    email_valid = is_valid_email(email)
+
+    if not email_valid:
+        raise HTTPException(status_code=400, detail="Email invalid")
+
+    # check that the passwordhash matches the one in the database
+
+    password = data["password"]
+    passwordMatches = await passwordHash_matches_email(password, email)
+    if passwordMatches == False:
+        return {"success": "false", "message" : "login failed"}
+
+    #get the real uuid
+    uuid = await get_uuid_by_email(email)
+
+    jwt = genenerate_jwt(uuid)
+    
+    return {"success":"true", "JWT" : jwt}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

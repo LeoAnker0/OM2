@@ -16,55 +16,54 @@ import './css/settings.css';
 we need real icons for loop song, and also pause
 
 */
-
-
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
-document.getElementById('app').innerHTML = layout;
 
 /* settings menu */
 import { initSettings } from './js/settings.js';
-initSettings();
 
 /* build in the different sections of the webpage, with modification of the src 
 names so that they point somewhere */
 import { loadMAINtopleft, loadMAINtopright } from './js/exportHTMLchunks.js';
-loadMAINtopleft();
-loadMAINtopright();
-
-/* load in the lcd and related items */
-import { initialiseLCD } from './js/lcd.js';
-initialiseLCD();
-
 
 /* creates event listeners for the playback controls as well as
 creating functions that set the different states of the playback buttons,
 so fx: changing the filter of the buttons, or changing out the button for a different one
 */
 import { setEventListenersForPlaybackcontrols, setEventListenersForVolume /*these probably shouldn't be imported here, but oh well..., shuffleStateChange, loopStateChange, playStateChange*/ } from './js/playbackControls.js';
-setEventListenersForPlaybackcontrols();
-setEventListenersForVolume();
 
+/* load in the lcd and related items */
+import { initialiseLCD } from './js/lcd.js';
 
 /* starts the event listeners for the search bar */
 import { setEventListenersForSearchbar } from './js/search.js';
-setEventListenersForSearchbar();
-
 
 /* queue display code */
 import { initialiseQueue } from './js/queue.js';
-initialiseQueue();
 
 /* account img and menu stuff */
 import { initAccountImg } from './js/loadAccountImage.js';
-initAccountImg();
-
-
-/* PAGES --------------------  */
 
 /* music object grid */
 import { initMusicObjectsGrid } from './js/musicObjectGrid.js';
-initMusicObjectsGrid();
+
+
+async function main() {
+
+    document.getElementById('app').innerHTML = layout;
+
+    await initSettings();
+
+
+    loadMAINtopleft();
+    loadMAINtopright();
+    initialiseLCD();
+    setEventListenersForPlaybackcontrols();
+    setEventListenersForSearchbar();
+    setEventListenersForVolume();
+    initAccountImg();
+
+    initialiseQueue();
 
 
 
@@ -72,6 +71,18 @@ initMusicObjectsGrid();
 
 
 
+
+
+    //PAGES --------------------  
+
+    initMusicObjectsGrid();
+    /*
+     */
+
+
+}
+
+main();
 
 
 
