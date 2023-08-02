@@ -548,6 +548,16 @@
     text-overflow: ellipsis;
 }
 
+.USERNAMEfieldWithImageContainer {
+    position: relative;
+    display: inline-flex;
+}
+
+.USERNAMEfieldWithImageContainer img {
+    margin-right: 0.3rem;
+    border-radius: 4px;
+}
+
 
 .ADMINusersTableInforRowsContainer {
     position: relative;

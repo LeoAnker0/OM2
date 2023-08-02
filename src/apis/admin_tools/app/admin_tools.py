@@ -39,7 +39,7 @@ async def create_db_pool():
 
 async def get_users_table():
 	async with app.state.pool.acquire() as conn:
-		query = "SELECT email, verified, uuid, username FROM users LIMIT 100;"
+		query = "SELECT email, verified, uuid, username, profile_picture FROM users LIMIT 100;"
 		users_table = await conn.fetch(query)
 
 		return users_table
@@ -164,8 +164,6 @@ async def retrieve_users_table():
     updated_users_table = []
     for user in users_table:
         uuid = user['uuid']
-        print(uuid)
-
         users_files = await get_files_table(uuid)
         storage_used = 0
 

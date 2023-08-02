@@ -1,5 +1,5 @@
 import './admin.css'
-import form from './html/delete_user.html?raw';
+import form from './html/admin.html?raw';
 
 document.querySelector('#app').innerHTML = form
 
@@ -31,13 +31,15 @@ async function loadTable() {
 
             usersTableEnvironment.innerHTML = "";
             for (let i = 0; i < usersTableLength; i++) {
-                const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used'];
+                const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used', 'profile_picture_url'];
 
                 const username = usersTable[i].username;
                 const uuid = usersTable[i].uuid;
                 const verified = usersTable[i].verified;
                 const email = usersTable[i].email;
                 const space_used = usersTable[i].storage_used;
+                const profile_picture = usersTable[i].profile_picture;
+                console.log(profile_picture);
 
 
                 let replacedContent = userRow;
@@ -57,6 +59,8 @@ async function loadTable() {
                         value = verified;
                     } else if (placeholder === 'Space_Used') {
                         value = space_used;
+                    } else if (placeholder === 'profile_picture_url') {
+                        value = profile_picture;
                     }
 
                     replacedContent = replacedContent.replace(regex, value);
