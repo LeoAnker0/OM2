@@ -79,11 +79,13 @@ async function signup(event) {
         if (!response.ok) {
             // Handle error response from the server if needed
             const errorData = await response.json();
-            console.error(errorData);
+            //console.error(errorData);
 
-            console.log("email error")
             stopSpinner();
             loginErrorAnimation()
+
+            const errorMessage = "There was an error with the email, check that the details are correct.";
+            alert(errorMessage);
 
         } else {
             // If the email is valid, continue with the second step
@@ -118,7 +120,10 @@ async function signup(event) {
             if (!secondResponse.ok) {
                 // Handle error response from the server if needed
                 const errorData = await secondResponse.json();
-                console.error(errorData);
+                //console.error(errorData);
+
+                const errorMessage = "There was an error, try again";
+                alert(errorMessage);
             } else {
                 // Handle successful response from the server if needed
                 const responseData = await secondResponse.json();
@@ -135,12 +140,11 @@ async function signup(event) {
         }
     } catch (error) {
         // Handle network errors or other exceptions
-        console.error(error);
+        //console.error(error);
         stopSpinner();
         loginErrorAnimation()
-
-
-        console.log("there was an error, lets try again")
+        const errorMessage = "There was an error, try again";
+        alert(errorMessage);
     }
 }
 
