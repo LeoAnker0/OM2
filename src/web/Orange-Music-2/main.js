@@ -19,9 +19,6 @@ we need real icons for loop song, and also pause
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
 
-/* settings menu */
-import { initSettings } from './js/settings.js';
-
 /* build in the different sections of the webpage, with modification of the src 
 names so that they point somewhere */
 import { loadMAINtopleft, loadMAINtopright } from './js/exportHTMLchunks.js';
@@ -48,11 +45,10 @@ import { initAccountImg } from './js/loadAccountImage.js';
 import { initMusicObjectsGrid } from './js/musicObjectGrid.js';
 
 
-async function main() {
 
-    document.getElementById('app').innerHTML = layout;
+export function main() {
 
-    await initSettings();
+    //await initSettings();
 
 
     loadMAINtopleft();
@@ -82,7 +78,11 @@ async function main() {
 
 }
 
-main();
+import { initSettings } from './js/settings.js';
+
+
+document.getElementById('app').innerHTML = layout;
+initSettings();
 
 
 

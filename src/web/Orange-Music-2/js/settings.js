@@ -1,93 +1,147 @@
-let signedIn = false;
 let loginAttempted = false; // New flag to track login attempts
+let signedIn = false;
+let loginFormLoaded = false; // Flag to track if the login form has been loaded and event listener attached
 
 
-async function makeRequest(url, method, data) {
-    try {
-        const response = await fetch(url, {
-            method: method,
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+export async function initSettings() {
+    const jwt = await prelogin();
+    console.log(jwt)
+    if (!jwt) {
+        if (!loginFormLoaded) {
+            loadLoginForm(); // Load the login form and attach the event listener only once
+            loginFormLoaded = true;
         }
-
-        const jsonData = await response.json();
-        return jsonData;
-    } catch (error) {
-        console.error('Error during fetch:', error);
-        throw error;
+    } else {
+        console.log("Authenticated!");
     }
 }
 
+import { main } from '../main.js';
 
+function loadLoginForm() {
+    loadInContainer(); // Load the form in the container
 
-export function initSettings() {
-    loadInContainer();
-    return new Promise((resolve, reject) => {
-        async function tryLogin(attempts) {
-            if (attempts >= 25) {
-                // Maximum number of attempts reached, reject the Promise
-                reject(new Error("Login failed after multiple attempts"));
-                location.reload();
-                return;
+    const loginForm = document.getElementById("SETTINGSloginForm"); // Updated ID to match the form in settingsModal.html
+    const emailInput = document.getElementById("email"); // Updated ID to match the email input in settingsModal.html
+    const passwordInput = document.getElementById("password"); // Updated ID to match the password input in settingsModal.html
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        if (loginAttempted) return false; // Don't attempt login if it's already been tried
+
+        loginAttempted = true;
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        try {
+            // Make the API call to authenticate the user
+            const authenticated = await login(email, password);
+
+            if (authenticated) {
+                signedIn = true;
+                loginSuccessAnimation();
+
+                //tell the other things to run now
+                main()
+
+                //await for 2000 and then do hide container
+                setTimeout(hideContainer, 2000);
+
+            } else {
+                signedIn = false;
+                loginErrorAnimation();
+                console.log("Login failed. Retry!");
             }
 
-
-            const loginForm = document.getElementById('SETTINGSloginForm');
-
-            // Use a regular function for the event listener
-            loginForm.addEventListener('submit', async function(event) {
-                event.preventDefault(); // Prevent the default form submission behavior
-
-                const emailValue = event.target.email.value;
-                const passwordValue = event.target.password.value;
-
-                try {
-                    const loginData = {
-                        email: emailValue,
-                        password: passwordValue,
-                    };
-
-                    const apiUrl = 'https://om2apis.la0.uk/login/'; // Replace with your actual API endpoint
-
-                    // Make the login API request using the utility function
-                    const response = await makeRequest(apiUrl, 'POST', loginData);
-
-                    // Assuming the API returns some JSON data with a 'success' property indicating login status
-                    if (response.success == "true") {
-                        // Successfully logged in
-                        loginSuccessAnimation();
-                        setTimeout(hideContainer, 2000);
-                        signedIn = true;
-                        resolve(true); // Resolve the promise with true
-                    } else {
-                        // Login failed, handle accordingly (show error message, etc.)
-                        loginErrorAnimation();
-                        tryLogin(attempts + 1); // Retry login by calling the function again with an incremented attempts count
-                    }
-                } catch (error) {
-                    reject(error); // Reject the promise with the fetch error or any other error
-                }
-            });
+            loginAttempted = false; // Reset the loginAttempted flag to allow retrying on subsequent attempts
+        } catch (error) {
+            console.error("Error:", error);
+            loginAttempted = false; // Reset the loginAttempted flag in case of an error, to allow retrying
         }
 
-        if (signedIn === false) {
-            tryLogin(1); // Start the login attempt with attempts count set to 1
-        } else {
-            console.log('already signedIn');
-            resolve(true); // Resolve the promise with true as the user is already signed in
-        }
+        return false; // Prevent the form from refreshing the page
     });
 }
 
 
 
 
+// The rest of the code remains unchanged
+
+async function login(email, password) {
+    try {
+        const response = await fetch("https://om2apis.la0.uk/login/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (data.authenticated === true) {
+            const jwt = data.jwt
+
+            //set jwt to local storage
+            localStorage.setItem("JWT", jwt)
+
+        }
+
+
+        return data.authenticated;
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
+}
+
+
+
+
+
+
+
+export async function prelogin() {
+    console.log("prelogin")
+
+    try {
+        const jwt = localStorage.getItem('JWT');
+
+        if (jwt !== null) {
+            // Key 'JWT' exists in localStorage
+            console.log('JWT found:', jwt);
+        } else {
+            // Key 'JWT' doesn't exist in localStorage
+            console.log('JWT not found');
+            return false;
+        }
+    } catch (error) {
+        // Error accessing localStorage
+        console.error('Error accessing localStorage:', error);
+        return false;
+    }
+
+
+
+    try {
+        const jwt = localStorage.getItem('JWT');
+        const response = await fetch("https://om2apis.la0.uk/prelogin/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ jwt })
+        });
+        const data = await response.json();
+
+        return data.authenticated;
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
+}
 import settingsModal from '../html/settingsModal.html?raw';
 /*
 import { svgImports } from './importAssets.js';

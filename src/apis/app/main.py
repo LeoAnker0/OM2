@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, Response
 from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, EmailStr
@@ -14,7 +15,7 @@ import html
 import re
 import email.utils
 import requests
-import jwt
+import jwt as pyjwt
 
 load_dotenv()
 
@@ -181,10 +182,10 @@ def genenerate_jwt(uuid):
 
     payload = {
         "uuid":uuid,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=4)
     }
 
-    token = jwt.encode(payload, secret_key, algorithm="HS256")
+    token = pyjwt.encode(payload, secret_key, algorithm="HS256")
 
     return token
 
@@ -200,6 +201,7 @@ async def get_uuid_by_email(email):
 async def login(request: Request):
     raw_data = await request.body()
     data = json.loads(raw_data);
+
 
     #validate that email is of valid form and is in database
 
@@ -224,15 +226,63 @@ async def login(request: Request):
     #get the real uuid
     uuid = await get_uuid_by_email(email)
 
-    jwt = genenerate_jwt(uuid)
+    expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=5)
     
-    return {"success":"true", "JWT" : jwt}
+    user_data = {"uuid": uuid}
+    access_token = genenerate_jwt(user_data)
+    response = JSONResponse({"authenticated": True, 
+                            "jwt": access_token})
+    return response
+
+
+def verify_jwt(jwt_token):
+    secret_key = str(os.environ.get("SECRET_JWT_KEY"))
+
+    received_jwt = jwt_token
+
+    try:
+        # Decode and verify the JWT
+        payload = pyjwt.decode(received_jwt, secret_key, algorithms=["HS256"])
+        
+        # You can now access the claims as needed, e.g., 'payload["user_id"]'
+        user_id = payload.get("uuid", None)
+        if user_id:
+            return True
+            # User is authenticated, you can proceed with their request
+        else:
+            return False
+            # Invalid JWT or missing 'user_id', consider the user not authenticated
+    except pyjwt.ExpiredSignatureError:
+        print("JWT is expired. Token has expired.")
+        # Handle JWT expiration, consider the user not authenticated
+    except pyjwt.InvalidTokenError:
+        print("Invalid JWT. Token verification failed.")
+        # Handle invalid JWT, consider the user not authenticated
 
 
 
 
+@app.post("/prelogin/")
+async def prelogin(request: Request):
+    raw_data = await request.body()
+    data = json.loads(raw_data);
+    access_token = data["jwt"]
+
+    real = verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    return {"authenticated": True}
 
 
+@app.post("/test/")
+async def test_endpoint(request: Request):
+    data = await request.json()
+    print(request)
+    print(data)
+    return {"received_data": data}
 
 
 
