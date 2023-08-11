@@ -76,6 +76,12 @@ async def is_email_unique(email):
         result = await conn.fetchval(query, email)
         return result == 0
 
+async def get_account_profile_picture(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT profile_picture FROM users WHERE uuid = $1"
+        result = await conn.fetchval(query, uuid)
+        return result
+
 
 
 async def insert_user(data: dict):
@@ -245,9 +251,9 @@ def verify_jwt(jwt_token):
         payload = pyjwt.decode(received_jwt, secret_key, algorithms=["HS256"])
         
         # You can now access the claims as needed, e.g., 'payload["user_id"]'
-        user_id = payload.get("uuid", None)
-        if user_id:
-            return True
+        uuid = payload.get("uuid", None)
+        if uuid:
+            return True, uuid
             # User is authenticated, you can proceed with their request
         else:
             return False
@@ -283,6 +289,29 @@ async def test_endpoint(request: Request):
     print(request)
     print(data)
     return {"received_data": data}
+
+
+@app.post("/get_account_image/")
+async def get_account_image(request: Request):
+    data = await request.json()
+    access_token = data["jwt"]
+
+    real, uuid = verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    url = await get_account_profile_picture(uuid)
+
+
+    return {"authenticated": True,
+            "url": url}
+
+    #get the url of the account image
+
 
 
 

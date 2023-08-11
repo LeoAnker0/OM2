@@ -6,14 +6,13 @@ let loginFormLoaded = false; // Flag to track if the login form has been loaded 
 
 export async function initSettings() {
     const jwt = await prelogin();
-    console.log(jwt)
     if (!jwt) {
         if (!loginFormLoaded) {
             loadLoginForm(); // Load the login form and attach the event listener only once
             loginFormLoaded = true;
         }
     } else {
-        console.log("Authenticated!");
+        main();
     }
 }
 
@@ -109,13 +108,9 @@ export async function prelogin() {
     try {
         const jwt = localStorage.getItem('JWT');
 
-        if (jwt !== null) {
+        if (jwt == null) {
             // Key 'JWT' exists in localStorage
-            console.log('JWT found:', jwt);
-        } else {
-            // Key 'JWT' doesn't exist in localStorage
-            console.log('JWT not found');
-            return false;
+            return false
         }
     } catch (error) {
         // Error accessing localStorage

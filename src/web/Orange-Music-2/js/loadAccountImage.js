@@ -1,25 +1,55 @@
-export function initAccountImg() {
+export async function initAccountImg() {
     /* loading in the img */
     const accountImgSource = document.getElementById("TOPRIGHTaccountImg");
-    const newImage = "https://images.unsplash.com/photo-1605106901227-991bd663255c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3F1YXJlJTIwaW1hZ2VzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60";
-    accountImgSource.src = newImage;
 
-    /* adding event listeners for loading in the menu for the account menu */
-    const accountImgButton = document.getElementById("TOPRIGHTaccountImgButton");
-    accountImgButton.addEventListener('click', handleClick);
+    try {
+        const url = await getAccountImageURL();
+        const newImage = `https://om2media.la0.uk/${url}/1/`;
+
+        accountImgSource.src = newImage;
+
+        /* adding event listeners for loading in the menu for the account menu */
+        const accountImgButton = document.getElementById("TOPRIGHTaccountImgButton");
+        accountImgButton.addEventListener('click', handleClick);
+    } catch (error) {
+        console.error("Error initializing account image:", error);
+    }
+}
+
+async function getAccountImageURL() {
+    const jwt = localStorage.getItem("JWT");
+    try {
+        const response = await fetch("https://om2apis.la0.uk/get_account_image/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ jwt })
+        });
+        const data = await response.json();
+
+        const authenticated = data.authenticated;
+        if (authenticated !== false) {
+            const url = data.url;
+            return url;
+        }
+
+        return false;
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
 }
 
 function handleClick(event) {
-    event.stopPropagation;
-    handleQueueDisplayMenu(event)
-
-    return
+    event.stopPropagation();
+    handleQueueDisplayMenu(event);
+    return;
 }
 
 import { MENUdisplay } from './menu.js';
 
 function handleQueueDisplayMenu(event) {
-
     const params = [{
         displayText: 'Help',
         optionalSVG: 'icons_helpIcon',
@@ -32,7 +62,7 @@ function handleQueueDisplayMenu(event) {
         displayText: 'Sign Out',
         optionalSVG: 'None',
         function: 'None',
-    }]
+    }];
 
     MENUdisplay(params, event);
     return;

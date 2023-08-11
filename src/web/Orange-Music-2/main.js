@@ -58,7 +58,6 @@ export function main() {
     setEventListenersForSearchbar();
     setEventListenersForVolume();
     initAccountImg();
-
     initialiseQueue();
 
 
