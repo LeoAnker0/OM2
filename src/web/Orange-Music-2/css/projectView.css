@@ -47,17 +47,18 @@
     display: grid;
 
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 10px;
     grid-template-areas:
         "PROJECTviewTopItem-1 PROJECTviewTopItem-3 PROJECTviewTopItem-3"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-2 PROJECTviewTopItem-2"
+        "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
+        "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
+        "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-4 PROJECTviewTopItem-4";
 
 
 
 }
 
-.PROJECTviewTOPgridItem {}
 
 
 .PROJECTviewDisplayImage {
@@ -83,8 +84,9 @@
 }
 
 .PROJECTviewDisplayTitle {
-    position: relative;
-    top: 20%;
+    display: block;
+    //background-color: blue;
+
 }
 
 .PROJECTviewDisplayTitle h1 {
@@ -102,16 +104,14 @@
 }
 
 .PROJECTviewDisplaySpacer {
-    position: relative;
     height: 4rem;
     width: 4rem;
     background-color: red;
 }
 
 .PROJECTviewDisplaySpacer2 {
-    position: relative;
-    height: 8rem;
-    width: 8rem;
+    height: 4rem;
+    width: 4rem;
     background-color: red;
 }
 
@@ -121,6 +121,32 @@
 
 .PROJECTviewTopItem-4 {
     grid-area: PROJECTviewTopItem-4;
+}
+
+.PROJECTviewDisplayDescription {
+    display: block;
+    width: 60%;
+    height: 4.9rem;
+
+    //background-color: green;
+
+}
+
+.PROJECTviewDisplayDescription p {
+    position: relative;
+    color: white;
+    height: 100%;
+    width: 100%;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+
+}
+
+.PROJECTviewTopItem-5 {
+    grid-area: PROJECTviewTopItem-5;
 }
 
 
