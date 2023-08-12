@@ -10,6 +10,7 @@ import './css/menu.css';
 import './css/lcd.css';
 import './css/musicObjectGrid.css';
 import './css/settings.css';
+import './css/projectView.css';
 
 /* immediate priority 
 
@@ -42,8 +43,10 @@ import { initialiseQueue } from './js/queue.js';
 import { initAccountImg } from './js/loadAccountImage.js';
 
 /* music object grid */
-import { initMusicObjectsGrid } from './js/musicObjectGrid.js';
+import { initMusicObjectsGrid, hideMusicObjectsGrid, showMusicObjectsGrid } from './js/musicObjectGrid.js';
 
+/* project view */
+import { initProjectView } from './js/projectView.js';
 
 
 export function main() {
@@ -71,6 +74,11 @@ export function main() {
     //PAGES --------------------  
 
     initMusicObjectsGrid();
+    hideMusicObjectsGrid();
+    //showMusicObjectsGrid();
+
+    initProjectView();
+
     /*
      */
 

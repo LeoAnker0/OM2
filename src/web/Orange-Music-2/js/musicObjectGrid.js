@@ -7,6 +7,8 @@ export function initMusicObjectsGrid() {
 
     loadInContainer();
 
+
+
     const libraryData = getLibraryData();
 
     loadObjects(libraryData);
@@ -14,83 +16,23 @@ export function initMusicObjectsGrid() {
     return
 }
 
+export function hideMusicObjectsGrid() {
+    //lets move the z index back to like 0
+    const gridContainer = document.getElementById("MOGcontainer");
+    gridContainer.style.zIndex = "0";
+    gridContainer.style.filter = "blur(50px)";
+    gridContainer.style.position = "fixed";
+}
+
+export function showMusicObjectsGrid() {
+    const gridContainer = document.getElementById("MOGcontainer");
+    gridContainer.style.zIndex = "1";
+    gridContainer.style.filter = "blur(00px)";
+    gridContainer.style.position = "absolute";
+}
+
 function getLibraryData() {
-    const libraryData = [{
-            days: 2,
-            bottom: "Billie Eilish",
-            top: "Bad Guy",
-            img: "https://picsum.photos/400?random=6",
-            OBJECTid: 1
-        },
-        {
-            days: 70,
-            bottom: "AURORA",
-            top: "Appletree",
-            img: "https://picsum.photos/400?random=7",
-            OBJECTid: 2
-        },
-        {
-            days: 1000,
-            bottom: "girl in red",
-            top: ".",
-            img: "https://picsum.photos/400?random=8",
-            OBJECTid: 3
-        },
-        {
-            days: 3,
-            bottom: "Joray",
-            top: "Beech please",
-            img: "https://picsum.photos/400?random=9",
-            OBJECTid: 4
-        }, {
-            days: 70,
-            bottom: "Lena Raine",
-            top: "The Augural",
-            img: "https://picsum.photos/400?random=10",
-            OBJECTid: 2
-        },
-        {
-            days: 1000,
-            bottom: "Kuraine",
-            top: "Desc Here",
-            img: "https://picsum.photos/400?random=11",
-            OBJECTid: 3
-        },
-        {
-            days: 3,
-            bottom: "Mamacita",
-            top: "Machbeats",
-            img: "https://picsum.photos/400?random=12",
-            OBJECTid: 4
-        }, {
-            days: 70,
-            bottom: "AURORA",
-            top: "Little Boy In The Grass",
-            img: "https://picsum.photos/400?random=13",
-            OBJECTid: 2
-        },
-        {
-            days: 1000,
-            bottom: "girl in red",
-            top: "Serotonin",
-            img: "https://picsum.photos/400?random=14",
-            OBJECTid: 3
-        },
-        {
-            days: 3,
-            bottom: "Lena Rhaine",
-            top: "Out of Control (feat. Quentin featin-tino)",
-            img: "https://picsum.photos/400?random=15",
-            OBJECTid: 4
-        },
-        {
-            days: 15,
-            bottom: "Ghost",
-            top: "Monstrance Clock",
-            img: "https://picsum.photos/400?random=16",
-            OBJECTid: 5
-        }
-    ];
+    const libraryData = [];
     return libraryData;
 }
 
@@ -126,14 +68,10 @@ function loadObjects(libraryData) {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
-    parentContainer.innerHTML += replacedContent;
+    parentContainer.innerHTML += replacedContent
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Your code here
-        const addButton = document.getElementById("MOGaddNewItem");
-        addButton.addEventListener('click', addNewLibraryItem);
-    });
-
+    const addButton = document.getElementById("MOGaddNewItem");
+    addButton.addEventListener('click', addNewLibraryItem);
 
 
 
