@@ -5,6 +5,7 @@ let loginFormLoaded = false; // Flag to track if the login form has been loaded 
 
 
 export async function initSettings() {
+    console.log("twize?")
     const jwt = await prelogin();
     if (!jwt) {
         if (!loginFormLoaded) {

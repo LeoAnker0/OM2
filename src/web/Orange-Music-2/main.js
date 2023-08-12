@@ -17,6 +17,7 @@ import './css/projectView.css';
 we need real icons for loop song, and also pause
 
 */
+
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
 
@@ -55,6 +56,7 @@ export function main() {
 
 
     loadMAINtopleft();
+    console.log("loadMAINtopleft")
     loadMAINtopright();
     initialiseLCD();
     setEventListenersForPlaybackcontrols();
@@ -87,13 +89,15 @@ export function main() {
 
 import { initSettings } from './js/settings.js';
 
-
 document.getElementById('app').innerHTML = layout;
-initSettings();
+let isAppInitialized = false;
 
-
-
-
+document.addEventListener("DOMContentLoaded", function() {
+    if (!isAppInitialized) {
+        initSettings();
+        isAppInitialized = true;
+    }
+});
 
 
 
