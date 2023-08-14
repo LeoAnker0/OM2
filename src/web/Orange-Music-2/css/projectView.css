@@ -1,5 +1,5 @@
 .PROJECTviewContainerEnvironment {
-    position: absolute;
+    position: fixed;
     z-index: 2;
     top: 0;
 
@@ -42,22 +42,19 @@
     position: relative;
     width: 100%;
 
-    height: 24rem;
+    min-height: 22rem;
 
     //background-color: hsla(0, 10%, 20%, 0.4);
     display: grid;
 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     grid-template-areas:
         "PROJECTviewTopItem-1 PROJECTviewTopItem-3 PROJECTviewTopItem-3"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-2 PROJECTviewTopItem-2"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
-        "PROJECTviewTopItem-1 PROJECTviewTopItem-5 PROJECTviewTopItem-5"
+        "PROJECTviewTopItem-1 PROJECTviewTopItem-6 PROJECTviewTopItem-7"
         "PROJECTviewTopItem-1 PROJECTviewTopItem-4 PROJECTviewTopItem-4";
-
-
-
 }
 
 
@@ -65,8 +62,8 @@
 .PROJECTviewDisplayImage {
     position: relative;
     overflow: hidden;
-    height: 18rem;
-    width: 18rem;
+    width: 100%;
+    aspect-ratio: 1/1;
 
 }
 
@@ -105,9 +102,11 @@
 }
 
 .PROJECTviewDisplaySpacer {
-    height: 4rem;
-    width: 4rem;
+    height: 2rem;
+    width: 2rem;
+    /*
     background-color: red;
+    */
 }
 
 .PROJECTviewDisplaySpacer2 {
@@ -127,7 +126,7 @@
 .PROJECTviewDisplayDescription {
     display: block;
     width: 60%;
-    height: 4.9rem;
+    height: 4.8rem;
 
     //background-color: green;
 
@@ -141,15 +140,71 @@
 
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
     overflow: hidden;
+}
 
+/* spans that will fade out overflowing letters from the description */
+.PROJECTopacity9 {
+    opacity: 90%;
+}
+
+.PROJECTopacity8 {
+    opacity: 85%;
+}
+
+.PROJECTopacity7 {
+    opacity: 64%;
+}
+
+.PROJECTopacity6 {
+    opacity: 32%;
+}
+
+.PROJECTopacity5 {
+    opacity: 16%;
+}
+
+.PROJECTopacity4 {
+    opacity: 8%;
+}
+
+.PROJECTopacity3 {
+    opacity: 4%;
+}
+
+.PROJECTopacity2 {
+    opacity: 1%;
+}
+
+.PROJECTopacity1 {
+    opacity: 00%;
+}
+
+.PROJECTopacity0 {
+    opacity: 00%;
 }
 
 .PROJECTviewTopItem-5 {
     grid-area: PROJECTviewTopItem-5;
 }
 
+
+
+.PROJECTviewTopItem-6 {
+    grid-area: PROJECTviewTopItem-6;
+}
+
+.PROJECTviewDisplayMenu {
+    height: 2rem;
+    width: 2rem;
+    background-color: blue;
+    border-radius: 50%;
+    margin-left: calc(100% - 2rem);
+}
+
+.PROJECTviewTopItem-7 {
+    grid-area: PROJECTviewTopItem-7;
+}
 
 
 .PROJECTview-projectAreaContainer {

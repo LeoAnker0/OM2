@@ -44,7 +44,7 @@
     //background-color: red;
 
     //outline: 1px solid var(--searchbar-container-after-outline-colour);
-    //outline: 1px solid white;
+    outline: 1px solid hsla(0, 0%, 100%, 0.23);
 }
 
 

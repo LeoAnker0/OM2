@@ -49,7 +49,7 @@ export function setEventListenersForSearchbar() {
     });
 
     searchBar.addEventListener('blur', () => {
-        outlineForSearchbar.style.outline = "1px solid transparent";
+        outlineForSearchbar.style.outline = "1px solid hsla(0, 0%, 100%, 0.23)";
 
         /* hide the clear icon (we changed over to using opacity so that it was always clickable) */
         clearIcon.style.opacity = "0%";
