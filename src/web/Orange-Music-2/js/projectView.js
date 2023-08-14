@@ -1,6 +1,4 @@
 export function initProjectView() {
-    console.log("nothing happened");
-
     loadContainer();
 }
 

@@ -76,9 +76,9 @@ export function main() {
     //PAGES --------------------  
 
     initMusicObjectsGrid();
-    hideMusicObjectsGrid();
     //showMusicObjectsGrid();
 
+    hideMusicObjectsGrid();
     initProjectView();
 
     /*
@@ -90,14 +90,8 @@ export function main() {
 import { initSettings } from './js/settings.js';
 
 document.getElementById('app').innerHTML = layout;
-let isAppInitialized = false;
+initSettings();
 
-document.addEventListener("DOMContentLoaded", function() {
-    if (!isAppInitialized) {
-        initSettings();
-        isAppInitialized = true;
-    }
-});
 
 
 
