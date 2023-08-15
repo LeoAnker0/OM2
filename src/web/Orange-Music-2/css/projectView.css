@@ -314,6 +314,15 @@
     position: absolute;
     left: calc(var(--PROJECTviewModalWidthOfSide) / 2);
     top: calc(var(--PROJECTviewModalWidthOfSide) / 2);
+    border: none;
+    padding: 10px;
+    background-color: transparent;
+    cursor: pointer;
+
+}
+
+.PROJECTviewMOREcloseButton img {
+    filter: var(--make-svg-grey);
 }
 
 
