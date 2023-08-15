@@ -23,7 +23,7 @@ export function setEventListenersForSearchbar() {
     })
 
     /* detects when the enter key is pressed, and logs the search query */
-    document.addEventListener("keydown", function(event) {
+    searchBar.addEventListener("keydown", function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             const inputContents = searchBar.value;
             console.log(inputContents);

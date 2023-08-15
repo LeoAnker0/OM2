@@ -5,6 +5,7 @@ export function initProjectView() {
                     You can adjust the gradient stops, colors, and sizes to achieve the exact fading effect you're looking for. Keep in mind that browser compatibility for CSS masks might vary, so it's a good idea to test this approach across different browsers.`;
     onResizeClipOverflowingText(description);
 
+    descriptionButtonInteractions();
 }
 
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -97,3 +98,59 @@ function clipOverflowingDescription(description) {
 
     container.innerHTML = newTextContent;
 }
+
+/* more description button */
+function descriptionButtonInteractions() {
+    const moreButton = document.getElementById('PROJECTviewDescriptionMoreButton');
+
+    moreButton.addEventListener('click', function() {
+        console.log('Button was pressed!');
+        // Perform any actions you want when the button is pressed
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/
