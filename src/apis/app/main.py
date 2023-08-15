@@ -249,6 +249,7 @@ def verify_jwt(jwt_token):
     try:
         # Decode and verify the JWT
         payload = pyjwt.decode(received_jwt, secret_key, algorithms=["HS256"])
+        print(payload)
         
         # You can now access the claims as needed, e.g., 'payload["user_id"]'
         uuid = payload.get("uuid", None)
@@ -256,12 +257,14 @@ def verify_jwt(jwt_token):
             return True, uuid
             # User is authenticated, you can proceed with their request
         else:
-            return False
+            return False, "notuuid"
             # Invalid JWT or missing 'user_id', consider the user not authenticated
     except pyjwt.ExpiredSignatureError:
         print("JWT is expired. Token has expired.")
+        return False, "notuuid"
         # Handle JWT expiration, consider the user not authenticated
     except pyjwt.InvalidTokenError:
+        return False, "notuuid"
         print("Invalid JWT. Token verification failed.")
         # Handle invalid JWT, consider the user not authenticated
 
@@ -274,10 +277,9 @@ async def prelogin(request: Request):
     data = json.loads(raw_data);
     access_token = data["jwt"]
 
-    real = verify_jwt(access_token)
+    real, uuid = verify_jwt(access_token)
 
     if real == False:
-        print("the jwt is not valid")
         return {"authenticated": False}
 
     return {"authenticated": True}
