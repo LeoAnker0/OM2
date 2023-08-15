@@ -10,6 +10,8 @@
     //background-color: hsla(150, 100%, 50%, 0.1);
     overflow: hidden;
 
+    pointer-events: all;
+
 }
 
 .PROJECTviewContainerEnvironment::-webkit-scrollbar {
@@ -90,11 +92,28 @@
 .PROJECTviewDisplayTitle h1 {
     color: white;
     margin: 0;
+    user-select: text;
+    pointer-events: auto;
+
+    width: 90%;
+    height: 2.5rem;
+
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .PROJECTviewDisplayTitle h3 {
     color: var(--cyan-4);
-    margin-top: 0.5rem;
+    margin-top: 0rem;
+    user-select: text;
+    pointer-events: auto;
+
+    width: 70%;
+    height: 1.3rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+
 }
 
 .PROJECTviewTopItem-2 {
@@ -143,6 +162,8 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
+
+    pointer-events: auto;
 }
 
 .PROJECTviewDescriptionMoreButton {

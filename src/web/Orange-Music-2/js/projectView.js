@@ -31,6 +31,7 @@ function onResizeClipOverflowingText(description) {
             cancelAnimationFrame(resizeTimer);
             resizeTimer = requestAnimationFrame(function() {
                 clipOverflowingDescription(description);
+
             });
         };
     }
@@ -38,11 +39,17 @@ function onResizeClipOverflowingText(description) {
     const throttledHandleResize = throttledResize();
     window.addEventListener('resize', throttledHandleResize);
 
+
     clipOverflowingDescription(description);
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+    });
 }
 
 
 function clipOverflowingDescription(description) {
+    console.log("running clipOverflowingDescription")
     const descriptionContainer = document.getElementById("PROJECTviewDescriptionP");
 
     const container = descriptionContainer;
