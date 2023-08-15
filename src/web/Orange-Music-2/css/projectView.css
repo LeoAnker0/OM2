@@ -1,3 +1,7 @@
+:root {
+    --PROJECTviewModalWidthOfSide: 2rem;
+}
+
 .PROJECTviewContainerEnvironment {
     position: fixed;
     z-index: 2;
@@ -172,11 +176,12 @@
     border: none;
     margin: 0rem;
     padding: 0rem;
-    font-size: 1rem;
+    font-size: 1.15rem;
 
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -0.15rem;
+    right: -0.5rem;
+
 
     color: white;
     font-weight: 600;
@@ -267,16 +272,93 @@
 
 
 
+/* more description box */
+
+.PROJECTviewMOREdescriptionboxEnvironment {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 4rem);
+    top: 4rem;
+
+    display: grid;
+    place-items: center;
+    background-color: hsla(0, 100%, 0%, 0.4);
+    backdrop-filter: saturate(0.8);
+}
+
+.PROJECTviewMOREdescriptionContainer {
+    position: relative;
+
+    height: 28rem;
+    width: 42rem;
+    border-radius: 12px;
+
+    background-color: hsla(0, 0%, 12%, 1.0);
+
+    color: white;
+}
+
+.PROJECTviewMOREdescriptionContainer::before {
+    position: absolute;
+    content: "";
+    bottom: 1rem;
+    left: 0;
+    height: 2rem;
+    width: calc(100% - (1.5 *var(--PROJECTviewModalWidthOfSide)));
+    background: linear-gradient(to bottom, hsla(0, 0%, 12%, 0), hsla(0, 0%, 12%, 1));
+    z-index: 1;
+}
+
+
+.PROJECTviewMOREcloseButton {
+    position: absolute;
+    left: calc(var(--PROJECTviewModalWidthOfSide) / 2);
+    top: calc(var(--PROJECTviewModalWidthOfSide) / 2);
+}
+
+
+.PROJECTviewMOREdescriptionHeaderContainer {
+    position: relative;
+    //background-color: blue;
+    top: 3.5rem;
+    height: 4rem;
+    margin-bottom: 2rem;
+    width: calc(100% - (2 * var(--PROJECTviewModalWidthOfSide)));
+    left: var(--PROJECTviewModalWidthOfSide);
+    overflow: hidden;
+
+}
+
+.PROJECTviewMOREdescriptionHeaderContainer h1 {
+    position: relative;
+    margin: 0;
+}
+
+.PROJECTviewMOREdescriptionHeaderContainer h3 {
+    margin: 0;
+    position: relative;
+    color: hsla(0, 0%, 90%, 1.0);
+}
+
+.PROJECTviewMOREdescriptionContentContainer {
+    position: relative;
+    width: calc(100% - (2 * var(--PROJECTviewModalWidthOfSide)));
+    left: var(--PROJECTviewModalWidthOfSide);
+
+    height: calc(100% - 10rem);
+
+
+    overflow: hidden;
+    overflow-y: scroll;
+    top: 3rem;
+}
 
 
 
-
-
-
-
-
-
-
+.PROJECTviewMOREdescriptionContentContainer p {
+    margin: 0;
+    margin-bottom: 2rem;
+}
 
 
 /**/
