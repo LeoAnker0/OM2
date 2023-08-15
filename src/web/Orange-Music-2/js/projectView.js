@@ -4,14 +4,13 @@ export function initProjectView() {
     const description = `In this example, the .content-container holds the fading content, and the .fade-text element inside it has a mask that uses a linear gradient to control the opacity. The gradient is set up so that the content's opacity gradually changes from left to right.
                     You can adjust the gradient stops, colors, and sizes to achieve the exact fading effect you're looking for. Keep in mind that browser compatibility for CSS masks might vary, so it's a good idea to test this approach across different browsers.`;
     onResizeClipOverflowingText(description);
+
 }
 
 import projectContainer from '../html/projectViewContainer.html?raw';
 import { svgImports } from './importAssets.js';
 
 function loadContainer() {
-
-
     let IDofElement = "MAINcontentPages";
     let replacedContent = projectContainer;
     for (const [placeholder, value] of Object.entries(svgImports)) {
@@ -21,7 +20,6 @@ function loadContainer() {
 
     document.getElementById(IDofElement).innerHTML = replacedContent;
     return;
-
 }
 
 /* the next two functions are used for getting those last characters of the whole thing to fade out */
