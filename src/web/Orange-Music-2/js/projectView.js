@@ -1,7 +1,9 @@
 export function initProjectView() {
     loadContainer();
 
-    clipOverflowingDescription();
+    const description = `In this example, the .content-container holds the fading content, and the .fade-text element inside it has a mask that uses a linear gradient to control the opacity. The gradient is set up so that the content's opacity gradually changes from left to right.
+                    You can adjust the gradient stops, colors, and sizes to achieve the exact fading effect you're looking for. Keep in mind that browser compatibility for CSS masks might vary, so it's a good idea to test this approach across different browsers.`;
+    onResizeClipOverflowingText(description);
 }
 
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -17,18 +19,36 @@ function loadContainer() {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-    document.getElementById(IDofElement).innerHTML += replacedContent;
+    document.getElementById(IDofElement).innerHTML = replacedContent;
     return;
 
 }
 
-//change to counting characters instead of words, and then i can just choose the characters that i want...
+/* the next two functions are used for getting those last characters of the whole thing to fade out */
+function onResizeClipOverflowingText(description) {
+    function throttledResize() {
+        let resizeTimer;
 
-function clipOverflowingDescription() {
+        return function() {
+            cancelAnimationFrame(resizeTimer);
+            resizeTimer = requestAnimationFrame(function() {
+                clipOverflowingDescription(description);
+            });
+        };
+    }
+
+    const throttledHandleResize = throttledResize();
+    window.addEventListener('resize', throttledHandleResize);
+
+    clipOverflowingDescription(description);
+}
+
+
+function clipOverflowingDescription(description) {
     const descriptionContainer = document.getElementById("PROJECTviewDescriptionP");
 
     const container = descriptionContainer;
-    const textContent = container.textContent;
+    const textContent = description;
 
     // Split the text content into an array of words
     const words = textContent.split(' ');

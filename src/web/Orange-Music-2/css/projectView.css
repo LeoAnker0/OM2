@@ -128,11 +128,12 @@
     width: 60%;
     height: 4.8rem;
 
-    //background-color: green;
+    //background-color: red;
 
 }
 
 .PROJECTviewDisplayDescription p {
+    margin: 0;
     position: relative;
     color: white;
     height: 100%;
