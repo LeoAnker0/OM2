@@ -174,7 +174,8 @@ function closeMoreDescription() {
 
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     background.style.display = "none";
-    updateDescription()
+    updateDescription();
+    clipOverflowingDescription();
 }
 
 

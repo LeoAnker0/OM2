@@ -176,7 +176,7 @@
     border: none;
     margin: 0rem;
     padding: 0rem;
-    font-size: 1.15rem;
+    font-size: 0.9rem;
 
     position: absolute;
     bottom: -0.15rem;
@@ -238,18 +238,63 @@
 
 .PROJECTviewTopItem-6 {
     grid-area: PROJECTviewTopItem-6;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.PROJECTviewTopItem-6 button {
+    all: unset;
+    position: relative;
+    border: none;
+    color: white;
+    padding: 0.3rem;
+    border-radius: 8px;
+    margin-right: 1rem;
+
+
+    width: 6rem;
+    height: 1.1rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    outline: 1px solid hsla(0, 100%, 100%, 0.3);
+
+    transition: background-color 0.05s ease;
+}
+
+.PROJECTviewTopItem-6 button:focus {
+    background-color: red;
+    outline: 1px solid red;
+}
+
+.PROJECTviewTopItem-6 button:active {
+    background-color: red;
+    outline: 1px solid red;
+}
+
+.PROJECTviewTopItem-6 button div {
+    position: relative;
+    margin-left: 0.2rem;
 }
 
 .PROJECTviewDisplayMenu {
     height: 2rem;
     width: 2rem;
-    background-color: blue;
     border-radius: 50%;
     margin-left: calc(100% - 2rem);
+
+
+    background-color: blue;
+    background-color: hsla(0, 100%, 25%, 0.3);
 }
 
 .PROJECTviewTopItem-7 {
     grid-area: PROJECTviewTopItem-7;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 
@@ -322,7 +367,6 @@
     padding: 10px;
     background-color: transparent;
     cursor: pointer;
-
 }
 
 .PROJECTviewMOREcloseButton img {
