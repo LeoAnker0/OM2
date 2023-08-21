@@ -193,9 +193,30 @@ function detectPlayAndShuffleButtons() {
     });
     menuButton.addEventListener("click", function() {
         console.log("menuButton pressed")
+        displayMenuForTop(event)
     });
 }
 
+import { MENUdisplay } from './menu.js';
+
+function displayMenuForTop(event) {
+    event.stopPropagation();
+    const clickedItem = event.target;
+
+    const params = [{
+        displayText: 'Play next',
+        optionalSVG: 'icons_yourUploadedSongs'
+    }, {
+        displayText: 'Play later',
+        optionalSVG: 'None'
+    }, {
+        displayText: 'Delete',
+        optionalSVG: 'None'
+    }]
+
+    MENUdisplay(params, event);
+    return;
+}
 
 
 
