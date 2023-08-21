@@ -185,6 +185,8 @@
 
     color: white;
     font-weight: 600;
+
+    cursor: pointer;
 }
 
 /* spans that will fade out overflowing letters from the description */
@@ -284,6 +286,8 @@
     place-items: center;
     background-color: hsla(0, 100%, 0%, 0.4);
     backdrop-filter: saturate(0.8);
+
+    display: none;
 }
 
 .PROJECTviewMOREdescriptionContainer {
@@ -357,16 +361,29 @@
     height: calc(100% - 10rem);
 
 
-    overflow: hidden;
-    overflow-y: scroll;
     top: 3rem;
 }
 
 
 
-.PROJECTviewMOREdescriptionContentContainer p {
-    margin: 0;
-    margin-bottom: 2rem;
+.PROJECTviewMOREdescriptionContentContainer textarea {
+    border: none;
+    resize: none;
+    outline: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0;
+    font: inherit;
+
+    position: relative;
+    background-color: transparent;
+    color: white;
+
+    height: calc(100% - 2rem);
+    width: 100%;
+
+    padding-bottom: 2rem;
+
 }
 
 
