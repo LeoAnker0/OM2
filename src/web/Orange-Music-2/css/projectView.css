@@ -234,6 +234,12 @@
     grid-area: PROJECTviewTopItem-5;
 }
 
+.PROJECTviewTopItem-5 button:focus {
+    outline: 1px solid hsla(0, 100%, 50%, 1);
+    outline-offset: 0.3rem;
+    border-radius: 4px;
+}
+
 
 
 .PROJECTviewTopItem-6 {
@@ -265,8 +271,7 @@
 }
 
 .PROJECTviewTopItem-6 button:focus {
-    background-color: red;
-    outline: 1px solid red;
+    outline: 1px solid hsla(0, 100%, 50%, 1);
 }
 
 .PROJECTviewTopItem-6 button:active {
@@ -283,11 +288,38 @@
     height: 2rem;
     width: 2rem;
     border-radius: 50%;
-    margin-left: calc(100% - 2rem);
+    margin-left: calc(100% - 2.1rem);
 
+    outline: 1px solid hsla(0, 100%, 100%, 0.3);
+}
 
-    background-color: blue;
-    background-color: hsla(0, 100%, 25%, 0.3);
+.PROJECTviewDisplayMenu button {
+    all: unset;
+}
+
+.PROJECTviewDisplayMenu button {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    z-index: 2;
+
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.PROJECTviewDisplayMenu button:focus {
+    outline: 1px solid hsla(0, 100%, 50%, 1);
+}
+
+.PROJECTviewDisplayMenu button:active {
+    background-color: red;
+}
+
+.PROJECTviewDisplayMenu button img {
+    position: relative;
+    pointer-events: none;
 }
 
 .PROJECTviewTopItem-7 {

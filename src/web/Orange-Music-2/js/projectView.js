@@ -9,7 +9,8 @@ export function initProjectView() {
     descriptionButtonInteractions();
 
     handleDescriptionMoreText();
-    detectOffClicks()
+    detectOffClicks();
+    detectPlayAndShuffleButtons();
 }
 
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -178,7 +179,18 @@ function closeMoreDescription() {
     clipOverflowingDescription();
 }
 
+/* project view top buttons */
+function detectPlayAndShuffleButtons() {
+    const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
+    const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
 
+    playButton.addEventListener("click", function() {
+        console.log("playButton pressed")
+    });
+    shuffleButton.addEventListener("click", function() {
+        console.log("shuffleButton pressed")
+    });
+}
 
 
 
