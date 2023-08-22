@@ -465,18 +465,9 @@
 
 }
 
-.PROJECTview-projectTable-rowContainer {
-    position: relative;
-    display: grid;
 
-    display: grid;
-    grid-template-columns: 30% 20% 40% 10%;
-    /* Equal width columns */
-    padding: 0.5rem 0;
-    /* Optional: Add borders between rows */
-
-    border-radius: 8px;
-    margin: 0.3rem;
+.PROJECTview-projectTable-rowItem-Title {
+    color: hsla(0, 100%, 100%, 0.95);
 }
 
 .PROJECTview-projectTable-rowItem-Title::after {
@@ -499,11 +490,12 @@
 .PROJECTview-projectTable-rowItem-4 {
     position: relative;
     white-space: nowrap;
-    color: white;
+    color: hsla(0, 10%, 90%, 1);
     width: 90%;
 }
 
 .PROJECTview-projectTable-rowItem-1 {
+    color: white;
     display: flex;
 }
 
@@ -589,6 +581,56 @@
 
     /*filter: var(--make-svg-orange);*/
 }
+
+.PROJECTview-projectTable-rowContainer {
+    position: relative;
+    display: grid;
+
+    display: grid;
+    grid-template-columns: 35% 25% calc(40% - 5.5rem) 5.5rem;
+    /* Equal width columns */
+    padding: 0.5rem 0;
+    /* Optional: Add borders between rows */
+
+    border-radius: 8px;
+    margin: 0.3rem;
+}
+
+/*
+
+.PROJECTview-projectTable-rowItem-1,
+.PROJECTview-projectTable-rowItem-2,
+.PROJECTview-projectTable-rowItem-3,
+.PROJECTview-projectTable-rowItem-4
+
+*/
+
+@media (max-width: 900px) {
+    .PROJECTview-projectTable-rowContainer {
+        grid-template-columns: 55% calc(45% - 5.5rem) 5.5rem;
+    }
+
+    .PROJECTview-projectTable-rowItem-3 {
+        display: none;
+    }
+
+}
+
+@media (max-width: 650px) {
+    .PROJECTview-projectTable-rowContainer {
+        grid-template-columns: calc(100% - 5.5rem) 5.5rem;
+    }
+
+    .PROJECTview-projectTable-rowItem-3,
+    .PROJECTview-projectTable-rowItem-2 {
+        display: none;
+    }
+
+}
+
+
+
+/* loose files area -------- */
 
 .PROJECTview-filesAreaContainer {
     position: relative;
