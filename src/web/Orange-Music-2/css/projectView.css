@@ -599,7 +599,7 @@
     display: grid;
 
     display: grid;
-    grid-template-columns: 35% 25% calc(40% - 5.5rem) 5.5rem;
+    grid-template-columns: 50% 30% calc(20% - 5.5rem) 5.5rem;
     /* Equal width columns */
     padding: 0.5rem 0;
     /* Optional: Add borders between rows */
@@ -640,6 +640,23 @@
 
 }
 
+/* file upload prompt */
+
+.PROJECTview-projectArea-uploadArea {
+    position: relative;
+    color: white;
+
+    margin-bottom: 2rem;
+}
+
+.PROJECTview_dropArea {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+
+    border-radius: 8px;
+}
 
 
 /* loose files area -------- */
@@ -651,6 +668,8 @@
     height: 12rem;
 
     background-color: blue;
+
+    margin-bottom: 2rem;
 }
 
 

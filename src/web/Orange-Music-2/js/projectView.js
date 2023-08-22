@@ -12,7 +12,12 @@ export function initProjectView() {
     detectOffClicks();
     detectPlayAndShuffleButtons();
     loadInTable();
+    loadFileDropArea();
 }
+
+import { projectViewSongsArray } from './sharedArrays.js';
+
+
 
 import projectContainer from '../html/projectViewContainer.html?raw';
 import { svgImports } from './importAssets.js';
@@ -224,128 +229,20 @@ import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 /* load in the table */
 function loadInTable() {
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
+    loadInProjectViewRowTitles();
+    const projectTable = document.getElementById('PROJECTview-projectTable');
 
-    const songData = [{
-            "img": "https://picsum.photos/30?random=1",
-            "songTitle": "Subwoofer Lullaby",
-            "artistName": "C418",
-            "projectName": "Minecraft - Volume Alpha",
-            "songDuration": "3:29"
-        }, {
-            "img": "https://picsum.photos/30?random=5",
-            "songTitle": "Summer Breeze",
-            "artistName": "Jazz Trio",
-            "projectName": "Smooth Jazz Vibes",
-            "songDuration": "5:12"
-        },
-        {
-            "img": "https://picsum.photos/30?random=6",
-            "songTitle": "Rainy Days",
-            "artistName": "Acoustic Band",
-            "projectName": "Cozy Acoustics",
-            "songDuration": "3:58"
-        },
-        {
-            "img": "https://picsum.photos/30?random=7",
-            "songTitle": "Sunny Side",
-            "artistName": "Sunshine Singers",
-            "projectName": "Happy Tunes",
-            "songDuration": "2:30"
-        },
-        {
-            "img": "https://picsum.photos/30?random=8",
-            "songTitle": "Moonlight Serenade",
-            "artistName": "Orchestra Ensemble",
-            "projectName": "Nighttime Classics",
-            "songDuration": "4:40"
-        },
-        {
-            "img": "https://picsum.photos/30?random=9",
-            "songTitle": "City Lights",
-            "artistName": "Urban Groove",
-            "projectName": "Metropolitan Beats",
-            "songDuration": "3:20"
-        },
-        {
-            "img": "https://picsum.photos/30?random=10",
-            "songTitle": "Morning Dew",
-            "artistName": "Nature Soundscape",
-            "projectName": "Relaxing Moments",
-            "songDuration": "6:15"
-        }, {
-            "img": "https://picsum.photos/30?random=11",
-            "songTitle": "A New Beginning",
-            "artistName": "Harmony Ensemble",
-            "projectName": "Fresh Horizons",
-            "songDuration": "4:15"
-        },
-        {
-            "img": "https://picsum.photos/30?random=12",
-            "songTitle": "Dancing in the Rain",
-            "artistName": "Melody Maker",
-            "projectName": "Rhythmic Raindrops",
-            "songDuration": "3:30"
-        },
-        {
-            "img": "https://picsum.photos/30?random=13",
-            "songTitle": "Twilight Dreams",
-            "artistName": "Ethereal Echoes",
-            "projectName": "Dreamscapes",
-            "songDuration": "5:50"
-        },
-        {
-            "img": "https://picsum.photos/30?random=14",
-            "songTitle": "Whispers of the Wind",
-            "artistName": "Nature's Orchestra",
-            "projectName": "Natural Harmonies",
-            "songDuration": "3:45"
-        },
-        {
-            "img": "https://picsum.photos/30?random=15",
-            "songTitle": "Urban Sunset",
-            "artistName": "City Lights Collective",
-            "projectName": "Urban Vibes",
-            "songDuration": "4:05"
-        },
-        {
-            "img": "https://picsum.photos/30?random=16",
-            "songTitle": "Enchanted Forest",
-            "artistName": "Mystic Melodies",
-            "projectName": "Enchanted Realms",
-            "songDuration": "6:25"
-        },
-        {
-            "img": "https://picsum.photos/30?random=17",
-            "songTitle": "Eternal Hope",
-            "artistName": "Hopeful Harmonies",
-            "projectName": "Inspirational Journeys",
-            "songDuration": "4:40"
-        },
-        {
-            "img": "https://picsum.photos/30?random=18",
-            "songTitle": "Sunrise Serenade",
-            "artistName": "Morning Melodies",
-            "projectName": "Daybreak Melodies",
-            "songDuration": "5:15"
-        },
-        {
-            "img": "https://picsum.photos/30?random=19",
-            "songTitle": "Ocean's Embrace",
-            "artistName": "Waves of Harmony",
-            "projectName": "Seaside Melodies",
-            "songDuration": "3:20"
-        },
-        {
-            "img": "https://picsum.photos/30?random=20",
-            "songTitle": "Starry Night",
-            "artistName": "Celestial Sounds",
-            "projectName": "Night Sky Symphony",
-            "songDuration": "4:50"
-        }
+    const songData = [
+        /*{
+                "img": "https://picsum.photos/30?random=1",
+                "songTitle": "Subwoofer Lullaby",
+                "artistName": "C418",
+                "projectName": "Minecraft - Volume Alpha",
+                "songDuration": "3:29"
+            }*/
     ]
 
 
-    loadInProjectViewRowTitles();
 
     for (let i = 0; i < songData.length; i++) {
         songData[i].projectID = i;
@@ -353,8 +250,7 @@ function loadInTable() {
         loadInProjectViewRowItems(song);
     }
 
-    /* event listeners */
-    const projectTable = document.getElementById('PROJECTview-projectTable');
+
 
     // Attach an event listener to the container
     projectTable.addEventListener('click', function(event) {
@@ -372,6 +268,71 @@ function loadInTable() {
             }
         }
     });
+}
+
+function updateLoadInTable() {
+    const projectTable = document.getElementById('PROJECTview-projectTable');
+    const newSongData = projectViewSongsArray;
+    let songData = [];
+
+    for (let i = 0; i < newSongData.length; i++) {
+        //console.log(newSongData[i])
+        const songFileName = newSongData[i].name;
+        const songName = removeLastExtension(songFileName)
+        const size = formatFileSize(newSongData[i].size)
+
+        const newRow = {
+            "img": "https://picsum.photos/30",
+            "songTitle": songName,
+            "artistName": "C418",
+            "projectName": size,
+            "songDuration": "?"
+        }
+
+        songData.push(newRow);
+    }
+
+
+    /* event listeners */
+    const parentDiv = document.getElementById("PROJECTview-projectTable");
+    const childElements = parentDiv.children;
+
+    for (let i = childElements.length - 1; i > 0; i--) {
+        parentDiv.removeChild(childElements[i]);
+    }
+
+
+    for (let i = 0; i < songData.length; i++) {
+        songData[i].projectID = i;
+        const song = songData[i];
+        loadInProjectViewRowItems(song);
+    }
+
+    // Attach an event listener to the container
+    projectTable.addEventListener('click', function(event) {
+        const target = event.target;
+        event.stopPropagation();
+
+        // Check if the clicked element is a button within a row
+        if (target.tagName === 'BUTTON') {
+            const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+            if (rowContainer) {
+                const rowId = rowContainer.getAttribute('data-row-id');
+                displayMenuForRow(event);
+                console.log(`Button in row ${rowId} clicked.`);
+            }
+        }
+    });
+}
+
+function removeLastExtension(filename) {
+    const parts = filename.split('.');
+    if (parts.length > 1) {
+        parts.pop(); // Remove the last element (extension)
+        return parts.join('.');
+    }
+    return filename;
 }
 
 function displayMenuForRow(event) {
@@ -440,6 +401,67 @@ function loadInProjectViewRowItems(songData) {
 }
 
 
+function loadFileDropArea() {
+    const dropArea = document.getElementById("PROJECTview_dropArea");
+
+    // Prevent default behavior for drag-and-drop events
+    dropArea.addEventListener("dragenter", (e) => {
+        e.preventDefault();
+        dropArea.classList.add("dragover");
+    });
+
+    dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("dragover");
+    });
+
+    dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropArea.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
+
+    // Handle selected files when files are chosen using the file input
+    dropArea.addEventListener("click", () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "audio/*"; // Specify accepted file types here
+        fileInput.multiple = true;
+        fileInput.addEventListener("change", () => {
+            const files = fileInput.files;
+            handleFiles(files);
+        });
+        fileInput.click();
+    });
+
+    // Handle uploaded files
+    function handleFiles(files) {
+        for (const file of files) {
+            projectViewSongsArray.push(file);
+            //console.log(file);
+        }
+        console.log(projectViewSongsArray);
+        updateLoadInTable();
+
+        //update project view
+    }
+}
+
+// Format file size
+function formatFileSize(size) {
+    if (size < 1024) {
+        return `${size} B`;
+    } else if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(2)} KB`;
+    } else {
+        return `${(size / 1024 / 1024).toFixed(2)} MB`;
+    }
+}
 
 
 
