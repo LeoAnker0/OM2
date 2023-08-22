@@ -470,6 +470,8 @@
     color: hsla(0, 100%, 100%, 0.95);
 }
 
+
+
 .PROJECTview-projectTable-rowItem-Title::after {
     content: "";
     position: absolute;
@@ -490,7 +492,7 @@
 .PROJECTview-projectTable-rowItem-4 {
     position: relative;
     white-space: nowrap;
-    color: hsla(0, 10%, 90%, 1);
+    color: hsla(0, 0%, 90%, 1);
     width: 90%;
 }
 
@@ -498,6 +500,12 @@
     color: white;
     display: flex;
 }
+
+.PROJECTview-projectTable-rowItem-Title,
+.PROJECTview-projectTable-rowItem-Title-1 {
+    color: hsla(0, 0%, 95%, 1);
+}
+
 
 .PROJECTview-projectTable-rowItem-1 img {
     position: relative;
