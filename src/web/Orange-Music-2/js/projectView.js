@@ -401,6 +401,7 @@ function loadInProjectViewRowItems(songData) {
 }
 
 
+
 function loadFileDropArea() {
     const dropArea = document.getElementById("PROJECTview_dropArea");
 
@@ -447,10 +448,41 @@ function loadFileDropArea() {
         }
         console.log(projectViewSongsArray);
         updateLoadInTable();
+        uploadFiles();
 
         //update project view
     }
 }
+
+function uploadFiles() {
+    const files = projectViewSongsArray;
+
+    if (files.length === 0) {
+        console.log('No files to upload.');
+        return;
+    }
+
+    for (const file of files) {
+        upload(file)
+            .then(() => {
+                console.log(`File "${file.name}" uploaded successfully.`);
+            })
+            .catch(error => {
+                console.error(`Error uploading "${file.name}":`, error);
+            });
+    }
+}
+
+async function upload(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    await fetch('http://om2apis.la0.uk/upload/', {
+        method: 'POST',
+        body: formData
+    });
+}
+
 
 // Format file size
 function formatFileSize(size) {

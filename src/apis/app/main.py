@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie
+from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
+from requests_toolbelt import MultipartEncoder
 from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, EmailStr
@@ -16,10 +17,13 @@ import re
 import email.utils
 import requests
 import jwt as pyjwt
+import shutil
 
 load_dotenv()
 
 app = FastAPI()
+
+
 
 # Temporary data store to store form data with tokens
 signup_data_store = {}
@@ -33,6 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#app.include_router(TusRouter(store_dir="./files", location="/files/upload"), prefix="/files")
 
 async def create_db_pool():
     pool = await asyncpg.create_pool(
@@ -314,18 +319,14 @@ async def get_account_image(request: Request):
 
     #get the url of the account image
 
+@app.post("/upload/")
+async def upload_file(file: UploadFile = File(...)):
+    upload_dir = f"/var/www/media/"
+    file_path = os.path.join(upload_dir, file.filename)
 
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
 
-
-
-
-
-
-
-
-
-
-
-
+    return {'message': f'File "{file.filename}" uploaded successfully to {upload_dir}'}
 
 

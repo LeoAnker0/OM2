@@ -14,3 +14,4 @@ pydantic
 pydantic[email]
 bcrypt
 Pillow>=8.3.1
+python-multipart
