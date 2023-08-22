@@ -348,10 +348,49 @@ function loadInTable() {
     loadInProjectViewRowTitles();
 
     for (let i = 0; i < songData.length; i++) {
+        songData[i].projectID = i;
         const song = songData[i];
         loadInProjectViewRowItems(song);
     }
 
+    /* event listeners */
+    const projectTable = document.getElementById('PROJECTview-projectTable');
+
+    // Attach an event listener to the container
+    projectTable.addEventListener('click', function(event) {
+        const target = event.target;
+        event.stopPropagation();
+
+        // Check if the clicked element is a button within a row
+        if (target.tagName === 'BUTTON') {
+            const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+            if (rowContainer) {
+                const rowId = rowContainer.getAttribute('data-row-id');
+                displayMenuForRow(event);
+                console.log(`Button in row ${rowId} clicked.`);
+            }
+        }
+    });
+}
+
+function displayMenuForRow(event) {
+    event.stopPropagation();
+    const clickedItem = event.target;
+
+    const params = [{
+        displayText: 'Play next',
+        optionalSVG: 'icons_yourUploadedSongs'
+    }, {
+        displayText: 'Play later',
+        optionalSVG: 'None'
+    }, {
+        displayText: 'Delete',
+        optionalSVG: 'None'
+    }]
+
+    MENUdisplay(params, event);
+    return;
 }
 
 function loadInProjectViewRowTitles() {
@@ -373,7 +412,7 @@ function loadInProjectViewRowItems(songData) {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration'];
+    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration', 'PROJECTviewRow_projectID'];
 
     for (let i = 0; i < listOfThings.length; i++) {
         const placeholder = listOfThings[i].toString();
@@ -383,13 +422,15 @@ function loadInProjectViewRowItems(songData) {
         if (placeholder === 'PROJECTviewRow_img') {
             value = songData.img
         } else if (placeholder === 'PROJECTviewRow_songTitle') {
-            value = songData.artistName;
-        } else if (placeholder === 'PROJECTviewRow_artistName') {
             value = songData.songTitle;
+        } else if (placeholder === 'PROJECTviewRow_artistName') {
+            value = songData.artistName;
         } else if (placeholder === 'PROJECTviewRow_projectName') {
             value = songData.projectName;
         } else if (placeholder === 'PROJECTviewRow_songDuration') {
             value = songData.songDuration;
+        } else if (placeholder === 'PROJECTviewRow_projectID') {
+            value = songData.projectID;
         }
         replacedContent = replacedContent.replace(regex, value);
     }

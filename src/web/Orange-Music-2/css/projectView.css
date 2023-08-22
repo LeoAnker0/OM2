@@ -559,6 +559,10 @@
     margin-bottom: 2%;
 }
 
+.PROJECTview-projectTable-rowItem-4 button:hover {
+    cursor: pointer;
+}
+
 .PROJECTview-projectTable-rowItem-4 button:focus div {
     outline: 1px solid red;
 }
