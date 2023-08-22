@@ -456,11 +456,12 @@
 .PROJECTview-projectAreaContainer {
     position: relative;
     width: 100%;
+
+    margin-bottom: 2rem;
 }
 
 .PROJECTview-projectTable {
     position: relative;
-    height: 20rem;
 
 }
 
@@ -499,6 +500,7 @@
     position: relative;
     white-space: nowrap;
     color: white;
+    width: 90%;
 }
 
 .PROJECTview-projectTable-rowItem-1 {
@@ -520,18 +522,18 @@
 .PROJECTview-projectTable-rowItem-3 div,
 .PROJECTview-projectTable-rowItem-4 div {
     position: relative;
-    top: 10%;
+    top: 16%;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.PROJECTview-projectTable-rowItem-4 div {
+    top: 0;
+}
+
 .PROJECTview-projectTable-rowItem-1 div {
-    position: relative;
-    top: 10%;
     width: 75%;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .PROJECTview-projectTable-rowItem-2 {}
@@ -541,6 +543,9 @@
 .PROJECTview-projectTable-rowItem-4 {
     display: flex;
     align-items: center;
+
+    width: 100%;
+
     /* Center vertically */
 }
 
@@ -551,6 +556,7 @@
     /* Set the button as a flex container */
     align-items: center;
     /* Center horizontally and vertically */
+    margin-bottom: 2%;
 }
 
 .PROJECTview-projectTable-rowItem-4 button:focus div {
@@ -580,6 +586,8 @@
     border-radius: 50%;
 
     pointer-events: none;
+
+    /*filter: var(--make-svg-orange);*/
 }
 
 .PROJECTview-filesAreaContainer {
@@ -601,19 +609,5 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+`
 /**/

@@ -11,6 +11,7 @@ export function initProjectView() {
     handleDescriptionMoreText();
     detectOffClicks();
     detectPlayAndShuffleButtons();
+    loadInTable();
 }
 
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -217,6 +218,185 @@ function displayMenuForTop(event) {
     return;
 }
 
+import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
+import projectViewRowItem from '../html/projectViewRowItem.html?raw';
+
+/* load in the table */
+function loadInTable() {
+    const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
+
+    const songData = [{
+            "img": "https://picsum.photos/30?random=1",
+            "songTitle": "Subwoofer Lullaby",
+            "artistName": "C418",
+            "projectName": "Minecraft - Volume Alpha",
+            "songDuration": "3:29"
+        }, {
+            "img": "https://picsum.photos/30?random=5",
+            "songTitle": "Summer Breeze",
+            "artistName": "Jazz Trio",
+            "projectName": "Smooth Jazz Vibes",
+            "songDuration": "5:12"
+        },
+        {
+            "img": "https://picsum.photos/30?random=6",
+            "songTitle": "Rainy Days",
+            "artistName": "Acoustic Band",
+            "projectName": "Cozy Acoustics",
+            "songDuration": "3:58"
+        },
+        {
+            "img": "https://picsum.photos/30?random=7",
+            "songTitle": "Sunny Side",
+            "artistName": "Sunshine Singers",
+            "projectName": "Happy Tunes",
+            "songDuration": "2:30"
+        },
+        {
+            "img": "https://picsum.photos/30?random=8",
+            "songTitle": "Moonlight Serenade",
+            "artistName": "Orchestra Ensemble",
+            "projectName": "Nighttime Classics",
+            "songDuration": "4:40"
+        },
+        {
+            "img": "https://picsum.photos/30?random=9",
+            "songTitle": "City Lights",
+            "artistName": "Urban Groove",
+            "projectName": "Metropolitan Beats",
+            "songDuration": "3:20"
+        },
+        {
+            "img": "https://picsum.photos/30?random=10",
+            "songTitle": "Morning Dew",
+            "artistName": "Nature Soundscape",
+            "projectName": "Relaxing Moments",
+            "songDuration": "6:15"
+        }, {
+            "img": "https://picsum.photos/30?random=11",
+            "songTitle": "A New Beginning",
+            "artistName": "Harmony Ensemble",
+            "projectName": "Fresh Horizons",
+            "songDuration": "4:15"
+        },
+        {
+            "img": "https://picsum.photos/30?random=12",
+            "songTitle": "Dancing in the Rain",
+            "artistName": "Melody Maker",
+            "projectName": "Rhythmic Raindrops",
+            "songDuration": "3:30"
+        },
+        {
+            "img": "https://picsum.photos/30?random=13",
+            "songTitle": "Twilight Dreams",
+            "artistName": "Ethereal Echoes",
+            "projectName": "Dreamscapes",
+            "songDuration": "5:50"
+        },
+        {
+            "img": "https://picsum.photos/30?random=14",
+            "songTitle": "Whispers of the Wind",
+            "artistName": "Nature's Orchestra",
+            "projectName": "Natural Harmonies",
+            "songDuration": "3:45"
+        },
+        {
+            "img": "https://picsum.photos/30?random=15",
+            "songTitle": "Urban Sunset",
+            "artistName": "City Lights Collective",
+            "projectName": "Urban Vibes",
+            "songDuration": "4:05"
+        },
+        {
+            "img": "https://picsum.photos/30?random=16",
+            "songTitle": "Enchanted Forest",
+            "artistName": "Mystic Melodies",
+            "projectName": "Enchanted Realms",
+            "songDuration": "6:25"
+        },
+        {
+            "img": "https://picsum.photos/30?random=17",
+            "songTitle": "Eternal Hope",
+            "artistName": "Hopeful Harmonies",
+            "projectName": "Inspirational Journeys",
+            "songDuration": "4:40"
+        },
+        {
+            "img": "https://picsum.photos/30?random=18",
+            "songTitle": "Sunrise Serenade",
+            "artistName": "Morning Melodies",
+            "projectName": "Daybreak Melodies",
+            "songDuration": "5:15"
+        },
+        {
+            "img": "https://picsum.photos/30?random=19",
+            "songTitle": "Ocean's Embrace",
+            "artistName": "Waves of Harmony",
+            "projectName": "Seaside Melodies",
+            "songDuration": "3:20"
+        },
+        {
+            "img": "https://picsum.photos/30?random=20",
+            "songTitle": "Starry Night",
+            "artistName": "Celestial Sounds",
+            "projectName": "Night Sky Symphony",
+            "songDuration": "4:50"
+        }
+    ]
+
+
+    loadInProjectViewRowTitles();
+
+    for (let i = 0; i < songData.length; i++) {
+        const song = songData[i];
+        loadInProjectViewRowItems(song);
+    }
+
+}
+
+function loadInProjectViewRowTitles() {
+    let IDofElement = "PROJECTview_projectAreaContainer";
+    let replacedContent = projectViewRowTitles;
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        replacedContent = replacedContent.replace(regex, value);
+    }
+    document.getElementById(IDofElement).innerHTML += replacedContent;
+    return;
+}
+
+function loadInProjectViewRowItems(songData) {
+    let IDofElement = "PROJECTview-projectTable";
+    let replacedContent = projectViewRowItem;
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
+    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration'];
+
+    for (let i = 0; i < listOfThings.length; i++) {
+        const placeholder = listOfThings[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'PROJECTviewRow_img') {
+            value = songData.img
+        } else if (placeholder === 'PROJECTviewRow_songTitle') {
+            value = songData.artistName;
+        } else if (placeholder === 'PROJECTviewRow_artistName') {
+            value = songData.songTitle;
+        } else if (placeholder === 'PROJECTviewRow_projectName') {
+            value = songData.projectName;
+        } else if (placeholder === 'PROJECTviewRow_songDuration') {
+            value = songData.songDuration;
+        }
+        replacedContent = replacedContent.replace(regex, value);
+    }
+    document.getElementById(IDofElement).innerHTML += replacedContent;
+    return;
+
+}
 
 
 
