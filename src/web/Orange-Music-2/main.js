@@ -56,7 +56,6 @@ export function main() {
 
 
     loadMAINtopleft();
-    console.log("loadMAINtopleft")
     loadMAINtopright();
     initialiseLCD();
     setEventListenersForPlaybackcontrols();

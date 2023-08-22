@@ -192,7 +192,6 @@ function detectPlayAndShuffleButtons() {
         console.log("shuffleButton pressed")
     });
     menuButton.addEventListener("click", function() {
-        console.log("menuButton pressed")
         displayMenuForTop(event)
     });
 }
