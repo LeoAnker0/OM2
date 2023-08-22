@@ -81,6 +81,8 @@
     top: 10%;
     border-radius: 8px;
     object-fit: cover;
+
+    pointer-events: none;
 }
 
 .PROJECTviewTopItem-1 {
@@ -268,6 +270,10 @@
     outline: 1px solid hsla(0, 100%, 100%, 0.3);
 
     transition: background-color 0.05s ease;
+}
+
+.PROJECTviewTopItem-6 button img {
+    pointer-events: none;
 }
 
 .PROJECTviewTopItem-6 button:focus {
@@ -564,12 +570,16 @@
     align-items: center;
     justify-content: center;
     margin-right: 0.5rem;
+
+    pointer-events: none;
 }
 
 .PROJECTview-projectTable-rowItem-4 button div img {
     max-width: 100%;
     max-height: 100%;
     border-radius: 50%;
+
+    pointer-events: none;
 }
 
 .PROJECTview-filesAreaContainer {
