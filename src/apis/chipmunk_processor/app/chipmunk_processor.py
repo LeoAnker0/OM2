@@ -14,6 +14,7 @@ import datetime
 import logging
 import ffmpeg
 import subprocess
+import shutil
 
 
 app = FastAPI()
@@ -243,6 +244,17 @@ async def process_and_save_image(image, url, image_type, image_data, owner_email
 		print(f"Error processing image: {e}")
 
 
+async def init_audio_file_in_database(data: dict):
+    async with app.state.pool.acquire() as conn:
+        data["file_created_time"] = int(datetime.datetime.now().timestamp() * 1000)
+
+        json_owner = {}
+        owner = json.dumps(json_owner)
+
+        query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
+        await conn.execute(query, "started", 0, data["url"], (owner,), "image", data["file_created_time"])
+
+
 @app.post("/process_audio/compress_and_index/")
 async def process_image(request: Request):
 	data = await request.json()
@@ -250,7 +262,31 @@ async def process_image(request: Request):
 	input_file = data["audioFilePath"]
 	uuid = data["uuid"]
 
-	output_files = [f"/var/www/media/1.mp3", f"/var/www/media/2.mp3",f"/var/www/media/3.mp3"]
+	url = await prepare_url()
+	print(f"url: {url}")
+
+	old_file_extension = os.path.splitext(input_file)[1]
+
+	file_path = f"/var/www/media/{url}/0{old_file_extension}"
+
+	# Check if the directory exists, if not, create it
+	directory = os.path.dirname(file_path)
+	if not os.path.exists(directory):
+		os.makedirs(directory)
+
+	# Copy the source file to the destination
+	try:
+		shutil.copy(input_file, file_path)
+		print(f"File copied to {file_path}")
+	except IOError as e:
+		print(f"Error copying file: {e}")
+
+
+	newFileExtension = f"mp3"
+
+
+	output_files = [f"/var/www/media/{url}/1.{newFileExtension}", f"/var/www/media/{url}/2.{newFileExtension}",f"/var/www/media/{url}/3.{newFileExtension}"]
+
 
 	compress_audio(input_file, output_files)
 
@@ -264,7 +300,7 @@ async def process_image(request: Request):
 	return {"message": "Image processing started."}
 
 
-def compress_audio(input_file, output_files, quality_levels=[9, 5, 1]):
+def compress_audio(input_file, output_files, quality_levels=[9, 7, 6]):
     """
     Compresses an audio file to different quality levels.
 
