@@ -1,6 +1,9 @@
 # Use an official Python runtime as the base image
 FROM python:3.11
 
+# Update and install necessary packages
+RUN apt-get update && apt-get install -y ffmpeg python3-pip
+
 # Set the working directory in the container
 WORKDIR /app
 

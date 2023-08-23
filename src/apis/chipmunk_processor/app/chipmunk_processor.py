@@ -12,6 +12,8 @@ import string
 import asyncio
 import datetime
 import logging
+import ffmpeg
+import subprocess
 
 
 app = FastAPI()
@@ -245,7 +247,53 @@ async def process_and_save_image(image, url, image_type, image_data, owner_email
 async def process_image(request: Request):
 	data = await request.json()
 	print(f"request recieved {data}")
+	input_file = data["audioFilePath"]
+	uuid = data["uuid"]
+
+	output_files = [f"/var/www/media/1.mp3", f"/var/www/media/2.mp3",f"/var/www/media/3.mp3"]
+
+	compress_audio(input_file, output_files)
+
+	#delete temp file
+	try:
+	    os.remove(input_file)
+	    print(f"{input_file} deleted successfully.")
+	except OSError as e:
+	    print(f"Error deleting {input_file}: {e}")
+
 	return {"message": "Image processing started."}
+
+
+def compress_audio(input_file, output_files, quality_levels=[9, 5, 1]):
+    """
+    Compresses an audio file to different quality levels.
+
+    Args:
+        input_file (str): Path to the input audio file.
+        output_files (list): List of output file paths for each quality level.
+        quality_levels (list): List of quality levels, where 1 is the lowest and 9 is the best.
+    """
+
+    # Get audio information using FFprobe
+    audio_info = ffmpeg.probe(input_file, v='error', select_streams='a:0', show_entries='stream=r_frame_rate')
+    frame_rate = audio_info['streams'][0]['r_frame_rate']
+
+    # Loop through quality levels and compress audio
+    for i, quality in enumerate(quality_levels):
+        output_file = output_files[i]
+        
+        # Use FFmpeg to compress audio
+        subprocess.run([
+            'ffmpeg',
+            '-i', input_file,
+            '-y',  # Overwrite output files if they exist
+            '-c:a', 'libmp3lame',
+            '-q:a', str(quality),
+            '-ar', '44100',  # Sample rate
+            '-af', 'aresample=async=1:first_pts=0',  # Resample with async
+            '-strict', '-2',  # Allow experimental codecs
+            output_file
+        ])
 
 
 
