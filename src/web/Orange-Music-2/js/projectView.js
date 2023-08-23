@@ -446,7 +446,7 @@ function loadFileDropArea() {
             projectViewSongsArray.push(file);
             //console.log(file);
         }
-        console.log(projectViewSongsArray);
+        //console.log(projectViewSongsArray);
         updateLoadInTable();
         uploadFiles(files);
 
@@ -454,7 +454,7 @@ function loadFileDropArea() {
     }
 }
 
-async function uploadFile(file) {
+async function uploadFileWithProgress(file, progressBar, fileNameLabel) {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -463,21 +463,27 @@ async function uploadFile(file) {
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = Math.round((event.loaded * 100) / event.total);
-            console.log(percentCompleted);
+            progressBar.style.width = percentCompleted + "%";
         }
     };
 
     xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
-            const uploadResult = JSON.parse(xhr.responseText);
-            console.log(uploadResult);
+            progressBar.style.backgroundColor = "#3498db"; // Set a color to indicate completion
+            fileNameLabel.innerText = `Uploaded: ${file.name}`;
+
+            // Remove the upload box after a few seconds
+            setTimeout(() => {
+                const uploadBox = progressBar.closest('.upload-box');
+                uploadBox.parentNode.removeChild(uploadBox);
+            }, 3000); // Adjust the time (in milliseconds) as needed
         } else {
-            console.log('Request failed with status:', xhr.status);
+            progressBar.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
         }
     };
 
     xhr.onerror = function() {
-        console.log('Request error occurred');
+        progressBar.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
     };
 
     xhr.open('POST', 'https://om2apis.la0.uk/upload/', true);
@@ -485,15 +491,26 @@ async function uploadFile(file) {
 }
 
 async function uploadFiles(files) {
-    //const files = projectViewSongsArray;
-
-    if (files.length === 0) {
-        console.log('No files to upload.');
-        return;
-    }
+    const uploadsContainer = document.getElementById('uploadsContainer');
 
     for (const file of files) {
-        await uploadFile(file);
+        const uploadBox = document.createElement('div');
+        uploadBox.classList.add('upload-box');
+
+        const fileNameLabel = document.createElement('div');
+        fileNameLabel.textContent = `Uploading: ${file.name}`;
+        uploadBox.appendChild(fileNameLabel);
+
+        const progressBar = document.createElement('div');
+        progressBar.classList.add('progress-bar');
+        const progressFill = document.createElement('div');
+        progressFill.classList.add('progress-fill');
+        progressBar.appendChild(progressFill);
+        uploadBox.appendChild(progressBar);
+
+        uploadsContainer.appendChild(uploadBox);
+
+        await uploadFileWithProgress(file, progressFill, fileNameLabel);
     }
 }
 

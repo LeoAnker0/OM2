@@ -323,7 +323,17 @@ async def get_account_image(request: Request):
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
+    #print(file)
+    message = f"File {file.filename} uploaded successfully"
 
-    return JSONResponse(content={"message": "File uploaded successfully"})
+    return JSONResponse(content={"message": message})
+
+
+
+
+
+
+
+
 
     
