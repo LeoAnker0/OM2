@@ -241,6 +241,14 @@ async def process_and_save_image(image, url, image_type, image_data, owner_email
 		print(f"Error processing image: {e}")
 
 
+@app.post("/process_audio/compress_and_index/")
+async def process_image(request: Request):
+	data = await request.json()
+	print(f"request recieved {data}")
+	return {"message": "Image processing started."}
+
+
+
 
 @app.post("/send_message/")
 async def send_message(request: Request):

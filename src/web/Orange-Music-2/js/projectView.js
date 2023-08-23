@@ -449,14 +449,16 @@ function loadFileDropArea() {
         //console.log(projectViewSongsArray);
         updateLoadInTable();
         uploadFiles(files);
-
-        //update project view
     }
 }
 
 async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
     const formData = new FormData();
     formData.append('file', file);
+
+    const jwtToken = localStorage.getItem('JWT');
+
+    formData.append('jwt', jwtToken);
 
     const xhr = new XMLHttpRequest();
 
@@ -487,7 +489,7 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
         progressFill.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
     };
 
-    xhr.open('POST', 'https://om2apis.la0.uk/upload/', true);
+    xhr.open('POST', 'https://om2apis.la0.uk/files/upload/audio/', true);
     xhr.send(formData);
 }
 

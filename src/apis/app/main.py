@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie, File, UploadFile, Form, WebSocket
+from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie, File, UploadFile, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from requests_toolbelt import MultipartEncoder
@@ -321,14 +321,54 @@ async def get_account_image(request: Request):
 
     #get the url of the account image
 
-@app.post("/upload/")
-async def upload_file(file: UploadFile = File(...)):
-    #print(file)
+def generate_uuid():
+    newUuid = str(uuid.uuid4())
+    return newUuid
+
+@app.post("/files/upload/audio/")
+async def upload_file(
+    file: UploadFile = File(...),
+    jwt: str = Form(...),  # Get the JWT token from the form
+):
+    
+    real, uuid = verify_jwt(jwt)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    print(f"valid jwt")
+
+    upload_dir = "/var/www/media/temp/"
+    # Check if the directory exists, if not, create it
+    directory = os.path.dirname(upload_dir)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    unique_filename_section = generate_uuid()
+
+    unique_filename = f"{unique_filename_section}_{file.filename}"
+    print(unique_filename)
+
+    # Save the file to the upload directory
+    file_path = os.path.join(upload_dir, unique_filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+
+
+    chipmunk_processor_url = "http://chipmunk_processor:8001/process_audio/compress_and_index/"
+    payload = {"audioFilePath": file_path, "uuid": uuid}
+    print("we are sending an image to chipmunk_processor")
+    response = requests.post(chipmunk_processor_url, json=payload)
+
+    # Continue with the file upload if the JWT is valid
+    # ... (your existing code for file upload)
+
     message = f"File {file.filename} uploaded successfully"
-
     return JSONResponse(content={"message": message})
-
-
 
 
 
