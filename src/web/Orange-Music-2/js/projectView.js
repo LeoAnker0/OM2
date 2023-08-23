@@ -448,14 +448,44 @@ function loadFileDropArea() {
         }
         console.log(projectViewSongsArray);
         updateLoadInTable();
-        uploadFiles();
+        uploadFiles(files);
 
         //update project view
     }
 }
 
-function uploadFiles() {
-    const files = projectViewSongsArray;
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.onprogress = function(event) {
+        if (event.lengthComputable) {
+            const percentCompleted = Math.round((event.loaded * 100) / event.total);
+            console.log(percentCompleted);
+        }
+    };
+
+    xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const uploadResult = JSON.parse(xhr.responseText);
+            console.log(uploadResult);
+        } else {
+            console.log('Request failed with status:', xhr.status);
+        }
+    };
+
+    xhr.onerror = function() {
+        console.log('Request error occurred');
+    };
+
+    xhr.open('POST', 'https://om2apis.la0.uk/upload/', true);
+    xhr.send(formData);
+}
+
+async function uploadFiles(files) {
+    //const files = projectViewSongsArray;
 
     if (files.length === 0) {
         console.log('No files to upload.');
@@ -463,25 +493,10 @@ function uploadFiles() {
     }
 
     for (const file of files) {
-        upload(file)
-            .then(() => {
-                console.log(`File "${file.name}" uploaded successfully.`);
-            })
-            .catch(error => {
-                console.error(`Error uploading "${file.name}":`, error);
-            });
+        await uploadFile(file);
     }
 }
 
-async function upload(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    await fetch('http://om2apis.la0.uk/upload/', {
-        method: 'POST',
-        body: formData
-    });
-}
 
 
 // Format file size

@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie, File, UploadFile, Form
+from fastapi import FastAPI, Header, HTTPException, Request, Response, Cookie, File, UploadFile, Form, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from requests_toolbelt import MultipartEncoder
+from starlette.websockets import WebSocketDisconnect
+
 from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, EmailStr
@@ -31,7 +33,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_origins=["http://localhost:5173"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -321,12 +323,7 @@ async def get_account_image(request: Request):
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
-    upload_dir = f"/var/www/media/"
-    file_path = os.path.join(upload_dir, file.filename)
 
-    with open(file_path, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+    return JSONResponse(content={"message": "File uploaded successfully"})
 
-    return {'message': f'File "{file.filename}" uploaded successfully to {upload_dir}'}
-
-
+    
