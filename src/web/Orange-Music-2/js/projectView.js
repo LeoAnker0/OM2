@@ -454,36 +454,37 @@ function loadFileDropArea() {
     }
 }
 
-async function uploadFileWithProgress(file, progressBar, fileNameLabel) {
+async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
     const formData = new FormData();
     formData.append('file', file);
 
     const xhr = new XMLHttpRequest();
 
+    const progressBar = document.createElement('div');
+    progressBar.classList.add('progress-bar');
+    const progressFill = document.createElement('div');
+    progressFill.classList.add('progress-fill');
+    progressBar.appendChild(progressFill);
+    uploadBox.appendChild(progressBar);
+
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
-            const percentCompleted = Math.round((event.loaded * 100) / event.total);
-            progressBar.style.width = percentCompleted + "%";
+            const percentCompleted = (event.loaded / event.total) * 100;
+            progressFill.style.width = percentCompleted + "%";
         }
     };
 
     xhr.onload = function() {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            progressBar.style.backgroundColor = "#3498db"; // Set a color to indicate completion
-            fileNameLabel.innerText = `Uploaded: ${file.name}`;
+        uploadBox.classList.add('complete');
+        fileNameLabel.textContent = `${file.name}`;
 
-            // Remove the upload box after a few seconds
-            setTimeout(() => {
-                const uploadBox = progressBar.closest('.upload-box');
-                uploadBox.parentNode.removeChild(uploadBox);
-            }, 3000); // Adjust the time (in milliseconds) as needed
-        } else {
-            progressBar.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
-        }
+        setTimeout(() => {
+            uploadBox.parentNode.removeChild(uploadBox);
+        }, 1000); // Adjust the time (in milliseconds) as needed
     };
 
     xhr.onerror = function() {
-        progressBar.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
+        progressFill.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
     };
 
     xhr.open('POST', 'https://om2apis.la0.uk/upload/', true);
@@ -498,23 +499,15 @@ async function uploadFiles(files) {
         uploadBox.classList.add('upload-box');
 
         const fileNameLabel = document.createElement('div');
-        fileNameLabel.textContent = `Uploading: ${file.name}`;
+        fileNameLabel.classList.add('PROJECTview_upload_nameLabel');
+        fileNameLabel.textContent = `${file.name}`;
         uploadBox.appendChild(fileNameLabel);
-
-        const progressBar = document.createElement('div');
-        progressBar.classList.add('progress-bar');
-        const progressFill = document.createElement('div');
-        progressFill.classList.add('progress-fill');
-        progressBar.appendChild(progressFill);
-        uploadBox.appendChild(progressBar);
 
         uploadsContainer.appendChild(uploadBox);
 
-        await uploadFileWithProgress(file, progressFill, fileNameLabel);
+        await uploadFileWithProgress(file, uploadBox, fileNameLabel);
     }
 }
-
-
 
 // Format file size
 function formatFileSize(size) {
