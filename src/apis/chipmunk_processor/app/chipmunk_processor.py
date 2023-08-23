@@ -245,57 +245,82 @@ async def process_and_save_image(image, url, image_type, image_data, owner_email
 
 
 async def init_audio_file_in_database(data: dict):
-    async with app.state.pool.acquire() as conn:
-        data["file_created_time"] = int(datetime.datetime.now().timestamp() * 1000)
+	async with app.state.pool.acquire() as conn:
 
-        json_owner = {}
-        owner = json.dumps(json_owner)
+		processed_state = f"started"
+		file_size = 0
+		url = data["url"]
+		file_created_time = int(datetime.datetime.now().timestamp() * 1000)
+		json_owner = {"owner": data["uuid"], "permissions": "owner"}
+		owner = json.dumps(json_owner)
+		file_type = f"audio"
 
-        query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
-        await conn.execute(query, "started", 0, data["url"], (owner,), "image", data["file_created_time"])
+
+		query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
+		await conn.execute(query, processed_state, file_size, url, (owner,), file_type, file_created_time)
+
+async def update_audio_file_in_database(data:dict):
+	async with app.state.pool.acquire() as conn:
+		# get the id of the owner via their email.
+		url = data["url"]
+
+		processed_state = "finished"
+		file_size = data["file_size"]
+
+
+		update_query = "UPDATE files SET processed_state = $1, file_size = $2 WHERE file_url = $3"
+		await conn.execute(update_query, processed_state, file_size, url)
 
 
 @app.post("/process_audio/compress_and_index/")
 async def process_image(request: Request):
 	data = await request.json()
-	print(f"request recieved {data}")
+
+	# get the details from fastapi
 	input_file = data["audioFilePath"]
 	uuid = data["uuid"]
 
+	# get the new url / unique name for this file
 	url = await prepare_url()
 	print(f"url: {url}")
 
+	# create a folder for url, as well as saving a copy of the original file to 0.extension
 	old_file_extension = os.path.splitext(input_file)[1]
-
 	file_path = f"/var/www/media/{url}/0{old_file_extension}"
-
-	# Check if the directory exists, if not, create it
+		# Check if the directory exists, if not, create it
 	directory = os.path.dirname(file_path)
 	if not os.path.exists(directory):
 		os.makedirs(directory)
 
-	# Copy the source file to the destination
+		# Copy the source file to the destination
 	try:
 		shutil.copy(input_file, file_path)
 		print(f"File copied to {file_path}")
 	except IOError as e:
 		print(f"Error copying file: {e}")
 
-
+	# specify the names (and file paths) of the processed files
 	newFileExtension = f"mp3"
-
-
 	output_files = [f"/var/www/media/{url}/1.{newFileExtension}", f"/var/www/media/{url}/2.{newFileExtension}",f"/var/www/media/{url}/3.{newFileExtension}"]
 
+	# send infos to database
+	files_dict = dict(url=url, uuid=uuid)
+	await init_audio_file_in_database(files_dict)
 
+	# send the files to being processed
 	compress_audio(input_file, output_files)
 
-	#delete temp file
+	# delete temp file
 	try:
 	    os.remove(input_file)
 	    print(f"{input_file} deleted successfully.")
 	except OSError as e:
 	    print(f"Error deleting {input_file}: {e}")
+
+	folder_size = get_folder_size(f"/var/www/media/{url}/")
+	files_dict = dict(url=url, file_size=folder_size)
+	await update_audio_file_in_database(files_dict)
+
 
 	return {"message": "Image processing started."}
 
@@ -329,7 +354,7 @@ def compress_audio(input_file, output_files, quality_levels=[9, 7, 6]):
             '-af', 'aresample=async=1:first_pts=0',  # Resample with async
             '-strict', '-2',  # Allow experimental codecs
             output_file
-        ])
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 
