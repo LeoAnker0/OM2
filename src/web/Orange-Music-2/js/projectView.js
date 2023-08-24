@@ -1,18 +1,38 @@
 export function initProjectView() {
-    loadContainer();
+    /* detect if the route is /projects/ or /projects/id, if the first one 
+    ask the server nicely for a new project
+    else load an existing project */
+    setTimeout(() => {
+        const currentPath = window.location.pathname;
+        console.log(currentPath)
+        if (currentPath === "/projects/") {
+            console.log("get new id")
+        } else {
+            console.log("don't get new id")
+            loadVisible();
+        }
 
-    const description = "cheese";
-    sessionStorage.setItem('description', description);
 
-    onResizeClipOverflowingText();
+    }, 1);
 
-    descriptionButtonInteractions();
 
-    handleDescriptionMoreText();
-    detectOffClicks();
-    detectPlayAndShuffleButtons();
-    loadInTable();
-    loadFileDropArea();
+    function loadVisible() {
+
+        loadContainer();
+
+        const description = "cheese";
+        sessionStorage.setItem('description', description);
+
+        onResizeClipOverflowingText();
+
+        descriptionButtonInteractions();
+
+        handleDescriptionMoreText();
+        detectOffClicks();
+        detectPlayAndShuffleButtons();
+        loadInTable();
+        loadFileDropArea();
+    }
 }
 
 export function hideProjectView() {
