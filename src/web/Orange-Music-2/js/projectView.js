@@ -15,6 +15,11 @@ export function initProjectView() {
     loadFileDropArea();
 }
 
+export function hideProjectView() {
+    const MainContent = document.getElementById("MAINcontentPages");
+    MainContent.innerHTML = "";
+}
+
 import { projectViewSongsArray } from './sharedArrays.js';
 
 

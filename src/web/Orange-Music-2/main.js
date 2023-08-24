@@ -44,10 +44,10 @@ import { initialiseQueue } from './js/queue.js';
 import { initAccountImg } from './js/loadAccountImage.js';
 
 /* music object grid */
-import { initMusicObjectsGrid, hideMusicObjectsGrid, showMusicObjectsGrid } from './js/musicObjectGrid.js';
+import { initMusicObjectsGrid, hideMusicObjectsGrid } from './js/musicObjectGrid.js';
 
 /* project view */
-import { initProjectView } from './js/projectView.js';
+import { initProjectView, hideProjectView } from './js/projectView.js';
 
 
 export function main() {
@@ -74,16 +74,45 @@ export function main() {
 
     //PAGES --------------------  
 
-    initMusicObjectsGrid();
-    //showMusicObjectsGrid();
-
-    hideMusicObjectsGrid();
-    initProjectView();
-
+    //initMusicObjectsGrid();
+    //hideMusicObjectsGrid();
+    //initProjectView();
+    //hideProjectView();
     /*
      */
 
+    function handleUrlChange() {
+        const currentPath = window.location.pathname;
+        handleRoute(currentPath);
+    }
 
+    window.addEventListener('popstate', handleUrlChange);
+
+    handleUrlChange();
+}
+
+function handleMusicObjectsGrid() {
+    hideProjectView();
+    initMusicObjectsGrid();
+}
+
+function handleProjectView() {
+    hideMusicObjectsGrid();
+    initProjectView();
+}
+
+const routeHandlers = {
+    '/': handleMusicObjectsGrid,
+    '/projects/': handleProjectView,
+    // Add more routes and handlers as needed
+};
+
+export function handleRoute(route) {
+    const handler = routeHandlers[route] || notFoundHandler;
+    handler();
+
+    // Update browser's history
+    history.pushState({}, '', route);
 }
 
 import { initSettings } from './js/settings.js';

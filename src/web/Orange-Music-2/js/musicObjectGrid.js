@@ -17,19 +17,12 @@ export function initMusicObjectsGrid() {
 }
 
 export function hideMusicObjectsGrid() {
-    //lets move the z index back to like 0
-    const gridContainer = document.getElementById("MOGcontainer");
-    gridContainer.style.zIndex = "0";
-    gridContainer.style.filter = "blur(50px)";
-    gridContainer.style.position = "fixed";
+    // clear the contents of main page content div
+
+    const MainContent = document.getElementById("MAINcontentPages");
+    MainContent.innerHTML = "";
 }
 
-export function showMusicObjectsGrid() {
-    const gridContainer = document.getElementById("MOGcontainer");
-    gridContainer.style.zIndex = "1";
-    gridContainer.style.filter = "blur(00px)";
-    gridContainer.style.position = "absolute";
-}
 
 function getLibraryData() {
     const libraryData = [];
@@ -192,6 +185,17 @@ function daysToDaysWeeksMonthsYears(days) {
     }
 }
 
+import { handleRoute } from '../main.js';
+
 function addNewLibraryItem() {
     console.log("add new");
+    handleRoute("/projects/")
 }
+
+
+
+
+
+
+
+/**/
