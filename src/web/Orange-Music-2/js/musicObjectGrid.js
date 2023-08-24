@@ -188,7 +188,7 @@ function daysToDaysWeeksMonthsYears(days) {
 import { handleRoute } from '../main.js';
 
 function addNewLibraryItem() {
-    handleRoute("/projects/")
+    handleRoute("/new-project/")
 }
 
 

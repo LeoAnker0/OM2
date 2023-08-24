@@ -47,13 +47,10 @@ import { initAccountImg } from './js/loadAccountImage.js';
 import { initMusicObjectsGrid, hideMusicObjectsGrid } from './js/musicObjectGrid.js';
 
 /* project view */
-import { initProjectView, hideProjectView } from './js/projectView.js';
+import { initProjectView, hideProjectView, createNewProjectID } from './js/projectView.js';
 
 
 export function main() {
-
-    //await initSettings();
-
 
     loadMAINtopleft();
     loadMAINtopright();
@@ -64,22 +61,6 @@ export function main() {
     initAccountImg();
     initialiseQueue();
 
-
-
-
-
-
-
-
-
-    //PAGES --------------------  
-
-    //initMusicObjectsGrid();
-    //hideMusicObjectsGrid();
-    //initProjectView();
-    //hideProjectView();
-    /*
-     */
 
     function handleUrlChange() {
         const currentPath = window.location.pathname;
@@ -96,23 +77,44 @@ function handleMusicObjectsGrid() {
     initMusicObjectsGrid();
 }
 
-function handleProjectView() {
+function handleProjectView(projectID) {
     hideMusicObjectsGrid();
-    initProjectView();
+    initProjectView(projectID);
 }
 
 const routeHandlers = {
     '/': handleMusicObjectsGrid,
-    '/projects/': handleProjectView,
+    '/new-project/': createNewProjectID,
+    '/projects/:projectID': handleProjectView,
     // Add more routes and handlers as needed
 };
 
-export function handleRoute(route) {
-    const handler = routeHandlers[route] || notFoundHandler;
-    handler();
+function notFoundHandler() {
+    console.log("notFoundHandler")
+}
 
-    // Update browser's history
-    history.pushState({}, '', route);
+export function handleRoute(route) {
+    const handlerKeys = Object.keys(routeHandlers);
+
+    for (const key of handlerKeys) {
+        const pattern = new RegExp(`^${key.replace(/:[^\s/]+/g, '([^/]+)')}$`);
+        const match = route.match(pattern);
+
+        if (match) {
+            const handler = routeHandlers[key];
+            const parameters = match.slice(1);
+            handler(...parameters);
+
+            // Update browser's history
+            if (route !== "/new-project/") {
+                history.pushState({}, '', route);
+            }
+
+            return;
+        }
+    }
+
+    notFoundHandler(); // Route not recognized
 }
 
 import { initSettings } from './js/settings.js';

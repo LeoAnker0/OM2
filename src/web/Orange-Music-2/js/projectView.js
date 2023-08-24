@@ -1,4 +1,24 @@
-export function initProjectView() {
+/* so i have decided that the generation of the new id should be 
+done somewhere else, and now that is a reality, so now the function
+that generates should be here
+*/
+
+import { handleRoute } from '../main.js';
+
+export function createNewProjectID() {
+    console.log("create new project ID please")
+
+    const projectID = "ansi013";
+    const newRoute = `/projects/${projectID}`
+
+    handleRoute(newRoute);
+
+
+}
+
+
+
+export function initProjectView(projectID) {
     /* detect if the route is /projects/ or /projects/id, if the first one 
     ask the server nicely for a new project
     else load an existing project */
