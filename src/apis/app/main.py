@@ -371,6 +371,32 @@ async def upload_file(
     return JSONResponse(content={"message": message})
 
 
+@app.post("/projects/new-project-id/")
+async def create_project(request: Request):
+    data = await request.json()
+    token = data["access-token"]
+
+    print(data)
+
+    # In a real-world scenario, you would handle token validation and project creation here
+    # For simplicity, we'll assume token validation and just return the received data
+    print("print new project ID")
+    return {"projectID": "token"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -5,13 +5,36 @@ that generates should be here
 
 import { handleRoute } from '../main.js';
 
-export function createNewProjectID() {
+export async function createNewProjectID() {
     console.log("create new project ID please")
 
-    const projectID = "ansi013";
-    const newRoute = `/projects/${projectID}`
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
 
-    handleRoute(newRoute);
+        const projectData = {
+            "access-token": token
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/new-project-id/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const projectID = data.projectID;
+
+        const newRoute = `/projects/${projectID}`
+        handleRoute(newRoute);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 
 
 }

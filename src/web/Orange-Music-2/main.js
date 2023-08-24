@@ -70,6 +70,7 @@ export function main() {
     window.addEventListener('popstate', handleUrlChange);
 
     handleUrlChange();
+    //window.location.href = '/';
 }
 
 function handleMusicObjectsGrid() {
