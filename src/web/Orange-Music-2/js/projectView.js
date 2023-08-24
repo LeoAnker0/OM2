@@ -473,20 +473,33 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
             progressFill.style.width = percentCompleted + "%";
+            if (percentCompleted === 100) {
+                progressBar.classList.add('opacity-animation');
+            }
         }
     };
 
     xhr.onload = function() {
-        uploadBox.classList.add('complete');
+        progressBar.classList.remove('opacity-animation');
+        progressBar.style.opacity = "1";
+        progressFill.classList.add('complete');
         fileNameLabel.textContent = `${file.name}`;
 
         setTimeout(() => {
+            uploadBox.classList.add('complete');
+        }, 2000); // Adjust the time (in milliseconds) as needed
+        setTimeout(() => {
             uploadBox.parentNode.removeChild(uploadBox);
-        }, 1000); // Adjust the time (in milliseconds) as needed
+        }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
     xhr.onerror = function() {
+        progressBar.classList.remove('opacity-animation');
+        progressBar.style.opacity = "1";
         progressFill.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
+        setTimeout(() => {
+            uploadBox.parentNode.removeChild(uploadBox);
+        }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
     xhr.open('POST', 'https://om2apis.la0.uk/files/upload/audio/', true);

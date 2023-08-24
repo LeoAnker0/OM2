@@ -668,7 +668,7 @@
 
 .upload-box {
     padding: 5px;
-    transition: opacity 0.3s;
+    transition: opacity 1s;
     position: relative;
 
     height: 1rem;
@@ -679,13 +679,15 @@
 
     display: flex;
     justify-content: center;
-    /* Centers content horizontally */
     align-items: center;
 }
 
 .upload-box.complete {
     opacity: 0;
+
 }
+
+
 
 .progress-bar {
     width: 90%;
@@ -697,6 +699,7 @@
     border-radius: 8px;
     overflow: hidden;
 
+    transition: opacity 0.3s;
 
 }
 
@@ -704,7 +707,11 @@
     height: 100%;
     background-color: white;
     width: 0;
-    transition: width 0.3s;
+    transition: width 0.3s, background-color 0.3s ease-in-out;
+}
+
+.progress-fill.complete {
+    background-color: green;
 }
 
 .PROJECTview_upload_nameLabel {
@@ -720,6 +727,27 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+
+/* Define the animation */
+@keyframes opacityLoop {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* Apply the animation to the element */
+.opacity-animation {
+    animation: opacityLoop 2s ease-in-out infinite;
+    /* Adjust the duration and timing function as needed */
+}
+
 
 /* loose files area -------- */
 
