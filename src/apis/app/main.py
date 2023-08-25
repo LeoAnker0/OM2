@@ -331,6 +331,7 @@ def generate_uuid():
 async def upload_file(
     file: UploadFile = File(...),
     jwt: str = Form(...),  # Get the JWT token from the form
+    project_id: str = Form (...)
 ):
     
     real, uuid = verify_jwt(jwt)
@@ -341,8 +342,6 @@ async def upload_file(
 
     uuid = uuid["uuid"]
 
-    print(f"valid jwt")
-
     upload_dir = "/var/www/media/temp/"
     # Check if the directory exists, if not, create it
     directory = os.path.dirname(upload_dir)
@@ -352,18 +351,18 @@ async def upload_file(
     unique_filename_section = generate_uuid()
 
     unique_filename = f"{unique_filename_section}_{file.filename}"
-    print(unique_filename)
 
     # Save the file to the upload directory
     file_path = os.path.join(upload_dir, unique_filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
+    song_name = file.filename
+    song_name = os.path.splitext(song_name)[0]
 
 
     chipmunk_processor_url = "http://chipmunk_processor:8001/process_audio/compress_and_index/"
-    payload = {"audioFilePath": file_path, "uuid": uuid}
-    print("we are sending an image to chipmunk_processor")
+    payload = {"audioFilePath": file_path, "uuid": uuid, "song_name":song_name, "project_id":project_id}
     response = requests.post(chipmunk_processor_url, json=payload)
 
     # Continue with the file upload if the JWT is valid

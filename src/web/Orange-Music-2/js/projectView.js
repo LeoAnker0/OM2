@@ -136,7 +136,7 @@ export async function initProjectView(projectID) {
         detectOffClicks(details);
         detectPlayAndShuffleButtons();
         loadInTable();
-        loadFileDropArea();
+        loadFileDropArea(details);
     }
 }
 
@@ -558,7 +558,7 @@ function loadInProjectViewRowItems(songData) {
 
 
 
-function loadFileDropArea() {
+function loadFileDropArea(details) {
     const dropArea = document.getElementById("PROJECTview_dropArea");
 
     // Prevent default behavior for drag-and-drop events
@@ -580,7 +580,7 @@ function loadFileDropArea() {
         dropArea.classList.remove("dragover");
 
         const files = e.dataTransfer.files;
-        handleFiles(files);
+        handleFiles(files, details);
     });
 
     // Handle selected files when files are chosen using the file input
@@ -591,26 +591,28 @@ function loadFileDropArea() {
         fileInput.multiple = true;
         fileInput.addEventListener("change", () => {
             const files = fileInput.files;
-            handleFiles(files);
+            handleFiles(files, details);
         });
         fileInput.click();
     });
 
     // Handle uploaded files
-    function handleFiles(files) {
+    function handleFiles(files, details) {
         for (const file of files) {
             projectViewSongsArray.push(file);
             //console.log(file);
         }
         //console.log(projectViewSongsArray);
         updateLoadInTable();
-        uploadFiles(files);
+        uploadFiles(files, details);
     }
 }
 
-async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
+async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
     const formData = new FormData();
     formData.append('file', file);
+
+    formData.append("project_id", details.project_id);
 
     const jwtToken = localStorage.getItem('JWT');
 
@@ -662,7 +664,7 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel) {
     xhr.send(formData);
 }
 
-async function uploadFiles(files) {
+async function uploadFiles(files, details) {
     const uploadsContainer = document.getElementById('uploadsContainer');
 
     for (const file of files) {
@@ -676,7 +678,7 @@ async function uploadFiles(files) {
 
         uploadsContainer.appendChild(uploadBox);
 
-        await uploadFileWithProgress(file, uploadBox, fileNameLabel);
+        await uploadFileWithProgress(file, uploadBox, fileNameLabel, details);
     }
 }
 

@@ -15,6 +15,7 @@ import logging
 import ffmpeg
 import subprocess
 import shutil
+import librosa
 
 
 app = FastAPI()
@@ -272,13 +273,19 @@ async def update_audio_file_in_database(data:dict):
 		await conn.execute(update_query, processed_state, file_size, url)
 
 
+
+
+
+
 @app.post("/process_audio/compress_and_index/")
 async def process_image(request: Request):
 	data = await request.json()
 
 	# get the details from fastapi
 	input_file = data["audioFilePath"]
+	print(input_file)
 	uuid = data["uuid"]
+
 
 	# get the new url / unique name for this file
 	url = await prepare_url()
@@ -295,7 +302,7 @@ async def process_image(request: Request):
 		# Copy the source file to the destination
 	try:
 		shutil.copy(input_file, file_path)
-		print(f"File copied to {file_path}")
+		#print(f"File copied to {file_path}")
 	except IOError as e:
 		print(f"Error copying file: {e}")
 
@@ -310,10 +317,22 @@ async def process_image(request: Request):
 	# send the files to being processed
 	compress_audio(input_file, output_files)
 
+	# update the projects item for this file
+	song_name = data["song_name"]
+	project_id = data["project_id"]
+	duration_in_seconds = round(librosa.get_duration(path=input_file))
+
+	project_json_append_json_dict = dict(url=url, uuid=uuid, song_name=song_name, project_id=project_id, duration=duration_in_seconds)
+	#print(duration_in_seconds)
+
+
+
 	# delete temp file
+
+	
 	try:
 	    os.remove(input_file)
-	    print(f"{input_file} deleted successfully.")
+	    #print(f"{input_file} deleted successfully.")
 	except OSError as e:
 	    print(f"Error deleting {input_file}: {e}")
 

@@ -16,3 +16,4 @@ bcrypt
 Pillow>=8.3.1
 python-multipart
 ffmpeg-python
+librosa==0.10
