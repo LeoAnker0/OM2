@@ -2,18 +2,20 @@
 JS for creating the music objects, and then hydrating them with dynamic data
 */
 
-export function initMusicObjectsGrid() {
-    const contentEnvironment = document.getElementById("MAINcontentPages");
+export async function initMusicObjectsGrid() {
+    try {
+        const contentEnvironment = document.getElementById("MAINcontentPages");
 
-    loadInContainer();
+        loadInContainer();
 
+        const libraryData = await getLibraryData(); // Wait for getLibraryData to complete
 
+        loadObjects(libraryData);
 
-    const libraryData = getLibraryData();
-
-    loadObjects(libraryData);
-
-    return
+        return;
+    } catch (error) {
+        console.error('Error in initMusicObjectsGrid:', error);
+    }
 }
 
 export function hideMusicObjectsGrid() {
@@ -24,10 +26,51 @@ export function hideMusicObjectsGrid() {
 }
 
 
-function getLibraryData() {
-    const libraryData = [];
-    return libraryData;
+async function getLibraryData() {
+    try {
+        const token = localStorage.getItem('JWT');
+        if (!token) {
+            console.log("no jwt");
+            return [];
+        }
+
+        const access_token = {
+            "access-token": token
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/get-projects/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(access_token)
+        });
+
+        const responseData = await response.json();
+        const projects = responseData.projects;
+
+        if (!Array.isArray(projects)) {
+            console.log("Projects is not an array:", projects);
+            return [];
+        }
+
+        const libraryData = projects.map(project => ({
+            img: project.picture_url,
+            top: project.project_name,
+            bottom: project.project_contributors,
+            days: project.time_created,
+            project_id: project.project_id
+        }));
+
+        return libraryData;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
 }
+
+
 
 
 import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
@@ -63,11 +106,6 @@ function loadObjects(libraryData) {
     }
     parentContainer.innerHTML += replacedContent
 
-    const addButton = document.getElementById("MOGaddNewItem");
-    addButton.addEventListener('click', addNewLibraryItem);
-
-
-
     /* from the users libraries ----- */
     const loadEvents = libraryData.length;
 
@@ -80,10 +118,10 @@ function loadObjects(libraryData) {
         const imgAddress = libraryData[i].img;
         const textTop = libraryData[i].top;
         const textBottom = libraryData[i].bottom;
-        const lastCheckedInDays = libraryData[i].days;
+        const lastCheckedInMillis = libraryData[i].days;
 
         /* last checked display calculator */
-        const checkedIndicator = daysToDaysWeeksMonthsYears(lastCheckedInDays);
+        const checkedIndicator = daysToDaysWeeksMonthsYears(lastCheckedInMillis);
 
 
 
@@ -123,7 +161,7 @@ function loadObjects(libraryData) {
         // for the play button"
         if (clickedElement.classList.contains('MOG-item-controls-play')) {
             const buttonID = clickedElement.id.split('-')[1];
-            const objectID = libraryData[buttonID].OBJECTid;
+            const objectID = libraryData[buttonID].project_id;
 
 
             console.log('Play ' + objectID);
@@ -133,9 +171,22 @@ function loadObjects(libraryData) {
         // for the menu button
         if (clickedElement.classList.contains('MOG-item-controls-menu')) {
             const buttonID = clickedElement.id.split('-')[1];
-            const objectID = libraryData[buttonID].OBJECTid;
+            const objectID = libraryData[buttonID].project_id;
 
             displayMenu(event);
+        }
+
+        // for the project box click
+        if (clickedElement.classList.contains('MOG-itemContainer')) {
+
+            if (clickedElement.id !== 'MOGaddNewItem') {
+                const buttonID = clickedElement.id.split('-')[1];
+                const objectID = libraryData[buttonID].project_id;
+
+                handleRoute(`/projects/${objectID}`);
+            } else if (clickedElement.id === 'MOGaddNewItem') {
+                addNewLibraryItem();
+            }
         }
     });
 }
@@ -161,25 +212,31 @@ function displayMenu(event) {
     return;
 }
 
-function daysToDaysWeeksMonthsYears(days) {
+function daysToDaysWeeksMonthsYears(milliseconds) {
+    const now = Date.now();
+    const differenceDays = (now - milliseconds) / (1000 * 60 * 60 * 24);
+
     let checkedIndicator;
 
-    if (days < 1) {
+    if (differenceDays < 0.01) { // Less than 0.01 days (approximately 14 minutes)
         checkedIndicator = "Now";
         return checkedIndicator;
-    } else if (days > 0 && days < 8) {
-        checkedIndicator = days + "d";
+    } else if (differenceDays < 1) {
+        checkedIndicator = "Now"; // Convert to hours
         return checkedIndicator;
-    } else if (days > 7 && days < 29) {
-        let noWeeks = Math.floor(days / 7);
+    } else if (differenceDays < 8) {
+        checkedIndicator = Math.floor(differenceDays) + "d";
+        return checkedIndicator;
+    } else if (differenceDays < 29) {
+        const noWeeks = Math.floor(differenceDays / 7);
         checkedIndicator = noWeeks + "w";
         return checkedIndicator;
-    } else if (days > 28 && days < 366) {
-        let noMonths = Math.floor(days / 28);
+    } else if (differenceDays < 365) {
+        const noMonths = Math.floor(differenceDays / 28);
         checkedIndicator = noMonths + "m";
         return checkedIndicator;
     } else {
-        let noYears = Math.floor(days / 356);
+        const noYears = Math.floor(differenceDays / 365);
         checkedIndicator = noYears + "y";
         return checkedIndicator;
     }

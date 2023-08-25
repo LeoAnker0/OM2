@@ -35,7 +35,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_origins=["http://localhost:5173", "http://localhost:4173"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -437,8 +437,30 @@ async def create_project(request: Request):
     init_project_dict = dict(uuid=uuid, project_id=project_id, owner_username=username)
     await init_project_in_database(init_project_dict)
 
-    print("print new project ID")
     return {"projectID": project_id}
+
+async def get_users_projects(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 LIMIT 100"
+        projects = await conn.fetch(query, uuid)
+        return projects
+
+@app.post("/projects/get-projects/")
+async def create_project(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+
+    real, uuid = verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    projects = await get_users_projects(uuid)
+
+    return {"projects": projects}
 
 
 

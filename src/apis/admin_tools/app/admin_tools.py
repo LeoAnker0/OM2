@@ -90,23 +90,6 @@ async def shutdown():
     await app.state.pool.close()
 
 
-"""
-@app.post("/send_message/")
-async def send_message(request: Request):
-	data = await request.json()
-	#process message
-	print("we have a message")
-
-	message = data.get("user_to_delete")
-
-	if message is None:
-		return {"error": "Message field not found in JSON payload."}
-
-
-	processed_message = f"Processed: {message}"
-
-	return {"response": processed_message}
-"""
 
 
 @app.post("/delete_user/")

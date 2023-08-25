@@ -35,11 +35,7 @@
     width: 100%;
     max-width: 15rem;
 
-
-
-
 }
-
 .MOG-itemImageContainer {
     position: relative;
     top: 0;
@@ -51,6 +47,8 @@
     overflow: hidden;
 
     outline: 1px solid hsla(0, 100%, 100%, 0.5);
+
+    pointer-events: none;
 }
 
 .MOG-itemImageContainer img {
@@ -60,12 +58,16 @@
     top: 0;
     left: 0;
     position: relative;
+
+    pointer-events: none;
 }
 
 .MOG-itemTextContainer {
     position: relative;
     width: 100%;
     margin-top: 0.3rem;
+
+    pointer-events: none;
 }
 
 .MOG-itemTextTop {
@@ -111,6 +113,8 @@
     bottom: 0;
 
     display: flex;
+
+    pointer-events: auto;
 
 }
 
