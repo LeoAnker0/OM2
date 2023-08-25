@@ -463,6 +463,70 @@ async def create_project(request: Request):
     return {"projects": projects}
 
 
+async def get_project_details_from_database(uuid, project_id):
+    async with app.state.pool.acquire() as conn:
+        query = """SELECT time_created, project_json, description, picture_url, project_name, project_contributors
+        FROM projects 
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1  AND project_id = $2
+        LIMIT 1"""
+        project_details = await conn.fetch(query, uuid, project_id)
+        return project_details
+
+@app.post("/projects/get-project-details/")
+async def get_project_details(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    project_id = data["project_id"]
+
+    real, uuid = verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    project_details = await get_project_details_from_database(uuid, project_id)
+
+    return {"project_details" : project_details[0]}
+
+
+async def update_project_detail_in_database(uuid, project_id, column_to_update, new_data):
+    async with app.state.pool.acquire() as conn:
+        query = f"""
+        UPDATE projects
+        SET {column_to_update} = $1
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3
+        """
+        project_details = await conn.execute(query, new_data, uuid, project_id)
+        return project_details
+
+@app.post("/projects/update_details/")
+async def update_project_details(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    project_id = data["project_id"]
+    column_to_update = data["column_to_be_updated"]
+    new_data = data["new_data"]
+
+    real, uuid = verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    valid_columns_to_update = ["description", "project_name"]
+    if column_to_update not in valid_columns_to_update:
+        print("the column is not open to being changed")
+        return {"authenticated": False}
+
+    await update_project_detail_in_database(uuid, project_id, column_to_update, new_data)
+
+    return {"updated" : "success"}
+
+
 
 
 

@@ -6,8 +6,6 @@ that generates should be here
 import { handleRoute } from '../main.js';
 
 export async function createNewProjectID() {
-    console.log("create new project ID please")
-
     try {
         const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
         if (!token) {
@@ -35,35 +33,99 @@ export async function createNewProjectID() {
     } catch (error) {
         console.error('Error:', error);
     }
-
-
 }
 
 
+async function getProjectDetails(project_id) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
 
-export function initProjectView(projectID) {
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/get-project-details/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const projectDetailsRecord = data.project_details
+        return projectDetailsRecord;
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function updateProjectDetails(project_id, column, newInfo) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id,
+            "column_to_be_updated": column,
+            "new_data": newInfo
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/update_details/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const update = data["updated"]
+        if (update === "success") {
+            return
+        } else {
+            console.log("there was an error")
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function initProjectView(projectID) {
     /* detect if the route is /projects/ or /projects/id, if the first one 
     ask the server nicely for a new project
     else load an existing project */
-    setTimeout(() => {
+    setTimeout(async () => {
         const currentPath = window.location.pathname;
-        console.log(currentPath)
-        if (currentPath === "/projects/") {
-            console.log("get new id")
-        } else {
-            console.log("don't get new id")
-            loadVisible();
-        }
+        const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
 
+        console.log(currentPath, project_id)
 
+        //get the project details
+
+        const details = await getProjectDetails(project_id);
+        details.project_id = project_id
+        loadVisible(details);
+        set_event_listeners_for_titles(details);
     }, 1);
 
 
-    function loadVisible() {
+    function loadVisible(details) {
 
-        loadContainer();
+        loadContainer(details);
 
-        const description = "cheese";
+        const description = details.description;
         sessionStorage.setItem('description', description);
 
         onResizeClipOverflowingText();
@@ -71,7 +133,7 @@ export function initProjectView(projectID) {
         descriptionButtonInteractions();
 
         handleDescriptionMoreText();
-        detectOffClicks();
+        detectOffClicks(details);
         detectPlayAndShuffleButtons();
         loadInTable();
         loadFileDropArea();
@@ -90,7 +152,31 @@ import { projectViewSongsArray } from './sharedArrays.js';
 import projectContainer from '../html/projectViewContainer.html?raw';
 import { svgImports } from './importAssets.js';
 
-function loadContainer() {
+function set_event_listeners_for_titles(details) {
+    const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
+
+    titleH1.addEventListener('blur', function(event) {
+        const newTitleH1 = titleH1.innerText
+        console.log('Content changed:', newTitleH1);
+        updateProjectDetails(details.project_id, "project_name", newTitleH1)
+    });
+
+    /*
+    H3 isn't meant to be set by the user, since it is by usernames, however the option
+    does now exist
+
+    const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
+
+    titleH3.addEventListener('blur', function(event) {
+        const newTitleH3 = titleH3.innerText
+        console.log('Content changed:', newTitleH3);
+    });
+
+    */
+
+}
+
+function loadContainer(details) {
     let IDofElement = "MAINcontentPages";
     let replacedContent = projectContainer;
     for (const [placeholder, value] of Object.entries(svgImports)) {
@@ -106,11 +192,11 @@ function loadContainer() {
         let value = '';
 
         if (placeholder === 'PROJECTviewMOREtitle') {
-            value = "UNHEALTHY (Deluxe)"
+            value = details.project_name
         } else if (placeholder === 'PROJECTviewMOREartist') {
-            value = "Anne-Marie";
+            value = details.project_contributors;
         } else if (placeholder === 'PROJECTviewMOREyear') {
-            value = "2023";
+            value = details.time_created;
         } else if (placeholder === 'MOG_checkedDate') {
             value = "checkedIndicator";
         } else if (placeholder === 'MOGI_placeholder_itemID') {
@@ -227,25 +313,27 @@ function handleDescriptionMoreText() {
     editor.innerText = description;
 }
 
-function detectOffClicks() {
+function detectOffClicks(details) {
     const xButton = document.getElementById("PROJECTviewMOREcloseButton");
     xButton.addEventListener('click', function() {
-        closeMoreDescription();
+        closeMoreDescription(details);
     });
 
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     background.addEventListener('click', function(event) {
         if (event.target === background) {
-            closeMoreDescription()
+            closeMoreDescription(details)
         }
     });
 }
 
-function closeMoreDescription() {
+function closeMoreDescription(details) {
     const editor = document.getElementById("PROJECTviewMOREdescriptionP");
 
     const newDescription = editor.value;
     sessionStorage.setItem('description', newDescription);
+
+    updateProjectDetails(details.project_id, "description", newDescription)
 
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     background.style.display = "none";
