@@ -20,6 +20,8 @@ import email.utils
 import requests
 import jwt as pyjwt
 import shutil
+import random
+import string
 
 load_dotenv()
 
@@ -371,17 +373,72 @@ async def upload_file(
     return JSONResponse(content={"message": message})
 
 
+async def init_project_in_database(data: dict):
+    async with app.state.pool.acquire() as conn:
+
+        json_owner = {"owner": data["uuid"], "permissions": "owner"}
+        owner = json.dumps(json_owner)
+
+        file_created_time = int(datetime.datetime.now().timestamp() * 1000)
+
+        project_json = "{}"
+
+        description = "Notes..."
+
+        picture_url = "https://picsum.photos/200"
+
+        project_id = data["project_id"]
+
+        project_name = "Project Title"
+
+        project_contributors = data["owner_username"]
+
+
+        query = "INSERT INTO projects (owner, time_created, project_json, description, picture_url, project_id, project_name, project_contributors) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+        await conn.execute(query, (owner,), file_created_time, project_json, description, picture_url, project_id, project_name, project_contributors)
+
+
+async def generate_unique_string():
+    async with app.state.pool.acquire() as conn:
+        while True:
+            min_length = 4
+            new_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(min_length))
+            
+            # Check if the string exists in the database
+            query = "SELECT COUNT(*) FROM projects WHERE project_id = $1"
+            result = await conn.fetchval(query, new_string)
+            if result == 0:
+                return new_string
+
+async def get_users_username(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT username FROM users WHERE uuid = $1"
+        username = await conn.fetchval(query, uuid)
+        return username
+
 @app.post("/projects/new-project-id/")
 async def create_project(request: Request):
     data = await request.json()
-    token = data["access-token"]
+    access_token = data["access-token"]
 
-    print(data)
+    real, uuid = verify_jwt(access_token)
 
-    # In a real-world scenario, you would handle token validation and project creation here
-    # For simplicity, we'll assume token validation and just return the received data
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    unique_string = await generate_unique_string()
+    print("Unique Random String:", unique_string)
+
+    uuid = uuid["uuid"]
+    project_id = unique_string
+    username = await get_users_username(uuid)
+
+    init_project_dict = dict(uuid=uuid, project_id=project_id, owner_username=username)
+    await init_project_in_database(init_project_dict)
+
     print("print new project ID")
-    return {"projectID": "token"}
+    return {"projectID": project_id}
 
 
 
