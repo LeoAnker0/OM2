@@ -135,7 +135,7 @@ export async function initProjectView(projectID) {
         handleDescriptionMoreText();
         detectOffClicks(details);
         detectPlayAndShuffleButtons();
-        loadInTable();
+        loadInTable(details.project_json);
         loadFileDropArea(details);
     }
 }
@@ -383,7 +383,9 @@ import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 
 /* load in the table */
-function loadInTable() {
+function loadInTable(details) {
+    console.log("load in table", details)
+
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
     loadInProjectViewRowTitles();
     const projectTable = document.getElementById('PROJECTview-projectTable');

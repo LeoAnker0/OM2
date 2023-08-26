@@ -273,7 +273,71 @@ async def update_audio_file_in_database(data:dict):
 		await conn.execute(update_query, processed_state, file_size, url)
 
 
+async def append_song_json(data:dict):
+	async with app.state.pool.acquire() as conn:
+		url = data["url"]
+		uuid = data["uuid"]
+		song_name = data["song_name"]
+		project_id = data["project_id"]
+		duration = data["duration"]
 
+		# Construct the new song data
+		new_song_data = {
+			'url': url,
+			'song_name': song_name,
+			'duration_in_seconds': duration
+		}
+        
+        # Get the existing JSON data for the specified project and owner (uuid)
+		select_query = """
+			SELECT project_json
+			FROM projects
+			WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2;
+		"""
+		existing_json = await conn.fetchval(select_query, uuid, project_id)
+		#print(f"existing json:\t{existing_json}")
+
+		if existing_json == "{}":
+			#print(f"existing json is empty")
+			newSongRow = f'{{"songs_json" : [{{"song_name": "{song_name}", "url": "{url}", "duration": "{duration}", "song_sequence": 0}}]}}'
+			#print(f"new song row: {newSongRow}")
+			query = "UPDATE projects SET project_json = $1 WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3"
+			await conn.execute(query, newSongRow, uuid, project_id)
+
+		else:
+			#print("there is some data in the projects json")
+			songs_json = json.loads(existing_json)
+
+			song_list = songs_json["songs_json"]
+			lastItemInJson = song_list[-1]
+			lastItemInJson_song_sequence = lastItemInJson["song_sequence"]
+			new_song_sequence = lastItemInJson_song_sequence + 1
+
+			new_song = {
+			    "song_name": song_name,
+			    "url": url,
+			    "duration": duration,
+			    "song_sequence": new_song_sequence
+			}
+
+			songs_json["songs_json"].append(new_song)
+			songs_json_print = json.dumps(songs_json, indent=4)
+			songs_json = json.dumps(songs_json)
+
+			print(f"parse data modified:\n\n{songs_json_print}\n")
+
+			query = "UPDATE projects SET project_json = $1 WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3"
+			await conn.execute(query, songs_json, uuid, project_id)
+
+
+
+        # Update the projects table with the modified JSON data
+		update_query = """
+			UPDATE projects
+			SET project_json = $1::jsonb
+			WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3;
+		"""
+		#await conn.execute(update_query, json.dumps(existing_data), uuid, project_id)
 
 
 
@@ -323,7 +387,7 @@ async def process_image(request: Request):
 	duration_in_seconds = round(librosa.get_duration(path=input_file))
 
 	project_json_append_json_dict = dict(url=url, uuid=uuid, song_name=song_name, project_id=project_id, duration=duration_in_seconds)
-	#print(duration_in_seconds)
+	await append_song_json(project_json_append_json_dict)
 
 
 
