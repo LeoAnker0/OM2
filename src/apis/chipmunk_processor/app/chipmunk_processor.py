@@ -321,10 +321,10 @@ async def append_song_json(data:dict):
 			}
 
 			songs_json["songs_json"].append(new_song)
-			songs_json_print = json.dumps(songs_json, indent=4)
+			#songs_json_print = json.dumps(songs_json, indent=4)
 			songs_json = json.dumps(songs_json)
 
-			print(f"parse data modified:\n\n{songs_json_print}\n")
+			#print(f"parse data modified:\n\n{songs_json_print}\n")
 
 			query = "UPDATE projects SET project_json = $1 WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3"
 			await conn.execute(query, songs_json, uuid, project_id)

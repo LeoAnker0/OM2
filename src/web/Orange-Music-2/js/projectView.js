@@ -110,10 +110,6 @@ export async function initProjectView(projectID) {
         const currentPath = window.location.pathname;
         const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
 
-        console.log(currentPath, project_id)
-
-        //get the project details
-
         const details = await getProjectDetails(project_id);
         details.project_id = project_id
         loadVisible(details);
@@ -135,7 +131,7 @@ export async function initProjectView(projectID) {
         handleDescriptionMoreText();
         detectOffClicks(details);
         detectPlayAndShuffleButtons();
-        loadInTable(details.project_json);
+        loadInTable(details);
         loadFileDropArea(details);
     }
 }
@@ -384,71 +380,86 @@ import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 
 /* load in the table */
 function loadInTable(details) {
-    console.log("load in table", details)
-
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
     loadInProjectViewRowTitles();
     const projectTable = document.getElementById('PROJECTview-projectTable');
 
-    const songData = [
-        /*{
-                "img": "https://picsum.photos/30?random=1",
-                "songTitle": "Subwoofer Lullaby",
-                "artistName": "C418",
-                "projectName": "Minecraft - Volume Alpha",
-                "songDuration": "3:29"
-            }*/
-    ]
+
+    const jsonDetails = details;
+    const songsJsonString = jsonDetails.project_json;
+
+    if (songsJsonString !== "{}") {
+        const songsJson = JSON.parse(songsJsonString).songs_json;
+        const songData = [];
+
+        for (const song of songsJson) {
+            songData.push({
+                "img": jsonDetails.picture_url,
+                "songTitle": song.song_name,
+                "artistName": jsonDetails.project_contributors,
+                "projectName": "cheese",
+                "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
+                "song_sequence": song.song_sequence,
+                "url": song.url
+            })
+        }
+
+        for (let i = 0; i < songData.length; i++) {
+            songData[i].projectID = i;
+            const song = songData[i];
+            loadInProjectViewRowItems(song);
+        }
 
 
 
-    for (let i = 0; i < songData.length; i++) {
-        songData[i].projectID = i;
-        const song = songData[i];
-        loadInProjectViewRowItems(song);
+        // Attach an event listener to the container
+        projectTable.addEventListener('click', function(event) {
+            const target = event.target;
+            event.stopPropagation();
+
+            // Check if the clicked element is a button within a row
+            if (target.tagName === 'BUTTON') {
+                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+                if (rowContainer) {
+                    const rowId = rowContainer.getAttribute('data-row-id');
+                    displayMenuForRow(event);
+                    console.log(`Button in row ${rowId} clicked.`);
+                }
+            }
+        });
     }
 
-
-
-    // Attach an event listener to the container
-    projectTable.addEventListener('click', function(event) {
-        const target = event.target;
-        event.stopPropagation();
-
-        // Check if the clicked element is a button within a row
-        if (target.tagName === 'BUTTON') {
-            const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-
-            if (rowContainer) {
-                const rowId = rowContainer.getAttribute('data-row-id');
-                displayMenuForRow(event);
-                console.log(`Button in row ${rowId} clicked.`);
-            }
-        }
-    });
 }
 
-function updateLoadInTable() {
+async function updateLoadInTable() {
     const projectTable = document.getElementById('PROJECTview-projectTable');
-    const newSongData = projectViewSongsArray;
-    let songData = [];
 
-    for (let i = 0; i < newSongData.length; i++) {
-        //console.log(newSongData[i])
-        const songFileName = newSongData[i].name;
-        const songName = removeLastExtension(songFileName)
-        const size = formatFileSize(newSongData[i].size)
+    // do a fetch request for the new table state
+    const currentPath = window.location.pathname;
+    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
 
-        const newRow = {
-            "img": "https://picsum.photos/30",
-            "songTitle": songName,
-            "artistName": "C418",
-            "projectName": size,
-            "songDuration": "?"
-        }
+    const details = await getProjectDetails(project_id);
+    details.project_id = project_id
 
-        songData.push(newRow);
+    const jsonDetails = details;
+    const songsJsonString = jsonDetails.project_json;
+
+    const songsJson = JSON.parse(songsJsonString).songs_json;
+    const songData = [];
+
+    for (const song of songsJson) {
+        songData.push({
+            "img": jsonDetails.picture_url,
+            "songTitle": song.song_name,
+            "artistName": jsonDetails.project_contributors,
+            "projectName": "cheese",
+            "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
+            "song_sequence": song.song_sequence,
+            "url": song.url
+        })
     }
+
 
 
     /* event listeners */
@@ -558,8 +569,6 @@ function loadInProjectViewRowItems(songData) {
 
 }
 
-
-
 function loadFileDropArea(details) {
     const dropArea = document.getElementById("PROJECTview_dropArea");
 
@@ -605,7 +614,6 @@ function loadFileDropArea(details) {
             //console.log(file);
         }
         //console.log(projectViewSongsArray);
-        updateLoadInTable();
         uploadFiles(files, details);
     }
 }
@@ -644,12 +652,15 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
         progressBar.style.opacity = "1";
         progressFill.classList.add('complete');
         fileNameLabel.textContent = `${file.name}`;
+        updateLoadInTable();
 
         setTimeout(() => {
             uploadBox.classList.add('complete');
         }, 2000); // Adjust the time (in milliseconds) as needed
         setTimeout(() => {
             uploadBox.parentNode.removeChild(uploadBox);
+
+
         }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
