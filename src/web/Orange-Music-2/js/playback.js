@@ -1,5 +1,6 @@
 import { updateQueue } from './queue.js';
 import { shuffleStateChange, loopStateChange, playStateChange } from './playbackControls.js';
+import { resizeTitleText } from './lcd.js';
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_array_index = 0;
@@ -109,6 +110,10 @@ function PLAYBACK_goto_next_song() {
         PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
         PLAYBACK_audio_tag.load();
         PLAYBACK_audio_tag.play();
+        LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+        LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+        resizeTitleText();
+
         updateQueue();
 
     } else {
@@ -122,12 +127,19 @@ function PLAYBACK_goto_next_song() {
 function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+    const LCDtitleText = document.getElementById("LCDtitleText");
+    const LCDbottomText = document.getElementById("LCDbottomText");
 
     PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.play();
+
+    LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+    resizeTitleText();
     updateQueue();
     playStateChange("playing");
+
 
 
 

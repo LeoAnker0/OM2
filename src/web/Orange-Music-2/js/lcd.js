@@ -38,9 +38,9 @@ function loadLCDbody() {
         let value = '';
 
         if (placeholder === 'LCD_titleText_placeholder') {
-            value = "And then we were Three and four and five";
+            value = "";
         } else if (placeholder === 'LCD_bottomText_placeholder') {
-            value = "Another thing to change and nroie and john the ripper";
+            value = "";
         }
 
 
@@ -51,7 +51,8 @@ function loadLCDbody() {
     return
 }
 
-function resizeTitleText() {
+
+export function resizeTitleText() {
     let elementWidth;
     const LCDtitleText = document.getElementById("LCDtitleText");
     const LCDcontentContainer = document.getElementById("LCDrightcontent");
@@ -64,11 +65,15 @@ function resizeTitleText() {
         elementWidth = LCDcontentContainer.clientWidth;
         textWidth = getWidthOfText();
 
+        console.log("textWidth", textWidth)
+
         WidthPlusFactor = elementWidth / widthFactor;
 
+        console.log("WidthPlusFactor", WidthPlusFactor)
+
         if (WidthPlusFactor > textWidth) {
-            newWidth = textWidth;
-            newWidth = (newWidth / 1.17);
+            newWidth = textWidth + 10;
+            //newWidth = (newWidth / 1.17);
         } else {
             newWidth = WidthPlusFactor;
         }
