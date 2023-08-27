@@ -15,10 +15,6 @@
     --searchbar-search-colour-unfocused: var(--lgrey-5);
     --searchbar-search-colour-focused: var(--lgrey-2);
 
-    --topleft-button-containers-width: calc(100% - (1 * 0.4rem));
-    --topleft-button-containers-height: calc(100% - 56%);
-    --topleft-button-containers-topoffset: calc(100% - (38% + 10%));
-    --topleft-button-containers-leftoffset: 0.4rem;
 }
 
 .topleft-searchbarContainer {
@@ -80,11 +76,11 @@
 
 
 .topleft-button-containers {
-    position: relative;
-    height: var(--topleft-button-containers-height);
-    width: var(--topleft-button-containers-width);
-    top: var(--topleft-button-containers-topoffset);
-    left: var(--topleft-button-containers-leftoffset);
+    position: absolute;
+    height: 1.3rem;
+    width: 90%;
+    bottom: 7%;
+    left: 5%;
 
 }
 
@@ -97,6 +93,8 @@
 }
 
 .topleft-button-container-button {
+    all: unset;
+
     position: relative;
     height: 70%;
     top: 15%;
@@ -105,7 +103,17 @@
     border-radius: 2px;
 
     background-color: hsla(0, 0%, 10%, 0.5);
+}
 
+
+
+
+.topleft-button-container-button div {
+    position: relative;
+    font-size: 0.7rem;
+    text-align: center;
+
+    color: white;
 }
 
 .topleft-button-container-button:nth-child(1) {

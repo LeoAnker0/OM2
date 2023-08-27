@@ -1,5 +1,7 @@
 /* JS for the search bar --------------------------------------------------------------------- */
 
+import { handleRoute } from '../main.js';
+
 export function setEventListenersForSearchbar() {
     const clearIcon = document.getElementById("topleftClearIcon");
     const searchBar = document.getElementById("searchBar");
@@ -55,5 +57,16 @@ export function setEventListenersForSearchbar() {
         clearIcon.style.opacity = "0%";
 
     });
+
+
+    /* and also for the home button why not... */
+    const homeButton = document.getElementById("TOPLEFT_homeButton")
+    homeButton.addEventListener("click", () => {
+        handleRoute("/")
+
+    })
+
+
+
 
 };

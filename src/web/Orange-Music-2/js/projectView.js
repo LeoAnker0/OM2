@@ -130,7 +130,7 @@ export async function initProjectView(projectID) {
 
         handleDescriptionMoreText();
         detectOffClicks(details);
-        detectPlayAndShuffleButtons();
+        detectPlayAndShuffleButtons(details);
         loadInTable(details);
         loadFileDropArea(details);
     }
@@ -338,13 +338,18 @@ function closeMoreDescription(details) {
 }
 
 /* project view top buttons */
-function detectPlayAndShuffleButtons() {
+async function detectPlayAndShuffleButtons(details) {
     const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
     const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
 
+
+    const project_details = await getProjectDetails(details.project_id);
+
+
     playButton.addEventListener("click", function() {
         console.log("playButton pressed")
+        console.log(project_details);
     });
     shuffleButton.addEventListener("click", function() {
         console.log("shuffleButton pressed")
