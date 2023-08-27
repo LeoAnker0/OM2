@@ -43,6 +43,8 @@ function PLAYBACK_on_song_end() {
     console.log("song ended")
 }
 
+import { updateQueue } from './queue.js';
+
 
 function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -51,6 +53,8 @@ function PLAYBACK_start_playback() {
     PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.play();
+
+    updateQueue();
 
 
 

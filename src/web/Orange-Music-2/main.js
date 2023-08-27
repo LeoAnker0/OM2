@@ -54,6 +54,7 @@ import { PLAYBACK_init } from './js/playback.js';
 
 export function main() {
 
+    PLAYBACK_init();
     loadMAINtopleft();
     loadMAINtopright();
     initialiseLCD();
@@ -62,7 +63,6 @@ export function main() {
     setEventListenersForVolume();
     initAccountImg();
     initialiseQueue();
-    PLAYBACK_init();
 
 
     function handleUrlChange() {

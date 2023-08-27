@@ -69,23 +69,28 @@ import queueItem from '../html/queueItem.html?raw';
 we want the only export here to be the update function
  */
 
+/*
 let songs = [
     { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://picsum.photos/400?random=1" },
     { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://picsum.photos/400?random=2" },
     { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://picsum.photos/400?random=3" },
     { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://picsum.photos/400?random=4" },
     { id: 0, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://picsum.photos/400?random=5" }
-];
+];*/
 
-function updateQueue() {
+import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
+
+export function updateQueue() {
+    console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)
+
     const queueContainer = document.getElementById("QUEUEbottomContainer");
 
     queueContainer.innerHTML = "";
 
-    for (let i = 0; i < songs.length; i++) {
-        songs[i].id = i;
+    for (let i = 0; i < PLAYBACK_songs_array.length; i++) {
+        PLAYBACK_songs_array[i].id = i;
 
-        const song = songs[i];
+        const song = PLAYBACK_songs_array[i];
         const html = hydrateItem(song);
         const div = document.createElement('div');
         div.innerHTML = html;
@@ -242,10 +247,10 @@ import icons_menuOptionsButton from '../assets/icons/menu_options_button.svg';
 
 function hydrateItem(song) {
     const listOfThings = ['QUEUE_item_image', 'QUEUE_item_title', 'QUEUE_item_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
-    const imgSrc = song.coverImage;
-    const songTitle = song.name;
-    const songArtist = song.artist;
-    const songDuration = song.duration;
+    const imgSrc = song.img;
+    const songTitle = song.song_name;
+    const songArtist = song.project_contributors;
+    const songDuration = `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`;
 
     let replacedContent = queueItem;
 
