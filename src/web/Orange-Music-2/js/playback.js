@@ -1,3 +1,6 @@
+import { updateQueue } from './queue.js';
+import { shuffleStateChange, loopStateChange, playStateChange } from './playbackControls.js';
+
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_array_index = 0;
 export const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -40,10 +43,80 @@ export function PLAYBACK_init() {
 }
 
 function PLAYBACK_on_song_end() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+
+    PLAYBACK_audio_tag.pause();
+
+
     console.log("song ended")
+
+    const length_of_queue = PLAYBACK_songs_array.length;
+    console.log(length_of_queue, PLAYBACK_songs_array_index)
+
+    if (length_of_queue > (PLAYBACK_songs_array_index + 1)) {
+        PLAYBACK_songs_array_index += 1
+
+        console.log("lets play another song?")
+        PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+        PLAYBACK_audio_tag.load();
+        PLAYBACK_audio_tag.play();
+        updateQueue();
+
+    } else {
+        console.log("there is nothing more in the queue")
+    }
 }
 
-import { updateQueue } from './queue.js';
+
+export function PLAYBACK_handle_PLAYER_playButton() {
+    console.log("play clicked")
+    PLAYBACK_playPause_song()
+}
+
+function PLAYBACK_playPause_song() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    if (PLAYBACK_audio_tag.paused) {
+        //play the audio
+        console.log("audio is paused")
+        playStateChange("playing")
+        PLAYBACK_audio_tag.play();
+
+    } else {
+        //pause the audio
+        console.log("audio is playing")
+        playStateChange("paused")
+        PLAYBACK_audio_tag.pause();
+    }
+
+}
+
+export function PLAYBACK_handle_PLAYER_nextButton() {
+    PLAYBACK_goto_next_song();
+}
+
+function PLAYBACK_goto_next_song() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+
+
+    const length_of_queue = PLAYBACK_songs_array.length;
+    if (length_of_queue > (PLAYBACK_songs_array_index + 1)) {
+        PLAYBACK_audio_tag.pause();
+        PLAYBACK_songs_array_index += 1
+
+        console.log("lets play another song?")
+        PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+        PLAYBACK_audio_tag.load();
+        PLAYBACK_audio_tag.play();
+        updateQueue();
+
+    } else {
+        console.log("there is nothing more in the queue")
+
+
+    }
+}
 
 
 function PLAYBACK_start_playback() {
@@ -53,8 +126,10 @@ function PLAYBACK_start_playback() {
     PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.play();
-
     updateQueue();
+    playStateChange("playing");
+
+
 
 
 
