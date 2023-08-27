@@ -337,6 +337,8 @@ function closeMoreDescription(details) {
     clipOverflowingDescription();
 }
 
+import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+
 /* project view top buttons */
 async function detectPlayAndShuffleButtons(details) {
     const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
@@ -348,8 +350,8 @@ async function detectPlayAndShuffleButtons(details) {
 
 
     playButton.addEventListener("click", function() {
-        console.log("playButton pressed")
-        console.log(project_details);
+        //console.log("playButton pressed")
+        PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
     });
     shuffleButton.addEventListener("click", function() {
         console.log("shuffleButton pressed")

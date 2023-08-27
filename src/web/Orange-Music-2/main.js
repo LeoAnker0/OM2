@@ -49,6 +49,8 @@ import { initMusicObjectsGrid, hideMusicObjectsGrid } from './js/musicObjectGrid
 /* project view */
 import { initProjectView, hideProjectView, createNewProjectID } from './js/projectView.js';
 
+import { PLAYBACK_init } from './js/playback.js';
+
 
 export function main() {
 
@@ -60,6 +62,7 @@ export function main() {
     setEventListenersForVolume();
     initAccountImg();
     initialiseQueue();
+    PLAYBACK_init();
 
 
     function handleUrlChange() {
