@@ -46,11 +46,27 @@ There are 6 different things that you can specify for a param:
 #### Display Text:
 DisplayText is just the name of the button inside the menu. Try and use as short a name for the button as possible, a theasaurus or LLM comes in handy with this. But otherwise it can any valid string. 
 
+```js
+    displayText: 'Play next',
+```
+
 #### optionalSVG:
 This allows you to specify an SVG that you would like to associate the text with, it can be any of the SVGs that are specified in importAssets.js. Can either be a string of 'None' if you don't want a picture with that text, or with the name of the svg from importAssets.js
 
+```js
+    optionalSVG: 'icons_playNext',
+```
+```js
+    optionalSVG: 'None',
+```
+
 ####  function:
 This is a neccessary param, since if the button isn't linked to a function to do something, why do you have the button? Anyway you specify as a string the name of the function that you will then also have to also specify in menu.js so that it can go and call a function from where you initially called the menu from.
+
+```js
+
+
+```
 
 
 ###### *The whole requirement of needing to specify the name of the function, import the function that will act as a sort of callback, and write out how to capture the function inside menu.js is a lot/confusing, so for for this reason it is on the agenda to update this at some point so that the only thing you have do is specify the function you want it to go from the origin file, but for the moment it will have to be done in this way.*
