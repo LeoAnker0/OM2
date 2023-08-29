@@ -157,6 +157,8 @@ function setEventListenersForPlaybackSeek() {
     return
 }
 
+import { PLAYBACK_handle_input_change_song_progress } from './playback.js';
+
 function handleInputChange(e) {
     function between(x, min, max) {
         return x >= min && x <= max;
@@ -166,10 +168,13 @@ function handleInputChange(e) {
     if (e.target.type !== 'range') {
         target = document.getElementById('LCDseekBar')
     }
-    const progess = target.value + "%";
+    const progress = target.value / 100;
+    const progressFormatted = target.value + "%"
 
     const root = document.documentElement;
-    root.style.setProperty('--LCD-seekbar-width', progess);
+    root.style.setProperty('--LCD-seekbar-width', progressFormatted);
+
+    PLAYBACK_handle_input_change_song_progress(progress);
 
     return
 
@@ -178,25 +183,15 @@ function handleInputChange(e) {
 
 
 /* changing the values of the time indicators -------- */
-
-function updateTimeIndicators(timeLeft, timeRight) {
+export function updateTimeIndicatorsGlobal(left, right) {
     const root = document.documentElement;
 
-    root.style.setProperty('--LCD-afterContent-bottom-left', timeLeft);
-    root.style.setProperty('--LCD-afterContent-bottom-right', timeRight);
-}
-
-export function updateTimeIndicatorsGlobal(left, right) {
-    document.addEventListener('DOMContentLoaded', function() {
-        let newLeft = "" + left + "";
-        let newRight = "" + right + "";
-
-        updateTimeIndicators(newLeft, newRight);
-    });
+    root.style.setProperty('--LCD-afterContent-bottom-left', left);
+    root.style.setProperty('--LCD-afterContent-bottom-right', right);
 }
 
 
-updateTimeIndicatorsGlobal('"1:29"', '"-0:43"');
+
 
 
 

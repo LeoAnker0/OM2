@@ -144,6 +144,20 @@ function formatTime(val) {
     return val;
 };
 
+export function PLAYBACK_handle_input_change_song_progress(progress) {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const duration = PLAYBACK_audio_tag.duration;
+    const newCurrentTime = duration * progress
+
+
+
+    PLAYBACK_audio_tag.currentTime = newCurrentTime;
+
+
+}
+
+
+import { updateTimeIndicatorsGlobal } from './lcd.js';
 
 function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -162,6 +176,7 @@ function PLAYBACK_start_playback() {
     playStateChange("playing");
 
     const root = document.documentElement;
+    const scrubInput = document.getElementById("LCDseekBar");
 
     PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
         const endOfAudio = PLAYBACK_audio_tag.duration;
@@ -173,9 +188,8 @@ function PLAYBACK_start_playback() {
 
         const timeLeft = formatTime(Math.floor(currentTime));
         const timeLeftFormatted = `"${timeLeft}"`
-        root.style.setProperty('--LCD-afterContent-bottom-right', timeRightFormatted);
 
-        root.style.setProperty('--LCD-afterContent-bottom-left', timeLeftFormatted);
+        updateTimeIndicatorsGlobal(timeLeftFormatted, timeRightFormatted)
 
 
         const progressPercent = (currentTime / endOfAudio) * 100;
@@ -184,14 +198,10 @@ function PLAYBACK_start_playback() {
         root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
         root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
 
+        scrubInput.value = progressPercent;
+
 
     });
-
-
-
-
-
-
 }
 
 
