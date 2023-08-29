@@ -1,6 +1,6 @@
 # Using Menus
 
-Menu.js makes it easy to create menus for all the parts of om2 that need a menu. This documentation will give snippets that make it easy to use.
+`menu.js` makes it easy to create menus for all the parts of om2 that need a menu. This documentation will give snippets that make it easy to use, and try to explain how to use it.
 
 ### Table of Contents
 * Getting Started
@@ -16,7 +16,7 @@ To be able to use menus you need to import it:
 import { MENUdisplay } from './menu.js';
 ```
 
-And then to display a basic menu you need to create a function, hopefully with a useful name like displayMenu() which triggers MENUdisplay with the right parametres. You also need an event with position (*for example a click event*), however this is also something that in the future should be negatable with a specific position instead.
+And then to display a basic menu you need to create a function, hopefully with a useful name like `displayMenu()` which triggers `MENUdisplay` with the right parametres. You also need an event with position (*for example a click event*), however this is also something that in the future should be negatable with a specific position instead.
 
 ```js
 function displayMenu(event) {
@@ -33,7 +33,7 @@ function displayMenu(event) {
 }
 ``` 
 
-With this function we create a menu with a button, which has the text "Button", and it's linked to the function TEST, which is a function inside menu.js, which will log to the console that the button worked. If you got that log, then your button worked, congratulations.
+With this function we create a menu with a button, which has the text `Button`, and it's linked to the function `TEST`, which is a function inside `menu.js`, which will log to the console that the button worked. If you got that log, then your button worked, congratulations.
 
 
 ### Functionality
@@ -52,7 +52,7 @@ DisplayText is just the name of the button inside the menu. Try and use as short
 ```
 <br><br>
 #### optionalSVG:
-This allows you to specify an SVG that you would like to associate the text with, it can be any of the SVGs that are specified in importAssets.js. Can either be a string of 'None' if you don't want a picture with that text, or with the name of the svg from importAssets.js
+This allows you to specify an SVG that you would like to associate the text with, it can be any of the SVGs that are specified in `importAssets.js`. Can either be a string of `None` if you don't want a picture with that text, or with the name of the svg from `importAssets.js`
 
 ```js
     optionalSVG: 'icons_playNext',
@@ -62,7 +62,7 @@ This allows you to specify an SVG that you would like to associate the text with
 ```
 <br><br>
 ####  function:
-This is a neccessary param, since if the button isn't linked to a function to do something, why do you have the button? Anyway you specify as a string the name of the function that you will then also have to also specify in menu.js so that it can go and call a function from where you initially called the menu from.
+This is a neccessary param, since if the button isn't linked to a function to do something, why do you have the button? Anyway you specify as a string the name of the function that you will then also have to also specify in `menu.js` so that it can go and call a function from where you initially called the menu from.
 
 ```js
     function: 'MENU_ACTION_log_duck_to_console',
@@ -76,7 +76,7 @@ export function ORIGIN_FILE_recieve_MENU_log_duck() {
 }
 ```
 
-And then inside menu.js we need to find this section (at the very bottom). And inside MENU_ACTION_FUNCTIONS, we want to create a new item with the name of the function that we specified above, and then inside it the name of the function that we want to run from our originFile.
+And then inside `menu.js` we need to find this section (at the very bottom). And inside `MENU_ACTION_FUNCTIONS`, we want to create a new item with the name of the function that we specified above, and then inside it the name of the function that we want to run from our `originFile`.
 
 ```js
 /* MENU functions */
@@ -117,7 +117,7 @@ One example is when I wanted to create a button for deleting a users project.
     },
 ```
 
-Then in menu.js I modifed MENU_ACTIONS_FUNCTIONS as following:
+Then in `menu.js` I modifed `MENU_ACTIONS_FUNCTIONS` as following:
 
 ```js
 import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
@@ -132,7 +132,7 @@ const MENU_ACTION_FUNCTIONS = {
 ```
 
 And here we just need to remember to pass in params.
-And then in projectView.js we just have to remember to accept these params:
+And then in `projectView.js` we just have to remember to accept these params:
 
 ```js
 export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
@@ -211,7 +211,7 @@ import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
 /* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
     PROJECT_VIEW_play_next() {
-        console.log("meny action play next");
+        console.log("menu action play next");
         return;
     },
     PROJECT_VIEW_play_later() {
@@ -243,7 +243,7 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 ```
 
 ### menuHide_foreign:
-This is a function that can be imported from menu.js and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves.
+This is a function that can be imported from `menu.js` and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves.
 
 
 
