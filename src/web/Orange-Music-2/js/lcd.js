@@ -65,11 +65,9 @@ export function resizeTitleText() {
         elementWidth = LCDcontentContainer.clientWidth;
         textWidth = getWidthOfText();
 
-        console.log("textWidth", textWidth)
 
         WidthPlusFactor = elementWidth / widthFactor;
 
-        console.log("WidthPlusFactor", WidthPlusFactor)
 
         if (WidthPlusFactor > textWidth) {
             newWidth = textWidth + 10;

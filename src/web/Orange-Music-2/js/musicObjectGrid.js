@@ -3,6 +3,9 @@ JS for creating the music objects, and then hydrating them with dynamic data
 */
 
 export async function initMusicObjectsGrid() {
+    //console.log("how many times does initMusicObjectsGrid get called?")
+
+
     try {
         const contentEnvironment = document.getElementById("MAINcontentPages");
 
@@ -18,11 +21,18 @@ export async function initMusicObjectsGrid() {
     }
 }
 
-export function hideMusicObjectsGrid() {
-    // clear the contents of main page content div
 
-    const MainContent = document.getElementById("MAINcontentPages");
-    MainContent.innerHTML = "";
+
+export function hideMusicObjectsGrid() {
+    //console.log("how many times does hideMusicObjectsGrid get called?")
+
+    const mainContent = document.getElementById("MAINcontentPages");
+    const MOGcontainer = document.getElementById("MOGcontainer");
+
+    MOGcontainer.removeEventListener('click', addEventListeners_to_music_object_grid);
+    // Remove tracked listeners before clearing content
+    // Clear the contents of the mainContent section
+    mainContent.innerHTML = "";
 }
 
 
@@ -153,43 +163,49 @@ function loadObjects(libraryData) {
         parentContainer.innerHTML += replacedContent;
     }
 
+    const MOGcontainer = document.getElementById("MOGcontainer");
 
     /* detecting when the items in the grid are clicked, and then doing something about it */
-    document.addEventListener('click', function(event) {
-        const clickedElement = event.target;
-
-        // for the play button"
-        if (clickedElement.classList.contains('MOG-item-controls-play')) {
-            const buttonID = clickedElement.id.split('-')[1];
-            const objectID = libraryData[buttonID].project_id;
-
-
-            console.log('Play ' + objectID);
-            //console.log(libraryData[buttonID].top);
-        }
-
-        // for the menu button
-        if (clickedElement.classList.contains('MOG-item-controls-menu')) {
-            const buttonID = clickedElement.id.split('-')[1];
-            const objectID = libraryData[buttonID].project_id;
-
-            displayMenu(event);
-        }
-
-        // for the project box click
-        if (clickedElement.classList.contains('MOG-itemContainer')) {
-
-            if (clickedElement.id !== 'MOGaddNewItem') {
-                const buttonID = clickedElement.id.split('-')[1];
-                const objectID = libraryData[buttonID].project_id;
-
-                handleRoute(`/projects/${objectID}`);
-            } else if (clickedElement.id === 'MOGaddNewItem') {
-                addNewLibraryItem();
-            }
-        }
+    MOGcontainer.addEventListener('click', function(event) {
+        addEventListeners_to_music_object_grid(event, libraryData)
     });
-}
+};
+
+function addEventListeners_to_music_object_grid(event, libraryData) {
+    const clickedElement = event.target;
+
+    // for the play button"
+    if (clickedElement.classList.contains('MOG-item-controls-play')) {
+        const buttonID = clickedElement.id.split('-')[1];
+        const objectID = libraryData[buttonID].project_id;
+
+
+        console.log('Play ' + objectID);
+        //console.log(libraryData[buttonID].top);
+    }
+
+    // for the menu button
+    if (clickedElement.classList.contains('MOG-item-controls-menu')) {
+        const buttonID = clickedElement.id.split('-')[1];
+        const objectID = libraryData[buttonID].project_id;
+
+        displayMenu(event);
+    }
+
+    // for the project box click
+    if (clickedElement.classList.contains('MOG-itemContainer')) {
+
+        if (clickedElement.id !== 'MOGaddNewItem') {
+            const buttonID = clickedElement.id.split('-')[1];
+            const objectID = libraryData[buttonID].project_id;
+
+            handleRoute(`/projects/${objectID}`);
+        } else if (clickedElement.id === 'MOGaddNewItem') {
+            addNewLibraryItem();
+        }
+    }
+};
+
 
 import { MENUdisplay } from './menu.js';
 

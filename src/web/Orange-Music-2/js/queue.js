@@ -81,7 +81,7 @@ let songs = [
 import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
 
 export function updateQueue() {
-    console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)
+    //console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)
 
     const queueContainer = document.getElementById("QUEUEbottomContainer");
 

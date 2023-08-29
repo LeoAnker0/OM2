@@ -35,7 +35,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:4173", "https://om2.la0.uk"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_origins=["http://localhost:5173", "http://localhost:4173", "http://localhost:5175"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -249,8 +249,14 @@ async def login(request: Request):
                             "jwt": access_token})
     return response
 
+async def check_if_user_exists_by_uuid(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT EXISTS(SELECT 1 FROM users WHERE uuid = $1)"
+        result = await conn.fetchval(query, uuid)
+        return result
 
-def verify_jwt(jwt_token):
+
+async def verify_jwt(jwt_token):
     secret_key = str(os.environ.get("SECRET_JWT_KEY"))
 
     received_jwt = jwt_token
@@ -258,14 +264,20 @@ def verify_jwt(jwt_token):
     try:
         # Decode and verify the JWT
         payload = pyjwt.decode(received_jwt, secret_key, algorithms=["HS256"])
-        print(payload)
         
         # You can now access the claims as needed, e.g., 'payload["user_id"]'
         uuid = payload.get("uuid", None)
-        if uuid:
+
+        #check if the uuid is in the users table:
+        unpacked_uuid = uuid["uuid"]
+
+        exists = await check_if_user_exists_by_uuid(unpacked_uuid)
+
+        if uuid and exists:
             return True, uuid
             # User is authenticated, you can proceed with their request
         else:
+            print(f"the user does not exist:\t{exists}\nthe user is not valid:\t{uuid}")
             return False, "notuuid"
             # Invalid JWT or missing 'user_id', consider the user not authenticated
     except pyjwt.ExpiredSignatureError:
@@ -286,7 +298,7 @@ async def prelogin(request: Request):
     data = json.loads(raw_data);
     access_token = data["jwt"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         return {"authenticated": False}
@@ -307,7 +319,7 @@ async def get_account_image(request: Request):
     data = await request.json()
     access_token = data["jwt"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         print("the jwt is not valid")
@@ -334,7 +346,7 @@ async def upload_file(
     project_id: str = Form (...)
 ):
     
-    real, uuid = verify_jwt(jwt)
+    real, uuid = await verify_jwt(jwt)
 
     if real == False:
         print("the jwt is not valid")
@@ -420,14 +432,13 @@ async def create_project(request: Request):
     data = await request.json()
     access_token = data["access-token"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     unique_string = await generate_unique_string()
-    print("Unique Random String:", unique_string)
 
     uuid = uuid["uuid"]
     project_id = unique_string
@@ -440,7 +451,7 @@ async def create_project(request: Request):
 
 async def get_users_projects(uuid):
     async with app.state.pool.acquire() as conn:
-        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 LIMIT 100"
+        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 LIMIT 10"
         projects = await conn.fetch(query, uuid)
         return projects
 
@@ -449,7 +460,7 @@ async def create_project(request: Request):
     data = await request.json()
     access_token = data["access-token"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         print("the jwt is not valid")
@@ -477,7 +488,7 @@ async def get_project_details(request: Request):
     access_token = data["access-token"]
     project_id = data["project_id"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         print("the jwt is not valid")
@@ -508,7 +519,7 @@ async def update_project_details(request: Request):
     column_to_update = data["column_to_be_updated"]
     new_data = data["new_data"]
 
-    real, uuid = verify_jwt(access_token)
+    real, uuid = await verify_jwt(access_token)
 
     if real == False:
         print("the jwt is not valid")

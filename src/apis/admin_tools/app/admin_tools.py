@@ -60,6 +60,11 @@ async def delete_files_row(url):
 		query = "DELETE FROM files WHERE file_url = $1"
 		await conn.execute(query, url)
 
+async def delete_user_from_projects_database(uuid):
+	async with app.state.pool.acquire() as conn:
+		query = "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1"
+		await conn.execute(query, uuid)
+
 
 async def get_files_table(uuid):
 	async with app.state.pool.acquire() as conn:
@@ -128,6 +133,10 @@ async def send_message(request: Request):
 		    print(f"The folder does not exist: {folder_path}")
 
 		await delete_files_row(url)
+
+	await delete_user_from_projects_database(uuid)
+
+	# delete projects
 
 
 
