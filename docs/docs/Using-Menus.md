@@ -75,7 +75,7 @@ export function ORIGIN_FILE_recieve_MENU_log_duck() {
 }
 ```
 
-And then inside menu.js we need to find this section (at the very bottom). And inside MENY_ACTION_FUNCTIONS, we want to create a new item with the name of the function that we specified above, and then inside it the name of the function that we want to run from our originFile.
+And then inside menu.js we need to find this section (at the very bottom). And inside MENU_ACTION_FUNCTIONS, we want to create a new item with the name of the function that we specified above, and then inside it the name of the function that we want to run from our originFile.
 
 ```js
 /* MENU functions */
@@ -90,7 +90,7 @@ const MENU_ACTION_FUNCTIONS = {
 };
 ````
 
-And then when the button has been pressed, it should hopefully log duck to the console.
+And then when the button has been pressed, it should hopefully log `duck` to the console.
 
 
 ###### *The whole requirement of needing to specify the name of the function, import the function that will act as a sort of callback, and write out how to capture the function inside menu.js is a lot/confusing, so for for this reason it is on the agenda to update this at some point so that the only thing you have do is specify the function you want it to go from the origin file, but for the moment it will have to be done in this way.*
