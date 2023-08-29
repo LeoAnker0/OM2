@@ -572,6 +572,7 @@ async def update_project_details(request: Request):
     json_string = project[0]['project_json']
     project_dict = json.loads(json_string)
 
+    # delete the project files
     if json_string !=  "{}":
         url_list = [song['url'] for song in project_dict['songs_json']]
         picture_url = project[0]['picture_url']
@@ -588,15 +589,8 @@ async def update_project_details(request: Request):
 
             await delete_files_row(url)
 
-
-
-    # delete project
+    # delete the project from the table
     await delete_project_by_uuid_and_project_id(uuid, project_id)
-
-
-
-
-    #print(f"url_list :\t{url_list}\npicture url:\t {picture_url}")
 
     return {"response": "cheese"}
 

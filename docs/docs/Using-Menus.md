@@ -24,7 +24,8 @@ function displayMenu(event) {
         optionalParams: {
             VALUE: value1,
             OTHER-VALUE: value2
-        }
+        },
+        colours: "red"
     }, {
         displayText: 'Play later',
         optionalSVG: 'None',
@@ -45,6 +46,9 @@ function displayMenu(event) {
 * *import {...} from '...': required to be able to then call this function again*
 
 *  *displayMenu: the name of the function that will start the menus, can be called anything, and is a local thing that then calls the external function*
+
+
+colours has been added as an extension to the menu system allowing the user to select a colour to give extra focus to a certain element of the menu, like delete and such. You can also leave that parameter blank, and it will just have the standard colour instead.
 
 
 
