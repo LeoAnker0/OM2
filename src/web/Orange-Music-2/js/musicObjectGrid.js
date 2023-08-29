@@ -165,17 +165,50 @@ function loadObjects(libraryData) {
     });
 };
 
-function addEventListeners_to_music_object_grid(event, libraryData) {
+import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+
+async function getProjectDetails(project_id) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/get-project-details/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const projectDetailsRecord = data.project_details
+        return projectDetailsRecord;
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+async function addEventListeners_to_music_object_grid(event, libraryData) {
     const clickedElement = event.target;
 
     // for the play button"
     if (clickedElement.classList.contains('MOG-item-controls-play')) {
+
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
+        const project_details = await getProjectDetails(objectID);
 
-
-        console.log('Play ' + objectID);
-        //console.log(libraryData[buttonID].top);
+        PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
     }
 
     // for the menu button

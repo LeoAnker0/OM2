@@ -174,7 +174,7 @@ function PLAYBACK_on_song_end() {
 
     PLAYBACK_audio_tag.pause();
 
-    // if loop off, and there are more songs in the queu
+    // if loop off or on, and there are more songs in the queu
     if ((length_of_queue > (PLAYBACK_songs_array_index + 1)) && (PLAYBACK_loop_state == "off" || PLAYBACK_loop_state == "on")) {
         PLAYBACK_songs_array_index += 1
         PLAYBACK_start_playback();
