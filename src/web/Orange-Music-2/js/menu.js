@@ -54,11 +54,15 @@ export function MENUdisplay(params, event) {
             const functionToCall = params[menuItemId].function;
             const optionalParams = params[menuItemId].optionalParams;
 
-            if (functionToCall != "None") {
+            if (functionToCall == "TEST") {
+                console.log("the button worked");
+            } else if (functionToCall != "None") {
                 MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
                 return;
+            } else {
+                return;
+
             }
-            return;
         });
     }
 }

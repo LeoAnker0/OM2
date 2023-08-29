@@ -35,7 +35,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:4173", "http://localhost:5175"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_origins=["http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
