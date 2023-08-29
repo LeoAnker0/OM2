@@ -160,7 +160,7 @@ The colour param is handy since it allows us to specify a colour for an item in 
     colour: "red"
 ```
 
-It will be set in the same manner as the css colour attribute, so you could also use something like `hsl(0, 100%, 80%)`, or a variable `var(--teal-3)`.
+It will be set in the same manner as a css colour attribute, so you could also use something like `hsl(0, 100%, 80%)`, or a variable `var(--teal-3)`.
 
 <br><br>
 
@@ -243,10 +243,14 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 ```
 
 ### menuHide_foreign:
-This is a function that can be imported from `menu.js` and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves.
+This is a function that can be imported from `menu.js` and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves. It won't cause any issues if the menu is already hidden when you call the function, since it merely changes it's `display` to `none`.
+
+```js
+        menuHide_foreign();
+```
 
 
-
+<br><br>
 
 
 
