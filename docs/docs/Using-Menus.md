@@ -64,9 +64,33 @@ This allows you to specify an SVG that you would like to associate the text with
 This is a neccessary param, since if the button isn't linked to a function to do something, why do you have the button? Anyway you specify as a string the name of the function that you will then also have to also specify in menu.js so that it can go and call a function from where you initially called the menu from.
 
 ```js
-
-
+    function: 'MENU_ACTION_log_duck_to_console',
 ```
+
+However This is not nearly enough to get that function working, we need to specify the function that we want to get run in the origin file
+
+```js
+export function ORIGIN_FILE_recieve_MENU_log_duck() {
+    console.log("duck");
+}
+```
+
+And then inside menu.js we need to find this section (at the very bottom). And inside MENY_ACTION_FUNCTIONS, we want to create a new item with the name of the function that we specified above, and then inside it the name of the function that we want to run from our originFile.
+
+```js
+/* MENU functions */
+import { ORIGIN_FILE_recieve_MENU_log_duck } from './originFile.js';
+
+
+const MENU_ACTION_FUNCTIONS = {
+    MENU_ACTION_log_duck_to_console() {
+        ORIGIN_FILE_recieve_MENU_log_duck();
+        return;
+    }
+};
+````
+
+And then when the button has been pressed, it should hopefully log duck to the console.
 
 
 ###### *The whole requirement of needing to specify the name of the function, import the function that will act as a sort of callback, and write out how to capture the function inside menu.js is a lot/confusing, so for for this reason it is on the agenda to update this at some point so that the only thing you have do is specify the function you want it to go from the origin file, but for the moment it will have to be done in this way.*

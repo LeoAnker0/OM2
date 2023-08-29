@@ -158,7 +158,7 @@ export function menuHide_foreign() {
 
 import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
 
-/* making the buttons inside the menu modal do something nice and specific ------------ */
+/* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
     MENU_ACTION_playNext(params) {
         console.log(params);
