@@ -3,13 +3,13 @@
 `menu.js` makes it easy to create menus for all the parts of om2 that need a menu. This documentation will give snippets that make it easy to use, and try to explain how to use it.
 
 ### Table of Contents
-* Getting Started
-* Functionality
-* Examples
-* menuHide_foreign
+* [Getting Started](#getting-started)
+* [Functionality](#functionality)
+* [Examples](#examples)
+* [menuHide_foreign](#menu-hide-foreign)
 
 
-### Getting Started
+### Getting Started <a name="getting-started"></a>
 To be able to use menus you need to import it:
 
 ```js
@@ -35,8 +35,7 @@ function displayMenu(event) {
 
 With this function we create a menu with a button, which has the text `Button`, and it's linked to the function `TEST`, which is a function inside `menu.js`, which will log to the console that the button worked. If you got that log, then your button worked, congratulations.
 
-
-### Functionality
+### Functionality <a name="functionality"></a>
 There are 6 different things that you can specify for a param:
 * displayText
 * optionalSVG
@@ -164,7 +163,7 @@ It will be set in the same manner as a css colour attribute, so you could also u
 
 <br><br>
 
-### Examples
+### Examples <a name="examples"></a>
 This here is a real life example of how it would be used.
 
 ##### Calling the menu system from projectView.js
@@ -242,7 +241,7 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 }
 ```
 
-### menuHide_foreign:
+### menuHide_foreign: <a name="menu-hide-foreign"></a>
 This is a function that can be imported from `menu.js` and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves. It won't cause any issues if the menu is already hidden when you call the function, since it merely changes it's `display` to `none`.
 
 ```js
