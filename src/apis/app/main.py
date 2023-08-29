@@ -536,8 +536,69 @@ async def update_project_details(request: Request):
 
     return {"updated" : "success"}
 
+async def delete_project_by_uuid_and_project_id(uuid, project_id):
+    async with app.state.pool.acquire() as conn:
+        query = "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2"
+        await conn.execute(query, uuid, project_id)
+
+async def get_users_projects_for_file_deletion(uuid, project_id):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT project_json, picture_url FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2;"
+        project = await conn.fetch(query, uuid, project_id)
+        return project
+
+async def delete_files_row(url):
+    async with app.state.pool.acquire() as conn:
+        query = "DELETE FROM files WHERE file_url = $1"
+        await conn.execute(query, url)
+
+@app.delete("/projects/delete_project/")
+async def update_project_details(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    project_id = data["project_id"]
+    data = project_id
+    project_id = data['PROJECT_ID']
+
+    real, uuid = await verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    project = await get_users_projects_for_file_deletion(uuid, project_id)
+    json_string = project[0]['project_json']
+    project_dict = json.loads(json_string)
+
+    if json_string !=  "{}":
+        url_list = [song['url'] for song in project_dict['songs_json']]
+        picture_url = project[0]['picture_url']
+        #url_list.append(picture_url)
+
+        #delete files
+        for url in url_list:
+            folder_path = os.path.join("/var/www/media", url)
+
+            if os.path.exists(folder_path):
+                shutil.rmtree(folder_path)
+            else:
+                print(f"The folder does not exist: {folder_path}")
+
+            await delete_files_row(url)
 
 
+
+    # delete project
+    await delete_project_by_uuid_and_project_id(uuid, project_id)
+
+
+
+
+    #print(f"url_list :\t{url_list}\npicture url:\t {picture_url}")
+
+    return {"response": "cheese"}
 
 
 

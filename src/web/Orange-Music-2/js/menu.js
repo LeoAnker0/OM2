@@ -102,11 +102,19 @@ import { svgImports } from './importAssets.js';
 function addModalItem(param) {
     const displayText = param.displayText
     const displayImage = param.optionalSVG
+    let colour;
+    if ("colour" in param) {
+        colour = param.colour;
+    } else {
+        colour = "white";
+    }
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');
 
     let regex = new RegExp(`\\{${"MENU_item_text"}\\}`, 'g');
     let replacedContent = menuItem.replace(regex, displayText);
+    regex = new RegExp(`\\{${"MENU_item_colour"}\\}`, 'g');
+    replacedContent = replacedContent.replace(regex, colour);
 
     if (displayImage !== "None") {
         regex = new RegExp(`\\{${"MENU_item_image"}\\}`, 'g');
@@ -138,6 +146,14 @@ export function menuHide(event) {
     return;
 }
 
+export function menuHide_foreign() {
+    const background = document.getElementById('MENUmodalEnvironment');
+    background.style.display = 'none';
+    return;
+}
+
+import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
+
 /* making the buttons inside the menu modal do something nice and specific ------------ */
 const MENU_ACTION_FUNCTIONS = {
     MENU_ACTION_playNext(params) {
@@ -146,6 +162,10 @@ const MENU_ACTION_FUNCTIONS = {
     },
     MENU_ACTION_playLast() {
         console.log("meny aacction play next");
+        return;
+    },
+    PROJECT_VIEW_delete_project(params) {
+        PROJECT_VIEW_receive_MENU_delete_request(params);
         return;
     }
 };

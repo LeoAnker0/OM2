@@ -3,9 +3,6 @@ JS for creating the music objects, and then hydrating them with dynamic data
 */
 
 export async function initMusicObjectsGrid() {
-    //console.log("how many times does initMusicObjectsGrid get called?")
-
-
     try {
         const contentEnvironment = document.getElementById("MAINcontentPages");
 
@@ -24,17 +21,14 @@ export async function initMusicObjectsGrid() {
 
 
 export function hideMusicObjectsGrid() {
-    //console.log("how many times does hideMusicObjectsGrid get called?")
-
     const mainContent = document.getElementById("MAINcontentPages");
     const MOGcontainer = document.getElementById("MOGcontainer");
 
-    MOGcontainer.removeEventListener('click', addEventListeners_to_music_object_grid);
-    // Remove tracked listeners before clearing content
-    // Clear the contents of the mainContent section
+    if (MOGcontainer !== null) {
+        MOGcontainer.removeEventListener('click', addEventListeners_to_music_object_grid);
+    }
     mainContent.innerHTML = "";
 }
-
 
 async function getLibraryData() {
     try {

@@ -357,30 +357,90 @@ async function detectPlayAndShuffleButtons(details) {
         console.log("shuffleButton pressed")
     });
     menuButton.addEventListener("click", function() {
-        displayMenuForTop(event)
+        displayMenuForTop(event, project_details)
     });
 }
 
-import { MENUdisplay } from './menu.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
 
-function displayMenuForTop(event) {
+function displayMenuForTop(event, project_details) {
     event.stopPropagation();
     const clickedItem = event.target;
 
+    const currentPath = window.location.pathname;
+    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
+
+
     const params = [{
         displayText: 'Play next',
-        optionalSVG: 'icons_yourUploadedSongs'
+        optionalSVG: 'icons_yourUploadedSongs',
+        function: 'None'
+
     }, {
         displayText: 'Play later',
-        optionalSVG: 'None'
+        optionalSVG: 'None',
+        function: 'None'
     }, {
         displayText: 'Delete',
-        optionalSVG: 'None'
+        optionalSVG: 'None',
+        function: 'PROJECT_VIEW_delete_project',
+        optionalParams: {
+            PROJECT_ID: project_id
+        },
+        colour: "hsl(180, 100%, 80%)"
     }]
 
     MENUdisplay(params, event);
     return;
 }
+
+
+
+export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+        console.log("delete project id:", project_id)
+        deleteProjectFromServer(project_id);
+
+        menuHide_foreign();
+        const newRoute = "/";
+        handleRoute(newRoute);
+    } else {
+        menuHide_foreign();
+
+    }
+}
+
+
+async function deleteProjectFromServer(project_id) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id
+        };
+
+        const response = await fetch('https://om2apis.la0.uk/projects/delete_project/', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        console.log(data)
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
 
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
