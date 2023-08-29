@@ -7,6 +7,8 @@
     --LCD-afterContent-bottom-left: "0:00";
     --LCD-afterContent-bottom-right: "-0:00";
 
+    --LCD-seekbar-indicator-left: 0%;
+
     --LCD-seekbar-width: 0%;
 }
 
@@ -198,6 +200,7 @@
 .LCDright-bottom-seekBar input[type="range"] {
     position: relative;
     top: 0;
+    //left: calc(13% - 0.2rem);
     left: 0;
     -webkit-appearance: none;
     visibility: hidden;
@@ -215,6 +218,7 @@
     height: 40%;
     width: 0.13rem;
     top: 60%;
+    left: var(--LCD-seekbar-indicator-left);
 
     /*
     --border-radius: 5px;

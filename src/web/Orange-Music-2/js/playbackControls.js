@@ -157,9 +157,13 @@ function handleInputChange(e) {
     }
     const volume = target.value
 
+    const audio = document.getElementById("audio")
+    audio.volume = volume / 100
+
 
     if (between(volume, 0, 1)) {
         showVolumeIcon('volumeControlZero');
+        audio.volume = 0;
         return
     }
     if (between(volume, 2, 33)) {

@@ -4,8 +4,8 @@ import { resizeTitleText } from './lcd.js';
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_array_index = 0;
-export const PLAYBACK_audio_tag = document.getElementById("audio");
-export const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+const PLAYBACK_audio_tag = document.getElementById("audio");
+const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
 export function PLAYBACK_handle_input_project_details_array_with_start_playback(project_details) {
     //console.log("PLAYBACK_handle_input_project_details_array")
@@ -123,6 +123,27 @@ function PLAYBACK_goto_next_song() {
     }
 }
 
+function formatTime(val) {
+    let h = 0,
+        m = 0,
+        s;
+    val = parseInt(val, 10);
+    if (val > 60 * 60) {
+        h = parseInt(val / (60 * 60), 10);
+        val -= h * 60 * 60;
+    };
+    if (val > 60) {
+        m = parseInt(val / 60, 10);
+        val -= m * 60;
+    };
+    s = val;
+    val = (h > 0) ? h + ':' : '';
+    val += (m > 0) ? ((m < 10 && h > 0) ? '0' : '') + m + ':' : '0:';
+    val += ((s < 10) ? '0' : '') + s;
+
+    return val;
+};
+
 
 function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -139,6 +160,32 @@ function PLAYBACK_start_playback() {
     resizeTitleText();
     updateQueue();
     playStateChange("playing");
+
+    const root = document.documentElement;
+
+    PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
+        const endOfAudio = PLAYBACK_audio_tag.duration;
+        //when the audio progesses by a second it updates the current time and time left tags
+        const currentTime = PLAYBACK_audio_tag.currentTime;
+
+        const timeRight = Math.floor(endOfAudio) - currentTime;
+        const timeRightFormatted = `"-${formatTime(timeRight)}"`;
+
+        const timeLeft = formatTime(Math.floor(currentTime));
+        const timeLeftFormatted = `"${timeLeft}"`
+        root.style.setProperty('--LCD-afterContent-bottom-right', timeRightFormatted);
+
+        root.style.setProperty('--LCD-afterContent-bottom-left', timeLeftFormatted);
+
+
+        const progressPercent = (currentTime / endOfAudio) * 100;
+        const progressPercentFormatted = `${progressPercent}%`
+
+        root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
+        root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
+
+
+    });
 
 
 
