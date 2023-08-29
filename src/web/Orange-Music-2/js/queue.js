@@ -84,10 +84,10 @@ export function updateQueue() {
     //console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)
 
     const queueContainer = document.getElementById("QUEUEbottomContainer");
-
     queueContainer.innerHTML = "";
 
-    for (let i = 0; i < PLAYBACK_songs_array.length; i++) {
+
+    for (let i = (PLAYBACK_songs_array_index + 1); i < PLAYBACK_songs_array.length; i++) {
         PLAYBACK_songs_array[i].id = i;
 
         const song = PLAYBACK_songs_array[i];
