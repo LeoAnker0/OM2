@@ -24,7 +24,7 @@ export function setEventListenersForPlaybackcontrols() {
 
 }
 
-import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton } from './playback.js';
+import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton } from './playback.js';
 
 /* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
 function shuffleClicked() {
@@ -33,7 +33,8 @@ function shuffleClicked() {
 }
 
 function backClicked() {
-    console.log("backClicked");
+    //console.log("backClicked");
+    PLAYBACK_handle_PLAYER_backButton();
     return
 }
 
