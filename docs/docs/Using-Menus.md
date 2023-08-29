@@ -6,6 +6,7 @@ Menu.js makes it easy to create menus for all the parts of om2 that need a menu.
 * Getting Started
 * Functionality
 * Examples
+* menuHide_foreign
 
 
 ### Getting Started
@@ -49,7 +50,7 @@ DisplayText is just the name of the button inside the menu. Try and use as short
 ```js
     displayText: 'Play next',
 ```
-
+<br><br>
 #### optionalSVG:
 This allows you to specify an SVG that you would like to associate the text with, it can be any of the SVGs that are specified in importAssets.js. Can either be a string of 'None' if you don't want a picture with that text, or with the name of the svg from importAssets.js
 
@@ -59,7 +60,7 @@ This allows you to specify an SVG that you would like to associate the text with
 ```js
     optionalSVG: 'None',
 ```
-
+<br><br>
 ####  function:
 This is a neccessary param, since if the button isn't linked to a function to do something, why do you have the button? Anyway you specify as a string the name of the function that you will then also have to also specify in menu.js so that it can go and call a function from where you initially called the menu from.
 
@@ -97,36 +98,105 @@ And then when the button has been pressed, it should hopefully log `duck` to the
 
 <br><br>
 
-
-To get a menu going, you'll need a function which is able to get the position of the mouse click, as well as creating the params array of objects, that will then be passed through to the code that will actually load in the menu.
+####  optionalParams:
+Optional params are passed into the function so that it can use that data to do something. However, since this data needs to be passed into a function to be of any use, i'll also detail how to do that here.
 
 ```js
-import { MENUdisplay } from './menu.js';
+    optionalParams: {
+        VALUE: value1,
+        OTHER_VALUE: value2
+    },
+```
 
-function displayMenu(event) {
+One example is when I wanted to create a button for deleting a users project.
+
+```js
+    function: 'PROJECT_VIEW_delete_project',
+    optionalParams: {
+        PROJECT_ID: project_id
+    },
+```
+
+Then in menu.js I modifed MENU_ACTIONS_FUNCTIONS as following:
+
+```js
+import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
+
+/* MENU functions */
+const MENU_ACTION_FUNCTIONS = {
+    PROJECT_VIEW_delete_project(params) {
+        PROJECT_VIEW_receive_MENU_delete_request(params);
+        return;
+    }
+};
+```
+
+And here we just need to remember to pass in params.
+And then in projectView.js we just have to remember to accept these params:
+
+```js
+export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+        console.log("delete project id:", project_id)
+        deleteProjectFromServer(project_id);
+
+        menuHide_foreign();
+        const newRoute = "/";
+        handleRoute(newRoute);
+    } else {
+        menuHide_foreign();
+
+    }
+}
+```
+
+And of course it should be noted that it is also possible to pass in several params, as needed.
+
+<br><br>
+#### colour
+The colour param is handy since it allows us to specify a colour for an item in the menu, which is other than the default colour. 
+
+```js
+    colour: "red"
+```
+
+It will be set in the same manner as the css colour attribute, so you could also use something like `hsl(0, 100%, 80%)`, or a variable `var(--teal-3)`.
+
+<br><br>
+
+### Examples
+This here is a real life example of how it would be used.
+
+##### Calling the menu system from projectView.js
+```js
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+
+
+function displayMenuForTop(event, project_details) {
     event.stopPropagation();
     const clickedItem = event.target;
-    
-    const value1 = clickedItem.getAttribute('data-1');
-    const value2 = clickedItem.getAttribute('data-2');
-    const value3 = clickedItem.getAttribute('data-3');
+
+    const currentPath = window.location.pathname;
+    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
+
 
     const params = [{
         displayText: 'Play next',
-        optionalSVG: 'icons_playNext',
-        function: 'MENU_ACTION_playNext',
-        optionalParams: {
-            VALUE: value1,
-            OTHER_VALUE: value2
-        },
-        colour: "red"
+        optionalSVG: 'icons_yourUploadedSongs',
+        function: 'PROJECT_VIEW_play_next'
+
     }, {
         displayText: 'Play later',
         optionalSVG: 'None',
-        function: 'MENU_ACTION_playLater',
+        function: 'PROJECT_VIEW_play_later'
+    }, {
+        displayText: 'Delete',
+        optionalSVG: 'None',
+        function: 'PROJECT_VIEW_delete_project',
         optionalParams: {
-            VALUE: value3
-        }
+            PROJECT_ID: project_id
+        },
+        colour: "hsl(180, 100%, 80%)"
     }]
 
     MENUdisplay(params, event);
@@ -134,16 +204,46 @@ function displayMenu(event) {
 }
 ```
 
-#### Values Breakdown
+##### Capturing the functions we specified
+```js
+import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
 
+/* MENU functions */
+const MENU_ACTION_FUNCTIONS = {
+    PROJECT_VIEW_play_next() {
+        console.log("meny action play next");
+        return;
+    },
+    PROJECT_VIEW_play_later() {
+        console.log("menu action play later");
+        return;
+    },
+    PROJECT_VIEW_delete_project(params) {
+        PROJECT_VIEW_receive_MENU_delete_request(params);
+        return;
+    }
+};
+```
 
-* *import {...} from '...': required to be able to then call this function again*
+##### And then running the function from projectView.js
+```js
+export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+        console.log("delete project id:", project_id)
+        deleteProjectFromServer(project_id);
 
-*  *displayMenu: the name of the function that will start the menus, can be called anything, and is a local thing that then calls the external function*
+        menuHide_foreign();
+        const newRoute = "/";
+        handleRoute(newRoute);
+    } else {
+        menuHide_foreign();
 
+    }
+}
+```
 
-colour has been added as an extension to the menu system allowing the user to select a colour to give extra focus to a certain element of the menu, like delete and such. You can also leave that parameter blank, and it will just have the standard colour instead.
-
+### menuHide_foreign:
+This is a function that can be imported from menu.js and used to hide a menu dialog that has been opened if you think that they should happen after a specific action like deleting the project, then obviously you shouldn't be able to do more actions to that project through the menu. However this shouldn't normally be done, since the user should choose to close the menu themselves.
 
 
 
