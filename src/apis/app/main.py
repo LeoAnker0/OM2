@@ -451,7 +451,7 @@ async def create_project(request: Request):
 
 async def get_users_projects(uuid):
     async with app.state.pool.acquire() as conn:
-        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 LIMIT 10"
+        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 ORDER BY time_created DESC LIMIT 15"
         projects = await conn.fetch(query, uuid)
         return projects
 
