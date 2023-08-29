@@ -95,6 +95,7 @@ And then when the button has been pressed, it should hopefully log `duck` to the
 
 ###### *The whole requirement of needing to specify the name of the function, import the function that will act as a sort of callback, and write out how to capture the function inside menu.js is a lot/confusing, so for for this reason it is on the agenda to update this at some point so that the only thing you have do is specify the function you want it to go from the origin file, but for the moment it will have to be done in this way.*
 
+<br><br>
 
 
 To get a menu going, you'll need a function which is able to get the position of the mouse click, as well as creating the params array of objects, that will then be passed through to the code that will actually load in the menu.
