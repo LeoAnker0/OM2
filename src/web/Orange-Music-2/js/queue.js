@@ -64,20 +64,6 @@ function queueStateChange(state) {
 
 import queueItem from '../html/queueItem.html?raw';
 
-/* update the queue display blocks
-
-we want the only export here to be the update function
- */
-
-/*
-let songs = [
-    { id: 0, name: "Changes are over", artist: "I messed up", duration: "3:45", coverImage: "https://picsum.photos/400?random=1" },
-    { id: 0, name: "ARIES", artist: "lives", duration: "4:20", coverImage: "https://picsum.photos/400?random=2" },
-    { id: 0, name: "Viva la Loco", artist: "Billie Eyelash", duration: "3:32", coverImage: "https://picsum.photos/400?random=3" },
-    { id: 0, name: "Cleopatra", artist: "shakespeare", duration: "55:32", coverImage: "https://picsum.photos/400?random=4" },
-    { id: 0, name: "A little place called the moon", artist: "Aurora", duration: "2:55", coverImage: "https://picsum.photos/400?random=5" }
-];*/
-
 import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
 
 export function updateQueue() {

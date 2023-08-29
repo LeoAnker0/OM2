@@ -7,6 +7,10 @@ export let PLAYBACK_songs_array_index = 0;
 const PLAYBACK_audio_tag = document.getElementById("audio");
 const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
+let PLAYBACK_loop_state = "off";
+let PLAYBACK_shuffle_state = "off";
+
+
 function formatTime(val) {
     let h = 0,
         m = 0,
@@ -108,6 +112,10 @@ export function PLAYBACK_handle_input_change_song_progress(progress) {
 }
 
 
+export function PLAYBACK_handle_PLAYER_loopButton() {
+    PLAYBACK_change_loop_state();
+}
+
 
 
 
@@ -136,6 +144,7 @@ function PLAYBACK_start_playback() {
     updateQueue();
     playStateChange("playing");
 
+    /* updates the top informations, which should really be it's own function? */
     PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
         const endOfAudio = PLAYBACK_audio_tag.duration;
         const currentTime = PLAYBACK_audio_tag.currentTime;
@@ -165,10 +174,22 @@ function PLAYBACK_on_song_end() {
 
     PLAYBACK_audio_tag.pause();
 
-    if (length_of_queue > (PLAYBACK_songs_array_index + 1)) {
+    // if loop off, and there are more songs in the queu
+    if ((length_of_queue > (PLAYBACK_songs_array_index + 1)) && (PLAYBACK_loop_state == "off" || PLAYBACK_loop_state == "on")) {
         PLAYBACK_songs_array_index += 1
         PLAYBACK_start_playback();
-    } else {
+    }
+    // if loop state song
+    else if (PLAYBACK_loop_state == "song") {
+        PLAYBACK_start_playback();
+    }
+    // if loop on, and there are no more songs in the queue
+    else if (length_of_queue == (PLAYBACK_songs_array_index + 1) && PLAYBACK_loop_state == "on") {
+        PLAYBACK_songs_array_index = 0;
+        PLAYBACK_start_playback();
+    }
+    // if loop off, and there are no more songs in the queue
+    else {
         PLAYBACK_stop_playback()
     }
 }
@@ -204,7 +225,24 @@ function PLAYBACK_goto_previous_song() {
     }
 }
 
-
+/* this funtion changes the value of the variable, however it will be on song end that deals with the logic for this  */
+function PLAYBACK_change_loop_state() {
+    // loop state on
+    if (PLAYBACK_loop_state == "off") {
+        PLAYBACK_loop_state = "on";
+        loopStateChange(PLAYBACK_loop_state);
+    }
+    // loop state song
+    else if (PLAYBACK_loop_state == "on") {
+        PLAYBACK_loop_state = "song"
+        loopStateChange(PLAYBACK_loop_state);
+    }
+    // loop state off
+    else {
+        PLAYBACK_loop_state = "off"
+        loopStateChange(PLAYBACK_loop_state);
+    }
+}
 
 
 

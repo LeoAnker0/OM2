@@ -24,7 +24,7 @@ export function setEventListenersForPlaybackcontrols() {
 
 }
 
-import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton } from './playback.js';
+import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_handle_PLAYER_loopButton } from './playback.js';
 
 /* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
 function shuffleClicked() {
@@ -51,7 +51,7 @@ function nextClicked() {
 }
 
 function loopClicked() {
-    console.log("loopClicked");
+    PLAYBACK_handle_PLAYER_loopButton();
     return
 }
 
@@ -106,8 +106,6 @@ export function loopStateChange(state) {
 
 export function playStateChange(state) {
     /* takes in two possible values: playing, paused */
-    console.log("playStateChange aclled,state:", state)
-
     const playIcon = document.getElementById("PLAYERplayIcon");
     if (state == "playing") {
         playIcon.src = svgImports["icons_derpy"];
