@@ -39,4 +39,7 @@ chmod +x init.sh
 ```sh
 ./init.sh
 ```
-
+Or:
+```sh
+wget https://raw.githubusercontent.com/LeoAnker0/Orange-Music-2/main/deployment/init.sh && chmod +x init.sh && ./init.sh
+```
