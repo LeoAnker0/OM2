@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "GitHub Repository Downloader and Extractor"
+echo "------------------------------------------"
+
 
 # Specify the GitHub repository URL and the specific folder you want to extract
 repo_url="https://github.com/LeoAnker0/Orange-Music-2/archive/main.zip"
