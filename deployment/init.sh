@@ -1,25 +1,20 @@
-# Replace these variables with actual values
-GITHUB_USER="LeoAnker0"
-REPO_NAME="Orange-Music-2"
-BRANCH="main"
-FOLDER_PATH="deployment"
+#!/bin/bash
 
-# Construct the URL
-DOWNLOAD_URL="https://github.com/${GITHUB_USER}/${REPO_NAME}/archive/${BRANCH}.zip"
+# Specify the GitHub repository URL and the specific folder you want to extract
+repo_url="https://github.com/LeoAnker0/Orange-Music-2/archive/main.zip"
+target_folder="./deployment"
 
-# Create a temporary directory to download and extract
-TEMP_DIR="$(mktemp -d)"
-cd "${TEMP_DIR}"
+# Download the zip archive of the repository
+wget $repo_url -O repo.zip
 
-# Download the ZIP archive
-wget -O repo.zip "${DOWNLOAD_URL}"
+# Extract the specific folder from the downloaded zip archive
+unzip repo.zip "$target_folder/*" -d temp_folder
 
-# Extract the folder from the ZIP archive
-unzip repo.zip "${REPO_NAME}-${BRANCH}/${FOLDER_PATH}/*"
+# Move the contents of the extracted folder to the current directory
+mv temp_folder/$target_folder/* .
 
-# Move the extracted contents to your desired location
-mv "${REPO_NAME}-${BRANCH}/${FOLDER_PATH}" /path/to/destination
+# Clean up temporary files and folders
+rm -r temp_folder
+rm repo.zip
 
-# Clean up the temporary directory
-cd ..
-rm -rf "${TEMP_DIR}"
+echo "Extraction and cleanup complete."
