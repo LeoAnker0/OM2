@@ -2,7 +2,7 @@
 GITHUB_USER="LeoAnker0"
 REPO_NAME="Orange-Music-2"
 BRANCH="main"
-FOLDER_PATH="deployment/"
+FOLDER_PATH="deployment"
 
 # Construct the URL
 DOWNLOAD_URL="https://github.com/${GITHUB_USER}/${REPO_NAME}/archive/${BRANCH}.zip"

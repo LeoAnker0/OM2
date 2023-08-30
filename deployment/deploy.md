@@ -23,6 +23,10 @@ docker buildx build --platform linux/amd64 -t leoanker/om2_chipmunk:0.0.1-amd64 
 Then ensure that the docker compose is using the most recent/ the correct docker image
 
 # Using Deployment
+Make sure that you have unzip installed:
+```sh
+sudo apt-get update && sudo apt-get install unzip
+```
 
 Download the init script
 
