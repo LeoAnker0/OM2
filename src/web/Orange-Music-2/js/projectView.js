@@ -4,6 +4,8 @@ that generates should be here
 */
 
 import { handleRoute } from '../main.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
 
 export async function createNewProjectID() {
     try {
@@ -17,7 +19,7 @@ export async function createNewProjectID() {
             "access-token": token
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/new-project-id/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/new-project-id/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ async function getProjectDetails(project_id) {
             "project_id": project_id
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/get-project-details/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ async function updateProjectDetails(project_id, column, newInfo) {
             "new_data": newInfo
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/update_details/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,6 +137,8 @@ export async function initProjectView(projectID) {
         loadFileDropArea(details);
     }
 }
+
+
 
 export function hideProjectView() {
     const MainContent = document.getElementById("MAINcontentPages");
@@ -424,7 +428,7 @@ async function deleteProjectFromServer(project_id) {
             "project_id": project_id
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/delete_project/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -740,7 +744,7 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
         }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
-    xhr.open('POST', 'https://om2apis.la0.uk/files/upload/audio/', true);
+    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload/audio/`, true);
     xhr.send(formData);
 }
 

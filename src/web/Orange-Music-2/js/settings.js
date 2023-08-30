@@ -65,6 +65,7 @@ function loadLoginForm() {
     });
 }
 
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
 
 
@@ -72,7 +73,7 @@ function loadLoginForm() {
 
 async function login(email, password) {
     try {
-        const response = await fetch("https://om2apis.la0.uk/login/", {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/login/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +121,7 @@ export async function prelogin() {
 
     try {
         const jwt = localStorage.getItem('JWT');
-        const response = await fetch("https://om2apis.la0.uk/prelogin/", {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/prelogin/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

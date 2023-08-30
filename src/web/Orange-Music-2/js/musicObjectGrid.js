@@ -30,6 +30,9 @@ export function hideMusicObjectsGrid() {
     mainContent.innerHTML = "";
 }
 
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
+
 async function getLibraryData() {
     try {
         const token = localStorage.getItem('JWT');
@@ -42,7 +45,7 @@ async function getLibraryData() {
             "access-token": token
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/get-projects/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-projects/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -180,7 +183,7 @@ async function getProjectDetails(project_id) {
             "project_id": project_id
         };
 
-        const response = await fetch('https://om2apis.la0.uk/projects/get-project-details/', {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -123,6 +123,9 @@ export function PLAYBACK_handle_PLAYER_loopButton() {
 
 /* LOGIC -------------------------------------------------------*/
 
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
+
 /* the main playback function, is responsible for playing the audio, will be called from many different places, this means that there
 is only one piece of logic that deals with loading and playing and all of these things, there will be other functions that do some of 
 this type of thing, but no other function will be allowed to start playback of audio. */
@@ -134,7 +137,7 @@ function PLAYBACK_start_playback() {
     const root = document.documentElement;
     const scrubInput = document.getElementById("LCDseekBar");
 
-    PLAYBACK_audio_source.src = `https://om2media.la0.uk/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.play();
 

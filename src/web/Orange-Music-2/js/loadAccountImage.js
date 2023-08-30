@@ -1,10 +1,12 @@
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
 export async function initAccountImg() {
     /* loading in the img */
     const accountImgSource = document.getElementById("TOPRIGHTaccountImg");
 
     try {
         const url = await getAccountImageURL();
-        const newImage = `https://om2media.la0.uk/${url}/1/`;
+        const newImage = `${MAIN_CONST_EXPORT_mediaPath}/${url}/1/`;
 
         accountImgSource.src = newImage;
 
@@ -19,7 +21,7 @@ export async function initAccountImg() {
 async function getAccountImageURL() {
     const jwt = localStorage.getItem("JWT");
     try {
-        const response = await fetch("https://om2apis.la0.uk/get_account_image/", {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/get_account_image/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
