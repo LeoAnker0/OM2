@@ -14,6 +14,8 @@ services:
     volumes:
       - om2data:/var/www/media
       - fastapi_code:/app
+    depends_on:
+      - postgres
     restart: always
 
   # For Exposing apis and file hosting to the internet
@@ -30,6 +32,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init_scripts:/docker-entrypoint-initdb.d 
     networks:
       - tunnel
 
@@ -58,6 +61,8 @@ services:
       - tunnel
     env_file:
       - .env
+    depends_on:
+      - postgres
     restart: always
 
   # File Serving
@@ -85,6 +90,8 @@ services:
       - tunnel
     env_file:
       - .env
+    depends_on:
+      - postgres
     restart: always
 
 

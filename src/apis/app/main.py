@@ -35,7 +35,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:4173", "http://localhost:5175"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+    allow_origins=["http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,11 +68,48 @@ def is_valid_email(email_address):
     # Check if the parsed email address is valid
     return re.match(r"[^@]+@[^@]+\.[^@]+", email_parsed) is not None
 
+async def startup_check_tables_exist():
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('users', 'projects', 'files')"
+        result = await conn.fetch(query)
+
+        existing_tables = [row['table_name'] for row in result]
+        required_tables = ['users', 'projects', 'files']
+
+        return set(required_tables).issubset(existing_tables)
+
+async def startup_check_admin_exists(admin_email):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT EXISTS (SELECT 1 FROM users WHERE email = $1)"
+        result = await conn.fetchval(query, admin_email)
+        return result == 1
 
 
 @app.on_event("startup")
 async def startup():
     app.state.pool = await create_db_pool()
+    #print(f"startup function in fastapi")
+
+
+    tablesExist = await startup_check_tables_exist()
+
+    if not tablesExist:
+        print(f"we need to create some tables")
+
+
+    admin_email = str(os.environ.get("OM2_ADMIN_USER_EMAIL"))
+    adminExists = await startup_check_admin_exists(admin_email);
+
+    if not adminExists:
+        print(f"adminExists:\t{adminExists}")
+        username = "admin"
+        password = hash_password(str(os.environ.get("OM2_ADMIN_PASSWORD")))
+        email = admin_email
+        url = "https://picsum.photos/10"
+
+        user_dict = dict(username=username, password=password, email=email, profile_picture=url)
+        await insert_user(user_dict)
+
 
 @app.on_event("shutdown")
 async def shutdown():
