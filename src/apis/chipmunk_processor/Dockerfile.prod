@@ -23,4 +23,4 @@ COPY . /app/
 EXPOSE 8001
 
 # Run the application with Gunicorn for production
-CMD ["gunicorn", "chipmunk_processor:app", "--bind", "0.0.0.0:8001", "--workers", "4"]
+CMD ["uvicorn", "chipmunk_processor:app", "--bind", "0.0.0.0:8001", "--workers", "4"]
