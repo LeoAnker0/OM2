@@ -19,8 +19,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . /app/
 
+ENV PORT 80
+
 # Expose the port for the HTTP API
-EXPOSE 8001
+EXPOSE 80
 
 # Run the application with Gunicorn for production
-CMD ["uvicorn", "chipmunk_processor:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "chipmunk_processor:app", "--host", "0.0.0.0", "--port", "80"]

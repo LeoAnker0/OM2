@@ -35,9 +35,9 @@ services:
 
   # File Processing
   chipmunk_processor:
-    image: leoanker/om2_main:0.0.1-arm64
+    image: leoanker/om2_chipmunk:0.0.1-arm64
     ports:
-      - "8001:8001"
+      - "8001:80"
     volumes:
       - background_data:/background_data
       - om2data:/var/www/media
