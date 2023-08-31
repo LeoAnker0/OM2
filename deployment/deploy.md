@@ -10,45 +10,13 @@ Make sure that you are logged in to docker using docker login...
 docker login
 ```
 
-Then: at `src/apis`
+Then make sure that the build.sh script has been `chmod +x build.sh`, and then do:
 ```sh
-sudo docker buildx build --platform linux/arm64 -t leoanker/om2_main:0.0.1-arm64 --push -f ./Dockerfile.prod .
+sudo ./build.sh
 ```
 
-At: `src/apis/chipmunk_processor`
-```sh
-sudo docker buildx build --platform linux/arm64 -t leoanker/om2_chipmunk:0.0.1-arm64 --push -f ./Dockerfile.prod .
-```
+This will build the three containers, but this will only work on arm64 machines, or I mean at the moment the script will only build arm64 images, but that is easy to change.
 
-At: `src/web/Orange-Music-2`
-```sh
-sudo docker buildx build --platform linux/arm64 -t leoanker/om2_frontend:0.0.1-arm64 --push -f ./Dockerfile .
-```
-
-
-
-
-To build the three docker containers you can use the following commands, granted you are in the correct directories.
-
-From `src/web/Orange-Music-2`
-
-```sh
-sudo docker buildx build --platform linux/amd64 -t leoanker/om2_main:0.0.1-amd64 --push -f ./Dockerfile.prod . && sudo docker buildx build --platform linux/arm64 -t leoanker/om2_main:0.0.1-arm64 --push -f ./Dockerfile.prod .
-```
-
-From `src/apis`
-
-```sh
-docker buildx build --platform linux/amd64 -t leoanker/om2_main:0.0.1-amd64 --push . && docker buildx build --platform linux/arm64 -t leoanker/om2_main:0.0.1-arm64 --push .
-```
-
-From `src/apis/chipmunk_processor`
-
-```sh
-docker buildx build --platform linux/amd64 -t leoanker/om2_chipmunk:0.0.1-amd64 --push . && docker buildx build --platform linux/arm64 -t leoanker/om2_chipmunk:0.0.1-arm64 --push .
-```
-
-Then ensure that the docker compose is using the most recent/ the correct docker image
 
 # Using Deployment
 Create a folder for om2:
@@ -118,7 +86,7 @@ Edit the .env file
 
 run the docker compose
 ```sh
-docker compose up
+sudo docker compose up
 ```
 
 
