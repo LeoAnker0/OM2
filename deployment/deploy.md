@@ -1,11 +1,20 @@
 # Building Deployment
 
+Building from the server:
+Make sure that git is installed so that I can clone the repo
+```sh
+git clone https://github.com/LeoAnker0/Orange-Music-2.git .
+```
+
+
+
+
 To build the three docker containers you can use the following commands, granted you are in the correct directories.
 
 From `src/web/Orange-Music-2`
 
 ```sh
-docker buildx build --platform linux/amd64 -t leoanker/om2_frontend:0.0.1-amd64 --push . && docker buildx build --platform linux/arm64 -t leoanker/om2_frontend:0.0.1-arm64 --push .
+sudo docker buildx build --platform linux/amd64 -t leoanker/om2_main:0.0.1-amd64 --push -f ./Dockerfile.prod . && sudo docker buildx build --platform linux/arm64 -t leoanker/om2_main:0.0.1-arm64 --push -f ./Dockerfile.prod .
 ```
 
 From `src/apis`
