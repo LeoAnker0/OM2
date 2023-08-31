@@ -17,7 +17,6 @@ import subprocess
 import shutil
 import librosa
 
-
 app = FastAPI()
 
 async def create_db_pool():

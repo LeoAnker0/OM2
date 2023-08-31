@@ -24,4 +24,4 @@ ENV PORT 80
 EXPOSE 80
 
 # Run the application with uvicorn for production
-CMD ["uvicorn", "app.chipmunk_processor:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8001", "app.main:app"]
