@@ -1,7 +1,7 @@
 -- initialization_script.sql
 
 -- Create the music_streaming database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS music_streaming;
+CREATE DATABASE music_streaming;
 
 -- Connect to the music_streaming database
 \connect music_streaming;
