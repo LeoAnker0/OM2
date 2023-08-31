@@ -23,5 +23,5 @@ ENV PORT 80
 # Expose the port for the HTTP API
 EXPOSE 80
 
-# Run the application with Gunicorn for production
+# Run the application with uvicorn for production
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
