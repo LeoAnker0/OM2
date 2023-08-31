@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y libpq-dev
+#RUN apt-get update && apt-get install -y libpq-dev
 
 # Copy only the requirements file first to leverage Docker cache
 COPY requirements.txt /app/
