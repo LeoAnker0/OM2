@@ -1,0 +1,26 @@
+# Use a minimal Python image as the base
+FROM python:3.11-slim
+
+# Set environment variables for better performance and safety
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PIP_NO_CACHE_DIR 1
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install necessary system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg
+
+# Copy only the requirements file first to leverage Docker cache
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code into the container
+COPY . /app/
+
+# Expose the port for the HTTP API
+EXPOSE 8001
+
+# Run the application with Gunicorn for production
+CMD ["gunicorn", "chipmunk_processor:app", "--bind", "0.0.0.0:8001", "--workers", "4"]

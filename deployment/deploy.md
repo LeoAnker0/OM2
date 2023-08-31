@@ -35,6 +35,7 @@ sudo apt-get update && sudo apt-get install unzip
 
 Make sure that you have docker and docker compose installed:
 * Either follow the intructions here [https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
 Or:
 * Setup Repsitory:
 ```sh
@@ -67,8 +68,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo docker run hello-world
 ```
 
-
-
+<br>
 
 Download the init script
 
@@ -80,6 +80,17 @@ chmod +x init.sh
 Or:
 ```sh
 wget https://raw.githubusercontent.com/LeoAnker0/Orange-Music-2/main/deployment/init.sh && chmod +x init.sh && ./init.sh
+```
+
+<br>
+
+Edit the .env file
+
+<br>
+
+run the docker compose
+```sh
+docker compose up
 ```
 
 

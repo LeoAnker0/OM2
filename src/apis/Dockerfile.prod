@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+# Set environment variables for better performance and safety
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y libpq-dev
+
+# Copy only the requirements file first to leverage Docker cache
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code into the container
+COPY ./app /app/app
+
+# Set the default environment variable for the port
+ENV PORT 80
+
+# Expose the port for the HTTP API
+EXPOSE 80
+
+# Run the application with Gunicorn for production
+CMD ["gunicorn", "app.main:app", "--bind", "0.0.0.0:80", "--workers", "4"]
