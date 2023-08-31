@@ -20,6 +20,11 @@ At: `src/apis/chipmunk_processor`
 sudo docker buildx build --platform linux/arm64 -t leoanker/om2_chipmunk:0.0.1-arm64 --push -f ./Dockerfile.prod .
 ```
 
+At: `src/web/Orange-Music-2`
+```sh
+sudo docker buildx build --platform linux/arm64 -t leoanker/om2_frontend:0.0.1-arm64 --push -f ./Dockerfile .
+```
+
 
 
 
