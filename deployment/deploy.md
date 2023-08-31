@@ -5,6 +5,20 @@ Make sure that git is installed so that I can clone the repo
 ```sh
 git clone https://github.com/LeoAnker0/Orange-Music-2.git .
 ```
+Make sure that you are logged in to docker using docker login...
+```sh
+docker login
+```
+
+Then: at `src/apis`
+```sh
+sudo docker buildx build --platform linux/arm64 -t leoanker/om2_main:0.0.1-arm64 --push -f ./Dockerfile.prod .
+```
+
+At: `src/apis/chipmunk_processor`
+```sh
+sudo docker buildx build --platform linux/arm64 -t leoanker/om2_chipmunk:0.0.1-arm64 --push -f ./Dockerfile.prod .
+```
 
 
 
