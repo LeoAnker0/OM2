@@ -26,7 +26,7 @@ services:
   postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init_scripts:/docker-entrypoint-initdb.d 
