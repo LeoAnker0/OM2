@@ -42,8 +42,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#app.include_router(TusRouter(store_dir="./files", location="/files/upload"), prefix="/files")
-
 async def create_db_pool():
     pool = await asyncpg.create_pool(
         database=str(os.environ.get("POSTGRES_DB")),
@@ -85,6 +83,18 @@ async def startup_check_admin_exists(admin_email):
         result = await conn.fetchval(query, admin_email)
         return result == 1
 
+async def startup_get_admin_password_hash(admin_email):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT password FROM users WHERE email = $1"
+        result = await conn.fetchval(query, admin_email)
+        return result
+
+async def update_password_user_by_uuid(uuid, password):
+    async with app.state.pool.acquire() as conn:
+        query = "UPDATE users SET password = $1 WHERE uuid = $2"
+        await conn.execute(query, password, uuid)
+        return
+
 
 @app.on_event("startup")
 async def startup():
@@ -110,6 +120,27 @@ async def startup():
 
         user_dict = dict(username=username, password=password, email=email, profile_picture=url)
         await insert_user(user_dict)
+
+    elif adminExists:
+        print(f"admin exists, yes:\t{adminExists}")
+
+        #get the current hash of the admin password
+        #current_hashed_password = await startup_get_admin_password_hash(admin_email)
+        try:
+            passwordMatches = await passwordHash_matches_email(str(os.environ.get("OM2_ADMIN_PASSWORD")), admin_email)
+        except ValueError as e:
+            print(f"Error: {e}")
+            passwordMatches = False
+
+        if not passwordMatches:
+            print(f"passwordMatches:\t{passwordMatches}")
+
+            uuid = await get_uuid_by_email(admin_email)
+            new_password = hash_password(str(os.environ.get("OM2_ADMIN_PASSWORD")))
+            await update_password_user_by_uuid(uuid, new_password)
+
+            # lets now set the password of the user by uuid, by hashing the password
+
 
 
 @app.on_event("shutdown")
