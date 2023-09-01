@@ -4,7 +4,7 @@ services:
   fastapi:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "6000:80"
     networks:
@@ -53,6 +53,7 @@ services:
   chipmunk_processor:
     build:
       context: ./chipmunk_processor
+      dockerfile: Dockerfile.dev
     volumes:
       - ./chipmunk_processor/app:/app
       - chipmunk_data:/chipmunk_data
