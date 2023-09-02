@@ -63,6 +63,18 @@
         "PROJECTviewTopItem-1 PROJECTviewTopItem-4 PROJECTviewTopItem-4";
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTview-topContainer {
+        grid-template-areas:
+            "PROJECTviewTopItem-1"
+            "PROJECTviewTopItem-2"
+            "PROJECTviewTopItem-5"
+            "PROJECTviewTopItem-6"
+            "PROJECTviewTopItem-7";
+        grid-template-columns: 100%;
+    }
+}
+
 
 
 .PROJECTviewDisplayImage {
@@ -84,6 +96,7 @@
 
     pointer-events: none;
 }
+
 
 .PROJECTviewTopItem-1 {
     grid-area: PROJECTviewTopItem-1;
@@ -121,6 +134,19 @@
     overflow: hidden;
 
 }
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewDisplayTitle h1 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .PROJECTviewDisplayTitle h3 {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 
 .PROJECTviewTopItem-2 {
     grid-area: PROJECTviewTopItem-2;
@@ -191,6 +217,16 @@
     cursor: pointer;
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewDisplayDescription {
+        width: 100%;
+    }
+
+    .PROJECTviewDescriptionMoreButton {
+        display: none;
+    }
+}
+
 /* spans that will fade out overflowing letters from the description */
 .PROJECTopacity9 {
     opacity: 90%;
@@ -244,6 +280,7 @@
 
 
 
+
 .PROJECTviewTopItem-6 {
     grid-area: PROJECTviewTopItem-6;
 
@@ -288,6 +325,24 @@
 .PROJECTviewTopItem-6 button div {
     position: relative;
     margin-left: 0.2rem;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewTopItem-6 {
+        //background-color: blue;
+        width: 98%;
+        align-items: center;
+        justify-content: space-between;
+        margin-left: 1%;
+    }
+
+    .PROJECTviewTopItem-6 button {
+        width: 45%;
+        height: 1.5rem;
+        margin-right: 0;
+    }
+
+
 }
 
 .PROJECTviewDisplayMenu {
@@ -335,6 +390,11 @@
     display: flex;
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewDisplayMenu {
+        display: none;
+    }
+}
 
 
 
