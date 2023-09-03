@@ -348,7 +348,8 @@ async function detectPlayAndShuffleButtons(details) {
     const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
     const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
-
+    const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
+    const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
 
     const project_details = await getProjectDetails(details.project_id);
 
@@ -363,6 +364,14 @@ async function detectPlayAndShuffleButtons(details) {
     menuButton.addEventListener("click", function() {
         displayMenuForTop(event, project_details)
     });
+    mobileMenuButton.addEventListener("click", function() {
+        displayMenuForTop(event, project_details)
+    });
+
+    homeButton.addEventListener("click", () => {
+        handleRoute("/")
+
+    })
 }
 
 import { MENUdisplay, menuHide_foreign } from './menu.js';
