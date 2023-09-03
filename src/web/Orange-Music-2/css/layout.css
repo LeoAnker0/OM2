@@ -49,8 +49,8 @@
 }
 
 main {
-    height: 100svh;
-    width: 100svw;
+    height: 100lvh;
+    width: 100lvw;
     overflow: hidden;
     position: relative;
 }
