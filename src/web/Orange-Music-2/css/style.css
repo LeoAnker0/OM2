@@ -135,7 +135,7 @@ body {
     margin: 0;
     padding: 0;
     position: relative;
-    height: 100vh;
+    height: 100svh;
 
     -webkit-user-select: none;
 
