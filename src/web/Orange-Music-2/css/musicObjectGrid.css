@@ -12,6 +12,16 @@
     top: calc(var(--height-of-top) + 0.0rem);
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+
+    .MOG-container {
+        top: 1rem;
+
+
+    }
+
+}
+
 .MOG-grid {
     position: relative;
     height: 100%;
@@ -30,8 +40,10 @@
 
     /* CSS rules for devices with portrait aspect ratio, mobile size, and mobile cursor */
     .MOG-grid {
-        grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-        grid-auto-rows: 15rem;
+        grid-template-columns: repeat(2, 2fr);
+        /* Two columns, each with a size of 15rem */
+        grid-auto-rows: 17rem;
+
 
     }
 

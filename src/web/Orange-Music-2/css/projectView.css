@@ -24,6 +24,7 @@
     height: 0;
 }
 
+
 .PROJECTviewContainer {
     position: relative;
     top: 0rem;
@@ -35,6 +36,7 @@
 
     //background-color: hsla(200, 100%, 50%, 0.2);
     overflow-y: scroll;
+    //overflow-x: hidden;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -176,6 +178,15 @@
 
 .PROJECTviewTopItem-4 {
     grid-area: PROJECTviewTopItem-4;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+
+    .PROJECTviewTopItem-3,
+    .PROJECTviewTopItem-4 {
+        display: none;
+    }
+
 }
 
 .PROJECTviewDisplayDescription {
@@ -339,6 +350,8 @@
         align-items: center;
         justify-content: space-between;
         margin-left: 1%;
+
+        margin-bottom: 2rem;
     }
 
     .PROJECTviewTopItem-6 button {
