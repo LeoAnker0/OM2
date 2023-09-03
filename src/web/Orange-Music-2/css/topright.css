@@ -146,7 +146,13 @@
     position: relative;
     height: 100%;
     width: var(--TOPRIGHT-lcd-width);
-    //background-color: blue;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .TOPRIGHT-lcd-container {
+        position: absolute;
+        width: calc(100% - 8rem);
+    }
 }
 
 /* account controls : right ------------------------------------------------- */
@@ -156,6 +162,12 @@
     width: var(--TOPRIGHT-accountcontrols-width);
     display: flex;
     justify-content: space-between;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .TOPRIGHT-accountcontrols-container {
+        display: none;
+    }
 }
 
 .TOPRIGHT-accountcontrols-volumeslider-container {

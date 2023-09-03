@@ -133,6 +133,7 @@ function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
     const LCDtitleText = document.getElementById("LCDtitleText");
+    const LCDtitleTextMobile = document.getElementById("LCDtitleTextMobile");
     const LCDbottomText = document.getElementById("LCDbottomText");
     const root = document.documentElement;
     const scrubInput = document.getElementById("LCDseekBar");
@@ -142,6 +143,7 @@ function PLAYBACK_start_playback() {
     PLAYBACK_audio_tag.play();
 
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     resizeTitleText();
     updateQueue();
