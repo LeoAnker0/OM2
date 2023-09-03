@@ -14,7 +14,7 @@ import './css/projectView.css';
 
 /* immediate priority 
 
-we need real icons for loop song, and also pause
+we need real icons for loop song, and also pause, s
 
 */
 
