@@ -14,17 +14,6 @@
 }
 
 
-@media (max-width: 850px) {
-    :root {
-        --TOPRIGHT-playbackcontrols-width2: 0px;
-        --TOPRIGHT-lcd-width: 100%;
-        --TOPRIGHT-accountcontrols-width: 0px;
-
-    }
-}
-
-
-
 
 .TOPRIGHT-topHalf-right-content {
     position: relative;
@@ -34,13 +23,34 @@
     justify-content: space-evenly;
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .TOPRIGHT-topHalf-right-content {
+        //background-color: red;
+        display: block;
+    }
+}
+
 /* playback controls : left ------------------------------------------------- */
 .TOPRIGHT-playbackcontrols-container {
     position: relative;
     height: 100%;
     width: var(--TOPRIGHT-playbackcontrols-width2);
+    display: flex;
+    justify-content: space-evenly;
 
 }
+
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .TOPRIGHT-playbackcontrols-container {
+        width: 1rem;
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0;
+    }
+}
+
 
 .TOPRIGHT-playbackcontrols-displacement {
     position: relative;
@@ -50,6 +60,15 @@
     width: 100%;
     max-width: var(--TOPRIGHT-playbackcontrols-width);
     height: 100%;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .TOPRIGHT-playbackcontrols-displacement {
+        position: relative;
+        height: 100%;
+        visibility: visible;
+        right: 0;
+    }
 }
 
 
@@ -84,6 +103,41 @@
     left: 50%;
     transform: translate(-50%, -50%);
     filter: none;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    #PLAYERplayButton {
+        z-index: 2;
+
+        width: 2rem;
+
+        position: absolute;
+        top: 0.2rem;
+        right: rem;
+        transform: scale(1.6);
+    }
+
+    #PLAYERnextButton {
+        z-index: 2;
+
+        width: 2rem;
+        height: 8rem;
+
+        height: 100%;
+        position: absolute;
+        right: -3.7rem;
+        transform: scale(2);
+
+
+    }
+
+    #PLAYERshuffleButton,
+    #PLAYERbackButton,
+    #PLAYERloopButton {
+        display: none;
+    }
+
+
 }
 
 

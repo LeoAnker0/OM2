@@ -21,7 +21,12 @@
     position: relative;
     height: var(--searchbar-container-height);
     width: var(--searchbar-container-width);
+}
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    :root {
+        --searchbar-container-width: 0rem;
+    }
 }
 
 
@@ -41,6 +46,12 @@
 
     //outline: 1px solid var(--searchbar-container-after-outline-colour);
     outline: 1px solid hsla(0, 0%, 100%, 0.23);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .topHalf-left {
+        background-color: red;
+    }
 }
 
 
