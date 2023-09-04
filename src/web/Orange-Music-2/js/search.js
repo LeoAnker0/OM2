@@ -59,12 +59,13 @@ export function setEventListenersForSearchbar() {
     });
 
 
-    /* and also for the home button why not... */
+    /* and also for the home button why not... 
     const homeButton = document.getElementById("TOPLEFT_homeButton")
     homeButton.addEventListener("click", () => {
         handleRoute("/")
 
     })
+    */
 
 
 

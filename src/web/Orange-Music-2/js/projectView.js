@@ -833,19 +833,38 @@ function detect_when_image_is_no_longer_visible() {
     const targetElement = document.querySelector('.PROJECTviewDisplayImage');
     const header = document.getElementById("PROJECTviewMobileStickyHeader");
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
 
     observer.observe(targetElement);
 
     function callback(entries, observer) {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (mediaQuery.matches) {
+                console.log("media query matches")
+            }
+            /* when mobile and above image */
+            if ((entry.isIntersecting) && (mediaQuery.matches)) {
                 header.style.backgroundColor = "transparent";
                 headerTitleText.style.visibility = "hidden";
                 //header.style.position = "absolute";
                 //placeholder.style.display = "block";
 
                 // Do something when it becomes visible
-            } else {
+            }
+            /* when desktop and above image */
+            else if ((entry.isIntersecting) && (!mediaQuery.matches)) {
+                header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
+                headerTitleText.style.visibility = "hidden";
+            }
+
+            /* when desktop and below image */
+            else if ((!entry.isIntersecting) && (!mediaQuery.matches)) {
+                header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
+                headerTitleText.style.visibility = "hidden";
+            }
+
+            /* when mobile and below image */
+            else if ((!entry.isIntersecting) && (mediaQuery.matches)) {
                 header.style.backgroundColor = "var(--dgrey-7)";
                 headerTitleText.style.visibility = "visible";
 

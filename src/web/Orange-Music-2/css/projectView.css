@@ -1,5 +1,7 @@
 :root {
     --PROJECTviewModalWidthOfSide: 2rem;
+
+    --PROJECTviewDesktopHeaderFilter: blur(5px);
 }
 
 .PROJECTviewContainerEnvironment {
@@ -28,7 +30,7 @@
 .PROJECTviewContainer {
     position: relative;
     top: 0rem;
-    padding-top: 4rem;
+    padding-top: 6rem;
     height: calc(100% - 4rem);
 
     width: 90%;
@@ -890,29 +892,24 @@
 /* mobile sticky header ------------- */
 
 .PROJECTviewMobileStickyHeader {
-    display: none;
+    top: 4rem;
+    position: absolute;
+    height: 3rem;
+    width: 100%;
+    z-index: 2;
+    backdrop-filter: var(--PROJECTviewDesktopHeaderFilter);
+    background-color: hsla(255, 90%, 9%, 0.8);
 }
 
 
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTviewMobileStickyHeader {
-        display: block;
+        top: 0rem;
         position: absolute;
-        //background-color: hsla(0, 100%, 50%, 0.2);
-        height: 3rem;
-        width: 100%;
-        z-index: 2;
 
         background-color: transparent;
-
     }
-
-
-
-
-
-
 }
 
 .PROJECTviewMobileStickyHeader {
@@ -957,12 +954,20 @@
     margin-left: 0.2rem;
 }
 
+
 .PROJECTviewMobileStickyHeaderMenuButton {
     position: relative;
     //left: calc(100% - 27.5rem);
     align-self: end;
     top: -0.9rem;
     transform: rotate(270deg);
+    visibility: hidden;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewMobileStickyHeaderMenuButton {
+        visibility: visible;
+    }
 }
 
 .PROJECTviewMobileStickyHeaderProjectNameContainer {
@@ -979,8 +984,8 @@
     white-space: nowrap;
 
     visibility: hidden;
-
 }
+
 
 
 
