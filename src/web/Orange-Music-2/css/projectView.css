@@ -847,6 +847,8 @@
     display: none;
 }
 
+
+
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTviewMobileStickyHeader {
         display: block;
@@ -856,7 +858,11 @@
         width: 100%;
         z-index: 2;
 
+        background-color: transparent;
+
     }
+
+
 
 
 
@@ -907,10 +913,26 @@
 
 .PROJECTviewMobileStickyHeaderMenuButton {
     position: relative;
-    left: calc(100% - 6rem);
+    left: calc(100% - 27.5rem);
     transform: rotate(90deg);
 }
 
+.PROJECTviewMobileStickyHeaderProjectNameContainer {
+    position: relative;
+    height: 100%;
+    color: white;
+    text-align: left;
+    align-items: center;
+    display: flex;
+    width: calc(100% - (1 * 6rem));
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    visibility: hidden;
+
+}
 
 
 

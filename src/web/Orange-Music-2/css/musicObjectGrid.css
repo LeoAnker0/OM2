@@ -143,6 +143,15 @@
 
 }
 
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOG-item-controlsContainer {
+        display: none;
+    }
+
+}
+
+
 .MOG-item-controls-play {
     --offset: 3rem;
     position: relative;

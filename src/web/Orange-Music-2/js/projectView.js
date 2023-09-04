@@ -135,6 +135,8 @@ export async function initProjectView(projectID) {
         detectPlayAndShuffleButtons(details);
         loadInTable(details);
         loadFileDropArea(details);
+        detect_when_image_is_no_longer_visible();
+        update_mobile_header_project_title(details.project_name)
     }
 }
 
@@ -157,7 +159,8 @@ function set_event_listeners_for_titles(details) {
 
     titleH1.addEventListener('blur', function(event) {
         const newTitleH1 = titleH1.innerText
-        console.log('Content changed:', newTitleH1);
+        update_mobile_header_project_title(newTitleH1);
+
         updateProjectDetails(details.project_id, "project_name", newTitleH1)
     });
 
@@ -290,11 +293,29 @@ function clipOverflowingDescription() {
 /* more description button */
 function descriptionButtonInteractions() {
     const moreButton = document.getElementById('PROJECTviewDescriptionMoreButton');
+    const descriptionBox = document.getElementById("PROJECTviewDisplayDescription");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
 
     moreButton.addEventListener('click', function() {
         background.style.display = "grid";
         // Perform any actions you want when the button is pressed
+    });
+
+    descriptionBox.addEventListener('dblclick', function() {
+        background.style.display = "grid";
+    })
+
+    let lastTapTime = 0;
+    descriptionBox.addEventListener('touchend', function(event) {
+        const currentTime = new Date().getTime();
+        const timeSinceLastTap = currentTime - lastTapTime;
+
+        if (timeSinceLastTap < 300) {
+            event.stopPropagation();
+            background.style.display = "grid";
+        }
+
+        lastTapTime = currentTime;
     });
 }
 
@@ -787,6 +808,47 @@ function formatFileSize(size) {
 }
 
 
+function update_mobile_header_project_title(project_name) {
+    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
+
+    headerTitleText.innerText = project_name;
+
+}
+
+
+/* the top bar of the mobile project view */
+function detect_when_image_is_no_longer_visible() {
+    const observer = new IntersectionObserver(callback, { threshold: 0.1 });
+    const targetElement = document.querySelector('.PROJECTviewDisplayImage');
+    const header = document.getElementById("PROJECTviewMobileStickyHeader");
+    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
+
+    observer.observe(targetElement);
+
+    function callback(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                header.style.backgroundColor = "transparent";
+                headerTitleText.style.visibility = "hidden";
+                //header.style.position = "absolute";
+                //placeholder.style.display = "block";
+
+                // Do something when it becomes visible
+            } else {
+                header.style.backgroundColor = "var(--dgrey-7)";
+                headerTitleText.style.visibility = "visible";
+
+                //placeholder.style.display = "none";
+
+
+                // Do something when it becomes hidden
+            }
+        });
+    }
+
+
+
+}
 
 
 
