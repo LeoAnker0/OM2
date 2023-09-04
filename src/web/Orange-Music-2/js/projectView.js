@@ -844,6 +844,8 @@ function detect_when_image_is_no_longer_visible() {
             }
             /* when mobile and above image */
             if ((entry.isIntersecting) && (mediaQuery.matches)) {
+                header.style.backdropFilter = "none";
+
                 header.style.backgroundColor = "transparent";
                 headerTitleText.style.visibility = "hidden";
                 //header.style.position = "absolute";
@@ -865,6 +867,8 @@ function detect_when_image_is_no_longer_visible() {
 
             /* when mobile and below image */
             else if ((!entry.isIntersecting) && (mediaQuery.matches)) {
+                header.style.backdropFilter = "none";
+
                 header.style.backgroundColor = "var(--dgrey-7)";
                 headerTitleText.style.visibility = "visible";
 
