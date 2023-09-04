@@ -295,14 +295,22 @@ function descriptionButtonInteractions() {
     const moreButton = document.getElementById('PROJECTviewDescriptionMoreButton');
     const descriptionBox = document.getElementById("PROJECTviewDisplayDescription");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
+    const main = document.querySelector("main");
+
+    function displayMenu() {
+        background.style.display = "grid";
+        main.style.zIndex = "40";
+
+    };
+
 
     moreButton.addEventListener('click', function() {
-        background.style.display = "grid";
+        displayMenu();
         // Perform any actions you want when the button is pressed
     });
 
     descriptionBox.addEventListener('dblclick', function() {
-        background.style.display = "grid";
+        displayMenu();
     })
 
     let lastTapTime = 0;
@@ -312,7 +320,7 @@ function descriptionButtonInteractions() {
 
         if (timeSinceLastTap < 300) {
             event.stopPropagation();
-            background.style.display = "grid";
+            displayMenu();
         }
 
         lastTapTime = currentTime;
@@ -360,6 +368,9 @@ function closeMoreDescription(details) {
     background.style.display = "none";
     updateDescription();
     clipOverflowingDescription();
+
+    const main = document.querySelector("main");
+    main.style.zIndex = "0";
 }
 
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
