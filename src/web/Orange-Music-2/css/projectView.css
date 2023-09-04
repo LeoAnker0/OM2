@@ -954,8 +954,10 @@
 
 .PROJECTviewMobileStickyHeaderMenuButton {
     position: relative;
-    left: calc(100% - 27.5rem);
-    transform: rotate(90deg);
+    //left: calc(100% - 27.5rem);
+    align-self: end;
+    top: -0.5rem;
+    transform: rotate(270deg);
 }
 
 .PROJECTviewMobileStickyHeaderProjectNameContainer {
