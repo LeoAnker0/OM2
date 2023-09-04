@@ -166,6 +166,46 @@ function loadObjects(libraryData) {
     MOGcontainer.addEventListener('click', function(event) {
         addEventListeners_to_music_object_grid(event, libraryData)
     });
+
+    let touchStartTimestamp;
+    let pressTimer;
+
+    // Add touchstart event listener to record the touch start timestamp
+    MOGcontainer.addEventListener('touchstart', function(e) {
+        touchStartTimestamp = e.timeStamp;
+
+        // Start the timer for long press
+        pressTimer = setTimeout(function() {
+            // Long press detected
+            handleLongPress(e, libraryData);
+        }, 500); // Adjust the time (in milliseconds) for a long press as needed
+    });
+
+    // Add touchend event listener to detect when the touch ends
+    MOGcontainer.addEventListener('touchend', function(e) {
+        // Calculate the duration of the touch event
+        const touchEndTimestamp = e.timeStamp;
+        const touchDuration = touchEndTimestamp - touchStartTimestamp;
+
+        // Clear the long press timer
+        clearTimeout(pressTimer);
+    });
+
+    // Function to handle long press
+    function handleLongPress(event, libraryData) {
+        navigator.vibrate(50);
+
+        // Add your long press action here
+        const clickedElement = event.target;
+
+        const buttonID = clickedElement.id.split('-')[1];
+        const objectID = libraryData[buttonID].project_id;
+        console.log(objectID)
+
+        displayMenu(event);
+    }
+
+
 };
 
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
@@ -204,6 +244,7 @@ async function getProjectDetails(project_id) {
 async function addEventListeners_to_music_object_grid(event, libraryData) {
     const clickedElement = event.target;
 
+
     // for the play button"
     if (clickedElement.classList.contains('MOG-item-controls-play')) {
 
@@ -234,6 +275,7 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
             addNewLibraryItem();
         }
     }
+
 };
 
 
