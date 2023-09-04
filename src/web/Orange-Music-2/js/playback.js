@@ -240,10 +240,6 @@ function PLAYBACK_on_song_end() {
     }
 }
 
-audio.addEventListener('ended', function() {
-    // Play automatically the next track when audio ends.
-    PLAYBACK_on_song_end();
-});
 
 function PLAYBACK_goto_next_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
