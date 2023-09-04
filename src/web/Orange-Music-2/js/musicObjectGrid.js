@@ -193,7 +193,7 @@ function loadObjects(libraryData) {
 
     // Function to handle long press
     function handleLongPress(event, libraryData) {
-        navigator.vibrate(50);
+        navigator.vibrate(1000);
 
         // Add your long press action here
         const clickedElement = event.target;
