@@ -77,18 +77,26 @@ function PLAYBACK_playPause_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     if (PLAYBACK_audio_tag.paused) {
         //play the audio
-        console.log("audio is paused")
         playStateChange("playing")
         PLAYBACK_audio_tag.play();
+        navigator.mediaSession.playbackState = 'playing';
 
     } else {
         //pause the audio
-        console.log("audio is playing")
         playStateChange("paused")
         PLAYBACK_audio_tag.pause();
+        navigator.mediaSession.playbackState = 'paused';
     }
-
 }
+
+navigator.mediaSession.setActionHandler('play', async function() {
+    PLAYBACK_handle_PLAYER_playButton();
+});
+
+navigator.mediaSession.setActionHandler('pause', function() {
+    PLAYBACK_handle_PLAYER_playButton()
+});
+
 
 export function PLAYBACK_handle_PLAYER_nextButton() {
     PLAYBACK_goto_next_song();
@@ -138,10 +146,14 @@ function PLAYBACK_start_playback() {
     const root = document.documentElement;
     const scrubInput = document.getElementById("LCDseekBar");
 
+    //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
-    PLAYBACK_audio_tag.play();
+    PLAYBACK_audio_tag.play()
+        .then(_ => PLAYBACK_update_external_metadata())
+        .catch(error => console.log(error));
 
+    //display the informations of text, and update queue and trigger a few actions
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
@@ -165,6 +177,35 @@ function PLAYBACK_start_playback() {
         root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
         scrubInput.value = progressPercent;
     });
+}
+
+function PLAYBACK_update_external_metadata() {
+    let track = PLAYBACK_songs_array[PLAYBACK_songs_array_index];
+
+    // the proper format for the images can be found at the bottom of https://googlechrome.github.io/samples/media-session/audio.html
+    //const formatted_img = [{ src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/4/`, sizes: '320x320', type: 'image/webp' }];
+    const formatted_img = [{ src: `https://picsum.photos/320`, sizes: '320x320', type: 'image/webp' }];
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.song_name,
+        artist: track.project_contributors,
+        album: track.project_name,
+        artwork: formatted_img
+    });
+
+    // Media is loaded, set the duration.
+    updatePositionState();
+}
+
+function updatePositionState() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    if ('setPositionState' in navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+            duration: PLAYBACK_audio_tag.duration,
+            playbackRate: PLAYBACK_audio_tag.playbackRate,
+            position: PLAYBACK_audio_tag.currentTime
+        });
+    }
 }
 
 function PLAYBACK_stop_playback() {
@@ -199,6 +240,11 @@ function PLAYBACK_on_song_end() {
     }
 }
 
+audio.addEventListener('ended', function() {
+    // Play automatically the next track when audio ends.
+    PLAYBACK_on_song_end();
+});
+
 function PLAYBACK_goto_next_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource")
@@ -213,6 +259,13 @@ function PLAYBACK_goto_next_song() {
         PLAYBACK_start_playback();
     }
 }
+
+navigator.mediaSession.setActionHandler('nexttrack', function() {
+    PLAYBACK_goto_next_song();
+});
+
+
+
 
 function PLAYBACK_goto_previous_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -229,6 +282,12 @@ function PLAYBACK_goto_previous_song() {
         PLAYBACK_start_playback();
     }
 }
+
+navigator.mediaSession.setActionHandler('previoustrack', function() {
+    PLAYBACK_goto_previous_song();
+});
+
+
 
 /* this funtion changes the value of the variable, however it will be on song end that deals with the logic for this  */
 function PLAYBACK_change_loop_state() {
