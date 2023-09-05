@@ -3,6 +3,19 @@ import menuModal from '../html/menuModal.html?raw';
 import update_project_imageModal from '../html/update_project_imageModal.html?raw';
 export function MENUdisplay(params, event, menu_type) {
 
+    //undefined    
+    if (menu_type === undefined) {
+        handle_normal_context_menu(params, event);
+    }
+
+    //defined and type == update_project_image
+    if ((menu_type !== undefined) && menu_type === "update_project_image") {
+        handle_update_project_image(params, event);
+    }
+}
+
+function handle_normal_context_menu(params, event) {
+
     const X = event.clientX;
     const Y = event.clientY;
 
@@ -20,10 +33,6 @@ export function MENUdisplay(params, event, menu_type) {
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
     MENUmodalEnvironment.innerHTML = menuModal;
 
-    if ((menu_type !== undefined) && menu_type === "update_project_image") {
-        console.log("we have a value for menu_type", menu_type);
-        MENUmodalEnvironment.innerHTML = update_project_imageModal;
-    }
     MENUmodalEnvironment.style.display = "block";
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');
@@ -35,55 +44,84 @@ export function MENUdisplay(params, event, menu_type) {
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
 
-    if (menu_type == undefined) {
 
-        for (let i = 0; i < params.length; i++) {
-            addModalItem(params[i]);
-        }
-
-        const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
-        const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
-
-        const overflowStates = showElementDetails('MENUmodalBody');
-        //console.log(overflowStates);
-
-        if (overflowStates.xOverflow == true) {
-            x = (X - MENUmodalBodyWidth) + "px";
-            MENUmodalBody.style.left = x;
-        }
-        if (overflowStates.yOverflow == true) {
-            y = (Y - MENUmodalBodyHeight) + "px";
-            MENUmodalBody.style.top = y;
-        }
-
-
-        // Attach event listeners to all the dynamically generated divs
-        const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
-        for (let i = 0; i < menuItems.length; i++) {
-            const menuItem = menuItems[i];
-            menuItem.setAttribute('data-menu-item-id', i);
-
-            menuItem.addEventListener('click', function(event) {
-                event.stopPropagation();
-
-                // Perform the action here using the parameters
-                const clickedElement = event.target;
-                const menuItemId = clickedElement.getAttribute('data-menu-item-id');
-                const functionToCall = params[menuItemId].function;
-                const optionalParams = params[menuItemId].optionalParams;
-
-                if (functionToCall == "TEST") {
-                    console.log("the button worked");
-                } else if (functionToCall != "None") {
-                    MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
-                    return;
-                } else {
-                    return;
-
-                }
-            });
-        }
+    for (let i = 0; i < params.length; i++) {
+        addModalItem(params[i]);
     }
+
+    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
+    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
+
+    const overflowStates = showElementDetails('MENUmodalBody');
+    //console.log(overflowStates);
+
+    if (overflowStates.xOverflow == true) {
+        x = (X - MENUmodalBodyWidth) + "px";
+        MENUmodalBody.style.left = x;
+    }
+    if (overflowStates.yOverflow == true) {
+        y = (Y - MENUmodalBodyHeight) + "px";
+        MENUmodalBody.style.top = y;
+    }
+
+
+    // Attach event listeners to all the dynamically generated divs
+    const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
+    for (let i = 0; i < menuItems.length; i++) {
+        const menuItem = menuItems[i];
+        menuItem.setAttribute('data-menu-item-id', i);
+
+        menuItem.addEventListener('click', function(event) {
+            event.stopPropagation();
+
+            // Perform the action here using the parameters
+            const clickedElement = event.target;
+            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
+            const functionToCall = params[menuItemId].function;
+            const optionalParams = params[menuItemId].optionalParams;
+
+            if (functionToCall == "TEST") {
+                console.log("the button worked");
+            } else if (functionToCall != "None") {
+                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
+                return;
+            } else {
+                return;
+
+            }
+        });
+    }
+}
+
+function handle_update_project_image(params, event) {
+
+    const X = event.clientX;
+    const Y = event.clientY;
+
+    const main = document.querySelector("main");
+    const navBar = document.querySelector(".topHalf-container");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+    // check if mobile
+    if (mediaQuery.matches) {
+        main.style.zIndex = "40";
+        navBar.style.zIndex = "0";
+    }
+
+
+
+    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
+
+    MENUmodalEnvironment.innerHTML = update_project_imageModal;
+    MENUmodalEnvironment.style.display = "block";
+
+    const MENUmodalBody = document.getElementById('MENUmodalBody');
+    MENUmodalEnvironment.addEventListener('click', menuHide);
+
+    let x = (X) + "px";
+    let y = (Y) + "px";
+
+    MENUmodalBody.style.left = x;
+    MENUmodalBody.style.top = y;
 }
 
 function showElementDetails(elementId) {
