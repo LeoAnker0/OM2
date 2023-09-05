@@ -5,10 +5,12 @@ export function MENUdisplay(params, event) {
     const Y = event.clientY;
 
     const main = document.querySelector("main");
+    const navBar = document.querySelector(".topHalf-container");
     const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
     // check if mobile
     if (mediaQuery.matches) {
         main.style.zIndex = "40";
+        navBar.style.zIndex = "0";
     }
 
 
@@ -150,6 +152,9 @@ export function menuHide(event) {
     const background = document.getElementById('MENUmodalEnvironment');
     const main = document.querySelector("main");
     const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+    const navBar = document.querySelector(".topHalf-container");
+
+
 
     // Check if the click target is the background itself
     if (event.target === background) {
@@ -157,6 +162,8 @@ export function menuHide(event) {
         // check if mobile
         if (mediaQuery.matches) {
             main.style.zIndex = "1";
+            navBar.style.zIndex = "10";
+
         }
 
         return;
@@ -168,10 +175,13 @@ export function menuHide_foreign() {
     const background = document.getElementById('MENUmodalEnvironment');
     const main = document.querySelector("main");
     const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+    const navBar = document.querySelector(".topHalf-container");
 
     background.style.display = 'none';
     if (mediaQuery.matches) {
         main.style.zIndex = "1";
+        navBar.style.zIndex = "10";
+
     }
 
     return;
