@@ -1,7 +1,7 @@
 #!/bin/bash
 # build the arm version of the images and push them
 
-build_version="0.0.2"
+build_version="0.0.3"
 original_directory="$PWD"
 
 #get the latest version of the

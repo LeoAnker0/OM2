@@ -296,10 +296,17 @@ function descriptionButtonInteractions() {
     const descriptionBox = document.getElementById("PROJECTviewDisplayDescription");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     const main = document.querySelector("main");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+
 
     function displayMenu() {
         background.style.display = "grid";
-        main.style.zIndex = "40";
+
+        // check if mobile
+        if (mediaQuery.matches) {
+            main.style.zIndex = "40";
+        }
+
 
     };
 
@@ -370,7 +377,7 @@ function closeMoreDescription(details) {
     clipOverflowingDescription();
 
     const main = document.querySelector("main");
-    main.style.zIndex = "0";
+    main.style.zIndex = "1";
 }
 
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
