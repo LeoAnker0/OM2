@@ -11,6 +11,7 @@ export function MENUdisplay(params, event) {
     if (mediaQuery.matches) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
+        navBar.style.display = "none";
     }
 
 
@@ -163,6 +164,8 @@ export function menuHide(event) {
         if (mediaQuery.matches) {
             main.style.zIndex = "1";
             navBar.style.zIndex = "10";
+            navBar.style.display = "block";
+
 
         }
 
@@ -181,6 +184,8 @@ export function menuHide_foreign() {
     if (mediaQuery.matches) {
         main.style.zIndex = "1";
         navBar.style.zIndex = "10";
+        navBar.style.display = "block";
+
 
     }
 
