@@ -12,6 +12,7 @@ export function MENUdisplay(params, event) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
         navBar.style.display = "none";
+        alert("is this code evening running?");
     }
 
 
