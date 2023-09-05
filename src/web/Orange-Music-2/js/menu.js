@@ -1,6 +1,8 @@
 /* loading in the menu modal, and that alone ------------ */
 import menuModal from '../html/menuModal.html?raw';
-export function MENUdisplay(params, event) {
+import update_project_imageModal from '../html/update_project_imageModal.html?raw';
+export function MENUdisplay(params, event, menu_type) {
+
     const X = event.clientX;
     const Y = event.clientY;
 
@@ -18,6 +20,10 @@ export function MENUdisplay(params, event) {
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
     MENUmodalEnvironment.innerHTML = menuModal;
 
+    if ((menu_type !== undefined) && menu_type === "update_project_image") {
+        console.log("we have a value for menu_type", menu_type);
+        MENUmodalEnvironment.innerHTML = update_project_imageModal;
+    }
     MENUmodalEnvironment.style.display = "block";
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');
@@ -29,51 +35,54 @@ export function MENUdisplay(params, event) {
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
 
-    for (let i = 0; i < params.length; i++) {
-        addModalItem(params[i]);
-    }
+    if (menu_type == undefined) {
 
-    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
-    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
+        for (let i = 0; i < params.length; i++) {
+            addModalItem(params[i]);
+        }
 
-    const overflowStates = showElementDetails('MENUmodalBody');
-    //console.log(overflowStates);
+        const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
+        const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
 
-    if (overflowStates.xOverflow == true) {
-        x = (X - MENUmodalBodyWidth) + "px";
-        MENUmodalBody.style.left = x;
-    }
-    if (overflowStates.yOverflow == true) {
-        y = (Y - MENUmodalBodyHeight) + "px";
-        MENUmodalBody.style.top = y;
-    }
+        const overflowStates = showElementDetails('MENUmodalBody');
+        //console.log(overflowStates);
+
+        if (overflowStates.xOverflow == true) {
+            x = (X - MENUmodalBodyWidth) + "px";
+            MENUmodalBody.style.left = x;
+        }
+        if (overflowStates.yOverflow == true) {
+            y = (Y - MENUmodalBodyHeight) + "px";
+            MENUmodalBody.style.top = y;
+        }
 
 
-    // Attach event listeners to all the dynamically generated divs
-    const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
-    for (let i = 0; i < menuItems.length; i++) {
-        const menuItem = menuItems[i];
-        menuItem.setAttribute('data-menu-item-id', i);
+        // Attach event listeners to all the dynamically generated divs
+        const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
+        for (let i = 0; i < menuItems.length; i++) {
+            const menuItem = menuItems[i];
+            menuItem.setAttribute('data-menu-item-id', i);
 
-        menuItem.addEventListener('click', function(event) {
-            event.stopPropagation();
+            menuItem.addEventListener('click', function(event) {
+                event.stopPropagation();
 
-            // Perform the action here using the parameters
-            const clickedElement = event.target;
-            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
-            const functionToCall = params[menuItemId].function;
-            const optionalParams = params[menuItemId].optionalParams;
+                // Perform the action here using the parameters
+                const clickedElement = event.target;
+                const menuItemId = clickedElement.getAttribute('data-menu-item-id');
+                const functionToCall = params[menuItemId].function;
+                const optionalParams = params[menuItemId].optionalParams;
 
-            if (functionToCall == "TEST") {
-                console.log("the button worked");
-            } else if (functionToCall != "None") {
-                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
-                return;
-            } else {
-                return;
+                if (functionToCall == "TEST") {
+                    console.log("the button worked");
+                } else if (functionToCall != "None") {
+                    MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
+                    return;
+                } else {
+                    return;
 
-            }
-        });
+                }
+            });
+        }
     }
 }
 

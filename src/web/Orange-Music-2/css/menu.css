@@ -132,6 +132,105 @@
 
 
 
+/* the image project updaters modal --------------------------------- */
+.MENUmodalBody_image_select {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    height: 12rem;
+    width: 12rem;
+    background-color: hsla(330, 20%, 10%, 1.0);
+    border-radius: 8px;
+    z-index: 2;
+
+    pointer-events: auto;
+
+
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(1rem, 2fr));
+    grid-auto-rows: 1fr;
+    /* This sets all rows to have equal height */
+    grid-template-areas:
+        "file-select file-select"
+        "image-preview file-submit";
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.MENUmodalBody_image_select_file_drop_area,
+.MENUmodalBody_image_preview_area,
+.MENUmodalBody_image_submit_area {
+    position: relative;
+    inset: 0.5rem;
+    height: calc(100% - (2 * 0.5rem));
+    width: calc(100% - (2 * 0.5rem));
+    border-radius: 8px;
+    background-color: hsla(330, 10%, 20%, 1.0);
+    overflow: hidden;
+
+}
+
+.MENUmodalBody_image_select_file_drop_area {
+    grid-area: file-select;
+    outline: 1px solid hsl(330, 50%, 20%);
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: white;
+}
+
+.MENUmodalBody_image_select_file_drop_area button {
+    all: unset;
+    position: relative;
+    width: 60%;
+    text-align: center;
+    left: 20%;
+
+}
+
+.MENUmodalBody_image_preview_area {
+    grid-area: image-preview;
+    outline: 1px solid hsl(330, 0%, 90%);
+}
+
+.MENUmodalBody_image_preview_area img {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.MENUmodalBody_image_submit_area {
+    grid-area: file-submit;
+    border-radius: 50px;
+    outline: 1px solid hsl(330, 50%, 70%);
+}
+
+.MENUmodalBody_image_submit_area button {
+    all: unset;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    color: white;
+
+    visibility: hidden;
+}
+
+
+.MENUmodalBody_submittable {
+    background-color: hsl(330, 90%, 60%);
+    visibility: visible;
+}
+
+
 
 
 

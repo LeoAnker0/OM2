@@ -137,6 +137,7 @@ export async function initProjectView(projectID) {
         loadFileDropArea(details);
         detect_when_image_is_no_longer_visible();
         update_mobile_header_project_title(details.project_name)
+        detect_when_image_is_interacted(details.project_id);
     }
 }
 
@@ -853,10 +854,6 @@ function detect_when_image_is_no_longer_visible() {
 
                 header.style.backgroundColor = "transparent";
                 headerTitleText.style.visibility = "hidden";
-                //header.style.position = "absolute";
-                //placeholder.style.display = "block";
-
-                // Do something when it becomes visible
             }
             /* when desktop and above image */
             else if ((entry.isIntersecting) && (!mediaQuery.matches)) {
@@ -876,17 +873,71 @@ function detect_when_image_is_no_longer_visible() {
 
                 header.style.backgroundColor = "var(--dgrey-7)";
                 headerTitleText.style.visibility = "visible";
-
-                //placeholder.style.display = "none";
-
-
-                // Do something when it becomes hidden
             }
         });
     }
+}
+
+function detect_when_image_is_interacted(project_id) {
+    console.log("project_id", project_id);
+
+    const image = document.getElementById("PROJECTviewDisplayImage");
+
+
+    /* now detect if double clicked, mouseovered, and long pressed
+     */
+
+    let touchStartTimestamp;
+    let pressTimer;
+
+    // Add touchstart event listener to record the touch start timestamp
+    image.addEventListener('touchstart', function(e) {
+        touchStartTimestamp = e.timeStamp;
+
+        // Start the timer for long press
+        pressTimer = setTimeout(function() {
+            // Long press detected
+            show_image_options(e, project_id);
+        }, 500); // Adjust the time (in milliseconds) for a long press as needed
+    });
+
+    // Add touchend event listener to detect when the touch ends
+    image.addEventListener('touchend', function(e) {
+        // Calculate the duration of the touch event
+        const touchEndTimestamp = e.timeStamp;
+        const touchDuration = touchEndTimestamp - touchStartTimestamp;
+
+        // Clear the long press timer
+        clearTimeout(pressTimer);
+    });
+
+    image.addEventListener('dblclick', function(e) {
+        show_image_options(e, project_id);
+    })
+
+    function show_image_options(e, project_id) {
+        //console.log("Long press detected on PROJECTviewDisplayImage", e, project_id);
+        displayMenuImage(e, project_id);
+    }
+}
+
+function displayMenuImage(event, project_id) {
+    event.stopPropagation();
+    const clickedItem = event.target;
+
+    const menu_type = "update_project_image";
 
 
 
+    const params = [{
+        displayText: 'Play next',
+        optionalSVG: 'icons_yourUploadedSongs',
+        function: 'None'
+
+    }]
+
+    MENUdisplay(params, event, menu_type);
+    return;
 }
 
 
