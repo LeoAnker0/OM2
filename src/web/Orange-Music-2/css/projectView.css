@@ -1,7 +1,7 @@
 :root {
     --PROJECTviewModalWidthOfSide: 2rem;
 
-    --PROJECTviewDesktopHeaderFilter: blur(5px);
+    --PROJECTviewDesktopHeaderFilter: saturate(2) blur(20px);
 }
 
 .PROJECTviewContainerEnvironment {
