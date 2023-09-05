@@ -202,12 +202,15 @@
     position: relative;
     height: 100%;
     width: 100%;
+    object-fit: cover;
+
 }
 
 .MENUmodalBody_image_submit_area {
     grid-area: file-submit;
     border-radius: 50px;
     outline: 1px solid hsl(330, 50%, 70%);
+    //outline: 1px solid red;
 }
 
 .MENUmodalBody_image_submit_area button {
@@ -222,13 +225,16 @@
     color: white;
 
     visibility: hidden;
+
+    background-color: hsl(0, 100%, 50%);
+
 }
 
-
+/*
 .MENUmodalBody_submittable {
     background-color: hsl(330, 90%, 60%);
     visibility: visible;
-}
+}*/
 
 
 

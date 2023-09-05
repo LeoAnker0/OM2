@@ -122,6 +122,70 @@ function handle_update_project_image(params, event) {
 
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
+
+    // Get references to the drop area and file input button
+    const dropArea = document.getElementById('MENUmodalBody_image_select_file_drop_area');
+    const fileInputButton = document.getElementById('MENUmodalBody_image_select_file_select_button');
+    const previewImage = document.getElementById("MENUmodalBody_image_select_preview_area");
+    const submitButton = document.getElementById("MENUmodalBody_image_select_submit_button");
+    const submitButtonContainer = document.getElementById("MENUmodalBody_image_select_submit_button_container");
+
+    // Function to handle file selection
+    function handleFileSelection(selectedFile) {
+        if (selectedFile) {
+
+            const imageURL = URL.createObjectURL(selectedFile);
+
+            // Set the src attribute of the img element to the image URL
+            previewImage.src = imageURL;
+
+            submitButton.style.visibility = "visible";
+            submitButtonContainer.style.outline = "1px solid red";
+
+            // Add an event listener to the submit button
+            submitButton.addEventListener('click', () => {
+                console.log('Selected file:', selectedFile);
+            });
+        } else {
+            console.log('No file selected.');
+        }
+    }
+
+    // Prevent the default behavior of drag-and-drop events
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    // Handle the drop event
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+
+        // Get the dropped files
+        const files = e.dataTransfer.files;
+
+        // Call the same function to handle the dropped file(s)
+        handleFileSelection(files[0]); // Only handle the first dropped file
+    });
+
+    // Open file dialog when the button is clicked
+    fileInputButton.addEventListener('click', () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+
+        fileInput.accept = 'image/*'; // This allows all image types
+
+        // Handle the file selection
+        fileInput.addEventListener('change', (e) => {
+            const selectedFile = e.target.files[0]; // Get the first selected file
+
+            // Call the same function to handle the selected file
+            handleFileSelection(selectedFile);
+        });
+
+        // Trigger the file input dialog
+        fileInput.click();
+    });
+
 }
 
 function showElementDetails(elementId) {
