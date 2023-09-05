@@ -306,8 +306,6 @@ function descriptionButtonInteractions() {
         if (mediaQuery.matches) {
             main.style.zIndex = "40";
         }
-
-
     };
 
 

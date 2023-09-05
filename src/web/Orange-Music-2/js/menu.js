@@ -4,6 +4,13 @@ export function MENUdisplay(params, event) {
     const X = event.clientX;
     const Y = event.clientY;
 
+    const main = document.querySelector("main");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+    // check if mobile
+    if (mediaQuery.matches) {
+        main.style.zIndex = "40";
+    }
+
 
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
     MENUmodalEnvironment.innerHTML = menuModal;
@@ -141,10 +148,17 @@ function addModalItem(param) {
 
 export function menuHide(event) {
     const background = document.getElementById('MENUmodalEnvironment');
+    const main = document.querySelector("main");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
 
     // Check if the click target is the background itself
     if (event.target === background) {
         background.style.display = 'none';
+        // check if mobile
+        if (mediaQuery.matches) {
+            main.style.zIndex = "1";
+        }
+
         return;
     }
     return;
@@ -152,7 +166,14 @@ export function menuHide(event) {
 
 export function menuHide_foreign() {
     const background = document.getElementById('MENUmodalEnvironment');
+    const main = document.querySelector("main");
+    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
+
     background.style.display = 'none';
+    if (mediaQuery.matches) {
+        main.style.zIndex = "1";
+    }
+
     return;
 }
 
