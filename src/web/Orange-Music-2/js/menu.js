@@ -13,7 +13,10 @@ export function MENUdisplay(params, event) {
         navBar.style.zIndex = "0";
         navBar.style.display = "none";
         alert("is this code evening running?");
+    } else {
+        alert("is this code evening running but for when it's not working?");
     }
+
 
 
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
