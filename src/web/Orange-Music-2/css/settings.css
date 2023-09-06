@@ -30,7 +30,6 @@
     .SETTINGSmodalContainer {
         position: absolute;
         width: 100%;
-        height: 42%;
         bottom: 0rem !important;
 
         border-bottom-left-radius: 0;
