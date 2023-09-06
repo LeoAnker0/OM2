@@ -93,6 +93,9 @@ function handle_normal_context_menu(params, event) {
     }
 }
 
+
+import { upload_image_files } from './file_upload.js';
+
 function handle_update_project_image(params, event) {
 
     const X = event.clientX;
@@ -131,7 +134,7 @@ function handle_update_project_image(params, event) {
     const submitButtonContainer = document.getElementById("MENUmodalBody_image_select_submit_button_container");
 
     // Function to handle file selection
-    function handleFileSelection(selectedFile) {
+    function handleFileSelection(selectedFile, params) {
         if (selectedFile) {
 
             const imageURL = URL.createObjectURL(selectedFile);
@@ -144,7 +147,7 @@ function handle_update_project_image(params, event) {
 
             // Add an event listener to the submit button
             submitButton.addEventListener('click', () => {
-                console.log('Selected file:', selectedFile);
+                upload_image_files(selectedFile, params.project_id);
             });
         } else {
             console.log('No file selected.');
@@ -164,7 +167,7 @@ function handle_update_project_image(params, event) {
         const files = e.dataTransfer.files;
 
         // Call the same function to handle the dropped file(s)
-        handleFileSelection(files[0]); // Only handle the first dropped file
+        handleFileSelection(files[0], params); // Only handle the first dropped file
     });
 
     // Open file dialog when the button is clicked
@@ -179,13 +182,12 @@ function handle_update_project_image(params, event) {
             const selectedFile = e.target.files[0]; // Get the first selected file
 
             // Call the same function to handle the selected file
-            handleFileSelection(selectedFile);
+            handleFileSelection(selectedFile, params);
         });
 
         // Trigger the file input dialog
         fileInput.click();
     });
-
 }
 
 function showElementDetails(elementId) {

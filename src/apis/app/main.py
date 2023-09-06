@@ -663,6 +663,52 @@ async def update_project_details(request: Request):
 
     return {"response": "cheese"}
 
+# for image uploads
+@app.post("/files/upload/photo/")
+async def upload_file_photo(
+    file: UploadFile = File(...),
+    jwt: str = Form(...),  # Get the JWT token from the form
+    project_id: str = Form (...)
+):
+    
+    real, uuid = await verify_jwt(jwt)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    upload_dir = "/var/www/media/temp/"
+    # Check if the directory exists, if not, create it
+    directory = os.path.dirname(upload_dir)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    unique_filename_section = generate_uuid()
+
+    unique_filename = f"{unique_filename_section}_{file.filename}"
+
+    # Save the file to the upload directory
+    file_path = os.path.join(upload_dir, unique_filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+    print(f"have saved the image file to temp directory at:\t{unique_filename}")
+
+
+    chipmunk_processor_url = "http://chipmunk_processor:8001/process_photo/compress_and_index/"
+    payload = {"filePath": file_path, "uuid": uuid, "project_id":project_id}
+    response = requests.post(chipmunk_processor_url, json=payload)
+
+    print(f"response:\t {response}")
+
+    # Continue with the file upload if the JWT is valid
+    # ... (your existing code for file upload)
+
+    message = f"File {file.filename} uploaded successfully"
+    return JSONResponse(content={"message": message})
+
 
 
 

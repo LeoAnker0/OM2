@@ -171,6 +171,105 @@ async def process_image(request: Request):
 		print(f"Error processing image: {e}")
 		raise HTTPException(status_code=500, detail="Error processing image.")
 
+@app.post("/process_photo/compress_and_index/")
+async def process_image(request: Request):
+	data = await request.json()
+
+	# get the details from fastapi
+	input_file = data["filePath"]
+	print(input_file)
+	uuid = data["uuid"]
+
+
+	# get the new url / unique name for this file
+	url = await prepare_url()
+	print(f"url: {url}")
+
+	# create a folder for url, as well as saving a copy of the original file to 0.extension
+	old_file_extension = os.path.splitext(input_file)[1]
+	file_path = f"/var/www/media/{url}/0{old_file_extension}"
+		# Check if the directory exists, if not, create it
+	directory = os.path.dirname(file_path)
+	if not os.path.exists(directory):
+		os.makedirs(directory)
+
+		# Copy the source file to the destination
+	try:
+		shutil.copy(input_file, file_path)
+		#print(f"File copied to {file_path}")
+	except IOError as e:
+		print(f"Error copying file: {e}")
+
+	#send infos to database
+	files_dict = dict(url=url, uuid=uuid)
+	await init_photo_file_in_database(files_dict)
+
+	# send the files to being processed
+	folder_size = await process_and_save_image_2(file_path, url)
+	print(f"folder size:\t{folder_size}")
+	
+	# delete temp file
+	try:
+	    os.remove(input_file)
+	    #print(f"{input_file} deleted successfully.")
+	except OSError as e:
+	    print(f"Error deleting {input_file}: {e}")
+
+	files_dict = dict(url=url, file_size=folder_size)
+	await update_file_size_and_processed_state_of_file_by_url(files_dict)
+
+
+	return {"message": "Image processing started."}
+
+async def process_and_save_image_2(image_path, url):
+	try:
+		# Open the image using PIL
+		with Image.open(image_path) as image:
+			# Crop the image to being square
+			width, height = image.size 
+			size = min(width, height)
+			left = (width - size) // 2
+			top = (height - size) // 2
+			right = (width + size) // 2
+			bottom = (height + size) // 2
+
+			cropped_image = image.crop((left, top, right, bottom))
+			image_type = "webp"
+
+
+			# Make more copies of this image in more compressed and smaller states
+			compressed_1 = cropped_image.resize((10, 10), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/1.{image_type}"
+			compressed_1.save(image_path, format=image_type)
+
+			compressed_2 = cropped_image.resize((40, 40), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/2.{image_type}"
+			compressed_2.save(image_path, format="webp", optimize=True, quality=60)
+
+			compressed_3 = cropped_image.resize((160, 160), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/3.{image_type}"
+			compressed_3.save(image_path, format="webp", optimize=True, quality=90)
+
+			compressed_4 = cropped_image.resize((320, 320), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/4.{image_type}"
+			compressed_4.save(image_path, format="webp", optimize=True, quality=90)
+
+			compressed_5 = cropped_image.resize((640, 640), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/5.{image_type}"
+			compressed_5.save(image_path, format="webp", optimize=True, quality=90)
+
+			compressed_6 = cropped_image.resize((1080, 1080), Image.LANCZOS)
+			image_path = f"/var/www/media/{url}/6.{image_type}"
+			compressed_6.save(image_path, format="webp", optimize=True, quality=96)
+
+
+			# Send details to our files database
+			folder_size = get_folder_size(f"/var/www/media/{url}/")
+			return folder_size
+
+	except Exception as e:
+		# Log the error and handle any necessary cleanup or error handling
+		print(f"Error processing image: {e}")
 
 async def process_and_save_image(image, url, image_type, image_data, owner_email):
 	try:
@@ -243,10 +342,8 @@ async def process_and_save_image(image, url, image_type, image_data, owner_email
         # Log the error and handle any necessary cleanup or error handling
 		print(f"Error processing image: {e}")
 
-
 async def init_audio_file_in_database(data: dict):
 	async with app.state.pool.acquire() as conn:
-
 		processed_state = f"started"
 		file_size = 0
 		url = data["url"]
@@ -259,7 +356,20 @@ async def init_audio_file_in_database(data: dict):
 		query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
 		await conn.execute(query, processed_state, file_size, url, (owner,), file_type, file_created_time)
 
-async def update_audio_file_in_database(data:dict):
+async def init_photo_file_in_database(data: dict):
+	async with app.state.pool.acquire() as conn:
+		processed_state = f"started"
+		file_size = 0
+		url = data["url"]
+		file_created_time = int(datetime.datetime.now().timestamp() * 1000)
+		json_owner = {"owner": data["uuid"], "permissions": "owner"}
+		owner = json.dumps(json_owner)
+		file_type = f"image"
+
+		query = "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
+		await conn.execute(query, processed_state, file_size, url, (owner,), file_type, file_created_time)
+
+async def update_file_size_and_processed_state_of_file_by_url(data:dict):
 	async with app.state.pool.acquire() as conn:
 		# get the id of the owner via their email.
 		url = data["url"]
@@ -401,7 +511,7 @@ async def process_image(request: Request):
 
 	folder_size = get_folder_size(f"/var/www/media/{url}/")
 	files_dict = dict(url=url, file_size=folder_size)
-	await update_audio_file_in_database(files_dict)
+	await update_file_size_and_processed_state_of_file_by_url(files_dict)
 
 
 	return {"message": "Image processing started."}

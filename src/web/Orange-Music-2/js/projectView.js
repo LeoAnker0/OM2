@@ -879,14 +879,7 @@ function detect_when_image_is_no_longer_visible() {
 }
 
 function detect_when_image_is_interacted(project_id) {
-    console.log("project_id", project_id);
-
     const image = document.getElementById("PROJECTviewDisplayImage");
-
-
-    /* now detect if double clicked, mouseovered, and long pressed
-     */
-
     let touchStartTimestamp;
     let pressTimer;
 
@@ -926,15 +919,9 @@ function displayMenuImage(event, project_id) {
     const clickedItem = event.target;
 
     const menu_type = "update_project_image";
-
-
-
-    const params = [{
-        displayText: 'Play next',
-        optionalSVG: 'icons_yourUploadedSongs',
-        function: 'None'
-
-    }]
+    const params = {
+        project_id: project_id
+    }
 
     MENUdisplay(params, event, menu_type);
     return;
