@@ -189,6 +189,13 @@ function handle_update_project_image(params, event) {
         fileInput.click();
     });
 }
+import { PROJECTVIEW_update } from './projectView.js';
+
+export function MENU_when_image_has_been_uploaded() {
+    console.log("the file has been uploaded")
+    menuHide_foreign();
+    PROJECTVIEW_update();
+}
 
 function showElementDetails(elementId) {
     const element = document.getElementById(elementId);

@@ -1,5 +1,7 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
+import { MENU_when_image_has_been_uploaded } from './menu.js';
+
 async function uploadFileWithProgress(file, project_id) {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
@@ -9,6 +11,7 @@ async function uploadFileWithProgress(file, project_id) {
     formData.append("project_id", project_id);
     formData.append('jwt', jwtToken);
 
+    // get the progress updates
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
@@ -19,10 +22,13 @@ async function uploadFileWithProgress(file, project_id) {
         }
     };
 
+    //the upload is finished
     xhr.onload = function() {
-        console.log("the file has been uplaoded")
+        //console.log("the file has been uplaoded")
+        MENU_when_image_has_been_uploaded();
     };
 
+    // if the upload had an error
     xhr.onerror = function() {
         console.log("there was an error with the upload")
     };

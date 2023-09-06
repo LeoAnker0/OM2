@@ -148,6 +148,28 @@ export function hideProjectView() {
     MainContent.innerHTML = "";
 }
 
+export async function PROJECTVIEW_update() {
+    /*
+    setTimeout(() => {
+        hideProjectView()
+    }, 1);
+    setTimeout(() => {
+        initProjectView()
+    }, 1);*/
+
+    updateLoadInTable();
+
+    /* update the image src of the top image. */
+    const currentPath = window.location.pathname;
+    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
+    const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
+    const details = await getProjectDetails(project_id);
+    const newImageUrl = details.picture_url;
+    const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/4/`;
+    imageTag.src = image;
+}
+
+
 import { projectViewSongsArray } from './sharedArrays.js';
 
 
@@ -569,16 +591,18 @@ async function updateLoadInTable() {
     const songsJson = JSON.parse(songsJsonString).songs_json;
     const songData = [];
 
-    for (const song of songsJson) {
-        songData.push({
-            "img": jsonDetails.picture_url,
-            "songTitle": song.song_name,
-            "artistName": jsonDetails.project_contributors,
-            "projectName": "cheese",
-            "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
-            "song_sequence": song.song_sequence,
-            "url": song.url
-        })
+    if (Array.isArray(songsJson)) {
+        for (const song of songsJson) {
+            songData.push({
+                "img": jsonDetails.picture_url,
+                "songTitle": song.song_name,
+                "artistName": jsonDetails.project_contributors,
+                "projectName": "cheese",
+                "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
+                "song_sequence": song.song_sequence,
+                "url": song.url
+            });
+        }
     }
 
 
