@@ -180,6 +180,7 @@ function PLAYBACK_start_playback() {
         root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
         root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
         scrubInput.value = progressPercent;
+        //updatePositionState();
     });
 }
 
@@ -209,9 +210,12 @@ function PLAYBACK_update_external_metadata() {
 
 function updatePositionState() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
-    if ('setPositionState' in navigator.mediaSession) {
+    const duration = PLAYBACK_audio_tag.duration
+
+
+    if (('setPositionState' in navigator.mediaSession) && (typeof duration === "number")) {
         navigator.mediaSession.setPositionState({
-            duration: PLAYBACK_audio_tag.duration,
+            duration: duration,
             playbackRate: PLAYBACK_audio_tag.playbackRate,
             position: PLAYBACK_audio_tag.currentTime
         });
