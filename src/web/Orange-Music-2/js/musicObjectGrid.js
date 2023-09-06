@@ -144,7 +144,8 @@ function loadObjects(libraryData) {
             let value = '';
 
             if (placeholder === 'MOG_image') {
-                value = imgAddress
+                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/4/`;
+                value = image
             } else if (placeholder === 'MOG_text1') {
                 value = textTop;
             } else if (placeholder === 'MOG_text2') {
