@@ -160,6 +160,24 @@
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MENUmodalBody_image_select {
+        top: auto !important;
+        bottom: 0px !important;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
+
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+
+    }
+}
+
+
+
 .MENUmodalBody_image_select_file_drop_area,
 .MENUmodalBody_image_preview_area,
 .MENUmodalBody_image_submit_area {
@@ -171,6 +189,20 @@
     background-color: hsla(330, 10%, 20%, 1.0);
     overflow: hidden;
 
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+
+    .MENUmodalBody_image_select_file_drop_area,
+    .MENUmodalBody_image_preview_area,
+    .MENUmodalBody_image_submit_area {
+        inset: 1rem;
+        height: calc(100% - (2 * 1rem));
+        width: calc(100% - (2 * 1rem));
+
+        border-radius: 1rem;
+
+    }
 }
 
 .MENUmodalBody_image_select_file_drop_area {
@@ -208,7 +240,7 @@
 
 .MENUmodalBody_image_submit_area {
     grid-area: file-submit;
-    border-radius: 50px;
+    border-radius: 50%;
     outline: 1px solid hsl(330, 50%, 70%);
     //outline: 1px solid red;
 }
@@ -228,13 +260,41 @@
 
     background-color: hsl(0, 100%, 50%);
 
+    visibility: hidden;
+
 }
 
-/*
-.MENUmodalBody_submittable {
-    background-color: hsl(330, 90%, 60%);
-    visibility: visible;
-}*/
+.MENUmodalBody_image_submit_area_loader_spinner {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    visibility: hidden;
+}
+
+.MENUmodalBody_image_submit_area_loader_spinner div {
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 96%;
+    height: 96%;
+    animation: MENU_LOADER_spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+@keyframes MENU_LOADER_spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 
 

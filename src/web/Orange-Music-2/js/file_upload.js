@@ -15,10 +15,13 @@ async function uploadFileWithProgress(file, project_id) {
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
-            console.log("percentCompleted:\t", percentCompleted)
+            //console.log("percentCompleted:\t", percentCompleted)
+
+            /*
             if (percentCompleted === 100) {
                 console.log("the file upload is finished");
             }
+            */
         }
     };
 

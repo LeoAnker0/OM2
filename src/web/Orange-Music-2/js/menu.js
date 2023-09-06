@@ -138,6 +138,7 @@ function handle_update_project_image(params, event) {
         if (selectedFile) {
 
             const imageURL = URL.createObjectURL(selectedFile);
+            const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
 
             // Set the src attribute of the img element to the image URL
             previewImage.src = imageURL;
@@ -148,6 +149,8 @@ function handle_update_project_image(params, event) {
             // Add an event listener to the submit button
             submitButton.addEventListener('click', () => {
                 upload_image_files(selectedFile, params.project_id);
+                //turn on animation
+                spinner.style.visibility = "visible";
             });
         } else {
             console.log('No file selected.');
@@ -192,7 +195,8 @@ function handle_update_project_image(params, event) {
 import { PROJECTVIEW_update } from './projectView.js';
 
 export function MENU_when_image_has_been_uploaded() {
-    console.log("the file has been uploaded")
+    const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
+    spinner.style.visibility = "hidden";
     menuHide_foreign();
     PROJECTVIEW_update();
 }
