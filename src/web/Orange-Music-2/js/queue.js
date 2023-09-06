@@ -1,6 +1,8 @@
 let queueState = "hidden";
 
 import { loadQUEUEbody } from './exportHTMLchunks.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
 
 export function initialiseQueue() {
     loadQUEUEbody();
@@ -145,20 +147,22 @@ function handleDrop(event) {
     const dragSourceId = event.dataTransfer.getData("text/plain");
     const dropTarget = event.target;
 
+    console.log("there was a drop event")
+
     // Find the corresponding song objects
-    const dragSourceSong = songs.find(song => song.id === parseInt(dragSourceId));
-    const dropTargetSong = songs.find(song => song.id === parseInt(dropTarget.dataset.songId));
+    const dragSourceSong = PLAYBACK_songs_array.find(song => song.id === parseInt(dragSourceId));
+    const dropTargetSong = PLAYBACK_songs_array.find(song => song.id === parseInt(dropTarget.dataset.songId));
 
     // Get the indexes of the songs in the array
-    const dragSourceIndex = songs.indexOf(dragSourceSong);
-    const dropTargetIndex = songs.indexOf(dropTargetSong);
+    const dragSourceIndex = PLAYBACK_songs_array.indexOf(dragSourceSong);
+    const dropTargetIndex = PLAYBACK_songs_array.indexOf(dropTargetSong);
 
     if (dragSourceIndex !== -1 && dropTargetIndex !== -1) {
         // Remove the drag source song from the array
-        songs.splice(dragSourceIndex, 1);
+        PLAYBACK_songs_array.splice(dragSourceIndex, 1);
 
         // Insert the drag source song at the drop target index
-        songs.splice(dropTargetIndex, 0, dragSourceSong);
+        PLAYBACK_songs_array.splice(dropTargetIndex, 0, dragSourceSong);
 
         // Re-render the queue to reflect the new order
         updateQueue();
@@ -246,7 +250,9 @@ function hydrateItem(song) {
         let value = '';
 
         if (placeholder === 'QUEUE_item_image') {
-            value = imgSrc;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3/`;
+
+            value = image;
         } else if (placeholder === 'QUEUE_item_title') {
             value = songTitle;
         } else if (placeholder === 'QUEUE_item_artist') {
