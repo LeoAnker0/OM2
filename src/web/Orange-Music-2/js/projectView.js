@@ -188,7 +188,7 @@ function loadContainer(details) {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-    const listOfThings = ['PROJECTviewMOREtitle', 'PROJECTviewMOREartist', 'PROJECTviewMOREyear'];
+    const listOfThings = ['PROJECTviewMOREtitle', 'PROJECTviewMOREartist', 'PROJECTviewMOREyear', 'PROJECTviewDisplayImage'];
 
     for (let i = 0; i < listOfThings.length; i++) {
         const placeholder = listOfThings[i].toString();
@@ -205,6 +205,9 @@ function loadContainer(details) {
             value = "checkedIndicator";
         } else if (placeholder === 'MOGI_placeholder_itemID') {
             value = "temporaryIidentifier";
+        } else if (placeholder === "PROJECTviewDisplayImage") {
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.picture_url}/4/`;
+            value = image
         }
 
         replacedContent = replacedContent.replace(regex, value);
@@ -668,7 +671,8 @@ function loadInProjectViewRowItems(songData) {
         let value = '';
 
         if (placeholder === 'PROJECTviewRow_img') {
-            value = songData.img
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/2/`;
+            value = image;
         } else if (placeholder === 'PROJECTviewRow_songTitle') {
             value = songData.songTitle;
         } else if (placeholder === 'PROJECTviewRow_artistName') {

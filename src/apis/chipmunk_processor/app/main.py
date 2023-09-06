@@ -218,8 +218,8 @@ async def process_image(request: Request):
 	files_dict = dict(url=url, file_size=folder_size)
 	await update_file_size_and_processed_state_of_file_by_url(files_dict)
 
+	return {"url": url}
 
-	return {"message": "Image processing started."}
 
 async def process_and_save_image_2(image_path, url):
 	try:
