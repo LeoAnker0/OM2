@@ -3,7 +3,6 @@ let queueState = "hidden";
 import { loadQUEUEbody } from './exportHTMLchunks.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
-
 export function initialiseQueue() {
     loadQUEUEbody();
     const queueButton = document.getElementById("queueButton");
@@ -22,17 +21,11 @@ function queueToggle() {
     if (queueState === "hidden") {
         queueState = "visible";
         queueStateChange(queueState);
-
-        /* call the function that will slide in the queue (make visible) */
-
         return
     }
     if (queueState === "visible") {
         queueState = "hidden";
         queueStateChange(queueState);
-
-        /* call the function that will slide out the queue (make hidden) */
-
         return
     }
     return
@@ -120,8 +113,6 @@ export function updateQueue() {
 
         // Add drop event listener for handling the drop
         div.addEventListener("drop", handleDrop);
-
-
         queueContainer.appendChild(div);
     }
 }
@@ -146,9 +137,6 @@ function handleDrop(event) {
     event.preventDefault();
     const dragSourceId = event.dataTransfer.getData("text/plain");
     const dropTarget = event.target;
-
-    console.log("there was a drop event")
-
     // Find the corresponding song objects
     const dragSourceSong = PLAYBACK_songs_array.find(song => song.id === parseInt(dragSourceId));
     const dropTargetSong = PLAYBACK_songs_array.find(song => song.id === parseInt(dropTarget.dataset.songId));
@@ -158,16 +146,10 @@ function handleDrop(event) {
     const dropTargetIndex = PLAYBACK_songs_array.indexOf(dropTargetSong);
 
     if (dragSourceIndex !== -1 && dropTargetIndex !== -1) {
-        // Remove the drag source song from the array
         PLAYBACK_songs_array.splice(dragSourceIndex, 1);
 
-        // Insert the drag source song at the drop target index
         PLAYBACK_songs_array.splice(dropTargetIndex, 0, dragSourceSong);
-
-        // Re-render the queue to reflect the new order
         updateQueue();
-
-        //console.log(songs);
     }
 }
 
@@ -176,9 +158,10 @@ function handleQueueItemRemove(event) {
     const clickedItem = event.target;
     const songID = parseInt(clickedItem.dataset.songID);
 
-    songs = songs.filter(item => item.id !== songID);
-
-    console.log('Clicked remove indicator for song ID:', songID);
+    const indexToRemove = PLAYBACK_songs_array.findIndex(item => item.id === songID);
+    if (indexToRemove !== -1) {
+        PLAYBACK_songs_array.splice(indexToRemove, 1);
+    }
     updateQueue();
 }
 

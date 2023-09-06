@@ -180,7 +180,7 @@ function PLAYBACK_start_playback() {
         root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
         root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
         scrubInput.value = progressPercent;
-        //updatePositionState();
+        updatePositionState();
     });
 }
 
