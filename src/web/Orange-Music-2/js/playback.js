@@ -145,6 +145,8 @@ function PLAYBACK_start_playback() {
     const LCDbottomText = document.getElementById("LCDbottomText");
     const root = document.documentElement;
     const scrubInput = document.getElementById("LCDseekBar");
+    const LCDimage = document.getElementById("LCDimage");
+    const LCDimageMobile = document.getElementById("LCDimageMobile");
 
     //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
@@ -160,6 +162,8 @@ function PLAYBACK_start_playback() {
     resizeTitleText();
     updateQueue();
     playStateChange("playing");
+    LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
+    LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
 
     /* updates the top informations, which should really be it's own function? */
     PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
