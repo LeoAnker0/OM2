@@ -183,8 +183,14 @@ function PLAYBACK_update_external_metadata() {
     let track = PLAYBACK_songs_array[PLAYBACK_songs_array_index];
 
     // the proper format for the images can be found at the bottom of https://googlechrome.github.io/samples/media-session/audio.html
-    //const formatted_img = [{ src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/4/`, sizes: '320x320', type: 'image/webp' }];
-    const formatted_img = [{ src: `https://picsum.photos/320`, sizes: '320x320', type: 'image/webp' }];
+    const formatted_img = [
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/1/`, sizes: '10x10', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/2/`, sizes: '40x40', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/3/`, sizes: '160x160', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/4/`, sizes: '320x320', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/5/`, sizes: '640x640', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/6/`, sizes: '1080x1080', type: 'image/webp' },
+    ];
 
     navigator.mediaSession.metadata = new MediaMetadata({
         title: track.song_name,
