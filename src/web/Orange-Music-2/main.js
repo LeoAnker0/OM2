@@ -46,10 +46,11 @@ import { initMusicObjectsGrid, hideMusicObjectsGrid } from './js/musicObjectGrid
 /* project view */
 import { initProjectView, hideProjectView, createNewProjectID } from './js/projectView.js';
 
-import { PLAYBACK_init } from './js/playback.js';
+import { PLAYBACK_init, PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_GET_progress, PLAYBACK_handle_input_sync_state } from './js/playback.js';
 
+import { updateUserDetails, getUserDetail } from './js/update_details.js';
 
-export function main() {
+export async function main() {
 
     PLAYBACK_init();
     loadMAINtopleft();
@@ -66,11 +67,69 @@ export function main() {
         const currentPath = window.location.pathname;
         handleRoute(currentPath);
     }
-
     window.addEventListener('popstate', handleUrlChange);
 
-    handleUrlChange();
+    /*
+        get last_state
+
+        if null :
+            handleUrlChange()
+
+        else:
+            do whatever to handle the new change
+
+    */
+
+    const lastStateRecord = await getUserDetail("last_state");
+    if (lastStateRecord === null) {
+        handleUrlChange();
+
+    } else {
+        const lastState = JSON.parse(lastStateRecord[0].last_state);
+        const current_path = lastState.current_path;
+
+        handleRoute(current_path)
+        PLAYBACK_handle_input_sync_state(lastState)
+
+        //console.log(lastState);
+    }
+
+
     //window.location.href = '/';
+
+    /* if we do it on end, and it's kinda weird, so imma just do it every 20 seconds instead...
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = 'Please wait while we complete some tasks...';
+
+        const current_path = window.location.pathname;
+        const current_queue = PLAYBACK_songs_array;
+        const current_index = PLAYBACK_songs_array_index;
+
+        const playback_states = PLAYBACK_GET_progress();
+        playback_states.current_path = current_path;
+        playback_states.current_queue = current_queue;
+        playback_states.current_index = current_index;
+
+        console.log(playback_states)
+        updateUserDetails("last_state", playback_states);
+    });*/
+
+    function update_user_sync() {
+        const current_path = window.location.pathname;
+        const current_queue = PLAYBACK_songs_array;
+        const current_index = PLAYBACK_songs_array_index;
+
+        const playback_states = PLAYBACK_GET_progress();
+        playback_states.current_path = current_path;
+        playback_states.current_queue = current_queue;
+        playback_states.current_index = current_index;
+
+        //console.log(playback_states)
+        updateUserDetails("last_state", playback_states);
+    }
+
+    const intervalId = setInterval(update_user_sync, 20000);
 }
 
 

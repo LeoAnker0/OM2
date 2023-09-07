@@ -5,7 +5,7 @@ that generates should be here
 
 import { handleRoute } from '../main.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-
+import { updateProjectDetails } from './update_details.js';
 
 export async function createNewProjectID() {
     try {
@@ -68,41 +68,7 @@ async function getProjectDetails(project_id) {
     }
 }
 
-async function updateProjectDetails(project_id, column, newInfo) {
-    try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
 
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id,
-            "column_to_be_updated": column,
-            "new_data": newInfo
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData)
-        });
-
-        const data = await response.json();
-        const update = data["updated"]
-        if (update === "success") {
-            return
-        } else {
-            console.log("there was an error")
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
 
 export async function initProjectView(projectID) {
     /* detect if the route is /projects/ or /projects/id, if the first one 

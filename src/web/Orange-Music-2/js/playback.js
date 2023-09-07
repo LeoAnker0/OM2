@@ -66,6 +66,26 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback(
     PLAYBACK_start_playback()
 }
 
+export function PLAYBACK_handle_input_sync_state(lastState) {
+
+    //fill PLAYBACK_songs_array with new data
+    const current_queue = lastState.current_queue;
+    const current_index = lastState.current_index;
+    const loop_state = lastState.PLAYBACK_loop_state;
+    const shuffle_state = lastState.PLAYBACK_shuffle_state;
+    const progress = lastState.progress;
+
+    //update the queue
+    PLAYBACK_songs_array = current_queue;
+    PLAYBACK_songs_array_index = current_index;
+    //update the loop and shuffle states
+    PLAYBACK_change_loop_state(loop_state)
+
+
+    //call function to start playback
+    PLAYBACK_start_without_playback_and_update_progress(progress)
+}
+
 /* buttons -------------------------------------------------------- */
 
 export function PLAYBACK_handle_PLAYER_playButton() {
@@ -78,7 +98,9 @@ function PLAYBACK_playPause_song() {
     if (PLAYBACK_audio_tag.paused) {
         //play the audio
         playStateChange("playing")
-        PLAYBACK_audio_tag.play();
+        PLAYBACK_audio_tag.play()
+            .then(_ => PLAYBACK_update_external_metadata())
+            .catch(error => console.log(error));
         navigator.mediaSession.playbackState = 'playing';
 
     } else {
@@ -125,7 +147,19 @@ export function PLAYBACK_handle_PLAYER_loopButton() {
 }
 
 
+export function PLAYBACK_GET_progress() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const progress = PLAYBACK_audio_tag.currentTime;
 
+    const response = {
+        PLAYBACK_loop_state: PLAYBACK_loop_state,
+        PLAYBACK_shuffle_state: PLAYBACK_shuffle_state,
+        progress: progress,
+    }
+
+    //console.log(response)
+    return response;
+}
 
 
 
@@ -184,6 +218,53 @@ function PLAYBACK_start_playback() {
     });
 }
 
+function PLAYBACK_start_without_playback_and_update_progress(progress) {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+    const LCDtitleText = document.getElementById("LCDtitleText");
+    const LCDtitleTextMobile = document.getElementById("LCDtitleTextMobile");
+    const LCDbottomText = document.getElementById("LCDbottomText");
+    const root = document.documentElement;
+    const scrubInput = document.getElementById("LCDseekBar");
+    const LCDimage = document.getElementById("LCDimage");
+    const LCDimageMobile = document.getElementById("LCDimageMobile");
+
+    //set the source of the audio tag and start playback
+    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+    PLAYBACK_audio_tag.load();
+    PLAYBACK_audio_tag.currentTime = progress;
+
+    //display the informations of text, and update queue and trigger a few actions
+    LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+    resizeTitleText();
+    updateQueue();
+    playStateChange("paused");
+    LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
+    LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
+
+
+
+    /* updates the top informations, which should really be it's own function? */
+    PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
+        const endOfAudio = PLAYBACK_audio_tag.duration;
+        const currentTime = PLAYBACK_audio_tag.currentTime;
+        const timeRight = Math.floor(endOfAudio) - currentTime;
+        const timeRightFormatted = `"-${formatTime(timeRight)}"`;
+        const timeLeft = formatTime(Math.floor(currentTime));
+        const timeLeftFormatted = `"${timeLeft}"`
+        const progressPercent = (currentTime / endOfAudio) * 100;
+        const progressPercentFormatted = `${progressPercent}%`
+
+        updateTimeIndicatorsGlobal(timeLeftFormatted, timeRightFormatted)
+        root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
+        root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
+        scrubInput.value = progressPercent;
+        updatePositionState();
+    });
+}
+
 function PLAYBACK_update_external_metadata() {
     let track = PLAYBACK_songs_array[PLAYBACK_songs_array_index];
 
@@ -212,14 +293,15 @@ function updatePositionState() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const duration = PLAYBACK_audio_tag.duration
 
-
-    if (('setPositionState' in navigator.mediaSession) && (typeof duration === "number")) {
-        navigator.mediaSession.setPositionState({
-            duration: duration,
-            playbackRate: PLAYBACK_audio_tag.playbackRate,
-            position: PLAYBACK_audio_tag.currentTime
-        });
-    }
+    try {
+        if (('setPositionState' in navigator.mediaSession) && (typeof duration === "number")) {
+            navigator.mediaSession.setPositionState({
+                duration: duration,
+                playbackRate: PLAYBACK_audio_tag.playbackRate,
+                position: PLAYBACK_audio_tag.currentTime
+            });
+        }
+    } catch {}
 }
 
 function PLAYBACK_stop_playback() {

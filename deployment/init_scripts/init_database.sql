@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS public.users (
     verified boolean,
     last_time_media_accessed bigint,
     last_logged_in bigint,
-    date_joined bigint
+    date_joined bigint,
+    last_state text
 );
 
 -- Make sure to reset the search path

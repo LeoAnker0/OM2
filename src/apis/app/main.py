@@ -580,6 +580,16 @@ async def update_project_detail_in_database(uuid, project_id, column_to_update, 
         project_details = await conn.execute(query, new_data, uuid, project_id)
         return project_details
 
+async def update_user_detail_in_database(uuid, column_to_update, new_data):
+    async with app.state.pool.acquire() as conn:
+        query = f"""
+        UPDATE users
+        SET {column_to_update} = $1
+        WHERE uuid = $2
+        """
+        user_details = await conn.execute(query, new_data, uuid)
+        return user_details
+
 @app.post("/projects/update_details/")
 async def update_project_details(request: Request):
     data = await request.json()
@@ -605,6 +615,54 @@ async def update_project_details(request: Request):
 
     return {"updated" : "success"}
 
+@app.post("/users/update_details/")
+async def update_user_details(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    column_to_update = data["column_to_be_updated"]
+    new_data = data["new_data"]
+
+    real, uuid = await verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    valid_columns_to_update = ["last_state", "username"]
+    if column_to_update not in valid_columns_to_update:
+        print("the column is not open to being changed")
+        return {"authenticated": False}
+
+    await update_user_detail_in_database(uuid, column_to_update, new_data)
+
+    return {"updated" : "success"}
+
+@app.post("/users/get_details/")
+async def update_get_details(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    column_to_retrieve = data["wanted_column"]
+
+    real, uuid = await verify_jwt(access_token)
+
+    if real == False:
+        print("the jwt is not valid")
+        return {"authenticated": False}
+
+    uuid = uuid["uuid"]
+
+    valid_columns_to_retrieve = ["last_state", "username"]
+    if column_to_retrieve not in valid_columns_to_retrieve:
+        print("the column is not open to being retrieved")
+        return {"authenticated": False}
+
+    response = await get_user_detail_in_database(uuid, column_to_retrieve)
+    print(f"response to get:\t{response}")
+
+    return {"response" : response}
+
 async def delete_project_by_uuid_and_project_id(uuid, project_id):
     async with app.state.pool.acquire() as conn:
         query = "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2"
@@ -615,6 +673,12 @@ async def get_users_projects_for_file_deletion(uuid, project_id):
         query = "SELECT project_json, picture_url FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2;"
         project = await conn.fetch(query, uuid, project_id)
         return project
+
+async def get_user_detail_in_database(uuid, column):
+    async with app.state.pool.acquire() as conn:
+        query = f"SELECT {column} FROM users WHERE uuid = $1;"
+        user = await conn.fetch(query, uuid)
+        return user
 
 async def delete_files_row(url):
     async with app.state.pool.acquire() as conn:
