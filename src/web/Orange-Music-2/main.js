@@ -85,6 +85,7 @@ function handleProjectView(projectID) {
     initProjectView(projectID);
 }
 
+
 const routeHandlers = {
     '/': handleMusicObjectsGrid,
     '/new-project/': createNewProjectID,

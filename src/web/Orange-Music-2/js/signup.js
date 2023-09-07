@@ -1,10 +1,30 @@
-import './signupPage.css'
-import form from './html/signupForm.html?raw';
+import form from '../html/signupForm.html?raw';
 
-document.querySelector('#app').innerHTML = form
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
-const imageInput = document.getElementById("profilePicture");
-imageInput.addEventListener("change", previewImage);
+
+export function init_signup_form() {
+    setTimeout(() => {
+        let IDofElement = "MAINcontentPages";
+        let replacedContent = form;
+
+        /*
+        for (const [placeholder, value] of Object.entries(svgImports)) {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            replacedContent = replacedContent.replace(regex, value);
+        }
+        */
+        document.getElementById(IDofElement).innerHTML += replacedContent;
+
+        //const imageInput = document.getElementById("profilePicture");
+        //imageInput.addEventListener("change", previewImage);
+
+        const signupForm = document.getElementById("SETTINGSsignupForm");
+        signupForm.addEventListener("submit", signup);
+
+    }, 1);
+}
+
 
 function previewImage(event) {
     const input = event.target;
@@ -18,7 +38,6 @@ function previewImage(event) {
             alert(errorMessage);
             const imageInput = document.getElementById("profilePicture");
             imageInput.value = ""; // Clear the file selection by setting the value to an empty string
-
             return;
         }
 
@@ -33,14 +52,15 @@ function previewImage(event) {
     }
 }
 
-const signupForm = document.getElementById("SETTINGSloginForm");
-signupForm.addEventListener("submit", signup);
+
 
 async function signup(event) {
+    console.log("the signup event was caught")
+
     event.preventDefault();
     startSpinner();
 
-    const form = document.getElementById("SETTINGSloginForm");
+    const form = document.getElementById("SETTINGSsignupForm");
     const formData = {};
 
     // Function to convert the selected image to Base64
@@ -68,7 +88,7 @@ async function signup(event) {
             }
         }
 
-        const response = await fetch("https://om2apis.la0.uk/signup/", {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/signup/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -108,7 +128,7 @@ async function signup(event) {
             }
             // Send the rest of the form data
             const secondResponse = await fetch(
-                "https://om2apis.la0.uk/signup/complete/", {
+                `${MAIN_CONST_EXPORT_apiPath}/signup/complete/`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -133,8 +153,9 @@ async function signup(event) {
                 loginSuccessAnimation()
 
                 setTimeout(function() {
-                    redirectToPage("http://localhost:5175");
-                }, 3000);
+                    console.log("signup very successful move to normal pages and stuff")
+                    window.location.href = '/';
+                }, 2000);
 
             }
         }
@@ -193,8 +214,4 @@ function loginErrorAnimation() {
     });
 
     return;
-}
-
-function redirectToPage(url) {
-    window.location.href = url;
 }

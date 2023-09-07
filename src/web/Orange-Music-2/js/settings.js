@@ -2,6 +2,8 @@ let loginAttempted = false; // New flag to track login attempts
 let signedIn = false;
 let loginFormLoaded = false; // Flag to track if the login form has been loaded and event listener attached
 
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { init_signup_form } from './signup.js';
 
 
 export async function initSettings() {
@@ -20,6 +22,39 @@ import { main } from '../main.js';
 
 function loadLoginForm() {
     loadInContainer(); // Load the form in the container
+    let signups_allowed;
+    const SETTINGSmodalSignupButton = document.getElementById("SETTINGSmodalSignupButton");
+
+    //check if signups are allowed
+    fetch(`${MAIN_CONST_EXPORT_apiPath}/status/are_signups_allowed/`) // Replace with your API endpoint
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // This assumes the response is JSON; use .text() for plain text responses
+        })
+        .then(data => {
+            // Handle the data returned from the server
+            signups_allowed = data.signups_allowed;
+            if (signups_allowed) {
+                SETTINGSmodalSignupButton.style.display = "inline-block";
+
+                SETTINGSmodalSignupButton.addEventListener("click", () => {
+                    console.log("signup button was pressed")
+                    hideContainer();
+
+                    // get the signup modal in and stuff
+                    init_signup_form();
+                    return
+                })
+            }
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch
+            console.error('Fetch error:', error);
+        });
+
+
 
     const loginForm = document.getElementById("SETTINGSloginForm"); // Updated ID to match the form in settingsModal.html
     const emailInput = document.getElementById("email"); // Updated ID to match the email input in settingsModal.html
@@ -65,7 +100,6 @@ function loadLoginForm() {
     });
 }
 
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
 
 
