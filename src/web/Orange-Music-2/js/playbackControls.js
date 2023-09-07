@@ -124,6 +124,15 @@ export function playStateChange(state) {
 
 /* volume controls, i figure they can be lumped in here as well? */
 export function setEventListenersForVolume() {
+    const playback_volume = localStorage.getItem("PLAYBACK_VOLUME");
+    if (playback_volume !== null) {
+        update_volumeBar(playback_volume);
+
+        const target = document.getElementById('volumeRangeSlider');
+        target.value = playback_volume;
+    }
+
+
     const rangeInputs = document.querySelectorAll('input[type="range"]#volumeRangeSlider')
 
     rangeInputs.forEach(input => {
@@ -132,6 +141,16 @@ export function setEventListenersForVolume() {
 }
 
 function handleInputChange(e) {
+    let target = e.target
+    if (e.target.type !== 'range') {
+        target = document.getElementById('volumeRangeSlider');
+    };
+
+    const volume = target.value;
+    update_volumeBar(volume);
+}
+
+function update_volumeBar(volume) {
     function between(x, min, max) {
         return x >= min && x <= max;
     }
@@ -150,11 +169,11 @@ function handleInputChange(e) {
         return
     }
 
-    let target = e.target
-    if (e.target.type !== 'range') {
-        target = document.getElementById('volumeRangeSlider')
-    }
-    const volume = target.value
+    // set the localstorage item
+
+
+
+    localStorage.setItem('PLAYBACK_VOLUME', volume)
 
     const audio = document.getElementById("audio")
     audio.volume = volume / 100
