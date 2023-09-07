@@ -149,14 +149,6 @@ export function hideProjectView() {
 }
 
 export async function PROJECTVIEW_update() {
-    /*
-    setTimeout(() => {
-        hideProjectView()
-    }, 1);
-    setTimeout(() => {
-        initProjectView()
-    }, 1);*/
-
     updateLoadInTable();
 
     /* update the image src of the top image. */
@@ -165,7 +157,7 @@ export async function PROJECTVIEW_update() {
     const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
     const details = await getProjectDetails(project_id);
     const newImageUrl = details.picture_url;
-    const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/4/`;
+    const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/5/`;
     imageTag.src = image;
 }
 
@@ -228,7 +220,7 @@ function loadContainer(details) {
         } else if (placeholder === 'MOGI_placeholder_itemID') {
             value = "temporaryIidentifier";
         } else if (placeholder === "PROJECTviewDisplayImage") {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.picture_url}/4/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.picture_url}/5/`;
             value = image
         }
 
