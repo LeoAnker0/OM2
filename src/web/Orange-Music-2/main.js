@@ -81,13 +81,12 @@ export async function main() {
     */
 
     const lastStateRecord = await getUserDetail("last_state");
-    if (lastStateRecord != null) {
-        const lastState = JSON.parse(lastStateRecord[0].last_state);
+    const lastState = JSON.parse(lastStateRecord[0].last_state);
+    if (lastState != null) {
         const current_path = lastState.current_path;
 
         handleRoute(current_path)
         PLAYBACK_handle_input_sync_state(lastState)
-        //console.log(lastState);
 
     } else {
         handleUrlChange();
