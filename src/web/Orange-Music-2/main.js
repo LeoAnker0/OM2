@@ -84,9 +84,10 @@ export async function main() {
     const lastState = JSON.parse(lastStateRecord[0].last_state);
     if (lastState != null) {
         const current_path = lastState.current_path;
+        //console.log(current_path)
 
-        handleRoute(current_path)
-        PLAYBACK_handle_input_sync_state(lastState)
+        handleRoute(current_path);
+        PLAYBACK_handle_input_sync_state(lastState);
 
     } else {
         handleUrlChange();

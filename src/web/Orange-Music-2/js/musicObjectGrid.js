@@ -9,7 +9,6 @@ export async function initMusicObjectsGrid() {
         loadInContainer();
 
         const libraryData = await getLibraryData(); // Wait for getLibraryData to complete
-
         loadObjects(libraryData);
 
         return;

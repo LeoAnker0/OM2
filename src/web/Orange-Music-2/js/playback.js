@@ -83,7 +83,10 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
 
 
     //call function to start playback
-    PLAYBACK_start_without_playback_and_update_progress(progress)
+    if (PLAYBACK_songs_array.length > 0) {
+        PLAYBACK_start_without_playback_and_update_progress(progress)
+    }
+
 }
 
 /* buttons -------------------------------------------------------- */
