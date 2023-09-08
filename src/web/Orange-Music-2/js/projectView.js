@@ -274,20 +274,22 @@ function clipOverflowingDescription() {
     container.innerHTML = newTextContent;
 }
 
+import { is_mobile } from './om2.js';
+
+
 /* more description button */
 function descriptionButtonInteractions() {
     const moreButton = document.getElementById('PROJECTviewDescriptionMoreButton');
     const descriptionBox = document.getElementById("PROJECTviewDisplayDescription");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     const main = document.querySelector("main");
-    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
 
 
     function displayMenu() {
         background.style.display = "grid";
 
         // check if mobile
-        if (mediaQuery.matches) {
+        if (is_mobile()) {
             main.style.zIndex = "40";
         }
     };
@@ -825,36 +827,35 @@ function detect_when_image_is_no_longer_visible() {
     const targetElement = document.querySelector('.PROJECTviewDisplayImage');
     const header = document.getElementById("PROJECTviewMobileStickyHeader");
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
-    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
 
     observer.observe(targetElement);
 
     function callback(entries, observer) {
         entries.forEach(entry => {
-            if (mediaQuery.matches) {
+            if (is_mobile()) {
                 console.log("media query matches")
             }
             /* when mobile and above image */
-            if ((entry.isIntersecting) && (mediaQuery.matches)) {
+            if ((entry.isIntersecting) && (is_mobile())) {
                 header.style.backdropFilter = "none";
 
                 header.style.backgroundColor = "transparent";
                 headerTitleText.style.visibility = "hidden";
             }
             /* when desktop and above image */
-            else if ((entry.isIntersecting) && (!mediaQuery.matches)) {
+            else if ((entry.isIntersecting) && (!is_mobile())) {
                 header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
                 headerTitleText.style.visibility = "hidden";
             }
 
             /* when desktop and below image */
-            else if ((!entry.isIntersecting) && (!mediaQuery.matches)) {
+            else if ((!entry.isIntersecting) && (!is_mobile())) {
                 header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
                 headerTitleText.style.visibility = "hidden";
             }
 
             /* when mobile and below image */
-            else if ((!entry.isIntersecting) && (mediaQuery.matches)) {
+            else if ((!entry.isIntersecting) && (is_mobile())) {
                 header.style.backdropFilter = "none";
 
                 header.style.backgroundColor = "var(--dgrey-7)";

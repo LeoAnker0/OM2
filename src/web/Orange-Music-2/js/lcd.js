@@ -1,3 +1,5 @@
+import { is_mobile } from './om2.js';
+
 export function initialiseLCD() {
     loadLCDbody();
     resizeTitleText();
@@ -10,6 +12,11 @@ export function initialiseLCD() {
     });
 
     setEventListenersForPlaybackSeek();
+
+    //when mobile, then add event listener to LCDbody
+    if (is_mobile()) {
+        console.log("we are on mobile mode")
+    }
 
 }
 
