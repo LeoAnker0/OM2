@@ -13,6 +13,7 @@ const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
 let PLAYBACK_loop_state = "off";
 let PLAYBACK_shuffle_state = "off";
+let PLAYBACK_playing_state = "paused";
 
 
 function formatTime(val) {
@@ -67,6 +68,7 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback(
         })
     }
     //call function to start playback
+    PLAYBACK_playing_state = "playing";
     PLAYBACK_start_playback()
 }
 
@@ -105,6 +107,7 @@ function PLAYBACK_playPause_song() {
     if (PLAYBACK_audio_tag.paused) {
         //play the audio
         playStateChange("playing")
+        PLAYBACK_playing_state = "playing";
         PLAYBACK_audio_tag.play()
             .then(_ => PLAYBACK_update_external_metadata())
             .catch(error => console.log(error));
@@ -112,6 +115,8 @@ function PLAYBACK_playPause_song() {
 
     } else {
         //pause the audio
+        PLAYBACK_playing_state = "paused";
+
         playStateChange("paused")
         PLAYBACK_audio_tag.pause();
         navigator.mediaSession.playbackState = 'paused';
@@ -192,9 +197,13 @@ function PLAYBACK_start_playback() {
     //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
-    PLAYBACK_audio_tag.play()
-        .then(_ => PLAYBACK_update_external_metadata())
-        .catch(error => console.log(error));
+    if (PLAYBACK_playing_state === "playing") {
+        PLAYBACK_audio_tag.play()
+            .then(_ => PLAYBACK_update_external_metadata())
+            .catch(error => console.log(error));
+
+    }
+
 
     //display the informations of text, and update queue and trigger a few actions
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;

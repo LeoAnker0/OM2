@@ -78,8 +78,14 @@
 
 .LCD_mobile_body_song_title {
     grid-area: LCD_mobile_body_song_title;
+    position: relative;
     color: white;
     font-weight: 600;
+
+    width: calc(100% - 2.5rem);
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .LCD_mobile_body_artist_title {
@@ -87,6 +93,12 @@
     color: white;
     opacity: 0.8;
     font-weight: 400;
+    width: calc(100% - 2.5rem);
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+
 }
 
 .LCD_mobile_body_progress_bar {
@@ -126,6 +138,7 @@
     background-color: transparent;
 
     backdrop-filter: var(--LCDMB-backdrop-filter);
+    webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
     border-radius: 1rem;
 }
 
@@ -160,6 +173,8 @@
     background-color: transparent;
 
     backdrop-filter: var(--LCDMB-backdrop-filter);
+    webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
+
 }
 
 .LCD_mobile_body_menu button img {
