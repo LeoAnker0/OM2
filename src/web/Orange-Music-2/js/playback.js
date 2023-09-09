@@ -85,7 +85,8 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
     PLAYBACK_songs_array = current_queue;
     PLAYBACK_songs_array_index = current_index;
     //update the loop and shuffle states
-    PLAYBACK_change_loop_state(loop_state)
+    console.log("loop_state", loop_state);
+    PLAYBACK_set_loop_state(loop_state)
 
 
     //call function to start playback
@@ -424,6 +425,27 @@ function PLAYBACK_change_loop_state() {
         loopStateChange(PLAYBACK_loop_state);
     }
 }
+
+function PLAYBACK_set_loop_state(loop_state) {
+    console.log(loop_state);
+    // loop state on
+    if (loop_state == "off") {
+        PLAYBACK_loop_state = "off";
+        loopStateChange(PLAYBACK_loop_state);
+    }
+    // loop state song
+    else if (loop_state == "on") {
+        PLAYBACK_loop_state = "on";
+        loopStateChange(PLAYBACK_loop_state);
+    }
+    // loop state off
+    else {
+        loop_state = "song";
+        PLAYBACK_loop_state = "on";
+        loopStateChange(PLAYBACK_loop_state);
+    }
+}
+
 
 
 
