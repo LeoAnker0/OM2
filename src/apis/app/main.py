@@ -35,7 +35,7 @@ signup_data_store = {}
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[f'https://{str(os.environ.get("CORS_POLICIES_ALLOWED_ORIGINS"))}', 'http://localhost:5173'],
+    allow_origins=[f'https://{str(os.environ.get("CORS_POLICIES_ALLOWED_ORIGINS"))}', 'http://localhost:5173', 'https://testom2.la0.uk'],
     #allow_origins=[f"http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk", "http://localhost:11001"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
     allow_credentials=True,
     allow_methods=["*"],
@@ -112,7 +112,7 @@ async def startup():
     adminExists = await startup_check_admin_exists(admin_email);
 
     if not adminExists:
-        print(f"adminExists:\t{adminExists}")
+        #print(f"adminExists:\t{adminExists}")
         username = "admin"
         password = hash_password(str(os.environ.get("OM2_ADMIN_PASSWORD")))
         email = admin_email
@@ -122,7 +122,7 @@ async def startup():
         await insert_user(user_dict)
 
     elif adminExists:
-        print(f"admin exists, yes:\t{adminExists}")
+        #print(f"admin exists, yes:\t{adminExists}")
 
         #get the current hash of the admin password
         #current_hashed_password = await startup_get_admin_password_hash(admin_email)
@@ -133,7 +133,7 @@ async def startup():
             passwordMatches = False
 
         if not passwordMatches:
-            print(f"passwordMatches:\t{passwordMatches}")
+            #print(f"passwordMatches:\t{passwordMatches}")
 
             uuid = await get_uuid_by_email(admin_email)
             new_password = hash_password(str(os.environ.get("OM2_ADMIN_PASSWORD")))
@@ -232,7 +232,7 @@ async def complete_signup(request: Request):
     # Send a message to the chipmunk_processor container
     chipmunk_processor_url = "http://chipmunk_processor:8001/process_image/base64/"
     payload = {"imgData": profilePicture, "owner_email": email}
-    print("we are sending an image to chipmunk_processor")
+    #print("we are sending an image to chipmunk_processor")
     response = requests.post(chipmunk_processor_url, json=payload)
 
     if response.status_code != 200:
@@ -659,7 +659,7 @@ async def update_get_details(request: Request):
         return {"authenticated": False}
 
     response = await get_user_detail_in_database(uuid, column_to_retrieve)
-    print(f"response to get:\t{response}")
+    #print(f"response to get:\t{response}")
 
     return {"response" : response}
 
@@ -765,7 +765,7 @@ async def upload_file_photo(
     
     response_data = response.json()
     url = response_data.get("url", "")
-    print("URL:", url)
+    #print("URL:", url)
 
     #update the project database item so that the image url is this
     await update_project_detail_in_database(uuid, project_id, "picture_url", url)
@@ -778,7 +778,7 @@ async def upload_file_photo(
 @app.get("/status/are_signups_allowed/")
 async def are_signups_allowed():
     signups_allowed = (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()
-    print(f"signups_allowed:\t{signups_allowed}")
+    #print(f"signups_allowed:\t{signups_allowed}")
     return {"signups_allowed": signups_allowed}
 
 

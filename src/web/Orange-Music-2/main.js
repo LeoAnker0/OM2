@@ -11,6 +11,7 @@ import './css/lcd.css';
 import './css/musicObjectGrid.css';
 import './css/settings.css';
 import './css/projectView.css';
+import './css/lcd_mobile_body.css';
 
 export const MAIN_CONST_EXPORT_apiPath = "https://om2apis.la0.uk";
 export const MAIN_CONST_EXPORT_mediaPath = "https://om2media.la0.uk";

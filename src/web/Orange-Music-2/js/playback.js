@@ -4,6 +4,10 @@ import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_array_index = 0;
+export let PLAYBACK_current_img = "";
+export let PLAYBACK_current_song_title = "";
+export let PLAYBACK_current_song_artist = "";
+
 const PLAYBACK_audio_tag = document.getElementById("audio");
 const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
@@ -201,6 +205,11 @@ function PLAYBACK_start_playback() {
     playStateChange("playing");
     LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
     LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
+    /* update the export variables */
+    PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
+    PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+
 
     /* updates the top informations, which should really be it's own function? */
     PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
@@ -246,6 +255,10 @@ function PLAYBACK_start_without_playback_and_update_progress(progress) {
     playStateChange("paused");
     LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
     LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
+    /* update the export variables */
+    PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
+    PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
+    PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
 
 
 

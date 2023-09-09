@@ -1,4 +1,6 @@
 import { is_mobile } from './om2.js';
+import { MENUdisplay } from './menu.js';
+
 
 export function initialiseLCD() {
     loadLCDbody();
@@ -15,11 +17,21 @@ export function initialiseLCD() {
 
     //when mobile, then add event listener to LCDbody
     if (is_mobile()) {
-        console.log("we are on mobile mode")
+        const LCDbody = document.getElementById("LCDbody");
+        LCDbody.addEventListener("click", open_mobile_lcd_body);
     }
 
 }
 
+function open_mobile_lcd_body(event) {
+    console.log("open mobile lcd body")
+    event.stopPropagation();
+    const params = {
+        param: "cheese",
+    }
+
+    MENUdisplay(params, event, "lcd_mobile_body");
+}
 
 
 
@@ -126,7 +138,6 @@ export function resizeTitleText() {
 }
 
 
-import { MENUdisplay } from './menu.js';
 
 function handleQueueDisplayMenu(event) {
     event.stopPropagation();

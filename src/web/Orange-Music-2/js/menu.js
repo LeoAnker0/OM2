@@ -1,6 +1,11 @@
 /* loading in the menu modal, and that alone ------------ */
 import menuModal from '../html/menuModal.html?raw';
 import update_project_imageModal from '../html/update_project_imageModal.html?raw';
+import { is_mobile } from './om2.js';
+import menuItem from '../html/menuModalItem.html?raw';
+import { svgImports } from './importAssets.js';
+
+
 export function MENUdisplay(params, event, menu_type) {
 
     //undefined    
@@ -12,6 +17,173 @@ export function MENUdisplay(params, event, menu_type) {
     if ((menu_type !== undefined) && menu_type === "update_project_image") {
         handle_update_project_image(params, event);
     }
+    //defined and type == lcd_mobile_body
+    if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
+        handle_lcd_mobile_body(params, event);
+    }
+}
+
+import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
+import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton } from './playback.js';
+
+function handle_lcd_mobile_body(params) {
+    const main = document.querySelector("main");
+    const navBar = document.querySelector(".topHalf-container");
+    // check if mobile
+    if (is_mobile()) {
+        main.style.zIndex = "40";
+        navBar.style.zIndex = "0";
+    }
+    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
+    MENUmodalEnvironment.style.display = "block";
+
+    let replacedContent = lcd_mobile_body;
+
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
+    MENUmodalEnvironment.innerHTML = replacedContent;
+    /* all content above is mostly template ------------------------------------------ */
+
+    /* handle the main mobile lcd page */
+
+    const playbackSeek = document.getElementById("LCDMB_seek_input");
+    const playbackSeekIndicator = document.getElementById("LCDMB_seek_indicator");
+    const menuButton = document.getElementById("LCDMB_menu_button");
+    const backButton = document.getElementById("LCDMB_back");
+    const playButton = document.getElementById("LCDMB_play");
+    const playIcon = document.getElementById("LCDMB_play_icon");
+    const nextButton = document.getElementById("LCDMB_next");
+    const queueButton = document.getElementById("LCDMB_queue_button");
+
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const title = document.getElementById("LCD_mobile_body_song_title");
+    const artist = document.getElementById("LCD_mobile_body_artist_title");
+    const image = document.getElementById("LCD_mobile_body_img");
+
+    /* on load get the most recent details, and then add an event listener for the end of the song, 
+    to then get new details again.
+     */
+    function update_display() {
+        image.src = PLAYBACK_current_img;
+        title.innerText = PLAYBACK_current_song_title;
+        artist.innerText = PLAYBACK_current_song_artist;
+    }
+    PLAYBACK_audio_tag.addEventListener('ended', () => {
+        update_display();
+    });
+
+    update_display();
+
+    /* check if  audo is playing */
+    function is_audio_paused() {
+        if (PLAYBACK_audio_tag.paused) {
+            console.log("audio is paused")
+            playIcon.src = svgImports["icons_playButtonV2"];
+        } else {
+            console.log("audio is playing")
+            playIcon.src = svgImports["icons_derpy"];
+        }
+
+    }
+
+    is_audio_paused();
+
+
+
+    const endOfAudio = PLAYBACK_audio_tag.duration;
+    const currentTime = PLAYBACK_audio_tag.currentTime;
+    //const timeRight = Math.floor(endOfAudio) - currentTime;
+    //const timeRightFormatted = `"-${formatTime(timeRight)}"`;
+    //const timeLeft = formatTime(Math.floor(currentTime));
+    //const timeLeftFormatted = `"${timeLeft}"`
+    const progressPercent = (currentTime / endOfAudio) * 100;
+    playbackSeekIndicator.style.width = `${progressPercent}%`;
+
+    PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
+        const endOfAudio = PLAYBACK_audio_tag.duration;
+        const currentTime = PLAYBACK_audio_tag.currentTime;
+        //const timeRight = Math.floor(endOfAudio) - currentTime;
+        //const timeRightFormatted = `"-${formatTime(timeRight)}"`;
+        //const timeLeft = formatTime(Math.floor(currentTime));
+        //const timeLeftFormatted = `"${timeLeft}"`
+        const progressPercent = (currentTime / endOfAudio) * 100;
+        playbackSeekIndicator.style.width = `${progressPercent}%`;
+    });
+
+
+    playbackSeek.addEventListener("input", function() {
+        const endOfAudio = PLAYBACK_audio_tag.duration;
+        const value = playbackSeek.value;
+        PLAYBACK_audio_tag.currentTime = ((endOfAudio) * (value / 100));
+    });
+
+
+    backButton.addEventListener('click', () => {
+        PLAYBACK_handle_PLAYER_backButton()
+        update_display();
+    })
+
+    playButton.addEventListener('click', () => {
+        PLAYBACK_handle_PLAYER_playButton();
+        update_display();
+        is_audio_paused();
+    })
+
+    nextButton.addEventListener('click', () => {
+        PLAYBACK_handle_PLAYER_nextButton();
+        update_display();
+    })
+
+    queueButton.addEventListener('click', () => {
+        console.log("queueButton was clicked");
+    })
+
+
+
+
+    /* the code for getting the whole view to hide itself again -------------------------- -- -- -- -- -- */
+    MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
+    MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
+    MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
+
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    function handleTouchStart(event) {
+        touchStartY = event.touches[0].clientY;
+    }
+
+    function handleTouchMove(event) {
+        // Prevent scrolling while swiping
+        event.preventDefault();
+    }
+
+    function handleTouchEnd(event) {
+        touchEndY = event.changedTouches[0].clientY;
+
+        // Calculate the vertical distance moved during the swipe
+        const deltaY = touchEndY - touchStartY;
+
+        // Set a threshold for swipe detection
+        const swipeThreshold = 70; // Adjust this value as needed
+
+        // Check if the vertical distance is greater than the threshold
+        if (deltaY > swipeThreshold) {
+            // Perform your desired action when a down swipe is detected
+            console.log("Down swipe detected!");
+            // Add your code here
+            menuHide_foreign();
+
+            document.removeEventListener('touchstart', handleTouchStart);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+
+        }
+    }
+
 }
 
 function handle_normal_context_menu(params, event) {
@@ -21,9 +193,8 @@ function handle_normal_context_menu(params, event) {
 
     const main = document.querySelector("main");
     const navBar = document.querySelector(".topHalf-container");
-    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
     // check if mobile
-    if (mediaQuery.matches) {
+    if (is_mobile()) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
     }
@@ -92,8 +263,6 @@ function handle_normal_context_menu(params, event) {
         });
     }
 }
-
-
 import { upload_image_files } from './file_upload.js';
 
 function handle_update_project_image(params, event) {
@@ -103,9 +272,8 @@ function handle_update_project_image(params, event) {
 
     const main = document.querySelector("main");
     const navBar = document.querySelector(".topHalf-container");
-    const mediaQuery = window.matchMedia("screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) ");
     // check if mobile
-    if (mediaQuery.matches) {
+    if (is_mobile()) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
     }
@@ -193,7 +361,6 @@ function handle_update_project_image(params, event) {
     });
 }
 import { PROJECTVIEW_update } from './projectView.js';
-
 export function MENU_when_image_has_been_uploaded() {
     const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
     spinner.style.visibility = "hidden";
@@ -233,9 +400,6 @@ function showElementDetails(elementId) {
 }
 
 
-import menuItem from '../html/menuModalItem.html?raw';
-
-import { svgImports } from './importAssets.js';
 
 function addModalItem(param) {
     const displayText = param.displayText
