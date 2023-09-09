@@ -104,7 +104,6 @@
 .LCD_mobile_body_progress_bar {
     grid-area: LCD_mobile_body_progress_bar;
 
-    //background-color: blue;
     height: 1rem;
     align-self: end;
     align-items: center;
@@ -132,13 +131,12 @@
     height: 0.5rem;
     border: none;
     outline: none;
-    -webkit-appearance: none;
-    /* Remove default styles on some browsers */
     appearance: none;
     background-color: transparent;
 
     backdrop-filter: var(--LCDMB-backdrop-filter);
     webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
+    backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
     border-radius: 1rem;
 }
 
@@ -147,7 +145,6 @@
 /* Style the slider thumb (handle) */
 .LCD_mobile_body_progress_bar input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    /* Remove default styles on some browsers */
     appearance: none;
     aspect-ratio: 1/1;
     height: 2rem;
@@ -174,6 +171,8 @@
 
     backdrop-filter: var(--LCDMB-backdrop-filter);
     webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
+    backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
+
 
 }
 
@@ -187,7 +186,6 @@
     position: relative;
     grid-area: LCD_mobile_body_playback_controls_area_container;
     width: 100%;
-    //background-color: green;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
