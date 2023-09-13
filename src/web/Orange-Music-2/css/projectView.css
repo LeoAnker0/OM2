@@ -71,6 +71,26 @@
         "PROJECTviewTopItem-1 PROJECTviewTopItem-4 PROJECTviewTopItem-4";
 }
 
+/* compressed desktop view */
+@media screen and (max-width: 768px) {
+    .PROJECTview-topContainer {
+        grid-template-areas:
+            "PROJECTviewTopItem-1 PROJECTviewTopItem-7"
+            "PROJECTviewTopItem-1 PROJECTviewTopItem-3"
+            "PROJECTviewTopItem-1 PROJECTviewTopItem-2"
+            "PROJECTviewTopItem-1 PROJECTviewTopItem-6"
+            "PROJECTviewTopItem-5 PROJECTviewTopItem-5"
+            "PROJECTviewTopItem-4 PROJECTviewTopItem-4"
+        ;
+
+
+
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+}
+
+
+/* mobile  */
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTview-topContainer {
         grid-template-areas:
@@ -176,7 +196,9 @@
 .PROJECTviewDisplaySpacer2 {
     height: 4rem;
     width: 4rem;
+    /*
     background-color: red;
+    */
 }
 
 .PROJECTviewTopItem-3 {
@@ -186,6 +208,13 @@
 .PROJECTviewTopItem-4 {
     grid-area: PROJECTviewTopItem-4;
 }
+
+@media screen and (max-width: 768px) {
+    .PROJECTviewTopItem-3 {
+        height: 0rem;
+    }
+}
+
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
 
@@ -202,8 +231,14 @@
     width: 60%;
     height: 4.8rem;
 
-    //background-color: red;
+}
 
+@media screen and (max-width: 768px) {
+    .PROJECTviewDisplayDescription {
+        width: 80%;
+        inset: 10%;
+        margin-bottom: 1rem;
+    }
 }
 
 .PROJECTviewDisplayDescription p {
@@ -379,6 +414,12 @@
     outline: 1px solid hsla(0, 100%, 100%, 0.3);
 }
 
+@media screen and (max-width: 768px) {
+    .PROJECTviewDisplayMenu {
+        margin-top: 1.2rem;
+    }
+}
+
 .PROJECTviewDisplayMenu button {
     all: unset;
 }
@@ -388,7 +429,7 @@
     height: 100%;
     width: 100%;
     border-radius: 50%;
-    z-index: 2;
+    z-index: 0;
 
     justify-content: center;
     align-items: center;
@@ -420,6 +461,7 @@
         display: none;
     }
 }
+
 
 
 
@@ -882,11 +924,12 @@
     position: relative;
     width: 100%;
 
-    height: 12rem;
 
-    background-color: red;
+    /*background-color: red;*/
+    height: 0.5rem;
 
     margin-bottom: 2rem;
+
 }
 
 /* mobile sticky header ------------- */
