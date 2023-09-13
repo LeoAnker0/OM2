@@ -1,6 +1,9 @@
 import { updateQueue } from './queue.js';
 import { shuffleStateChange, loopStateChange, playStateChange } from './playbackControls.js';
 import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
+import { getProjectDetails } from './network_requests.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_array_index = 0;
@@ -47,29 +50,43 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback(
     PLAYBACK_songs_array = [];
     PLAYBACK_songs_array_index = 0;
 
+    PLAYBACK_songs_array = PLAYBACK_prepare_project_details_array(project_details);
+
+    //call function to start playback
+    if (PLAYBACK_songs_array.length > 0) {
+        PLAYBACK_playing_state = "playing";
+        PLAYBACK_start_playback()
+    }
+
+}
+
+function PLAYBACK_prepare_project_details_array(project_details) {
     //fill PLAYBACK_songs_array with new data
+    const array = [];
+
     const project_contributors = project_details.project_contributors;
     const project_name = project_details.project_name;
     const picture_url = project_details.picture_url;
     const project_json = JSON.parse(project_details.project_json).songs_json
+    try {
+        for (const song of project_json) {
+            const song_name = song.song_name;
+            const duration = song.duration;
+            const url = song.url;
 
-    for (const song of project_json) {
-        const song_name = song.song_name;
-        const duration = song.duration;
-        const url = song.url;
+            array.push({
+                "img": picture_url,
+                "song_name": song_name,
+                "url": url,
+                "duration": duration,
+                "project_name": project_name,
+                "project_contributors": project_contributors
+            })
+        }
+    } catch (e) {
 
-        PLAYBACK_songs_array.push({
-            "img": picture_url,
-            "song_name": song_name,
-            "url": url,
-            "duration": duration,
-            "project_name": project_name,
-            "project_contributors": project_contributors
-        })
     }
-    //call function to start playback
-    PLAYBACK_playing_state = "playing";
-    PLAYBACK_start_playback()
+    return array;
 }
 
 export function PLAYBACK_handle_input_sync_state(lastState) {
@@ -89,14 +106,36 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
 
 
     //call function to start playback
+    console.log("queue:", PLAYBACK_songs_array)
+
+
     if (PLAYBACK_songs_array.length > 0) {
         PLAYBACK_start_without_playback_and_update_progress(progress)
     }
 
 }
 
+
+
 export async function PLAYBACK_handle_add_songs_to_queue(params) {
-    console.log(params);
+    const project_id = params.PROJECT_ID;
+    const queue_position = params.QUEUE_POSITION;
+    const details = await getProjectDetails(project_id);
+    const new_array = PLAYBACK_prepare_project_details_array(details);
+
+    if (queue_position === "later") {
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
+
+    } else if (queue_position === "next") {
+        const firstHalf = PLAYBACK_songs_array.slice(0, (PLAYBACK_songs_array_index + 1));
+        const secondHalf = PLAYBACK_songs_array.slice((PLAYBACK_songs_array_index + 1));
+
+        PLAYBACK_songs_array = firstHalf;
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(secondHalf);
+    }
+
+    updateQueue();
 }
 
 /* buttons -------------------------------------------------------- */
@@ -109,6 +148,7 @@ function PLAYBACK_playPause_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     if (PLAYBACK_audio_tag.paused) {
         //play the audio
+
         playStateChange("playing")
         PLAYBACK_playing_state = "playing";
         PLAYBACK_audio_tag.play()
@@ -180,7 +220,6 @@ export function PLAYBACK_GET_progress() {
 
 /* LOGIC -------------------------------------------------------*/
 
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
 
 /* the main playback function, is responsible for playing the audio, will be called from many different places, this means that there

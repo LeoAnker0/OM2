@@ -100,3 +100,33 @@ export async function getUserDetail(wantedColumn) {
         console.error('Error:', error);
     }
 }
+
+export async function getProjectDetails(project_id) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const projectDetailsRecord = data.project_details
+        return projectDetailsRecord;
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

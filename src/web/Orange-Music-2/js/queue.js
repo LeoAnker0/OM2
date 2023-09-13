@@ -213,6 +213,7 @@ function handleQueueDisplayMenu(event) {
 
 function handleQueueItemClick(songId) {
     // Find the song object based on the song ID
+    /*
     const clickedSong = songs.find(song => song.id === parseInt(songId));
 
     // Perform actions based on the clicked song
@@ -222,7 +223,7 @@ function handleQueueItemClick(songId) {
 
         return
     }
-    return
+    return*/
 }
 
 import icons_menuOptionsButton from '../assets/icons/menu_options_button.svg';
