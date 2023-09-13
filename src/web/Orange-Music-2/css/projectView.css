@@ -479,6 +479,7 @@
     place-items: center;
     background-color: hsla(0, 100%, 0%, 0.4);
     backdrop-filter: saturate(0.8);
+    -webkit-backdrop-filter: saturate(0.8);
 
     display: none;
 }
@@ -941,6 +942,7 @@
     width: 100%;
     z-index: 2;
     backdrop-filter: var(--PROJECTviewDesktopHeaderFilter);
+    -webkit-backdrop-filter: var(--PROJECTviewDesktopHeaderFilter);
     background-color: hsla(255, 90%, 9%, 0.8);
 }
 
@@ -953,6 +955,7 @@
 
         background-color: transparent;
         backdrop-filter: none;
+        -webkit-backdrop-filter: none;
 
     }
 }

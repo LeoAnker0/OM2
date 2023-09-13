@@ -135,8 +135,9 @@
     background-color: transparent;
 
     backdrop-filter: var(--LCDMB-backdrop-filter);
-    webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
+    -webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
     backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
+    -webkit-backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
     border-radius: 1rem;
 }
 

@@ -2,16 +2,18 @@
 .MATERIAL-blur-1 {
     background-color: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(10px) contrast(0.6) brightness(0.6);
+    -webkit-backdrop-filter: blur(10px) contrast(0.6) brightness(0.6);
 
-    /*
+
+    overflow: hidden;
+}
+
+/*
     background-image:
         radial-gradient(at 60% 30%, hsla(230, 60%, 60%, 0.5) 0px, transparent 100%),
         radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 0.5) 0px, transparent 100%),
         radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 0.5) 0px, transparent 100%);
     */
-
-    overflow: hidden;
-}
 
 /*
 .MATERIAL-blur-1:before {
@@ -32,6 +34,8 @@
 .MATERIAL-blur-2 {
     background-color: rgba(256, 256, 256, 0.2);
     backdrop-filter: blur(5px) contrast(0.2) brightness(0.8);
+    -webkit-backdrop-filter: blur(5px) contrast(0.2) brightness(0.8);
+
     overflow: hidden;
 
 }
@@ -40,6 +44,7 @@
 .MATERIAL-blur-22 {
     background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px) contrast(0.6);
+    -webkit-backdrop-filter: blur(10px) contrast(0.6);
     overflow: hidden;
 
 }
@@ -48,6 +53,7 @@
 .MATERIAL-blur-3 {
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px) contrast(0.8) brightness(0.80);
+    -webkit-backdrop-filter: blur(5px) contrast(0.8) brightness(0.80);
 
     overflow: hidden;
 }
@@ -69,6 +75,7 @@
 .MATERIAL-blur-4 {
     background-color: rgba(256, 256, 256, 0.25);
     backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
+    -webkit-backdrop-filter: blur(5px) contrast(0.6) brightness(0.8);
     /*
     background-image:
         radial-gradient(at 50% 50%, hsla(230, 100%, 80%, 0.5) 0px, transparent 100%),
@@ -105,12 +112,14 @@
 .MATERIAL-blur-5 {
     background-color: rgba(256, 256, 256, 0.2);
     backdrop-filter: blur(5px) contrast(0.8) brightness(0.4);
+    -webkit-backdrop-filter: blur(5px) contrast(0.8) brightness(0.4);
     overflow: hidden;
 }
 
 .MATERIAL-blur-6 {
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(8px) contrast(0.8) brightness(0.7);
+    -webkit-backdrop-filter: blur(8px) contrast(0.8) brightness(0.7);
     overflow: hidden;
 
 }

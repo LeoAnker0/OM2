@@ -44,9 +44,23 @@
         width: 100%;
     }
 
+}
 
+@media (max-width: 600px) {
+
+    :root {
+        --width-of-left-bar-fortop: 0rem;
+
+    }
+
+    .topHalf-left {
+        visibility: hidden;
+        display: none;
+    }
 
 }
+
+
 
 main {
     height: 100%;
