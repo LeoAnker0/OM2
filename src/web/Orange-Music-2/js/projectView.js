@@ -409,13 +409,21 @@ function displayMenuForTop(event, project_details) {
 
     const params = [{
         displayText: 'Play next',
-        optionalSVG: 'icons_yourUploadedSongs',
-        function: 'None'
-
+        optionalSVG: 'icons_playlist',
+        optionalParams: {
+            PROJECT_ID: project_id,
+            QUEUE_POSITION: "next"
+        },
+        function: 'PLAYBACK_add_songs_to_queue'
     }, {
         displayText: 'Play later',
-        optionalSVG: 'None',
-        function: 'None'
+        optionalSVG: 'icons_playlist',
+        optionalParams: {
+            PROJECT_ID: project_id,
+            QUEUE_POSITION: "later"
+
+        },
+        function: 'PLAYBACK_add_songs_to_queue'
     }, {
         displayText: 'Delete',
         optionalSVG: 'None',
@@ -423,7 +431,7 @@ function displayMenuForTop(event, project_details) {
         optionalParams: {
             PROJECT_ID: project_id
         },
-        colour: "hsl(180, 100%, 80%)"
+        colour: "hsl(0, 100%, 55%)"
     }]
 
     MENUdisplay(params, event);
@@ -432,9 +440,9 @@ function displayMenuForTop(event, project_details) {
 
 
 
+
 export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     if (window.confirm("Are you sure you want to delete this project?")) {
-        console.log("delete project id:", project_id)
         deleteProjectFromServer(project_id);
 
         menuHide_foreign();

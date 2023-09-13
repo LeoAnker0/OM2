@@ -1,4 +1,4 @@
-let queueState = "visible";
+let queueState = "hidden";
 
 import { loadQUEUEbody } from './exportHTMLchunks.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
