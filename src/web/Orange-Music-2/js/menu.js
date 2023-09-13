@@ -475,6 +475,7 @@ export function menuHide_foreign() {
 }
 
 import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
+import { PLAYBACK_handle_add_songs_to_queue } from './playback.js';
 
 /* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
@@ -489,5 +490,9 @@ const MENU_ACTION_FUNCTIONS = {
     PROJECT_VIEW_delete_project(params) {
         PROJECT_VIEW_receive_MENU_delete_request(params);
         return;
-    }
+    },
+    PLAYBACK_add_songs_to_queue(params) {
+        PLAYBACK_handle_add_songs_to_queue(params);
+        return;
+    },
 };

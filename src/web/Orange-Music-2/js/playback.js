@@ -95,6 +95,10 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
 
 }
 
+export async function PLAYBACK_handle_add_songs_to_queue(params) {
+    console.log(params);
+}
+
 /* buttons -------------------------------------------------------- */
 
 export function PLAYBACK_handle_PLAYER_playButton() {

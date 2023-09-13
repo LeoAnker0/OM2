@@ -202,7 +202,7 @@ function loadObjects(libraryData) {
         const objectID = libraryData[buttonID].project_id;
         console.log(objectID)
 
-        displayMenu(event);
+        displayMenu(event, objectID);
     }
 
 
@@ -260,7 +260,7 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
 
-        displayMenu(event);
+        displayMenu(event, objectID);
     }
 
     // for the project box click
@@ -281,19 +281,26 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
 
 import { MENUdisplay } from './menu.js';
 
-function displayMenu(event) {
+function displayMenu(event, project_id) {
     event.stopPropagation();
-    const clickedItem = event.target;
-
 
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
-        function: 'None'
+        optionalParams: {
+            PROJECT_ID: project_id,
+            QUEUE_POSITION: "next"
+        },
+        function: 'PLAYBACK_add_songs_to_queue'
     }, {
         displayText: 'Play later',
-        optionalSVG: 'icons_derpy',
-        function: 'None'
+        optionalSVG: 'icons_playlist',
+        optionalParams: {
+            PROJECT_ID: project_id,
+            QUEUE_POSITION: "later"
+
+        },
+        function: 'PLAYBACK_add_songs_to_queue'
     }]
 
     MENUdisplay(params, event);

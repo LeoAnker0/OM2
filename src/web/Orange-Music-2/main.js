@@ -49,7 +49,7 @@ import { initProjectView, hideProjectView, createNewProjectID } from './js/proje
 
 import { PLAYBACK_init, PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_GET_progress, PLAYBACK_handle_input_sync_state } from './js/playback.js';
 
-import { updateUserDetails, getUserDetail } from './js/update_details.js';
+import { updateUserDetails, getUserDetail } from './js/network_requests.js';
 
 export async function main() {
 
