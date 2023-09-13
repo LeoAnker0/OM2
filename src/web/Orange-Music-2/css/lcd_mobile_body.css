@@ -29,12 +29,31 @@
     grid-template-areas:
         "LCD_mobile_body_img"
         "LCD_mobile_body_img"
+        "LCD_mobile_body_secondary_seek_indicator"
+        "LCD_mobile_body_queue_container"
+
         "LCD_mobile_body_title_area_container"
         "LCD_mobile_body_playback_controls_area_container"
         "LCD_mobile_body_further_options_button_container"
 
     ;
     z-index: 2;
+}
+
+.LCD_mobile_body_container_l2.queue_visible {
+    grid-template-areas:
+        "LCD_mobile_body_img LCD_mobile_body_title_area_container"
+
+        "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
+        "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
+        "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
+
+        "LCD_mobile_body_secondary_seek_indicator LCD_mobile_body_secondary_seek_indicator"
+
+        "LCD_mobile_body_playback_controls_area_container LCD_mobile_body_playback_controls_area_container"
+        "LCD_mobile_body_further_options_button_container LCD_mobile_body_further_options_button_container"
+
+    ;
 }
 
 .LCD_mobile_body_img {
@@ -46,6 +65,13 @@
     grid-area: LCD_mobile_body_img;
 }
 
+.LCD_mobile_body_img.queue_visible {
+    height: 4.4rem;
+    left: 0;
+    margin-top: 1rem;
+}
+
+
 .LCD_mobile_body_img img {
     position: relative;
     height: 80%;
@@ -53,6 +79,13 @@
     inset: 10%;
     object-fit: cover;
     border-radius: 1rem;
+}
+
+.LCD_mobile_body_img.queue_visible img {
+    border-radius: 0.5rem;
+    inset: 5%;
+    height: 90%;
+    width: 90%;
 }
 
 /* title area  */
@@ -68,12 +101,27 @@
 
     display: grid;
     grid-template-areas:
-        "LCD_mobile_body_song_title LCD_mobile_body_song_title LCD_mobile_body_menu"
+        "LCD_mobile_body_song_title   LCD_mobile_body_song_title   LCD_mobile_body_menu"
         "LCD_mobile_body_artist_title LCD_mobile_body_artist_title LCD_mobile_body_menu"
         "LCD_mobile_body_artist_title LCD_mobile_body_artist_title LCD_mobile_body_menu"
         "LCD_mobile_body_artist_title LCD_mobile_body_artist_title LCD_mobile_body_menu"
         "LCD_mobile_body_artist_title LCD_mobile_body_artist_title LCD_mobile_body_menu"
-        "LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar";
+        "LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar"
+
+
+    ;
+}
+
+.LCD_mobile_body_title_area_container.queue_visible {
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 5rem;
+
+    grid-template-areas:
+        "LCD_mobile_body_song_title   LCD_mobile_body_song_title   LCD_mobile_body_menu"
+        "LCD_mobile_body_artist_title LCD_mobile_body_artist_title LCD_mobile_body_menu"
+        "LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar LCD_mobile_body_progress_bar"
+    ;
 }
 
 .LCD_mobile_body_song_title {
@@ -88,6 +136,11 @@
     text-overflow: ellipsis;
 }
 
+.LCD_mobile_body_song_title.queue_visible {
+    width: calc(100% - 1.5rem);
+    top: 0.9rem;
+}
+
 .LCD_mobile_body_artist_title {
     grid-area: LCD_mobile_body_artist_title;
     color: white;
@@ -97,8 +150,10 @@
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
 
-
+.LCD_mobile_body_artist_title.queue_visible {
+    width: calc(100% - 1.5rem);
 }
 
 .LCD_mobile_body_progress_bar {
@@ -112,6 +167,10 @@
 
     margin-bottom: 0.5rem;
     width: 100%;
+}
+
+.LCD_mobile_body_progress_bar.queue_visible {
+    display: none;
 }
 
 .LCD_mobile_body_progress_bar span {
@@ -173,14 +232,150 @@
     backdrop-filter: var(--LCDMB-backdrop-filter);
     webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
     backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
-
-
 }
+
+.LCD_mobile_body_menu.queue_visible {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-right: 0.5rem;
+}
+
+
 
 .LCD_mobile_body_menu button img {
     position: relative;
     top: 0.1rem;
 }
+
+/* mobile queue */
+.LCD_mobile_body_queue_container {
+    grid-area: LCD_mobile_body_queue_container;
+    display: none;
+    visibility: hidden;
+
+    background-color: hsla(240, 100%, 50%, 0.2);
+}
+
+.LCD_mobile_body_queue_container.queue_visible {
+    display: block;
+    visibility: visible;
+    width: 100%;
+    aspect-ratio: 7/10;
+
+    overflow-y: scroll;
+}
+
+.LCD_mobile_queue_top_container {
+    position: sticky;
+
+    display: grid;
+    grid-template-areas:
+        "LCD_mobile_body_queue_playing_next LCD_mobile_body_queue_button_container"
+        "LCD_mobile_body_queue_from LCD_mobile_body_queue_button_container"
+    ;
+
+
+}
+
+.LCD_mobile_body_queue_playing_next {
+    grid-area: LCD_mobile_body_queue_playing_next;
+}
+
+.LCD_mobile_body_queue_from {
+    grid-area: LCD_mobile_body_queue_from;
+}
+
+.LCD_mobile_body_queue_button_container {
+    grid-area: LCD_mobile_body_queue_button_container;
+    display: flex;
+    justify-content: space-between;
+    inset: 10%;
+    width: 80%;
+    height: 80%;
+    position: relative;
+}
+
+.LCD_mobile_body_queue_button_container button {
+    background-color: transparent;
+    border: none;
+
+    background-color: hsla(0, 00%, 90%, 0.5);
+    border-radius: 8px;
+    aspect-ratio: 1/1;
+}
+
+
+
+.LCD_mobile_body_secondary_seek_indicator {
+    grid-area: LCD_mobile_body_secondary_seek_indicator;
+    display: none;
+    visibility: hidden;
+}
+
+.LCD_mobile_body_secondary_seek_indicator.queue_visible {
+    display: block;
+    visibility: visible;
+    height: 1rem;
+}
+
+.LCD_mobile_body_progress_bar {
+    grid-area: LCD_mobile_body_progress_bar;
+
+    height: 1rem;
+    align-self: end;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.LCD_mobile_body_progress_bar.queue_visible {
+    display: none;
+}
+
+.LCD_mobile_body_progress_bar_secondary span {
+    position: absolute;
+    width: 0%;
+    background-color: hsla(180, 00%, 100%, 0.5);
+    height: 0.5rem;
+    left: 0rem;
+    border-radius: 1rem;
+    pointer-events: none;
+    transition: 0.1s width ease-in-out;
+}
+
+
+.LCD_mobile_body_progress_bar_secondary input[type="range"] {
+    width: 100%;
+    height: 0.5rem;
+    border: none;
+    outline: none;
+    appearance: none;
+    background-color: transparent;
+
+    backdrop-filter: var(--LCDMB-backdrop-filter);
+    -webkit-backdrop-filter: var(--LCDMB-backdrop-filter);
+    backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
+    -webkit-backdrop-filter: blur(10px) contrast(0.7) brightness(1.2);
+    border-radius: 1rem;
+}
+
+
+
+/* Style the slider thumb (handle) */
+.LCD_mobile_body_progress_bar_secondary input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    aspect-ratio: 1/1;
+    height: 2rem;
+
+    background-color: transparent;
+}
+
 
 /* playback controls */
 .LCD_mobile_body_playback_controls_area_container {

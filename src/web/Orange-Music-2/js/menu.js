@@ -26,6 +26,8 @@ export function MENUdisplay(params, event, menu_type) {
 import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
 import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton } from './playback.js';
 
+let queue_displayed = false;
+
 function handle_lcd_mobile_body(params) {
     const main = document.querySelector("main");
     const navBar = document.querySelector(".topHalf-container");
@@ -136,10 +138,59 @@ function handle_lcd_mobile_body(params) {
         PLAYBACK_handle_PLAYER_nextButton();
         update_display();
     })
+    const classesToTarget = [
+        'LCD_mobile_body_container_l2', 'LCD_mobile_body_img',
+        'LCD_mobile_body_title_area_container', 'LCD_mobile_body_song_title',
+        'LCD_mobile_body_artist_title', 'LCD_mobile_body_progress_bar',
+        'LCD_mobile_body_menu', 'LCD_mobile_body_queue_container', 'LCD_mobile_body_secondary_seek_indicator'
+    ];
 
     queueButton.addEventListener('click', () => {
-        console.log("queueButton was clicked");
+        if (queue_displayed === false) {
+            display_mobile_queue();
+            queue_displayed = true
+        } else {
+            hide_mobile_queue();
+            queue_displayed = false;
+        }
+
     })
+    if (queue_displayed === true) {
+        display_mobile_queue();
+    } else {
+        hide_mobile_queue();
+    }
+
+
+
+
+
+    function display_mobile_queue() {
+        // Function to add the .queue_visible class to elements with specified classes
+        function addQueueVisibleClassToElements(classes) {
+            classes.forEach(className => {
+                const elementsWithClass = document.querySelectorAll('.' + className);
+                elementsWithClass.forEach(element => {
+                    element.classList.add('queue_visible');
+                });
+            });
+        }
+        addQueueVisibleClassToElements(classesToTarget);
+    }
+
+    function hide_mobile_queue() {
+
+        // Function to remove the .queue_visible class to elements with specified classes
+        function removeQueueVisibleClassToElements(classes) {
+            classes.forEach(className => {
+                const elementsWithClass = document.querySelectorAll('.' + className);
+                elementsWithClass.forEach(element => {
+                    element.classList.remove('queue_visible');
+                });
+            });
+        }
+        removeQueueVisibleClassToElements(classesToTarget);
+    }
 
 
 

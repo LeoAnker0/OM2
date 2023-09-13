@@ -90,7 +90,6 @@ function PLAYBACK_prepare_project_details_array(project_details) {
 }
 
 export function PLAYBACK_handle_input_sync_state(lastState) {
-
     //fill PLAYBACK_songs_array with new data
     const current_queue = lastState.current_queue;
     const current_index = lastState.current_index;
@@ -104,15 +103,10 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
     //update the loop and shuffle states
     PLAYBACK_set_loop_state(loop_state)
 
-
     //call function to start playback
-    console.log("queue:", PLAYBACK_songs_array)
-
-
     if (PLAYBACK_songs_array.length > 0) {
         PLAYBACK_start_without_playback_and_update_progress(progress)
     }
-
 }
 
 
