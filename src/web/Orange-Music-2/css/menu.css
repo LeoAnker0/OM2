@@ -11,22 +11,54 @@
     display: none;
 }
 
+
 .menuModalBackground {
     /*background-color: hsla(130, 60%, 50%, 0.5);
     backdrop-filter: blur(0px);*/
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .menuModalBackground {
+        background-color: hsla(0, 0%, 10%, 0.4);
+        /* Fallback background color */
+        backdrop-filter: brightness(0.8) saturate(0.0);
+        /* Desired filter */
+    }
+
+    /* Check if backdrop-filter is supported */
+    @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+        .menuModalBackground {
+            background-color: transparent;
+            /* Reset background color */
+            backdrop-filter: brightness(0.8) saturate(0.0);
+            /* Desired filter */
+        }
+    }
 }
 
 .MENUmodalBody {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 12rem;
+    width: 14rem;
     //background-color: red;
     border-radius: 8px;
     z-index: 2;
 
     outline: 1px solid white;
+    outline: 1px solid transparent;
+
     pointer-events: none;
+
+    background-color: hsla(330, 10%, 20%, 1);
+
+    overflow: hidden;
+
+    border-bottom: 1px solid hsla(0, 00%, 80%, 0.2);
+    border-right: 1px solid hsla(0, 00%, 80%, 0.2);
+
+
+
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -39,12 +71,18 @@
 
         border-radius: 0;
 
+        background-color: hsla(330, 10%, 13%, 1.0);
+
+        border-top-right-radius: 2px;
+        border-top-left-radius: 2px;
+
+
     }
 }
 
 .MENUmodalItemContainer {
     position: relative;
-    height: 2rem;
+    height: 2.5rem;
     width: 100%;
 
     display: flex;
@@ -59,6 +97,25 @@
     }
 }
 
+.MENUmodalItemContainer:not(:last-child) {
+    border-bottom: 1px solid hsla(0, 00%, 80%, 0.2);
+
+}
+
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MENUmodalBody {
+        border: none;
+    }
+
+    .MENUmodalItemContainer:not(:last-child) {
+        border: none;
+
+    }
+}
+
+
+/*
 .MENUmodalItemContainer::after {
     content: "";
     position: absolute;
@@ -67,7 +124,19 @@
     height: 0.02rem;
     bottom: 0;
 
-    background-color: hsla(0, 100%, 100%, 0.2);
+    background-color: hsla(0, 00%, 80%, 0.2);
+}
+
+.MENUmodalBody:nth-child(-1) .MENUmodalItemContainer::after {
+    content: "";
+    position: absolute;
+
+    width: 100%;
+    height: 0.02rem;
+    bottom: 0;
+
+    background-color: hsla(0, 00%, 80%, 0.2);
+    background-color: transparent;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -76,6 +145,8 @@
 
     }
 }
+*/
+
 
 .MENUmodalItemContainer:hover {
     background-color: hsla(0, 100%, 100%, 0.1);
@@ -90,7 +161,7 @@
     left: 0.5rem;
 
     font-weight: 400;
-    font-size: 0.8rem;
+    font-size: 1rem;
 
     pointer-events: none;
 }
