@@ -118,9 +118,18 @@ export function updateQueue() {
 }
 
 function queueClear() {
-    songs = [];
+    const currentQueueIndex = PLAYBACK_songs_array_index + 1;
+    // Check if currentQueueIndex is within the valid range of indices
+    if (currentQueueIndex >= 0 && currentQueueIndex < PLAYBACK_songs_array.length) {
+        // Splice out items with indices greater than currentQueueIndex
+        PLAYBACK_songs_array.splice(currentQueueIndex);
+    } else {
+        // If currentQueueIndex is out of range, clear the entire array
+        PLAYBACK_songs_array.length = 0;
+    }
+
     updateQueue();
-    return
+    return;
 }
 
 function handleDragStart(event) {
