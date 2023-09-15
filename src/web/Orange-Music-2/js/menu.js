@@ -4,6 +4,11 @@ import update_project_imageModal from '../html/update_project_imageModal.html?ra
 import { is_mobile } from './om2.js';
 import menuItem from '../html/menuModalItem.html?raw';
 import { svgImports } from './importAssets.js';
+import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
+import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
+import lcd_mobile_queue_item from '../html/lcd_mobile_queue_item.html?raw';
+import { MAIN_CONST_EXPORT_mediaPath, MAIN_CONST_EXPORT_apiPath } from '../main.js';
+
 
 
 export function MENUdisplay(params, event, menu_type) {
@@ -23,8 +28,6 @@ export function MENUdisplay(params, event, menu_type) {
     }
 }
 
-import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
-import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton } from './playback.js';
 
 let queue_displayed = false;
 
@@ -75,6 +78,9 @@ function handle_lcd_mobile_body(params) {
     }
     PLAYBACK_audio_tag.addEventListener('ended', () => {
         update_display();
+        if (queue_displayed === true) {
+            load_mobile_queue();
+        }
     });
 
     update_display();
@@ -126,6 +132,9 @@ function handle_lcd_mobile_body(params) {
     backButton.addEventListener('click', () => {
         PLAYBACK_handle_PLAYER_backButton()
         update_display();
+        if (queue_displayed === true) {
+            load_mobile_queue();
+        }
     })
 
     playButton.addEventListener('click', () => {
@@ -137,6 +146,10 @@ function handle_lcd_mobile_body(params) {
     nextButton.addEventListener('click', () => {
         PLAYBACK_handle_PLAYER_nextButton();
         update_display();
+        console.log("next was clicked");
+        if (queue_displayed === true) {
+            load_mobile_queue();
+        }
     })
     const classesToTarget = [
         'LCD_mobile_body_container_l2', 'LCD_mobile_body_img',
@@ -161,7 +174,44 @@ function handle_lcd_mobile_body(params) {
         hide_mobile_queue();
     }
 
+    function load_mobile_queue() {
+        const mobile_queue_container = document.getElementById("LCD_mobile_queue_content_container");
 
+        mobile_queue_container.innerHTML = "";
+
+
+        for (let i = (PLAYBACK_songs_array_index + 1); i < PLAYBACK_songs_array.length; i++) {
+            const song = PLAYBACK_songs_array[i];
+
+            const listOfThings = ['queue_item_img', 'queue_item_song_name', 'queue_item_song_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
+            const imgSrc = song.img;
+            const songTitle = song.song_name;
+            const songArtist = song.project_contributors;
+            //const songDuration = `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`;
+
+            let replacedContent = lcd_mobile_queue_item;
+
+            for (let i = 0; i < listOfThings.length; i++) {
+                const placeholder = listOfThings[i].toString();
+                const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+                let value = '';
+
+                if (placeholder === 'queue_item_img') {
+                    const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3/`;
+
+                    value = image;
+                } else if (placeholder === 'queue_item_song_name') {
+                    value = songTitle;
+                } else if (placeholder === 'queue_item_song_artist') {
+                    value = songArtist;
+                }
+
+                replacedContent = replacedContent.replace(regex, value);
+            }
+
+            mobile_queue_container.innerHTML += replacedContent;
+        }
+    }
 
 
 
@@ -176,6 +226,17 @@ function handle_lcd_mobile_body(params) {
             });
         }
         addQueueVisibleClassToElements(classesToTarget);
+        //MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
+        //MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
+        //MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
+        load_mobile_queue();
+
+
+
+
+
+
+
     }
 
     function hide_mobile_queue() {
@@ -189,7 +250,13 @@ function handle_lcd_mobile_body(params) {
                 });
             });
         }
+
         removeQueueVisibleClassToElements(classesToTarget);
+        //MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
+        //MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
+        //MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
+
+
     }
 
 
@@ -204,7 +271,12 @@ function handle_lcd_mobile_body(params) {
     let touchEndY = 0;
 
     function handleTouchStart(event) {
+        /*if (queue_displayed === false) {
+
+        }*/
+        console.log("queue is not displayed")
         touchStartY = event.touches[0].clientY;
+
     }
 
     function handleTouchMove(event) {
@@ -228,9 +300,9 @@ function handle_lcd_mobile_body(params) {
             // Add your code here
             menuHide_foreign();
 
-            document.removeEventListener('touchstart', handleTouchStart);
-            document.removeEventListener('touchmove', handleTouchMove);
-            document.removeEventListener('touchend', handleTouchEnd);
+            MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
+            MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
+            MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
 
         }
     }

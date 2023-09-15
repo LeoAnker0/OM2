@@ -15,6 +15,7 @@
         radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 0.5) 0px, transparent 100%),
         radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 0.5) 0px, transparent 100%);
 
+
 }
 
 
@@ -27,7 +28,6 @@
     height: 100%;
     display: grid;
     grid-template-areas:
-        "LCD_mobile_body_img"
         "LCD_mobile_body_img"
         "LCD_mobile_body_secondary_seek_indicator"
         "LCD_mobile_body_queue_container"
@@ -45,8 +45,6 @@
         "LCD_mobile_body_img LCD_mobile_body_title_area_container"
 
         "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
-        "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
-        "LCD_mobile_body_queue_container LCD_mobile_body_queue_container"
 
         "LCD_mobile_body_secondary_seek_indicator LCD_mobile_body_secondary_seek_indicator"
 
@@ -54,6 +52,7 @@
         "LCD_mobile_body_further_options_button_container LCD_mobile_body_further_options_button_container"
 
     ;
+
 }
 
 .LCD_mobile_body_img {
@@ -114,8 +113,10 @@
 
 .LCD_mobile_body_title_area_container.queue_visible {
     margin-top: 1rem;
-    margin-left: 0.5rem;
-    margin-right: 5rem;
+    position: absolute;
+    width: 110%;
+    left: 0%;
+
 
     grid-template-areas:
         "LCD_mobile_body_song_title   LCD_mobile_body_song_title   LCD_mobile_body_menu"
@@ -255,7 +256,7 @@
     display: none;
     visibility: hidden;
 
-    background-color: hsla(240, 100%, 50%, 0.2);
+    //background-color: hsla(240, 100%, 50%, 0.2);
 }
 
 .LCD_mobile_body_queue_container.queue_visible {
@@ -268,7 +269,9 @@
 }
 
 .LCD_mobile_queue_top_container {
-    position: sticky;
+    position: absolute;
+    width: 100%;
+    height: 2.5rem;
 
     display: grid;
     grid-template-areas:
@@ -281,10 +284,26 @@
 
 .LCD_mobile_body_queue_playing_next {
     grid-area: LCD_mobile_body_queue_playing_next;
+
+    color: white;
+    font-weight: 600;
+
+    width: 100%;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .LCD_mobile_body_queue_from {
     grid-area: LCD_mobile_body_queue_from;
+
+    color: white;
+    opacity: 0.8;
+    font-weight: 400;
+    width: 100%;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .LCD_mobile_body_queue_button_container {
@@ -294,18 +313,90 @@
     inset: 10%;
     width: 80%;
     height: 80%;
-    position: relative;
+    position: absolute;
+
 }
 
 .LCD_mobile_body_queue_button_container button {
     background-color: transparent;
     border: none;
 
-    background-color: hsla(0, 00%, 90%, 0.5);
+    backdrop-filter: brightness(2) saturate(0.5) contrast(0.8) blur(10px);
+    -webkit-backdrop-filter: brightness(2) saturate(0.5) contrast(0.8) blur(10px);
     border-radius: 8px;
+    height: 1.8rem;
+    width: 1.8rem;
+    aspect-ratio: 1/1;
+
+    /*
+    -webkit-mask-image: url(/assets/v3/shuffle_mask.png);
+    mask-image: url(/assets/v3/shuffle_mask.png);
+
+    */
+
+    mask-mode: alpha;
+
+    /*mask-mode: alpha;
+    background-color: hsla(0, 00%, 90%, 0.8);*/
+}
+
+.LCD_mobile_body_queue_button_container button img {
+    position: relative;
+    height: 100%;
     aspect-ratio: 1/1;
 }
 
+
+.LCD_mobile_queue_content_container {
+    position: relative;
+    top: 3rem;
+    width: 100%;
+    height: calc(100% - 3rem);
+
+    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.LCD_mobile_queue_content_container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.lcd_mobile_queue_item {
+    position: relative;
+    width: 100%;
+    height: 3rem;
+    display: grid;
+    grid-template-areas:
+        "lcd_mobile_queue_item_song_img lcd_mobile_queue_item_song_name"
+        "lcd_mobile_queue_item_song_img lcd_mobile_queue_item_song_artist"
+
+    ;
+
+    grid-template-columns: 3.8rem 1fr;
+
+    margin-bottom: 0.8rem;
+}
+
+.lcd_mobile_queue_item_song_img {
+    grid-area: lcd_mobile_queue_item_song_img;
+    aspect-ratio: 1/1;
+    height: 3rem;
+    border-radius: 6px;
+}
+
+.lcd_mobile_queue_item_song_name {
+    grid-area: lcd_mobile_queue_item_song_name;
+    color: white;
+}
+
+.lcd_mobile_queue_item_song_artist {
+    grid-area: lcd_mobile_queue_item_song_artist;
+    color: hsla(0, 00%, 80%, 0.6);
+    color: hsl(0, 00%, 70%);
+}
 
 
 .LCD_mobile_body_secondary_seek_indicator {

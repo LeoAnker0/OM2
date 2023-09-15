@@ -13,8 +13,8 @@ import './css/settings.css';
 import './css/projectView.css';
 import './css/lcd_mobile_body.css';
 
-export const MAIN_CONST_EXPORT_apiPath = "https://om2apis.la0.uk";
-export const MAIN_CONST_EXPORT_mediaPath = "https://om2media.la0.uk";
+export const MAIN_CONST_EXPORT_apiPath = "https://testom2apis.la0.uk";
+export const MAIN_CONST_EXPORT_mediaPath = "https://testom2media.la0.uk";
 
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
@@ -22,6 +22,8 @@ import layout from './html/layout.html?raw';
 /* build in the different sections of the webpage, with modification of the src 
 names so that they point somewhere */
 import { loadMAINtopleft, loadMAINtopright } from './js/exportHTMLchunks.js';
+
+import { svgImports } from './js/importAssets.js';
 
 /* creates event listeners for the playback controls as well as
 creating functions that set the different states of the playback buttons,
@@ -190,7 +192,14 @@ export function handleRoute(route) {
 
 /* start the whole site */
 import { initSettings } from './js/settings.js';
-document.getElementById('app').innerHTML = layout;
+
+let replacedContent = layout;
+for (const [placeholder, value] of Object.entries(svgImports)) {
+    const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+    replacedContent = replacedContent.replace(regex, value);
+}
+
+document.getElementById('app').innerHTML = replacedContent;
 initSettings();
 
 
