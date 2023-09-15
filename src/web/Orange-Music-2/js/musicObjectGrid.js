@@ -1,6 +1,18 @@
 /* 
 JS for creating the music objects, and then hydrating them with dynamic data
 */
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { handleRoute } from './routing.js';
+import { MENUdisplay } from './menu.js';
+import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
+import { svgImports } from './importAssets.js';
+import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
+import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+
+
+
+
 
 export async function initMusicObjectsGrid() {
     try {
@@ -29,7 +41,6 @@ export function hideMusicObjectsGrid() {
     mainContent.innerHTML = "";
 }
 
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
 
 async function getLibraryData() {
@@ -79,8 +90,6 @@ async function getLibraryData() {
 
 
 
-import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
-import { svgImports } from './importAssets.js';
 
 function loadInContainer() {
     let IDofElement = "MAINcontentPages";
@@ -95,8 +104,6 @@ function loadInContainer() {
 }
 
 
-import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
-import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 
 function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
@@ -208,7 +215,6 @@ function loadObjects(libraryData) {
 
 };
 
-import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
 
 async function getProjectDetails(project_id) {
     try {
@@ -279,7 +285,6 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
 };
 
 
-import { MENUdisplay } from './menu.js';
 
 function displayMenu(event, project_id) {
     event.stopPropagation();
@@ -337,7 +342,6 @@ function daysToDaysWeeksMonthsYears(milliseconds) {
     }
 }
 
-import { handleRoute } from '../main.js';
 
 function addNewLibraryItem() {
     handleRoute("/new-project/")

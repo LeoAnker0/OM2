@@ -24,7 +24,6 @@ export function initialiseLCD() {
 }
 
 function open_mobile_lcd_body(event) {
-    console.log("open mobile lcd body")
     event.stopPropagation();
     const params = {
         param: "cheese",

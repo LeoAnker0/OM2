@@ -1,6 +1,6 @@
 /* JS for the search bar --------------------------------------------------------------------- */
 
-import { handleRoute } from '../main.js';
+import { handleRoute } from './routing.js';
 
 export function setEventListenersForSearchbar() {
     const clearIcon = document.getElementById("topleftClearIcon");

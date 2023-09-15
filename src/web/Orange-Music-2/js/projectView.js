@@ -3,7 +3,7 @@ done somewhere else, and now that is a reality, so now the function
 that generates should be here
 */
 
-import { handleRoute } from '../main.js';
+import { handleRoute } from './routing.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails } from './network_requests.js';
 
@@ -477,7 +477,6 @@ async function deleteProjectFromServer(project_id) {
         });
 
         const data = await response.json();
-        console.log(data)
 
     } catch (error) {
         console.error('Error:', error);
@@ -535,7 +534,6 @@ function loadInTable(details) {
                 if (rowContainer) {
                     const rowId = rowContainer.getAttribute('data-row-id');
                     displayMenuForRow(event);
-                    console.log(`Button in row ${rowId} clicked.`);
                 }
             }
         });
@@ -840,9 +838,6 @@ function detect_when_image_is_no_longer_visible() {
 
     function callback(entries, observer) {
         entries.forEach(entry => {
-            if (is_mobile()) {
-                console.log("media query matches")
-            }
             /* when mobile and above image */
             if ((entry.isIntersecting) && (is_mobile())) {
                 header.style.backdropFilter = "none";

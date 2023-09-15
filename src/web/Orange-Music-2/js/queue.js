@@ -3,6 +3,11 @@ let queueState = "hidden";
 import { loadQUEUEbody } from './exportHTMLchunks.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
+import queueItem from '../html/queueItem.html?raw';
+
+import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
+
+
 export function initialiseQueue() {
     loadQUEUEbody();
     const queueButton = document.getElementById("queueButton");
@@ -57,9 +62,6 @@ function queueStateChange(state) {
 }
 
 
-import queueItem from '../html/queueItem.html?raw';
-
-import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
 
 export function updateQueue() {
     //console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)

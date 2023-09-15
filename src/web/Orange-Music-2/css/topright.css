@@ -43,11 +43,11 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .TOPRIGHT-playbackcontrols-container {
-        width: 1rem;
         position: absolute;
         display: block;
         top: 0;
         right: 0;
+
     }
 }
 
@@ -139,7 +139,7 @@
 
         height: 100%;
         position: absolute;
-        right: -3.7rem;
+        right: 0rem;
         transform: scale(2);
 
 

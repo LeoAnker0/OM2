@@ -277,7 +277,7 @@
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTviewDisplayDescription {
         width: 100%;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     }
 
     .PROJECTviewDescriptionMoreButton {

@@ -88,10 +88,8 @@ function handle_lcd_mobile_body(params) {
     /* check if  audo is playing */
     function is_audio_paused() {
         if (PLAYBACK_audio_tag.paused) {
-            console.log("audio is paused")
             playIcon.src = svgImports["icons_playButtonV2"];
         } else {
-            console.log("audio is playing")
             playIcon.src = svgImports["icons_derpy"];
         }
 
@@ -146,7 +144,6 @@ function handle_lcd_mobile_body(params) {
     nextButton.addEventListener('click', () => {
         PLAYBACK_handle_PLAYER_nextButton();
         update_display();
-        console.log("next was clicked");
         if (queue_displayed === true) {
             load_mobile_queue();
         }
@@ -272,7 +269,6 @@ function handle_lcd_mobile_body(params) {
 
     function handleTouchStart(event) {
         if (queue_displayed === false) {
-            console.log("queue is not displayed")
             touchStartY = event.touches[0].clientY;
 
         }
@@ -296,7 +292,6 @@ function handle_lcd_mobile_body(params) {
         // Check if the vertical distance is greater than the threshold
         if (deltaY > swipeThreshold) {
             // Perform your desired action when a down swipe is detected
-            console.log("Down swipe detected!");
             // Add your code here
             menuHide_foreign();
 

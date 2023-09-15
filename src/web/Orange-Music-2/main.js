@@ -53,8 +53,9 @@ import { PLAYBACK_init, PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBA
 
 import { updateUserDetails, getUserDetail } from './js/network_requests.js';
 
-export async function main() {
+import { init_routing } from './js/routing.js';
 
+export async function main() {
     PLAYBACK_init();
     loadMAINtopleft();
     loadMAINtopright();
@@ -64,130 +65,7 @@ export async function main() {
     setEventListenersForVolume();
     initAccountImg();
     initialiseQueue();
-
-
-    function handleUrlChange() {
-        const currentPath = window.location.pathname;
-        handleRoute(currentPath);
-    }
-    window.addEventListener('popstate', handleUrlChange);
-
-    /*
-        get last_state
-
-        if null :
-            handleUrlChange()
-
-        else:
-            do whatever to handle the new change
-
-    */
-
-    const lastStateRecord = await getUserDetail("last_state");
-    const lastState = JSON.parse(lastStateRecord[0].last_state);
-    if (lastState != null) {
-        const current_path = lastState.current_path;
-
-        handleRoute(current_path);
-        PLAYBACK_handle_input_sync_state(lastState);
-
-    } else {
-        handleUrlChange();
-
-    }
-
-
-    //window.location.href = '/';
-
-    /* if we do it on end, and it's kinda weird, so imma just do it every 20 seconds instead...
-    window.addEventListener('beforeunload', function(e) {
-        e.preventDefault();
-        e.returnValue = 'Please wait while we complete some tasks...';
-
-        const current_path = window.location.pathname;
-        const current_queue = PLAYBACK_songs_array;
-        const current_index = PLAYBACK_songs_array_index;
-
-        const playback_states = PLAYBACK_GET_progress();
-        playback_states.current_path = current_path;
-        playback_states.current_queue = current_queue;
-        playback_states.current_index = current_index;
-
-        console.log(playback_states)
-        updateUserDetails("last_state", playback_states);
-    });*/
-
-    function update_user_sync() {
-        const current_path = window.location.pathname;
-        const current_queue = PLAYBACK_songs_array;
-        const current_index = PLAYBACK_songs_array_index;
-
-        const playback_states = PLAYBACK_GET_progress();
-        playback_states.current_path = current_path;
-        playback_states.current_queue = current_queue;
-        playback_states.current_index = current_index;
-
-        //console.log(playback_states)
-        updateUserDetails("last_state", playback_states);
-    }
-
-    const intervalId = setInterval(update_user_sync, 20000);
-}
-
-
-/* route handlers */
-function handleMusicObjectsGrid() {
-    hideProjectView();
-    initMusicObjectsGrid();
-}
-
-function handleProjectView(projectID) {
-    hideMusicObjectsGrid();
-    initProjectView(projectID);
-}
-
-
-const routeHandlers = {
-    '/': handleMusicObjectsGrid,
-    '/new-project/': createNewProjectID,
-    '/projects/:projectID': handleProjectView,
-    // Add more routes and handlers as needed
-};
-
-function notFoundHandler() {
-    console.log("notFoundHandler")
-
-    /* add a 404 page */
-
-    /* after like 3-5 seconds of 404 page do
-
-    handleRoute("/")''
-
-     */
-}
-
-export function handleRoute(route) {
-    const handlerKeys = Object.keys(routeHandlers);
-
-    for (const key of handlerKeys) {
-        const pattern = new RegExp(`^${key.replace(/:[^\s/]+/g, '([^/]+)')}$`);
-        const match = route.match(pattern);
-
-        if (match) {
-            const handler = routeHandlers[key];
-            const parameters = match.slice(1);
-            handler(...parameters);
-
-            // Update browser's history
-            if (route !== "/new-project/") {
-                history.pushState({}, '', route);
-            }
-
-            return;
-        }
-    }
-
-    notFoundHandler(); // Route not recognized
+    init_routing();
 }
 
 /* start the whole site */
