@@ -226,9 +226,9 @@ function handle_lcd_mobile_body(params) {
             });
         }
         addQueueVisibleClassToElements(classesToTarget);
-        //MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
-        //MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
-        //MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
+        MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
+        MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
+        MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
         load_mobile_queue();
 
 
@@ -252,9 +252,9 @@ function handle_lcd_mobile_body(params) {
         }
 
         removeQueueVisibleClassToElements(classesToTarget);
-        //MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
-        //MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
-        //MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
+        MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
+        MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
+        MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
 
 
     }

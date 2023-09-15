@@ -359,7 +359,7 @@
     -webkit-overflow-scrolling: touch;
 }
 
-.LCD_mobile_queue_content_container::-webkit-scrollbar {
+.LCD_mobile_queue_content_container *::-webkit-scrollbar {
     width: 0;
     height: 0;
 }
