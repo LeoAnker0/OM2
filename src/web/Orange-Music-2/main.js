@@ -13,8 +13,8 @@ import './css/settings.css';
 import './css/projectView.css';
 import './css/lcd_mobile_body.css';
 
-export const MAIN_CONST_EXPORT_apiPath = "https://testom2apis.la0.uk";
-export const MAIN_CONST_EXPORT_mediaPath = "https://testom2media.la0.uk";
+export const MAIN_CONST_EXPORT_apiPath = "https://om2apis.la0.uk";
+export const MAIN_CONST_EXPORT_mediaPath = "https://om2media.la0.uk";
 
 /* imports in the most basic-ist of html which constitutes the rough layout of the page */
 import layout from './html/layout.html?raw';
