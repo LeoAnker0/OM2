@@ -271,11 +271,11 @@ function handle_lcd_mobile_body(params) {
     let touchEndY = 0;
 
     function handleTouchStart(event) {
-        /*if (queue_displayed === false) {
+        if (queue_displayed === false) {
+            console.log("queue is not displayed")
+            touchStartY = event.touches[0].clientY;
 
-        }*/
-        console.log("queue is not displayed")
-        touchStartY = event.touches[0].clientY;
+        }
 
     }
 
