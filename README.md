@@ -2,7 +2,9 @@
 Orange music is a music streaming platform designed specifically for musicians and creators. Orange Music is a music streaming platform tailored to the needs of musicians and creators, providing a dedicated platform for uploading and listening to your projects. 
 
 ![Mobile Views](/docs/images/om2_mobile_views_18:9:23.png)
+
 ![Desktop View 1](/docs/images/om2_desktop_view_1_18/9/23.png)
+
 ![Desktop View 2](/docs/images/om2_desktop_view_2_18/9/23.png)
 
 
