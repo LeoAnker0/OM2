@@ -44,6 +44,13 @@ sudo docker compose up
 ###### *If you are unable to access the service from the domain. Try restarting the containers a few times, this is an issue, however it should be fixed at some point. This will only happen the first time that you start the service, after that it should start from the first go.*
 
 
+## Tech Stack
+This project is in two parts, the frontend and the backend. 
+The frontend is written in vanilla javascript and vanilla CSS, and it interacts with the backend via apis. The frontend is via an nginx docker container. And the media is served via another nginx container.
+The backend is python fastapi, running in docker containers. From there it interacts with postgres, and FFMPEG is used to process the audio files, *(which does leave the door open for video? However video requires so much storage, so I might not.),* and PIL is used to turn all the input images into webp's.
+And then because my internet is slow I use my VPS as a build server, which builds the docker images, and pushes them to the docker hub, and then I can just pull them down on my VPS again.
+
+
 
 
 
