@@ -1,6 +1,9 @@
 # Orange Music 2 - Music Streaming for Music Makers
 Orange music is a music streaming platform designed specifically for musicians and creators. Orange Music is a music streaming platform tailored to the needs of musicians and creators, providing a dedicated platform for uploading and listening to your projects. 
 
+![Mobile Views](/docs/images/om2_mobile_views_18:9:23.png)
+
+
 #### Notes:
 ###### *At the moment it is not possible to set the domains name that the main.js tries to access other than in that file. So this means it is not possible to deploy this yourself, unless you build it yourself, however this is something that will be being changed soon.*
 ###### *The only images that are available at the moment are arm64 images, and in the future I will also include x86 images.*
