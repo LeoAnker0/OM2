@@ -46,9 +46,9 @@ sudo docker compose up
 
 ## Tech Stack
 This project is in two parts, the frontend and the backend. 
-The frontend is written in vanilla javascript and vanilla CSS, the javascript is in the form of modules, and vite is used to build the project into a nice small bundle, and it interacts with the backend via apis. The frontend is served via an nginx docker container. And the media is served via another nginx container.
-The backend is python fastapi, running in docker containers. From there it interacts with postgres, and FFMPEG is used to process the audio files, *(which does leave the door open for video? However video requires so much storage, so I might not.),* and PIL is used to turn all the input images into webp's.
-And then because my internet is slow I use my VPS as a build server, which builds the docker images, and pushes them to the docker hub, and then I can just pull them down on my VPS again.
+* The frontend is written in vanilla javascript and vanilla CSS, the javascript is in the form of modules, and vite is used to build the project into a nice small bundle, and it interacts with the backend via apis. The frontend is served via an nginx docker container. And the media is served via another nginx container.
+* The backend is python fastapi, running in docker containers. From there it interacts with postgres, and FFMPEG is used to process the audio files, *(which does leave the door open for video? However video requires so much storage, so I might not.),* and PIL is used to turn all the input images into webp's.
+* And then because my internet is slow I use my VPS as a build server, which builds the docker images, and pushes them to the docker hub, and then I can just pull them down on my VPS again.
 
 
 
