@@ -11,6 +11,7 @@ Orange music comes with several key features that make it a valuable tool for mu
 * Projects: Create projects that allow you to collect multiple songs/files together.
 * Easy Music Upload: Upload your music from anywhere, in any format, and listen to it wherever you have internet access.
 * Seamless Playback: Enjoy smooth and uninterrupted playback of your songs. Unlike file-sharing platforms like Dropbox, Orange Music is designed for playing multiple songs in sequence or looping a song and has queue functionality, creating a more focused and streamlined listening experience.
+* Sync: It will sync your last state, so that you can pick up on a different device or the next day from the place that you left off.
 * Coming functionality: In future updates Orange Music will get the ability to share projects or songs with others.
 
 
