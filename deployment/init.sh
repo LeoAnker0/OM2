@@ -16,4 +16,6 @@ mv temp_folder/$target_folder/* .
 rm -r temp_folder
 rm repo.zip
 
+mv env.txt .env
+
 echo "Extraction and cleanup complete."

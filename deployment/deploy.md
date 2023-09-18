@@ -9,6 +9,8 @@ Make sure that you have unzip installed:
 sudo apt-get update && sudo apt-get install unzip
 ```
 
+A domain name and cloudflare tunnel token ready.
+
 Make sure that you have docker and docker compose installed:
 * Either follow the intructions here [https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
 
