@@ -1,23 +1,3 @@
-# Building Deployment
-
-Building from the server:
-Make sure that git is installed so that I can clone the repo
-```sh
-git clone https://github.com/LeoAnker0/Orange-Music-2.git .
-```
-Make sure that you are logged in to docker using docker login...
-```sh
-docker login
-```
-
-Then make sure that the build.sh script has been `chmod +x build.sh`, and then do:
-```sh
-sudo ./build.sh
-```
-
-This will build the three containers, but this will only work on arm64 machines, or I mean at the moment the script will only build arm64 images, but that is easy to change.
-
-
 # Using Deployment
 Create a folder for om2:
 ```sh
@@ -88,6 +68,28 @@ run the docker compose
 ```sh
 sudo docker compose up
 ```
+
+---
+
+# Building Deployment
+
+Building from the server:
+Make sure that git is installed so that I can clone the repo
+```sh
+git clone https://github.com/LeoAnker0/Orange-Music-2.git .
+```
+Make sure that you are logged in to docker using docker login...
+```sh
+docker login
+```
+
+Then make sure that the build.sh script has been `chmod +x build.sh`, and then do:
+```sh
+sudo ./build.sh
+```
+
+This will build the three containers, but this will only work on arm64 machines, or I mean at the moment the script will only build arm64 images, but that is easy to change.
+
 
 
 
