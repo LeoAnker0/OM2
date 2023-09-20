@@ -1,4 +1,17 @@
 # Using Deployment
+
+Also this project currently is only tested (for deployment) as working on ubuntu, on an arm server. Theoretically it should run wherever because of docker containers, however I have not tested this yet. And at the moment there are no x86/AMD64 images, however this will come in the future. But if there are any issues or questions, please contact me at the email in my profile.
+
+This project uses Cloudflare tunnels to get SSL and a stable connection to the outside world, independent of wether or not you have a fixed IP. This means that you will need a domain name to be able to access om2. In theory you could set it up to run locally, however this is not a use case that I use it for, and thus at the moment it will be for advanced users only.
+
+If you already have a domain name, skip this sentence.
+In the olden days I would have said get a domain name from google domains, because it was easy and trust worthy, however they decided to sell that business??? So now I would say get it from Cloudflare, who sell it at cost, and it means you don't have to configure C-Names and stuff, not that it is particularly hard these days.
+
+And once you have your domain name at Cloudflare, or accessible through Cloudflare, you want to head over to the zero trust overview --> access --> tunnels. From here you will make a new tunnel, and then write down the token that it generates somewhere, making sure that you choose the docker install method. From here you want to make three tunnels, one that has a name of `om2.domain.tld`, another of `om2apis.domain.tld`, and the third one of `om2media.la0.uk`.
+
+Once you have that ready you can then proceed to the following steps:
+
+
 Create a folder for om2:
 ```sh
 mkdir om2 && cd ./om2
@@ -9,7 +22,6 @@ Make sure that you have unzip installed:
 sudo apt-get update && sudo apt-get install unzip
 ```
 
-A domain name and cloudflare tunnel token ready.
 
 Make sure that you have docker and docker compose installed:
 * Either follow the intructions here [https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
@@ -62,7 +74,9 @@ wget https://raw.githubusercontent.com/LeoAnker0/Orange-Music-2/main/deployment/
 
 <br>
 
-Edit the .env file
+Edit the `.env` file
+
+You can edit the `.env` with whatever software that you want to use, however 
 
 <br>
 
