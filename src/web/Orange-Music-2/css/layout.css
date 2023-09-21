@@ -6,35 +6,20 @@
     --height-of-top: 4rem;
 
     --border-radius-top: 8px;
-
-
     --outline-and-back: var(--dgrey-7);
 
     --background-top-right-back: var(--outline-and-back);
     --background-top-left-back: var(--outline-and-back);
     --background-bottom-left-back: var(--outline-and-back);
     --background-bottom-right-back: var(--dgrey-6);
-
-
     --content-inset: 0.4rem;
     --content-inset-colour: var(--outline-and-back);
 
     --playercontrols-outline-colour: var(--lgrey-0);
-
 }
 
 @media (max-width: 850px) {
 
-    /*
-    :root {
-        --width-of-left-bar-fortop: 0rem;
-
-    }
-
-    .topHalf-left {
-        visibility: hidden;
-    }
-    */
     .TOPRIGHT-accountcontrols-container,
     .TOPRIGHT-playbackcontrols-container {
         visibility: hidden;
@@ -43,24 +28,18 @@
     .TOPRIGHT-lcd-container {
         width: 100%;
     }
-
 }
 
 @media (max-width: 600px) {
-
     :root {
         --width-of-left-bar-fortop: 0rem;
-
     }
 
     .topHalf-left {
         visibility: hidden;
         display: none;
     }
-
 }
-
-
 
 main {
     height: 100%;
@@ -99,8 +78,6 @@ main {
     overflow-x: hidden;
 }
 
-
-
 .topHalf-container {
     position: absolute;
     height: var(--height-of-top);
@@ -124,7 +101,6 @@ main {
     width: 100%;
     height: var(--height-of-top);
     display: flex;
-
 }
 
 .topHalf:after {
@@ -132,18 +108,18 @@ main {
     z-index: 1;
     width: 100%;
     height: 1px;
-    background-color: white;
     opacity: 0.2;
     right: 0;
     content: "";
     bottom: 0;
+
+    background-color: var(--background);
 }
 
 .topHalf-left {
     position: relative;
     height: 100%;
     width: var(--width-of-left-bar-fortop);
-    //background-color: var(--background-top-left-back);
     z-index: 10;
 }
 
@@ -152,11 +128,12 @@ main {
     z-index: 1;
     width: 1px;
     height: 100%;
-    background-color: white;
     opacity: 0.2;
     right: 0;
     content: "";
     top: 0;
+
+    background-color: var(--background);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -164,8 +141,6 @@ main {
         display: none;
     }
 }
-
-
 
 .topHalf-right {
     position: relative;

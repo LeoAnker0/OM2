@@ -88,9 +88,6 @@ async function getLibraryData() {
 }
 
 
-
-
-
 function loadInContainer() {
     let IDofElement = "MAINcontentPages";
     let replacedContent = musicObjetsGridContainer;
@@ -250,10 +247,8 @@ async function getProjectDetails(project_id) {
 async function addEventListeners_to_music_object_grid(event, libraryData) {
     const clickedElement = event.target;
 
-
     // for the play button"
     if (clickedElement.classList.contains('MOG-item-controls-play')) {
-
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
         const project_details = await getProjectDetails(objectID);
@@ -277,9 +272,11 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
             const objectID = libraryData[buttonID].project_id;
 
             handleRoute(`/projects/${objectID}`);
-        } else if (clickedElement.id === 'MOGaddNewItem') {
-            addNewLibraryItem();
         }
+    }
+
+    if (clickedElement.id === 'MOGaddNewItem') {
+        addNewLibraryItem();
     }
 
 };

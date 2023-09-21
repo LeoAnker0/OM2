@@ -1,18 +1,24 @@
-<div class="MOG-itemContainer" id="MOGI_itemContainer-{MOGI_placeholder_itemID}" draggable="false">
+<button class="MOG-itemContainer" id="MOGI_itemContainer-{MOGI_placeholder_itemID}" draggable="false">
     <div class="MOG-itemImageContainer">
         <img src="{MOG_image}">
-        <div class="MOG-item-controlsContainer">
-            <div id="MOGIplayButton-{MOGI_placeholder_itemID}" class="MOG-item-controls-play MATERIAL-blur-3">
-                <img src="{icons_playButtonV2}">
-            </div>
-            <div id="MOGImenuButton-{MOGI_placeholder_itemID}" class="MOG-item-controls-menu MATERIAL-blur-3">
-                <img src="{icons_menuOptionsButton}">
-            </div>
+    </div>
+    <div id="MOGIplayButton-{MOGI_placeholder_itemID}" class="MOG-item-controls-play">
+        <div>
+            <img src="{icons_playButtonV2}">
+        </div>
+    </div>
+    <div id="MOGImenuButton-{MOGI_placeholder_itemID}" class="MOG-item-controls-menu">
+        <div>
+            <img src="{icons_menuOptionsButton}">
         </div>
     </div>
     <div class="MOG-itemTextContainer">
         <div class="MOG-itemTextTop">{MOG_text1}</div>
         <div class="MOG-itemTextBottom">{MOG_text2}</div>
-        <div class="MOG-itemCheckedDate">{MOG_checkedDate}</div>
     </div>
-</div>
+    <div class="MOG-itemCheckedDate">
+        <div>
+            {MOG_checkedDate}
+        </div>
+    </div>
+</button>

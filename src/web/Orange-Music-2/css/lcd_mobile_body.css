@@ -255,8 +255,6 @@
     grid-area: LCD_mobile_body_queue_container;
     display: none;
     visibility: hidden;
-
-    //background-color: hsla(240, 100%, 50%, 0.2);
 }
 
 .LCD_mobile_body_queue_container.queue_visible {

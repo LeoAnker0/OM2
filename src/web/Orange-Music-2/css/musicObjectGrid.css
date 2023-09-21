@@ -28,37 +28,66 @@
     height: 100%;
     width: calc(100% - 2rem);
     margin: 1rem;
-
-    /*  grid*/
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
-    grid-auto-rows: var(--MOG-height-of-MOGitem);
-    grid-gap: 1rem;
-
-}
-
-@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
-    .MOG-grid {
-        grid-template-columns: repeat(2, 2fr);
-        grid-auto-rows: 17rem;
-    }
 }
 
 /* music object grid items ---- */
 .MOG-itemContainer {
+    all: unset;
     position: relative;
-    height: var(--MOG-height-of-MOGitem);
     width: 100%;
-    max-width: 15rem;
+    height: 3rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    overflow: hidden;
+    transition: height 0.1s ease-in-out;
+    display: grid;
+    grid-template-areas:
+        "MOG-image MOG-play MOG-text MOG-date MOG-menu"
+    ;
+    grid-template-columns: 4rem 2.5rem calc(100% - 11.5rem) 2.5rem 2.5rem;
+
+    border-radius: 8px;
+}
+
+.MOG-itemContainer:hover {
+    cursor: pointer;
+    background-color: var(--secondary-weak);
+}
+
+.MOG-itemContainer:focus {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
+}
+
+.MOG-itemContainer:active {
+    background-color: var(--secondary);
+    outline: 1px solid var(--secondary);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOG-itemContainer {
+        height: 4rem;
+    }
+}
+
+.MOG-itemContainer::after {
+    content: "";
+    position: absolute;
+    bottom: 0rem;
+    width: 100%;
+    height: 1px;
+
+    background-color: var(--grey);
 }
 
 .MOG-itemImageContainer {
+    grid-area: MOG-image;
     position: relative;
-    top: 0;
-    width: calc(100% - (2 * 1px));
-    inset: 1px;
+    height: 80%;
+    top: 10%;
+    left: 1rem;
     aspect-ratio: 1/1;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
     pointer-events: none;
 
@@ -76,6 +105,7 @@
 }
 
 .MOG-itemTextContainer {
+    grid-area: MOG-text;
     position: relative;
     width: 100%;
     margin-top: 0.3rem;
@@ -105,57 +135,43 @@
     -webkit-box-orient: vertical;
 
     color: var(--MOG-text-secondary);
-
 }
 
 .MOG-itemCheckedDate {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    grid-area: MOG-date;
     font-size: 0.8rem;
-
-    color: var(--MOG-text-secondary);
-}
-
-.MOG-item-controlsContainer {
-    position: absolute;
     width: 100%;
-    height: 4rem;
-    bottom: 0;
-    display: flex;
-    pointer-events: auto;
+    color: var(--MOG-text-secondary);
+    display: grid;
+    align-items: center;
+    text-align: right;
 }
-
-
-@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
-    .MOG-item-controlsContainer {
-        display: none;
-    }
-}
-
 
 .MOG-item-controls-play {
-    --offset: 3rem;
-    position: relative;
-    height: var(--offset);
-    top: calc((100% - var(--offset)) / 2);
-    left: 0.5rem;
-    width: var(--offset);
+    grid-area: MOG-play;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    align-items: center;
+}
+
+.MOG-item-controls-play div {
+    height: 2rem;
+    aspect-ratio: 1/1;
     border-radius: 50%;
-    overflow: hidden;
     display: grid;
     place-items: center;
-    opacity: 0%;
+    justify-content: center;
+    pointer-events: none;
 }
 
 .MOG-itemContainer:hover .MOG-item-controls-play {
     opacity: 100%;
 }
 
-.MOG-item-controls-play:hover {
+.MOG-item-controls-play:hover div {
     background-color: var(--MOG-hover-background);
 }
-
 
 .MOG-item-controls-play img {
     position: relative;
@@ -163,27 +179,35 @@
     width: 1rem;
     left: 0.1rem;
     pointer-events: none;
+
+    filter: var(--make-svg-black);
 }
 
 .MOG-item-controls-menu {
-    --offset: 3rem;
-    position: relative;
-    height: var(--offset);
-    top: calc((100% - var(--offset)) / 2);
-    left: calc(100% - 6.5rem);
-    width: var(--offset);
-    border-radius: 50%;
-    overflow: hidden;
+    grid-area: MOG-menu;
+    height: 100%;
+    width: 3rem;
     display: grid;
     place-items: center;
-    opacity: 0%;
+    justify-content: center;
+    align-items: center;
+}
+
+.MOG-item-controls-menu div {
+    height: 2rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    justify-content: center;
+    pointer-events: none;
 }
 
 .MOG-itemContainer:hover .MOG-item-controls-menu {
     opacity: 100%;
 }
 
-.MOG-item-controls-menu:hover {
+.MOG-item-controls-menu:hover div {
     background-color: var(--MOG-hover-background);
 }
 
@@ -192,4 +216,58 @@
     height: 12.5%;
     width: 60%;
     pointer-events: none;
+
+    filter: var(--make-svg-black);
+}
+
+.MOGaddNewItem {
+    all: unset;
+    height: 6rem;
+    width: calc(100% - 1rem);
+    display: grid;
+    align-content: center;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    padding-left: 1rem;
+}
+
+.MOGaddNewItem:hover {
+    cursor: pointer;
+
+    background-color: var(--secondary-weak);
+}
+
+.MOGaddNewItem:focus {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
+
+}
+
+.MOGaddNewItem:active {
+    background-color: var(--secondary);
+    outline: 1px solid var(--secondary);
+}
+
+.MOG_add_text {
+    width: 100%;
+    font-size: 3rem;
+    font-family: 'Roboto Mono', monospace;
+    pointer-events: none;
+
+    color: var(--text);
+}
+
+.MOG_add_image {
+    visibility: hidden;
+    display: none;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    #MOGaddNewItem {
+        height: 4rem;
+    }
+
+    .MOG_add_text {
+        font-size: 2rem;
+    }
 }

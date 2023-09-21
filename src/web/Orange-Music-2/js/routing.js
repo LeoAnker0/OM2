@@ -19,7 +19,8 @@ export async function init_routing() {
     const lastStateRecord = await getUserDetail("last_state");
     const lastState = JSON.parse(lastStateRecord[0].last_state);
     if (lastState != null) {
-        const current_path = lastState.current_path;
+        //const current_path = lastState.current_path;
+        const current_path = window.location.pathname;
 
         handleRoute(current_path);
         PLAYBACK_handle_input_sync_state(lastState);
