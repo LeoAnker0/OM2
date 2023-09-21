@@ -1,37 +1,26 @@
 .menuModalEnvironment {
     position: absolute;
-
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-
     z-index: 100;
-
     display: none;
 }
 
-
-.menuModalBackground {
-    /*background-color: hsla(130, 60%, 50%, 0.5);
-    backdrop-filter: blur(0px);*/
-}
+.menuModalBackground {}
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .menuModalBackground {
-        background-color: hsla(0, 0%, 10%, 0.4);
-        /* Fallback background color */
         backdrop-filter: brightness(0.8) saturate(0.0);
-        /* Desired filter */
+        background-color: var(--background-overlay);
     }
 
     /* Check if backdrop-filter is supported */
     @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
         .menuModalBackground {
-            background-color: transparent;
-            /* Reset background color */
             backdrop-filter: brightness(0.8) saturate(0.0);
-            /* Desired filter */
+            background-color: transparent;
         }
     }
 }
@@ -41,42 +30,27 @@
     top: 0px;
     left: 0px;
     width: 14rem;
-    //background-color: red;
     border-radius: 8px;
     z-index: 2;
-
-    outline: 1px solid white;
-    outline: 1px solid transparent;
-
     pointer-events: none;
-
-    background-color: hsla(330, 10%, 20%, 1);
-
     overflow: hidden;
 
-    border-bottom: 1px solid hsla(0, 00%, 80%, 0.2);
-    border-right: 1px solid hsla(0, 00%, 80%, 0.2);
-
-
-
+    border-bottom: 1px solid var(--text-secondary);
+    border-right: 1px solid var(--text-secondary);
+    background-color: var(--transparent-overlay);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .MENUmodalBody {
         bottom: 0 !important;
         top: auto !important;
-
         width: 100%;
         left: 0 !important;
-
         border-radius: 0;
-
-        background-color: hsla(330, 10%, 13%, 1.0);
-
         border-top-right-radius: 2px;
         border-top-left-radius: 2px;
 
-
+        background-color: var(--background-dark);
     }
 }
 
@@ -84,7 +58,6 @@
     position: relative;
     height: 2.5rem;
     width: 100%;
-
     display: flex;
     align-items: center;
     pointer-events: all;
@@ -93,15 +66,12 @@
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .MENUmodalItemContainer {
         height: 4rem;
-
     }
 }
 
 .MENUmodalItemContainer:not(:last-child) {
-    border-bottom: 1px solid hsla(0, 00%, 80%, 0.2);
-
+    border-bottom: 1px solid var(--text-secondary);
 }
-
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .MENUmodalBody {
@@ -110,59 +80,18 @@
 
     .MENUmodalItemContainer:not(:last-child) {
         border: none;
-
     }
 }
-
-
-/*
-.MENUmodalItemContainer::after {
-    content: "";
-    position: absolute;
-
-    width: 100%;
-    height: 0.02rem;
-    bottom: 0;
-
-    background-color: hsla(0, 00%, 80%, 0.2);
-}
-
-.MENUmodalBody:nth-child(-1) .MENUmodalItemContainer::after {
-    content: "";
-    position: absolute;
-
-    width: 100%;
-    height: 0.02rem;
-    bottom: 0;
-
-    background-color: hsla(0, 00%, 80%, 0.2);
-    background-color: transparent;
-}
-
-@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
-    .MENUmodalItemContainer::after {
-        background-color: transparent;
-
-    }
-}
-*/
-
 
 .MENUmodalItemContainer:hover {
-    background-color: hsla(0, 100%, 100%, 0.1);
-
+    background-color: var(--transparent-overlay-focus);
 }
 
 .MENUmodalTextArranger {
     position: relative;
-
-
-    color: white;
     left: 0.5rem;
-
     font-weight: 400;
     font-size: 1rem;
-
     pointer-events: none;
 }
 
@@ -170,20 +99,15 @@
     .MENUmodalTextArranger {
         font-size: 1.2rem;
         left: 2.5rem;
-
     }
 }
 
 .MENUmodalSVGcontainer {
     position: absolute;
-
     height: 1rem;
     width: 1rem;
-
     right: 0.5rem;
     pointer-events: none;
-
-
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -197,38 +121,28 @@
     height: 90%;
     aspect-ratio: 1/1;
     pointer-events: none;
-
 }
-
-
-
 
 /* the image project updaters modal --------------------------------- */
 .MENUmodalBody_image_select {
     position: absolute;
     top: 0px;
     left: 0px;
-
     height: 12rem;
     width: 12rem;
-    background-color: hsla(330, 20%, 10%, 1.0);
     border-radius: 8px;
     z-index: 2;
-
     pointer-events: auto;
-
-
     overflow: hidden;
-
     display: grid;
     grid-template-columns: repeat(2, minmax(1rem, 2fr));
     grid-auto-rows: 1fr;
-    /* This sets all rows to have equal height */
     grid-template-areas:
         "file-select file-select"
         "image-preview file-submit";
 
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--transparent-overlay);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -238,16 +152,12 @@
         width: 100%;
         height: auto;
         aspect-ratio: 1/1;
-
         border-top-right-radius: 1rem;
         border-top-left-radius: 1rem;
         border-bottom-right-radius: 0px;
         border-bottom-left-radius: 0px;
-
     }
 }
-
-
 
 .MENUmodalBody_image_select_file_drop_area,
 .MENUmodalBody_image_preview_area,
@@ -257,9 +167,9 @@
     height: calc(100% - (2 * 0.5rem));
     width: calc(100% - (2 * 0.5rem));
     border-radius: 8px;
-    background-color: hsla(330, 10%, 20%, 1.0);
     overflow: hidden;
 
+    background-color: var(--transparent-overlay-focus);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -270,21 +180,19 @@
         inset: 1rem;
         height: calc(100% - (2 * 1rem));
         width: calc(100% - (2 * 1rem));
-
         border-radius: 1rem;
-
     }
 }
 
 .MENUmodalBody_image_select_file_drop_area {
     grid-area: file-select;
-    outline: 1px solid hsl(330, 50%, 20%);
-
     display: grid;
     align-items: center;
     justify-content: center;
     position: relative;
-    color: white;
+
+    color: var(--text);
+    outline: 1px solid var(--text-secondary);
 }
 
 .MENUmodalBody_image_select_file_drop_area button {
@@ -293,12 +201,12 @@
     width: 60%;
     text-align: center;
     left: 20%;
-
 }
 
 .MENUmodalBody_image_preview_area {
     grid-area: image-preview;
-    outline: 1px solid hsl(330, 0%, 90%);
+
+    outline: 2px solid var(--text-third);
 }
 
 .MENUmodalBody_image_preview_area img {
@@ -306,14 +214,13 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
-
 }
 
 .MENUmodalBody_image_submit_area {
     grid-area: file-submit;
     border-radius: 50%;
-    outline: 1px solid hsl(330, 50%, 70%);
-    //outline: 1px solid red;
+
+    outline: 3px solid var(--accent);
 }
 
 .MENUmodalBody_image_submit_area button {
@@ -324,15 +231,10 @@
     position: relative;
     height: 100%;
     width: 100%;
-
-    color: white;
-
     visibility: hidden;
 
-    background-color: hsl(0, 100%, 50%);
-
-    visibility: hidden;
-
+    color: var(--text);
+    background-color: var(--primary);
 }
 
 .MENUmodalBody_image_submit_area_loader_spinner {
@@ -341,20 +243,19 @@
     width: 100%;
     z-index: 2;
     top: 0;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     visibility: hidden;
 }
 
 .MENUmodalBody_image_submit_area_loader_spinner div {
-    border-top: 4px solid white;
     border-radius: 50%;
     width: 96%;
     height: 96%;
     animation: MENU_LOADER_spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+
+    border-top: 4px solid var(--text-third);
 }
 
 @keyframes MENU_LOADER_spin {
@@ -366,39 +267,3 @@
         transform: rotate(360deg);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**/

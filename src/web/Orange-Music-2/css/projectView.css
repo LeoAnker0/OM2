@@ -1,7 +1,7 @@
 :root {
     --PROJECTviewModalWidthOfSide: 2rem;
 
-    --PROJECTviewDesktopHeaderFilter: saturate(1) blur(20px);
+    --PROJECTviewDesktopHeaderFilter: blur(20px);
 
     --PV-text: var(--text);
     --PV-text-third: var(--text-third);
@@ -430,7 +430,6 @@
     position: absolute;
     width: 100%;
     height: calc(100% - 0rem);
-    top: 4rem;
     display: grid;
     place-items: center;
     backdrop-filter: saturate(0.8);
@@ -438,6 +437,8 @@
     display: none;
 
     background-color: var(--PV-dark-overlay);
+    top: 4rem;
+    z-index: 10;
 }
 
 @media (max-width: 650px) {
@@ -452,6 +453,7 @@
     height: 28rem;
     width: 42rem;
     border-radius: 12px;
+    top: -2rem;
 
     background-color: var(--PV-background-dark);
     color: var(--PV-text-dark);

@@ -384,7 +384,6 @@ function handle_normal_context_menu(params, event) {
 import { upload_image_files } from './file_upload.js';
 
 function handle_update_project_image(params, event) {
-
     const X = event.clientX;
     const Y = event.clientY;
 
@@ -395,8 +394,6 @@ function handle_update_project_image(params, event) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
     }
-
-
 
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
 
@@ -430,7 +427,7 @@ function handle_update_project_image(params, event) {
             previewImage.src = imageURL;
 
             submitButton.style.visibility = "visible";
-            submitButtonContainer.style.outline = "1px solid red";
+            submitButtonContainer.style.outline = "3px solid var(--primary)";
 
             // Add an event listener to the submit button
             submitButton.addEventListener('click', () => {
@@ -526,7 +523,7 @@ function addModalItem(param) {
     if ("colour" in param) {
         colour = param.colour;
     } else {
-        colour = "white";
+        colour = "var(--text)";
     }
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');

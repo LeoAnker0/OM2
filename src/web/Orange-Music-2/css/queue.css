@@ -1,10 +1,5 @@
 :root {
-    --QUEUE-outline-colour: var(--violet-5);
-    --QUEUE-outline-colour: white;
-    --QUEUE-width: 0.2rem;
-
     --QUEUE-top-width: 3rem;
-
 }
 
 /* queue body */
@@ -16,7 +11,6 @@
     top: 0;
     right: calc((var(--width-of-left-bar-fortop) + 5rem) * -1);
     pointer-events: none;
-
     transition-property: right;
     transition-duration: var(--transition-speed);
     transition-timing-function: ease-in-out;
@@ -25,36 +19,21 @@
 
 .QUEUE-container {
     position: absolute;
-
     width: var(--width-of-left-bar-fortop);
-    height: calc((100% - var(--height-of-top)) - 1rem);
-
+    height: calc((100% - var(--height-of-top)) - 2rem);
     z-index: 20;
-    top: calc((var(--height-of-top) / 2) + 2.1rem);
+    top: calc((var(--height-of-top) / 3) + 2.1rem);
     right: 1.5rem;
     border-radius: 8px;
-    outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
-
     pointer-events: visible;
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 
-}
-
-.QUEUE-container-pointer {
-    --normal: 0.8rem;
-    --half: calc(var(--normal) / 2);
-
-    position: absolute;
-    width: 0;
-    height: 0;
-
-    /* triangle maker */
-    border-left: var(--half) solid transparent;
-    border-right: var(--half) solid transparent;
-    border-bottom: var(--normal) solid var(--QUEUE-outline-colour);
-
-    z-index: 19;
-    top: calc(((var(--height-of-top) / 2) + 2.1rem) - var(--normal));
-    left: calc(100% - 4.3rem);
+    border-right: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--background-transparent);
 }
 
 .QUEUE-containerL2 {
@@ -66,10 +45,10 @@
 
 .QUEUE-top {
     position: relative;
-    background-color: hsla(255, 80%, 46%, 0.5);
-    background-color: hsla(0, 0%, 100%, 0.5);
     height: var(--QUEUE-top-width);
     width: 100%;
+
+    background-color: var(--transparent-overlay);
 }
 
 .QUEUE-top-text {
@@ -84,50 +63,39 @@
 .QUEUE-top-text-title {
     font-size: 1.2rem;
     font-weight: 600;
-    /*filter: drop-shadow(1px 1px 0px var(--violet-6));*/
 
-    color: black;
-    color: var(--violet-9);
+    color: var(--text);
 }
 
 .QUEUE-top-text-clear {
     position: absolute;
-
     font-size: 1rem;
-    color: var(--violet-6);
     font-weight: 400;
     right: 3rem;
     top: 1rem;
+    cursor: pointer;
 
-
+    color: var(--text-third);
 }
-
-
-
-
 
 .QUEUE-bottom {
     position: relative;
     width: 100%;
     height: calc(100% - var(--QUEUE-top-width));
     bottom: 0;
-    border-radius: 8px;
-    outline: var(--QUEUE-width) solid var(--QUEUE-outline-colour);
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-
 .QUEUE-bottom::-webkit-scrollbar {
     width: 0.5rem;
-
 }
 
 
 :root {
-    --QUEUE-toptext-colour: hsla(0, 0%, 100%, 1);
-    --QUEUE-bottomtext-colour: hsla(255, 55%, 90%, 1);
-    --QUEUE-righttext-colour: hsla(255, 65%, 85%, 1);
+    --QUEUE-toptext-colour: var(--text);
+    --QUEUE-bottomtext-colour: var(--text-third);
+    --QUEUE-righttext-colour: var(--text-secondary);
 }
 
 
@@ -135,10 +103,13 @@
 .QUEUE-item-container {
     position: relative;
     width: 100%;
+    height: 4rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    overflow: hidden;
 }
 
 /* item underline */
@@ -148,49 +119,44 @@
     width: 65%;
     left: 25%;
     height: 0.05rem;
-    background-color: white;
     opacity: 0.2;
+
+    background-color: var(--text-third);
 }
 
 /* image container */
 .QUEUE-item-up-next-queue-image-container {
     position: relative;
-    height: 2.3rem;
-    width: 2.3rem;
+    height: 2.5rem;
+    width: 2.5rem;
     object-fit: cover;
     margin-left: 0.8rem;
-
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
-
     pointer-events: none;
 }
 
 .QUEUE-item-up-next-queue-image {
     height: 100%;
     width: 100%;
-    border-radius: 2px;
+    border-radius: 4px;
     object-fit: cover;
 }
 
 .QUEUE-item-image-removeIndicator {
     --height: 0.8rem;
-
     position: absolute;
     height: var(--height);
     width: var(--height);
-
     top: calc((var(--height) / 3) * -1);
     left: calc((var(--height) / 3) * -1);
-
     border-radius: 50%;
-
-    background-color: red;
-    outline: 2px solid white;
-
     visibility: hidden;
-
     pointer-events: all;
+    cursor: pointer;
+
+    outline: 1px solid var(--text-dark);
+    background-color: var(--whoopsie);
 }
 
 /* le remove indicator */
@@ -198,21 +164,18 @@
     --height: 0.10rem;
     content: "";
     position: absolute;
-
     width: 50%;
     height: var(--height);
-
-    background-color: white;
     z-index: 1;
     top: calc((55% - var(--height)));
     left: 25%;
 
+    background-color: var(--text-dark);
 }
 
 .QUEUE-item-container:hover .QUEUE-item-image-removeIndicator {
     visibility: visible;
 }
-
 
 /* text container */
 .QUEUE-item-up-next-queue-text-container {
@@ -221,36 +184,33 @@
     width: 55%;
     display: flex;
     flex-direction: column;
-
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
-
     pointer-events: none;
-
 }
 
 .QUEUE-item-up-next-queue-text-song-title {
     position: relative;
     height: 50%;
     font-size: 0.95rem;
-    color: var(--QUEUE-toptext-colour);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
     pointer-events: none;
+
+    color: var(--QUEUE-toptext-colour);
 }
 
 .QUEUE-item-up-next-queue-text-song-artist {
     position: relative;
     font-size: 0.85rem;
     height: 50%;
-    color: var(--QUEUE-bottomtext-colour);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
     pointer-events: none;
+
+    color: var(--QUEUE-bottomtext-colour);
 }
 
 /* time and menu -- */
@@ -260,7 +220,6 @@
     width: 2.3rem;
     margin-right: 0.5rem;
     cursor: pointer;
-
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
 }
@@ -271,14 +230,12 @@
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    color: var(--QUEUE-righttext-colour);
     font-size: 0.85rem;
-
     visibility: visible;
-
     pointer-events: none;
-
     z-index: 0;
+
+    color: var(--QUEUE-righttext-colour);
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-time-span {
@@ -291,32 +248,12 @@
     position: relative;
     top: 18%;
     left: 15%;
-    filter: var(--make-svg-orange);
     cursor: pointer;
-
     z-index: 10;
+
+    filter: var(--make-svg-orange);
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-item-context-call {
     visibility: visible;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-*/

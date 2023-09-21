@@ -136,8 +136,10 @@
     --secondary: hsl(222, 100%, 70%);
     --accent: hsl(165, 90%, 20%);
     --success: hsl(165, 90%, 35%);
+    --whoopsie: hsl(350, 80%, 60%);
     --background-overlay: hsla(0, 0%, 0%, 0.6);
     --transparent-overlay: hsl(0, 0%, 80%);
+    --transparent-overlay-focus: hsl(0, 0%, 85%);
 
 
     --background-dark: hsl(0, 00%, 10%);
