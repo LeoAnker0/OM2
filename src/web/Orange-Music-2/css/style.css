@@ -126,6 +126,26 @@
 
     /* animations ? */
     --transition-speed: 18ms;
+
+    --text: hsl(0, 0%, 10%);
+    --text-secondary: hsl(0, 0%, 50%);
+    --text-third: hsl(0, 0%, 20%);
+    --background: hsl(0, 0%, 90%);
+    --background-transparent: hsla(0, 0%, 90%, 0.7);
+    --primary: hsl(210, 100%, 78%);
+    --secondary: hsl(222, 100%, 70%);
+    --accent: hsl(165, 90%, 20%);
+    --success: hsl(165, 90%, 35%);
+    --background-overlay: hsla(0, 0%, 0%, 0.6);
+    --transparent-overlay: hsl(0, 0%, 80%);
+
+
+    --background-dark: hsl(0, 00%, 10%);
+    --text-dark: hsl(0, 0%, 98%);
+    --text-dark-secondary: hsl(210, 10%, 85%);
+
+    color: var(--text);
+
 }
 
 

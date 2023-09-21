@@ -2,43 +2,45 @@
     --PROJECTviewModalWidthOfSide: 2rem;
 
     --PROJECTviewDesktopHeaderFilter: saturate(1) blur(20px);
+
+    --PV-text: var(--text);
+    --PV-text-third: var(--text-third);
+    --PV-text-accent: var(--accent);
+    --PV-outline-colour: var(--text-secondary);
+    --PV-focus-colour: var(--secondary);
+    --PV-dark-overlay: var(--background-overlay);
+    --PV-transparent-overlay: var(--transparent-overlay);
+    --PV-success: var(--success);
+
+    --PV-background-dark: var(--background-dark);
+    --PV-text-dark: var(--text-dark);
+    --PV-text-secondary: var(--text-dark-secondary);
 }
 
 .PROJECTviewContainerEnvironment {
     position: fixed;
     z-index: 2;
     top: 0;
-
     width: 100%;
     height: 100%;
-
-
-    //background-color: hsla(150, 100%, 50%, 0.1);
     overflow: hidden;
-
     pointer-events: all;
-
 }
-
 
 .PROJECTviewContainerEnvironment::-webkit-scrollbar {
     width: 0;
     height: 0;
 }
 
-
 .PROJECTviewContainer {
     position: relative;
     top: 0rem;
     padding-top: 6rem;
     height: calc(100% - 4rem);
-
     width: 90%;
     left: 5%;
-
-    //background-color: hsla(200, 100%, 50%, 0.2);
     overflow-y: scroll;
-    //overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -55,12 +57,8 @@
 .PROJECTview-topContainer {
     position: relative;
     width: 100%;
-
     min-height: 22rem;
-
-    //background-color: hsla(0, 10%, 20%, 0.4);
     display: grid;
-
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     grid-template-areas:
         "PROJECTviewTopItem-1 PROJECTviewTopItem-3 PROJECTviewTopItem-3"
@@ -83,12 +81,9 @@
             "PROJECTviewTopItem-4 PROJECTviewTopItem-4"
         ;
 
-
-
         grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     }
 }
-
 
 /* mobile  */
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -103,14 +98,11 @@
     }
 }
 
-
-
 .PROJECTviewDisplayImage {
     position: relative;
     overflow: hidden;
     width: 100%;
     aspect-ratio: 1/1;
-
 }
 
 .PROJECTviewDisplayImage img {
@@ -121,10 +113,8 @@
     top: 10%;
     border-radius: 8px;
     object-fit: cover;
-
     pointer-events: none;
 }
-
 
 .PROJECTviewTopItem-1 {
     grid-area: PROJECTviewTopItem-1;
@@ -132,35 +122,30 @@
 
 .PROJECTviewDisplayTitle {
     display: block;
-    //background-color: blue;
-
 }
 
 .PROJECTviewDisplayTitle h1 {
-    color: white;
     margin: 0;
     user-select: text;
     pointer-events: auto;
-
     width: 90%;
     height: 2.5rem;
-
     white-space: nowrap;
     overflow: hidden;
+
+    color: var(--PV-text);
 }
 
 .PROJECTviewDisplayTitle h3 {
-    color: var(--cyan-4);
     margin-top: 0rem;
     user-select: text;
     pointer-events: auto;
-
     width: 70%;
     height: 1.3rem;
-
     white-space: nowrap;
     overflow: hidden;
 
+    color: var(--PV-text-accent);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -188,17 +173,11 @@
 .PROJECTviewDisplaySpacer {
     height: 2rem;
     width: 2rem;
-    /*
-    background-color: red;
-    */
 }
 
 .PROJECTviewDisplaySpacer2 {
     height: 4rem;
     width: 4rem;
-    /*
-    background-color: red;
-    */
 }
 
 .PROJECTviewTopItem-3 {
@@ -244,34 +223,29 @@
 .PROJECTviewDisplayDescription p {
     margin: 0;
     position: relative;
-    color: white;
     height: 100%;
     width: 100%;
-
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
-
     pointer-events: auto;
+
+    color: var(--PV-text);
 }
 
 .PROJECTviewDescriptionMoreButton {
-    /*cancel old styles*/
-    background-color: transparent;
     border: none;
     margin: 0rem;
     padding: 0rem;
-    font-size: 0.9rem;
-
     position: absolute;
     bottom: -0.15rem;
     right: -0.5rem;
-
-
-    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
     font-weight: 600;
 
-    cursor: pointer;
+    color: var(--PV-text);
+    background-color: transparent;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -331,13 +305,10 @@
 }
 
 .PROJECTviewTopItem-5 button:focus {
-    outline: 1px solid hsla(0, 100%, 50%, 1);
+    outline: 1px solid var(--PV-focus-colour);
     outline-offset: 0.3rem;
     border-radius: 4px;
 }
-
-
-
 
 .PROJECTviewTopItem-6 {
     grid-area: PROJECTviewTopItem-6;
@@ -350,21 +321,18 @@
     all: unset;
     position: relative;
     border: none;
-    color: white;
     padding: 0.3rem;
     border-radius: 8px;
     margin-right: 1rem;
-
-
     width: 6rem;
     height: 1.1rem;
     justify-content: center;
     align-items: center;
     display: flex;
-
-    outline: 1px solid hsla(0, 100%, 100%, 0.3);
-
     transition: background-color 0.05s ease;
+
+    outline: 1px solid var(--PV-outline-colour);
+    color: var(--PV-text);
 }
 
 .PROJECTviewTopItem-6 button img {
@@ -372,12 +340,12 @@
 }
 
 .PROJECTviewTopItem-6 button:focus {
-    outline: 1px solid hsla(0, 100%, 50%, 1);
+    outline: 1px solid var(--PV-focus-colour);
 }
 
 .PROJECTviewTopItem-6 button:active {
-    background-color: red;
-    outline: 1px solid red;
+    outline: 1px solid var(--PV-focus-colour);
+    background-color: var(--PV-focus-colour);
 }
 
 .PROJECTviewTopItem-6 button div {
@@ -387,12 +355,10 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTviewTopItem-6 {
-        //background-color: blue;
         width: 98%;
         align-items: center;
         justify-content: space-between;
         margin-left: 1%;
-
         margin-bottom: 2rem;
     }
 
@@ -401,8 +367,6 @@
         height: 1.5rem;
         margin-right: 0;
     }
-
-
 }
 
 .PROJECTviewDisplayMenu {
@@ -411,7 +375,7 @@
     border-radius: 50%;
     margin-left: calc(100% - 2.1rem);
 
-    outline: 1px solid hsla(0, 100%, 100%, 0.3);
+    outline: 1px solid var(--PV-outline-colour);
 }
 
 @media screen and (max-width: 768px) {
@@ -430,18 +394,17 @@
     width: 100%;
     border-radius: 50%;
     z-index: 0;
-
     justify-content: center;
     align-items: center;
     display: flex;
 }
 
 .PROJECTviewDisplayMenu button:focus {
-    outline: 1px solid hsla(0, 100%, 50%, 1);
+    outline: 1px solid var(--PV-focus-colour);
 }
 
 .PROJECTviewDisplayMenu button:active {
-    background-color: red;
+    background-color: var(--PV-focus-colour);
 }
 
 .PROJECTviewDisplayMenu button img {
@@ -462,26 +425,19 @@
     }
 }
 
-
-
-
-
-
 /* more description box */
-
 .PROJECTviewMOREdescriptionboxEnvironment {
     position: absolute;
     width: 100%;
-    height: calc(100% - 4rem);
+    height: calc(100% - 0rem);
     top: 4rem;
-
     display: grid;
     place-items: center;
-    background-color: hsla(0, 100%, 0%, 0.4);
     backdrop-filter: saturate(0.8);
     -webkit-backdrop-filter: saturate(0.8);
-
     display: none;
+
+    background-color: var(--PV-dark-overlay);
 }
 
 @media (max-width: 650px) {
@@ -489,19 +445,16 @@
         height: 100%;
         top: 0rem;
     }
-
 }
 
 .PROJECTviewMOREdescriptionContainer {
     position: relative;
-
     height: 28rem;
     width: 42rem;
     border-radius: 12px;
 
-    background-color: hsla(0, 0%, 12%, 1.0);
-
-    color: white;
+    background-color: var(--PV-background-dark);
+    color: var(--PV-text-dark);
 }
 
 @media (max-width: 650px) {
@@ -515,7 +468,6 @@
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
-
 }
 
 .PROJECTviewMOREdescriptionContainer::before {
@@ -525,8 +477,9 @@
     left: 0;
     height: 2rem;
     width: calc(100% - (1.5 *var(--PROJECTviewModalWidthOfSide)));
-    background: linear-gradient(to bottom, hsla(0, 0%, 12%, 0), hsla(0, 0%, 12%, 1));
     z-index: 1;
+
+    background: linear-gradient(to bottom, hsla(0, 0%, 10%, 0), var(--PV-background-dark));
 }
 
 
@@ -536,8 +489,9 @@
     top: calc(var(--PROJECTviewModalWidthOfSide) / 2);
     border: none;
     padding: 10px;
-    background-color: transparent;
     cursor: pointer;
+
+    background-color: transparent;
 }
 
 .PROJECTviewMOREcloseButton img {
@@ -547,14 +501,12 @@
 
 .PROJECTviewMOREdescriptionHeaderContainer {
     position: relative;
-    //background-color: blue;
     top: 3.5rem;
     height: 4rem;
     margin-bottom: 2rem;
     width: calc(100% - (2 * var(--PROJECTviewModalWidthOfSide)));
     left: var(--PROJECTviewModalWidthOfSide);
     overflow: hidden;
-
 }
 
 .PROJECTviewMOREdescriptionHeaderContainer h1 {
@@ -565,7 +517,8 @@
 .PROJECTviewMOREdescriptionHeaderContainer h3 {
     margin: 0;
     position: relative;
-    color: hsla(0, 0%, 90%, 1.0);
+
+    color: var(--PV-text-secondary);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -575,19 +528,14 @@
 
     .PROJECTviewMOREdescriptionHeaderContainer {
         height: 2.3rem;
-
     }
-
 }
 
 .PROJECTviewMOREdescriptionContentContainer {
     position: relative;
     width: calc(100% - (2 * var(--PROJECTviewModalWidthOfSide)));
     left: var(--PROJECTviewModalWidthOfSide);
-
     height: calc(100% - 10rem);
-
-
     top: 3rem;
 }
 
@@ -597,9 +545,6 @@
     }
 }
 
-
-
-
 .PROJECTviewMOREdescriptionContentContainer textarea {
     border: none;
     resize: none;
@@ -608,51 +553,38 @@
     overflow-x: hidden;
     padding: 0;
     font: inherit;
-
     position: relative;
-    background-color: transparent;
-    color: white;
-
     height: calc(100% - 2rem);
     width: 100%;
-
     padding-bottom: 2rem;
 
+    background-color: transparent;
+    color: var(--PV-text-dark);
 }
 
 /* project table area */
-
 .PROJECTview-projectAreaContainer {
     position: relative;
     width: 100%;
-
     margin-bottom: 2rem;
 }
 
 .PROJECTview-projectTable {
     position: relative;
-
 }
-
-
-.PROJECTview-projectTable-rowItem-Title {
-    color: hsla(0, 100%, 100%, 0.95);
-}
-
-
 
 .PROJECTview-projectTable-rowItem-Title::after {
     content: "";
     position: absolute;
     height: 1.2rem;
     width: 2px;
-    background-color: hsla(0, 100%, 100%, 0.15);
     left: -1rem;
 
+    background-color: var(--PV-outline-colour);
 }
 
 .PROJECTview-projectTable-rowContainer:nth-child(even) {
-    background-color: hsla(0, 100%, 100%, 0.15);
+    background-color: var(--PV-transparent-overlay);
 }
 
 .PROJECTview-projectTable-rowItem-1,
@@ -661,20 +593,21 @@
 .PROJECTview-projectTable-rowItem-4 {
     position: relative;
     white-space: nowrap;
-    color: hsla(0, 0%, 90%, 1);
     width: 90%;
+
+    color: var(--PV-text-third);
 }
 
 .PROJECTview-projectTable-rowItem-1 {
-    color: white;
     display: flex;
+
+    color: var(--PV-text);
 }
 
 .PROJECTview-projectTable-rowItem-Title,
 .PROJECTview-projectTable-rowItem-Title-1 {
-    color: hsla(0, 0%, 95%, 1);
+    color: var(--PV-text-third);
 }
-
 
 .PROJECTview-projectTable-rowItem-1 img {
     position: relative;
@@ -683,7 +616,6 @@
     aspect-ratio: 1/1;
     left: 0.5rem;
     border-radius: 2px;
-
     margin-right: 1rem;
 }
 
@@ -713,19 +645,14 @@
 .PROJECTview-projectTable-rowItem-4 {
     display: flex;
     align-items: center;
-
     width: 100%;
-
-    /* Center vertically */
 }
 
 .PROJECTview-projectTable-rowItem-4 button {
     position: relative;
     all: unset;
     display: flex;
-    /* Set the button as a flex container */
     align-items: center;
-    /* Center horizontally and vertically */
     margin-bottom: 2%;
 }
 
@@ -734,12 +661,12 @@
 }
 
 .PROJECTview-projectTable-rowItem-4 button:focus div {
-    outline: 1px solid red;
+    outline: 1px solid var(--PV-focus-colour);
 }
 
 .PROJECTview-projectTable-rowItem-4 button:active div {
-    outline: 1px solid red;
-    background-color: red;
+    outline: 1px solid var(--PV-focus-colour);
+    background-color: var(--PV-focus-colour);
 }
 
 .PROJECTview-projectTable-rowItem-4 button div {
@@ -750,7 +677,6 @@
     align-items: center;
     justify-content: center;
     margin-right: 0.5rem;
-
     pointer-events: none;
 }
 
@@ -758,34 +684,18 @@
     max-width: 100%;
     max-height: 100%;
     border-radius: 50%;
-
     pointer-events: none;
-
-    /*filter: var(--make-svg-orange);*/
 }
 
 .PROJECTview-projectTable-rowContainer {
     position: relative;
     display: grid;
-
     display: grid;
     grid-template-columns: 50% 30% calc(20% - 5.5rem) 5.5rem;
-    /* Equal width columns */
     padding: 0.5rem 0;
-    /* Optional: Add borders between rows */
-
     border-radius: 8px;
     margin: 0.3rem;
 }
-
-/*
-
-.PROJECTview-projectTable-rowItem-1,
-.PROJECTview-projectTable-rowItem-2,
-.PROJECTview-projectTable-rowItem-3,
-.PROJECTview-projectTable-rowItem-4
-
-*/
 
 @media (max-width: 900px) {
     .PROJECTview-projectTable-rowContainer {
@@ -795,7 +705,6 @@
     .PROJECTview-projectTable-rowItem-3 {
         display: none;
     }
-
 }
 
 @media (max-width: 650px) {
@@ -807,25 +716,23 @@
     .PROJECTview-projectTable-rowItem-2 {
         display: none;
     }
-
 }
 
 /* file upload prompt */
-
 .PROJECTview-projectArea-uploadArea {
     position: relative;
-    color: white;
-
     margin-bottom: 2rem;
+
+    color: var(--PV-text);
 }
 
 .PROJECTview_dropArea {
-    border: 2px dashed #ccc;
     padding: 1rem;
     text-align: center;
     cursor: pointer;
-
     border-radius: 8px;
+
+    border: 2px dashed var(--PV-outline-colour);
 }
 
 .uploadsContainer {
@@ -835,71 +742,59 @@
     gap: 1rem;
 }
 
-
 .upload-box {
     padding: 5px;
     transition: opacity 1s;
     position: relative;
-
     height: 1rem;
-
-    outline: 1px solid white;
-
     border-radius: 6px;
-
     display: flex;
     justify-content: center;
     align-items: center;
+
+    outline: 1px solid var(--PV-outline-colour);
 }
 
 .upload-box.complete {
     opacity: 0;
-
 }
-
-
 
 .progress-bar {
     width: 90%;
     height: 0.3rem;
-    //background-color: #ccc;
     position: absolute;
     z-index: 1;
-
     border-radius: 8px;
     overflow: hidden;
-
     transition: opacity 0.3s;
-
 }
 
 .progress-fill {
     height: 100%;
-    background-color: white;
     width: 0;
     transition: width 0.3s, background-color 0.3s ease-in-out;
+
+    background-color: var(--PV-text);
 }
 
 .progress-fill.complete {
-    background-color: green;
+    background-color: var(--PV-success);
 }
 
 .PROJECTview_upload_nameLabel {
+    font-size: 0.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     position: absolute;
     top: -1rem;
     z-index: 1;
     left: 0;
     width: 100%;
 
-    font-size: 0.6rem;
-    color: white;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    color: var(--PV-text);
 }
 
-
-/* Define the animation */
 @keyframes opacityLoop {
 
     0%,
@@ -912,29 +807,22 @@
     }
 }
 
-/* Apply the animation to the element */
 .opacity-animation {
     animation: opacityLoop 2s ease-in-out infinite;
-    /* Adjust the duration and timing function as needed */
 }
 
 
 /* loose files area -------- */
-
 .PROJECTview-filesAreaContainer {
     position: relative;
     width: 100%;
-
-
-    /*background-color: red;*/
     height: 0.5rem;
-
     margin-bottom: 2rem;
 
+    /*background-color: red;*/
 }
 
 /* mobile sticky header ------------- */
-
 .PROJECTviewMobileStickyHeader {
     top: 4rem;
     position: absolute;
@@ -943,26 +831,23 @@
     z-index: 2;
     backdrop-filter: var(--PROJECTviewDesktopHeaderFilter);
     -webkit-backdrop-filter: var(--PROJECTviewDesktopHeaderFilter);
-    background-color: hsla(255, 90%, 9%, 0.8);
+
+    background-color: var(--background-transparent);
 }
-
-
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .PROJECTviewMobileStickyHeader {
         top: 0rem;
         position: absolute;
-
-        background-color: transparent;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
 
+        background-color: transparent;
     }
 }
 
 .PROJECTviewMobileStickyHeader {
     grid-area: PROJECTviewTopItem-6;
-
     display: flex;
     flex-direction: row;
 }
@@ -971,17 +856,16 @@
     all: unset;
     position: relative;
     border: none;
-    color: white;
     border-radius: 50%;
-
     inset: 0.1rem;
     aspect-ratio: 1/1;
     height: 100%;
     justify-content: center;
     align-items: center;
     display: flex;
-
     transition: background-color 0.05s ease;
+
+    color: var(--PV-text);
 }
 
 .PROJECTviewMobileStickyHeader button img {
@@ -989,12 +873,12 @@
 }
 
 .PROJECTviewMobileStickyHeader button:focus {
-    outline: 1px solid hsla(0, 100%, 50%, 1);
+    outline: 1px solid var(--PV-focus-colour);
 }
 
 .PROJECTviewMobileStickyHeader button:active {
-    background-color: red;
-    outline: 1px solid red;
+    background-color: var(--PV-focus-colour);
+    outline: 1px solid var(--PV-focus-colour);
 }
 
 .PROJECTviewMobileStickyHeader button div {
@@ -1002,10 +886,8 @@
     margin-left: 0.2rem;
 }
 
-
 .PROJECTviewMobileStickyHeaderMenuButton {
     position: relative;
-    //left: calc(100% - 27.5rem);
     align-self: end;
     top: -0.9rem;
     transform: rotate(270deg);
@@ -1021,26 +903,14 @@
 .PROJECTviewMobileStickyHeaderProjectNameContainer {
     position: relative;
     height: 100%;
-    color: white;
     text-align: left;
     align-items: center;
     display: flex;
     width: calc(100% - (1 * 6rem));
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
     visibility: hidden;
+
+    color: var(--PV-text-dark);
 }
-
-
-
-
-
-
-
-
-
-`
-/**/
