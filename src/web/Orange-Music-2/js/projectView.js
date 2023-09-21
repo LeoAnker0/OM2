@@ -859,9 +859,9 @@ function detect_when_image_is_no_longer_visible() {
 
             /* when mobile and below image */
             else if ((!entry.isIntersecting) && (is_mobile())) {
-                header.style.backdropFilter = "none";
+                header.style.backdropFilter = "blur(15px)";
 
-                header.style.backgroundColor = "var(--dgrey-7)";
+                header.style.backgroundColor = "var(--background-transparent)";
                 headerTitleText.style.visibility = "visible";
             }
         });

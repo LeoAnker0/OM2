@@ -35,11 +35,8 @@
     height: 100%;
     width: var(--TOPRIGHT-playbackcontrols-width2);
     display: flex;
-    justify-content: space-evenly;
-
+    justify-content: center;
 }
-
-
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .TOPRIGHT-playbackcontrols-container {
@@ -47,16 +44,13 @@
         display: block;
         top: 0;
         right: 0;
-
     }
 }
-
 
 .TOPRIGHT-playbackcontrols-displacement {
     position: relative;
     display: flex;
     justify-content: space-evenly;
-    left: var(--TOPRIGHT-playbackcontrols-leftoffset);
     width: 100%;
     max-width: var(--TOPRIGHT-playbackcontrols-width);
     height: 100%;
@@ -64,7 +58,6 @@
 
 @media (max-width: 850px) {
     .TOPRIGHT-playbackcontrols-container {
-        //left: 0;
         width: 10rem;
         visibility: visible;
     }
@@ -72,8 +65,6 @@
     .TOPRIGHT-playbackcontrols-displacement {
         width: 90%;
     }
-
-
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -85,13 +76,13 @@
     }
 }
 
-
 #PLAYERplayButton,
 #PLAYERshuffleButton,
 #PLAYERbackButton,
 #PLAYERnextButton,
 #PLAYERloopButton {
     filter: var(--make-svg-grey);
+
 }
 
 #PLAYERplayButton:hover,
@@ -122,9 +113,7 @@
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     #PLAYERplayButton {
         z-index: 2;
-
         width: 2rem;
-
         position: absolute;
         top: 0.2rem;
         right: rem;
@@ -133,16 +122,12 @@
 
     #PLAYERnextButton {
         z-index: 2;
-
         width: 2rem;
         height: 8rem;
-
         height: 100%;
         position: absolute;
         right: 0rem;
         transform: scale(2);
-
-
     }
 
     #PLAYERshuffleButton,
@@ -150,10 +135,7 @@
     #PLAYERloopButton {
         display: none;
     }
-
-
 }
-
 
 /* lcd  : middle -------------------------------------------------  */
 .TOPRIGHT-lcd-container {
@@ -161,7 +143,6 @@
     height: 100%;
     width: var(--TOPRIGHT-lcd-width);
 }
-
 
 @media (max-width: 850px) {
     .TOPRIGHT-lcd-container {
@@ -210,7 +191,6 @@
 .TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container {
     display: grid;
     place-items: center;
-
     position: relative;
     height: 100%;
     width: 15%;
@@ -228,15 +208,12 @@
     visibility: hidden;
 }
 
-
 /* volume slider */
 #volumeSliderID {
     /* the parent container of the slider */
     position: relative;
     width: 100%;
-
     height: 100%;
-
     display: grid;
     place-items: center;
 }
@@ -248,11 +225,9 @@
     width: 70%;
     height: 0.15rem;
     border-radius: 8px;
-
     cursor: pointer;
 
-    background: transparent;
-    backdrop-filter: contrast(0.2) brightness(4);
+    background-color: var(--background-overlay);
 }
 
 #volumeSliderID input[type="range"]::-webkit-slider-thumb {
@@ -262,8 +237,8 @@
     border-radius: 50%;
     cursor: pointer;
 
-    background: var(--indigo-0);
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 0px 1px inset, rgba(64, 61, 57, 0.4) 0px 0px 0px 01px;
+    background: var(--background);
+    outline: 1px solid var(--text);
 }
 
 #volumeSliderID input[type=range]::-webkit-slider-runnable-track {
@@ -274,14 +249,9 @@
     cursor: pointer;
 }
 
-
-
-
 .TOPRIGHT-accountcontrols-buttonarea-container {
     position: relative;
     height: 100%;
-    //width: calc(100% - var(--TOPRIGHT-accountcontrols-volumeslider-width));
-    //max-width: 6rem;
     width: 6rem;
     right: 0;
     display: flex;
@@ -292,7 +262,6 @@
     position: relative;
     height: 100%;
     width: 4rem;
-
 }
 
 .TOPRIGHT-accountcontrols-buttonarea-queue-positioner {
@@ -309,20 +278,17 @@
     position: absolute;
     height: var(--height-of-queueBackground);
     aspect-ratio: 1/1;
-    background-color: white;
     display: grid;
     place-items: center;
     border-radius: 5px;
     opacity: var(--TOPRIGHT-accountcontrols-queue-opacity);
+
+    background-color: var(--background);
 }
 
 #queueIcon {
     position: relative;
-    filter: var(--make-svg-grey);
 }
-
-
-
 
 /* account image ----------------------- */
 .TOPRIGHT-accountImageContainer {
@@ -339,11 +305,8 @@
     width: var(--height);
     aspect-ratio: 1/1;
     height: var(--height);
-    background-color: blue;
-
-    outline: 1px solid hsla(0, 100%, 100%, 0.5);
-    border-radius: 50%;
     overflow: hidden;
+    border-radius: 50%;
 }
 
 .TOPRIGHT-accountImageContainer-imgContainer img {
@@ -352,36 +315,3 @@
     width: 100%;
     object-fit: cover;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**/

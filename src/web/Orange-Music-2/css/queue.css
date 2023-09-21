@@ -1,5 +1,9 @@
 :root {
     --QUEUE-top-width: 3rem;
+
+    --QUEUE-toptext-colour: var(--text);
+    --QUEUE-bottomtext-colour: var(--text-third);
+    --QUEUE-righttext-colour: var(--text-secondary);
 }
 
 /* queue body */
@@ -7,7 +11,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    z-index: 20;
+    z-index: 40;
     top: 0;
     right: calc((var(--width-of-left-bar-fortop) + 5rem) * -1);
     pointer-events: none;
@@ -90,14 +94,6 @@
 .QUEUE-bottom::-webkit-scrollbar {
     width: 0.5rem;
 }
-
-
-:root {
-    --QUEUE-toptext-colour: var(--text);
-    --QUEUE-bottomtext-colour: var(--text-third);
-    --QUEUE-righttext-colour: var(--text-secondary);
-}
-
 
 /* queue item ------------------------------- */
 .QUEUE-item-container {
@@ -251,7 +247,7 @@
     cursor: pointer;
     z-index: 10;
 
-    filter: var(--make-svg-orange);
+    filter: var(--make-svg-black);
 }
 
 .QUEUE-item-container:hover .QUEUE-item-up-next-queue-item-context-call {

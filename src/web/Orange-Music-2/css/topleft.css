@@ -8,13 +8,9 @@
     --searchbar-container-after-width: calc(100% - (2 * var(--searchbar-container-after-leftoffset)));
     --searchbar-container-after-topoffset: 15%;
 
-    --searchbar-container-after-background-colour: var(--dgrey-8);
-    --searchbar-container-after-outline-colour: var(--lgrey-8);
-
-
-    --searchbar-search-colour-unfocused: var(--lgrey-5);
-    --searchbar-search-colour-focused: var(--lgrey-2);
-
+    --searchbar-container-after-outline-colour: var(--text-third);
+    --searchbar-search-colour-unfocused: var(--text-secondary);
+    --searchbar-search-colour-focused: var(--text-dark);
 }
 
 .topleft-searchbarContainer {
@@ -29,51 +25,35 @@
     }
 }
 
-
 .topleft-searchbarContainerL2 {
     position: absolute;
     height: var(--searchbar-container-after-height);
     width: var(--searchbar-container-after-width);
-
-    top: var(--searchbar-container-after-topoffset);
+    bottom: 0.75rem;
     left: var(--searchbar-container-after-leftoffset);
-
     border-radius: var(--searchbar-borderradius);
 
-    //background-color: var(--searchbar-container-after-background-colour);
-
-    //background-color: red;
-
-    //outline: 1px solid var(--searchbar-container-after-outline-colour);
     outline: 1px solid hsla(0, 0%, 100%, 0.23);
+    background-color: var(--text-third);
 }
-
-@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
-    .topHalf-left {
-        background-color: red;
-    }
-}
-
-
-
 
 .topleft-searchbar-hideLabels {
     position: absolute;
     opacity: 0%;
     user-select: none;
-
 }
 
 .topleft-searchbar-input {
     border: none;
     outline: none;
-    background-color: transparent;
     position: relative;
     width: 72.5%;
     left: 12.5%;
     height: 100%;
-    color: var(--searchbar-search-colour-unfocused);
     font-style: italic;
+
+    color: var(--searchbar-search-colour-unfocused);
+    background-color: transparent;
 }
 
 .topleft-searchbar-input::placeholder {
@@ -81,102 +61,10 @@
 }
 
 .topleft-searchbar-input:focus {
-    color: var(--searchbar-search-colour-focused);
     font-style: normal;
+
+    color: var(--searchbar-search-colour-focused);
 }
-
-
-.topleft-button-containers {
-    position: absolute;
-    height: 1.3rem;
-    width: 90%;
-    bottom: 7%;
-    left: 5%;
-
-}
-
-.topleft-button-containersL2 {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-content: flex-start;
-}
-
-.topleft-button-container-button {
-    all: unset;
-
-    position: relative;
-    height: 70%;
-    top: 15%;
-    width: 3.5rem;
-    margin-right: 0.7rem;
-    border-radius: 2px;
-
-    background-color: hsla(0, 0%, 10%, 0.5);
-}
-
-
-
-
-.topleft-button-container-button div {
-    position: relative;
-    font-size: 0.7rem;
-    text-align: center;
-
-    color: white;
-}
-
-.topleft-button-container-button:nth-child(1) {
-    /*
-    background-color: hsla(85, 80%, 20%, 0.25);
-    background-image:
-        radial-gradient(at 40% 20%, hsla(131, 40%, 37%, 1) 0px, transparent 25%),
-        radial-gradient(at 70% 100%, hsla(208, 40%, 35%, 1) 0px, transparent 25%),
-        radial-gradient(at 30% 0%, hsla(230, 30%, 32%, 1) 0px, transparent 25%);
-
-    //filter: brightness(0.2);*/
-    background-color: hsla(0, 0%, 10%, 0.5);
-
-}
-
-
-.topleft-button-container-button:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    margin: -1px;
-    /* !importanté */
-    border-radius: inherit;
-    /* !importanté */
-
-    background-color: hsla(85, 80%, 90%, 1);
-    background-image:
-        radial-gradient(at 40% 20%, hsla(131, 90%, 77%, 1) 0px, transparent 100%),
-        radial-gradient(at 70% 100%, hsla(208, 90%, 35%, 1) 0px, transparent 100%),
-        radial-gradient(at 30% 0%, hsla(230, 100%, 23%, 1) 0px, transparent 100%);
-}
-
-.topleft-button-container-button:nth-child(2):before {
-    background-color: hsla(162, 50%, 69%, 1);
-    background-image: radial-gradient(at 60% 30%, hsla(230, 60%, 60%, 1) 0px, transparent 100%),
-        radial-gradient(at 60% 90%, hsla(255, 90%, 75%, 1) 0px, transparent 100%),
-        radial-gradient(at 100% 20%, hsla(162, 100%, 73%, 1) 0px, transparent 100%);
-}
-
-.topleft-button-container-button:nth-child(3):before {
-    background-color: hsla(205, 50%, 69%, 1);
-    background-image:
-        radial-gradient(at 10% 60%, hsla(230, 60%, 90%, 1) 0px, transparent 100%),
-        radial-gradient(at 40% 20%, hsla(230, 90%, 75%, 1) 0px, transparent 100%),
-        radial-gradient(at 70% 40%, hsla(255, 100%, 73%, 1) 0px, transparent 100%);
-
-}
-
 
 .topleft-search-icon {
     position: absolute;
@@ -184,7 +72,6 @@
     top: 25%;
     aspect-ratio: 1/1;
     left: 3.5%;
-
 }
 
 .topleft-clearIcon {
@@ -193,14 +80,9 @@
     top: 25%;
     aspect-ratio: 1/1;
     right: 3.5%;
-    filter: invert(100%);
     outline: 0.2rem solid transparent;
+    opacity: 0%;
 
     background-color: transparent;
-
-    opacity: 0%;
+    filter: invert(100%);
 }
-
-
-
-/**/

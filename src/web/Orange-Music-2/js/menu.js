@@ -395,6 +395,8 @@ function handle_update_project_image(params, event) {
         navBar.style.zIndex = "0";
     }
 
+    main.style.zIndex = "2";
+
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
 
     MENUmodalEnvironment.innerHTML = update_project_imageModal;
@@ -524,7 +526,9 @@ function addModalItem(param) {
         colour = param.colour;
     } else {
         colour = "var(--text)";
-    }
+        if (is_mobile()) {
+            colour = "var(--text)";
+        }    }
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');
 

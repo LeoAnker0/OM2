@@ -49,8 +49,6 @@
         border-radius: 0;
         border-top-right-radius: 2px;
         border-top-left-radius: 2px;
-
-        background-color: var(--background-dark);
     }
 }
 
@@ -113,7 +111,7 @@
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .MENUmodalSVGcontainer {
         left: 1rem;
-        filter: var(--make-svg-orange);
+        filter: var(--make-svg-black);
     }
 }
 

@@ -1,6 +1,5 @@
 /* loads in all the css */
 import './css/style.css';
-import './css/sketch.css';
 import './css/materials.css';
 import './css/layout.css';
 import './css/topleft.css';

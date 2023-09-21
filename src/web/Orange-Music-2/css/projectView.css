@@ -337,6 +337,7 @@
 
 .PROJECTviewTopItem-6 button img {
     pointer-events: none;
+    filter: var(--make-svg-black);
 }
 
 .PROJECTviewTopItem-6 button:focus {
@@ -410,6 +411,8 @@
 .PROJECTviewDisplayMenu button img {
     position: relative;
     pointer-events: none;
+    filter: var(--make-svg-black);
+
 }
 
 .PROJECTviewTopItem-7 {
@@ -497,7 +500,7 @@
 }
 
 .PROJECTviewMOREcloseButton img {
-    filter: var(--make-svg-grey);
+    filter: var(--make-svg-white);
 }
 
 
@@ -687,6 +690,8 @@
     max-height: 100%;
     border-radius: 50%;
     pointer-events: none;
+
+    filter: var(--make-svg-black);
 }
 
 .PROJECTview-projectTable-rowContainer {
@@ -872,6 +877,8 @@
 
 .PROJECTviewMobileStickyHeader button img {
     pointer-events: none;
+
+    filter: var(--make-svg-black);
 }
 
 .PROJECTviewMobileStickyHeader button:focus {
@@ -914,5 +921,5 @@
     white-space: nowrap;
     visibility: hidden;
 
-    color: var(--PV-text-dark);
+    color: var(--PV-text);
 }

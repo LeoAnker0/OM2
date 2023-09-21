@@ -2,124 +2,12 @@
     font-family: 'Libre Franklin';
     font-weight: 400;
 
-    /* colour variables */
-    --red-0: hsl(0, 80%, 90%);
-    --red-1: hsl(0, 80%, 86%);
-    --red-2: hsl(0, 80%, 77%);
-    --red-3: hsl(0, 80%, 68%);
-    --red-4: hsl(0, 80%, 59%);
-    --red-5: hsl(0, 80%, 50%);
-    --red-6: hsl(0, 80%, 41%);
-    --red-7: hsl(0, 80%, 32%);
-    --red-8: hsl(0, 80%, 23%);
-    --pink-0: hsl(339, 80%, 90%);
-    --pink-1: hsl(339, 80%, 86%);
-    --pink-2: hsl(339, 80%, 77%);
-    --pink-3: hsl(339, 80%, 68%);
-    --pink-4: hsl(339, 80%, 59%);
-    --pink-5: hsl(339, 80%, 50%);
-    --pink-6: hsl(339, 80%, 41%);
-    --pink-7: hsl(339, 80%, 32%);
-    --pink-8: hsl(339, 80%, 23%);
-    --grape-0: hsl(288, 80%, 90%);
-    --grape-1: hsl(288, 80%, 86%);
-    --grape-2: hsl(288, 80%, 77%);
-    --grape-3: hsl(288, 80%, 68%);
-    --grape-4: hsl(288, 80%, 59%);
-    --grape-5: hsl(288, 80%, 50%);
-    --grape-6: hsl(288, 80%, 41%);
-    --grape-7: hsl(288, 80%, 32%);
-    --grape-8: hsl(288, 80%, 23%);
-    --violet-0: hsl(255, 80%, 95%);
-    --violet-1: hsl(255, 80%, 86%);
-    --violet-2: hsl(255, 80%, 77%);
-    --violet-3: hsl(255, 80%, 68%);
-    --violet-4: hsl(255, 80%, 59%);
-    --violet-5: hsl(255, 80%, 48%);
-    --violet-6: hsl(255, 80%, 41%);
-    --violet-7: hsl(255, 80%, 32%);
-    --violet-8: hsl(255, 80%, 23%);
-    --violet-9: hsl(255, 100%, 13%);
-    --indigo-0: hsl(230, 80%, 90%);
-    --indigo-1: hsl(230, 80%, 86%);
-    --indigo-2: hsl(230, 80%, 77%);
-    --indigo-3: hsl(230, 80%, 68%);
-    --indigo-4: hsl(230, 80%, 59%);
-    --indigo-5: hsl(230, 80%, 50%);
-    --indigo-6: hsl(230, 80%, 41%);
-    --indigo-7: hsl(230, 80%, 32%);
-    --indigo-8: hsl(230, 80%, 23%);
-    --blue-0: hsl(208, 80%, 90%);
-    --blue-1: hsl(208, 80%, 86%);
-    --blue-2: hsl(208, 80%, 77%);
-    --blue-3: hsl(208, 80%, 68%);
-    --blue-4: hsl(208, 80%, 59%);
-    --blue-5: hsl(208, 80%, 50%);
-    --blue-6: hsl(208, 80%, 41%);
-    --blue-7: hsl(208, 80%, 32%);
-    --blue-8: hsl(208, 80%, 23%);
-    --cyan-0: hsl(188, 80%, 90%);
-    --cyan-1: hsl(188, 80%, 86%);
-    --cyan-2: hsl(188, 80%, 77%);
-    --cyan-3: hsl(188, 80%, 68%);
-    --cyan-4: hsl(188, 80%, 59%);
-    --cyan-5: hsl(188, 80%, 50%);
-    --cyan-6: hsl(188, 80%, 41%);
-    --cyan-7: hsl(188, 80%, 32%);
-    --cyan-8: hsl(188, 80%, 23%);
-    --teal-0: hsl(162, 80%, 90%);
-    --teal-1: hsl(162, 80%, 86%);
-    --teal-2: hsl(162, 80%, 77%);
-    --teal-3: hsl(162, 80%, 68%);
-    --teal-4: hsl(162, 80%, 59%);
-    --teal-5: hsl(162, 80%, 50%);
-    --teal-6: hsl(162, 80%, 41%);
-    --teal-7: hsl(162, 80%, 32%);
-    --teal-8: hsl(162, 80%, 23%);
-    --green-0: hsl(131, 80%, 90%);
-    --green-1: hsl(131, 80%, 86%);
-    --green-2: hsl(131, 80%, 77%);
-    --green-3: hsl(131, 80%, 68%);
-    --green-4: hsl(131, 80%, 59%);
-    --green-5: hsl(131, 80%, 50%);
-    --green-6: hsl(131, 80%, 41%);
-    --green-7: hsl(131, 80%, 32%);
-    --green-8: hsl(131, 80%, 23%);
-    --lime-0: hsl(85, 80%, 90%);
-    --lime-1: hsl(85, 80%, 86%);
-    --lime-2: hsl(85, 80%, 77%);
-    --lime-3: hsl(85, 80%, 68%);
-    --lime-4: hsl(85, 80%, 59%);
-    --lime-5: hsl(85, 80%, 50%);
-    --lime-6: hsl(85, 80%, 41%);
-    --lime-7: hsl(85, 80%, 32%);
-    --lime-8: hsl(85, 80%, 23%);
-    --lgrey-0: hsl(0, 0%, 99%);
-    --lgrey-1: hsl(0, 0%, 97%);
-    --lgrey-2: hsl(0, 0%, 93%);
-    --lgrey-3: hsl(0, 0%, 84%);
-    --lgrey-4: hsl(0, 0%, 75%);
-    --lgrey-5: hsl(0, 0%, 66%);
-    --lgrey-6: hsl(0, 0%, 57%);
-    --lgrey-7: hsl(0, 0%, 48%);
-    --lgrey-8: hsl(0, 0%, 39%);
-    --lgrey-9: hsl(0, 0%, 30%);
-    --dgrey-0: hsl(188, 1%, 64%);
-    --dgrey-1: hsl(188, 1%, 60%);
-    --dgrey-2: hsl(188, 1%, 56%);
-    --dgrey-3: hsl(188, 1%, 47%);
-    --dgrey-4: hsl(188, 1%, 38%);
-    --dgrey-5: hsl(188, 1%, 29%);
-    --dgrey-6: hsl(188, 1%, 20%);
-    --dgrey-7: hsl(188, 1%, 11%);
-    --dgrey-8: hsl(188, 1%, 2%);
-    --dgrey-9: hsl(188, 1%, 1%);
-
     /* svg filters */
-    --make-svg-grey: invert(1) invert(37%) sepia(10%) saturate(302%) hue-rotate(357deg) brightness(200%) contrast(89%);
+    --make-svg-grey: sepia(3%) saturate(965%) hue-rotate(41deg) brightness(116%) contrast(80%);
     --make-svg-light-grey: invert(1) invert(91%) sepia(12%) saturate(216%) hue-rotate(359deg) brightness(89%) contrast(83%);
     --make-svg-orange: invert(1) invert(64%) sepia(77%) saturate(6168%) hue-rotate(351deg) brightness(101%) contrast(84%);
-    --make-svg-black: invert(1);
+    --make-svg-black: invert(1) invert(2%) sepia(12%) saturate(135%) hue-rotate(314deg) brightness(108%) contrast(83%);
+    --make-svg-white: invert(1) invert(99%) sepia(86%) saturate(57%) hue-rotate(235deg) brightness(110%) contrast(96%);
     --make-svg-dark-grey: invert(1) invert(8%) sepia(6%) saturate(675%) hue-rotate(2deg) brightness(93%) contrast(85%);
     --make-svg-grey-2: invert(1) invert(21%) sepia(5%) saturate(742%) hue-rotate(355deg) brightness(92%) contrast(86%);
     --make-svg-grey-3: invert(1) invert(37%) sepia(10%) saturate(302%) hue-rotate(357deg) brightness(95%) contrast(89%);
@@ -127,9 +15,11 @@
     /* animations ? */
     --transition-speed: 18ms;
 
+    /* colours */
     --text: hsl(0, 0%, 10%);
     --text-secondary: hsl(0, 0%, 50%);
     --text-third: hsl(0, 0%, 20%);
+    --grey: hsl(0, 0%, 75%);
     --background: hsl(0, 0%, 90%);
     --background-transparent: hsla(0, 0%, 90%, 0.7);
     --primary: hsl(210, 100%, 78%);
@@ -141,26 +31,23 @@
     --transparent-overlay: hsl(0, 0%, 80%);
     --transparent-overlay-focus: hsl(0, 0%, 85%);
 
-
+    /* inverted colours */
     --background-dark: hsl(0, 00%, 10%);
     --text-dark: hsl(0, 0%, 98%);
     --text-dark-secondary: hsl(210, 10%, 85%);
 
     color: var(--text);
-
 }
 
-
 body {
-    color: black;
-    background-color: var(--bg-main-area);
     margin: 0;
     padding: 0;
     position: relative;
     height: 100svh;
-
     -webkit-user-select: none;
 
+    color: var(--text);
+    background-color: var(--background);
 }
 
 #app {
@@ -172,14 +59,4 @@ body {
 .hideLabels {
     position: absolute;
     opacity: 0;
-
 }
-
-
-
-/*
-*::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-*/

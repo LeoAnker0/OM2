@@ -33,12 +33,13 @@
     border-radius: 5px;
     overflow: hidden;
     display: flex;
+
+    background-color: var(--text-third);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .LCDcontentContainer {
         display: none;
-
     }
 }
 
@@ -56,8 +57,6 @@
     position: relative;
     object-fit: cover;
 }
-
-
 
 .LCDrightContent {
     flex: 1 1 auto;
@@ -83,9 +82,7 @@
 .LCDrightTitleText-leftSpacer {
     flex: 0 0 var(--LCD-widthOfMenuContainer);
     height: 1rem;
-    //background-color: hsla(180, 100%, 60%, 0.5);
     padding-left: 0.3rem;
-
 }
 
 .LCDrightTitleText-text {
@@ -95,9 +92,9 @@
     overflow: hidden;
     height: 1rem;
     font-size: 0.8rem;
-
-    color: white;
     font-weight: 600;
+
+    color: var(--text-dark);
 }
 
 
@@ -106,7 +103,6 @@
     flex: 0 0 var(--LCD-widthOfMenuContainer);
     height: 1rem;
     aspect-ratio: 1/1;
-    //background-color: hsla(180, 100%, 60%, 0.5);
     cursor: pointer;
     padding-left: 0.3rem;
 }
@@ -115,10 +111,11 @@
     position: relative;
     height: 100%;
     aspect-ratio: 2/3;
-    filter: var(--make-svg-orange);
     opacity: 0%;
     transition: opacity 150ms ease-in-out;
     transition: opacity 30ms ease-in-out;
+
+    filter: var(--make-svg-white);
 }
 
 .LCDbody:hover img {
@@ -137,7 +134,6 @@
     position: relative;
     width: var(--LCD-widthOfTimeIndicators);
     height: 100%;
-
     font-size: 0.7rem;
 }
 
@@ -146,12 +142,10 @@
     position: absolute;
     bottom: 0.1rem;
     left: 0.3rem;
-
-    color: var(--lgrey-4);
     opacity: 0%;
     transition: opacity 30ms ease-in-out;
 
-
+    color: var(--text-dark-secondary);
 }
 
 .LCDbody:hover .LCDright-bottomTextTimeIndicatorsLeft::after {
@@ -162,7 +156,6 @@
     position: relative;
     width: var(--LCD-widthOfTimeIndicators);
     height: 100%;
-
     font-size: 0.7rem;
 }
 
@@ -171,10 +164,10 @@
     position: absolute;
     bottom: 0.1rem;
     right: 0.3rem;
-
-    color: var(--lgrey-4);
     opacity: 0%;
     transition: opacity 30ms ease-in-out;
+
+    color: var(--text-dark-secondary);
 }
 
 .LCDbody:hover .LCDright-bottomTextTimeIndicatorsRight::after {
@@ -188,10 +181,9 @@
     height: 1rem;
     overflow: hidden;
     font-size: 0.75rem;
-
-
-    color: white;
     font-weight: 400;
+
+    color: var(--text-dark-secondary);
 }
 
 .LCDright-bottomText-text {
@@ -215,7 +207,6 @@
 .LCDright-bottom-seekBar input[type="range"] {
     position: relative;
     top: 0;
-    //left: calc(13% - 0.2rem);
     left: 0rem;
     -webkit-appearance: none;
     visibility: hidden;
@@ -229,29 +220,16 @@
     position: relative;
     visibility: visible;
     -webkit-appearance: none;
-
     height: 40%;
     width: 0.13rem;
     top: 60%;
-    //left: var(--LCD-seekbar-indicator-left);
-
-    /*
-    --border-radius: 5px;
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
-    */
-
-    background: grey;
-    background: var(--teal-3);
-    background-color: var(--teal-4);
     cursor: ew-resize;
     transition: 30ms ease-in-out;
-
     cursor: grabbing;
-
     opacity: 0%;
-
     z-index: 2;
+
+    background-color: var(--primary);
 }
 
 .LCDbody:hover input[type="range"]::-webkit-slider-thumb {
@@ -262,9 +240,7 @@
     position: relative;
     visibility: visible;
     -webkit-appearance: none;
-
     cursor: pointer;
-
     height: 100%;
     width: 100%;
     left: 0;
@@ -279,26 +255,20 @@
     left: 0;
     top: 0;
 
-    background-color: var(--lgrey-5);
-
-
+    background-color: var(--grey);
 }
 
 .LCDright-bottom-seekBar-indicator {
     position: absolute;
     width: 100%;
     height: 0.1rem;
-    background-color: var(--dgrey-7);
     bottom: 0;
-
 }
-
 
 /* mobile ------- */
 .LCDcontentContainerMobile {
     display: none;
 }
-
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .LCDcontentContainerMobile {
@@ -316,9 +286,7 @@
         flex: 0 0 auto;
         position: relative;
         overflow: hidden;
-
         border-radius: 5px;
-
     }
 
     .LCDleftImage img {
@@ -335,40 +303,12 @@
         left: 3.6rem;
         height: 3.2rem;
         width: calc(100% - 3.6rem);
-
-        /* center the text vertically */
         display: flex;
         align-items: center;
-        color: white;
-
-
-        /* hide the overflowing text */
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+
+        color: var(--text-dark);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**/

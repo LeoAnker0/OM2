@@ -107,6 +107,10 @@ main {
     width: 100%;
     z-index: 10;
     display: block;
+    overflow: hidden;
+
+    backdrop-filter: brightness(0.6) blur(10px) contrast(0.6) brightness(0.9);
+    -webkit-backdrop-filter: brightness(0.6) blur(10px) contrast(0.6) brightness(0.9);
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
