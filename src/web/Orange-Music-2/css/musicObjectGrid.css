@@ -30,6 +30,10 @@
     margin: 1rem;
 }
 
+.MOG-grid .MOG-itemContainer:last-child::after {
+    background-color: transparent;
+}
+
 /* music object grid items ---- */
 .MOG-itemContainer {
     all: unset;

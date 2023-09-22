@@ -304,10 +304,27 @@
     grid-area: PROJECTviewTopItem-5;
 }
 
-.PROJECTviewTopItem-5 button:focus {
-    outline: 1px solid var(--PV-focus-colour);
-    outline-offset: 0.3rem;
+.PROJECTviewTopItem-5 button {
+    bottom: -0.4rem;
+    padding: 0.3rem;
     border-radius: 4px;
+}
+
+.PROJECTviewTopItem-5 button:hover {
+    border-radius: 4px;
+    cursor: pointer;
+
+    background-color: var(--secondary-weak);
+}
+
+.PROJECTviewTopItem-5 button:focus {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
+}
+
+.PROJECTviewTopItem-5 button:active {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary);
 }
 
 .PROJECTviewTopItem-6 {
@@ -340,8 +357,15 @@
     filter: var(--make-svg-black);
 }
 
+.PROJECTviewTopItem-6 button:hover {
+    cursor: pointer;
+    background-color: var(--secondary-weak);
+}
+
 .PROJECTviewTopItem-6 button:focus {
     outline: 1px solid var(--PV-focus-colour);
+    background-color: var(--secondary-weak);
+
 }
 
 .PROJECTviewTopItem-6 button:active {
@@ -400,12 +424,20 @@
     display: flex;
 }
 
+.PROJECTviewDisplayMenu button:hover {
+    cursor: pointer;
+    background-color: var(--secondary-weak);
+
+}
+
 .PROJECTviewDisplayMenu button:focus {
-    outline: 1px solid var(--PV-focus-colour);
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
 }
 
 .PROJECTviewDisplayMenu button:active {
-    background-color: var(--PV-focus-colour);
+    background-color: var(--secondary);
+    outline: 1px solid var(--secondary);
 }
 
 .PROJECTviewDisplayMenu button img {
@@ -661,12 +693,14 @@
     margin-bottom: 2%;
 }
 
-.PROJECTview-projectTable-rowItem-4 button:hover {
+.PROJECTview-projectTable-rowItem-4 button:hover div {
     cursor: pointer;
+    background-color: var(--secondary-weak);
 }
 
 .PROJECTview-projectTable-rowItem-4 button:focus div {
     outline: 1px solid var(--PV-focus-colour);
+    background-color: var(--secondary-weak);
 }
 
 .PROJECTview-projectTable-rowItem-4 button:active div {
@@ -864,9 +898,10 @@
     position: relative;
     border: none;
     border-radius: 50%;
-    inset: 0.1rem;
+    inset: 10%;
+    left: 1rem;
     aspect-ratio: 1/1;
-    height: 100%;
+    height: 80%;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -875,14 +910,38 @@
     color: var(--PV-text);
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTviewMobileStickyHeader button {
+        all: unset;
+        position: relative;
+        border: none;
+        border-radius: 50%;
+        inset: 0.1rem;
+        aspect-ratio: 1/1;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        transition: background-color 0.05s ease;
+
+        color: var(--PV-text);
+    }
+}
+
 .PROJECTviewMobileStickyHeader button img {
     pointer-events: none;
 
     filter: var(--make-svg-black);
 }
 
+.PROJECTviewMobileStickyHeader button:hover {
+    background-color: var(--secondary-weak);
+    cursor: pointer;
+}
+
 .PROJECTviewMobileStickyHeader button:focus {
     outline: 1px solid var(--PV-focus-colour);
+    background-color: var(--secondary-weak);
 }
 
 .PROJECTviewMobileStickyHeader button:active {

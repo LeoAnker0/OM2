@@ -64,8 +64,6 @@ function queueStateChange(state) {
 
 
 export function updateQueue() {
-    //console.log(PLAYBACK_songs_array, PLAYBACK_songs_array_index)
-
     const queueContainer = document.getElementById("QUEUEbottomContainer");
     queueContainer.innerHTML = "";
 
