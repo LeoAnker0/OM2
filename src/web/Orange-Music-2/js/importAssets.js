@@ -39,6 +39,9 @@ import icons_listenNowV2 from '../assets/iconsv2/listen_now.svg';
 import icons_browse2V2 from '../assets/iconsv2/browse.2.svg';
 import v3_placeholder from '../assets/v3/place_holder_image.svg';
 import icons_MOGitems_add from '../assets/v3/icons_MOGitems_add.svg';
+import icons_back from '../assets/v3/back.svg';
+import icons_forwards from '../assets/v3/forwards.svg';
+import icons_close from '../assets/v3/icons_close.svg';
 
 export const svgImports = {
     icons_volumeNull,
@@ -81,5 +84,8 @@ export const svgImports = {
     icons_listenNowV2,
     icons_browse2V2,
     v3_placeholder,
-    icons_MOGitems_add
+    icons_MOGitems_add,
+    icons_back,
+    icons_forwards,
+    icons_close
 }

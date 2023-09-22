@@ -235,7 +235,12 @@ function clipOverflowingDescription() {
     const words = textContent.split(' ');
 
     const lastVisibleCharacters = [];
-    container.textContent = ''; // Clear the original text content
+    try {
+        container.textContent = ''; // Clear the original text content
+    } catch {
+
+    }
+
 
     for (const word of words) {
         const span = document.createElement('span');

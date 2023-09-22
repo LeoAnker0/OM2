@@ -123,6 +123,12 @@ main {
     background-color: var(--accent);
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .topHalf:after {
+        top: 0;
+    }
+}
+
 .topHalf-left {
     position: relative;
     height: 100%;
