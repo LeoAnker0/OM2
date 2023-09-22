@@ -60,15 +60,17 @@ function loopClicked() {
 export function shuffleStateChange(state) {
     /* takes in two possible values: on or off */
     const shuffleButton = document.getElementById("PLAYERshuffleButton");
+    const loopIcon = document.getElementById("PLAYERshuffleIcon");
+
 
     if (state === "on") {
         //console.log("filter was added");
-        shuffleButton.style.filter = "var(--make-svg-secondary)";
+        loopIcon.style.filter = "var(--make-svg-secondary)";
         return
     }
     if (state === "off") {
         //console.log("filter was removed");
-        shuffleButton.style.filter = "var(--make-svg-black)";
+        loopIcon.style.filter = "var(--make-svg-black)";
         return
     }
     return
@@ -82,22 +84,24 @@ export function loopStateChange(state) {
     const loopButton = document.getElementById("PLAYERloopButton");
     const loopIcon = document.getElementById("PLAYERloopIcon");
 
+
+
     if (state === "off") {
         //console.log("off state");
-        loopButton.style.filter = "var(--make-svg-black)";
+        loopIcon.style.filter = "var(--make-svg-black)";
         loopIcon.src = svgImports["icons_loopButton"];
         return
     }
     if (state === "on") {
         //console.log("on state");
-        loopButton.style.filter = "var(--make-svg-secondary)";
+        loopIcon.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_loopButton"];
 
         return
     }
     if (state === "song") {
         //console.log("song state");
-        loopButton.style.filter = "var(--make-svg-secondary)";
+        loopIcon.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_derpy"];
         return
     }
