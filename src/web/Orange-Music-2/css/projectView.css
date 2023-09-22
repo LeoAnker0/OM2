@@ -259,47 +259,6 @@
     }
 }
 
-/* spans that will fade out overflowing letters from the description */
-.PROJECTopacity9 {
-    opacity: 90%;
-}
-
-.PROJECTopacity8 {
-    opacity: 85%;
-}
-
-.PROJECTopacity7 {
-    opacity: 64%;
-}
-
-.PROJECTopacity6 {
-    opacity: 32%;
-}
-
-.PROJECTopacity5 {
-    opacity: 16%;
-}
-
-.PROJECTopacity4 {
-    opacity: 8%;
-}
-
-.PROJECTopacity3 {
-    opacity: 4%;
-}
-
-.PROJECTopacity2 {
-    opacity: 1%;
-}
-
-.PROJECTopacity1 {
-    opacity: 00%;
-}
-
-.PROJECTopacity0 {
-    opacity: 00%;
-}
-
 .PROJECTviewTopItem-5 {
     grid-area: PROJECTviewTopItem-5;
 }
@@ -308,6 +267,20 @@
     bottom: -0.4rem;
     padding: 0.3rem;
     border-radius: 4px;
+    z-index: 1;
+}
+
+.PROJECTviewTopItem-5 button::before {
+    content: "";
+    position: absolute;
+    height: 200%;
+    width: 200%;
+    left: -50%;
+    top: -50%;
+    z-index: -1;
+    filter: blur(5px);
+
+    background-color: var(--background);
 }
 
 .PROJECTviewTopItem-5 button:hover {

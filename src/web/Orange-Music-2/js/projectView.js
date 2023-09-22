@@ -6,6 +6,8 @@ that generates should be here
 import { handleRoute } from './routing.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails } from './network_requests.js';
+import { is_mobile } from './om2.js';
+
 
 export async function createNewProjectID() {
     try {
@@ -91,8 +93,7 @@ export async function initProjectView(projectID) {
 
         const description = details.description;
         sessionStorage.setItem('description', description);
-
-        onResizeClipOverflowingText();
+        updateDescription_display();
 
         descriptionButtonInteractions();
 
@@ -146,8 +147,8 @@ function set_event_listeners_for_titles(details) {
     });
 
     /*
-    H3 isn't meant to be set by the user, since it is by usernames, however the option
-    does now exist
+    H3 isn 't meant to be set by the user, since it is by usernames, however the option
+    does now exist*/
 
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
 
@@ -156,7 +157,7 @@ function set_event_listeners_for_titles(details) {
         console.log('Content changed:', newTitleH3);
     });
 
-    */
+
 
 }
 
@@ -198,89 +199,11 @@ function loadContainer(details) {
     return;
 }
 
-/* the next two functions are used for getting those last characters of the whole thing to fade out */
-function onResizeClipOverflowingText() {
-    function throttledResize() {
-        let resizeTimer;
-
-        return function() {
-            cancelAnimationFrame(resizeTimer);
-            resizeTimer = requestAnimationFrame(function() {
-                clipOverflowingDescription();
-
-            });
-        };
-    }
-
-    const throttledHandleResize = throttledResize();
-    window.addEventListener('resize', throttledHandleResize);
-    clipOverflowingDescription();
-}
-
-
-function clipOverflowingDescription() {
+function updateDescription_display() {
     let description = sessionStorage.getItem('description');
-
-
-    const spaces = ' '.repeat(120);
-    description = description + spaces
-
-
     const descriptionContainer = document.getElementById("PROJECTviewDescriptionP");
-
-    const container = descriptionContainer;
-    const textContent = description;
-
-    // Split the text content into an array of words
-    const words = textContent.split(' ');
-
-    const lastVisibleCharacters = [];
-    try {
-        container.textContent = ''; // Clear the original text content
-    } catch {
-
-    }
-
-
-    for (const word of words) {
-        const span = document.createElement('span');
-        span.textContent = word + ' ';
-        container.appendChild(span);
-
-        const spanRect = span.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-
-        if (
-            spanRect.bottom <= containerRect.bottom &&
-            spanRect.top >= containerRect.top &&
-            spanRect.left >= containerRect.left &&
-            spanRect.right <= containerRect.right
-        ) {
-            lastVisibleCharacters.unshift(word); // Store words in reverse order
-        } else {
-            break;
-        }
-    }
-
-    const visibleWords = lastVisibleCharacters.reverse();
-    const visibleWordsString = visibleWords.join(' ');
-    const lastTenCharaters = visibleWordsString.slice(-10);
-    const withoutLastTenCharacters = visibleWordsString.slice(0, -10);
-    const lastTenCharactersArr = lastTenCharaters.split('');
-
-    let newTextContent = withoutLastTenCharacters;
-
-    for (let i = 0; i < lastTenCharactersArr.length; i++) {
-        const char = lastTenCharactersArr[i];
-        const spanWithCharacter = `<span class="PROJECTopacity${9 - i}">${char}</span>`;
-        newTextContent = newTextContent + spanWithCharacter;
-    }
-
-    container.innerHTML = newTextContent;
+    descriptionContainer.innerText = description;
 }
-
-import { is_mobile } from './om2.js';
-
 
 /* more description button */
 function descriptionButtonInteractions() {
@@ -363,7 +286,6 @@ function closeMoreDescription(details) {
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     background.style.display = "none";
     updateDescription();
-    clipOverflowingDescription();
 
     const main = document.querySelector("main");
     main.style.zIndex = "1";
