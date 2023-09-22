@@ -37,6 +37,12 @@
     background-color: var(--text-third);
 }
 
+@media (prefers-color-scheme: dark) {
+    .topleft-searchbarContainerL2 {
+        background-color: hsl(0, 0%, 25%);
+    }
+}
+
 .topleft-searchbar-hideLabels {
     position: absolute;
     opacity: 0%;

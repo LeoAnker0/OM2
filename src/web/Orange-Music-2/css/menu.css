@@ -40,6 +40,13 @@
     background-color: var(--transparent-overlay);
 }
 
+@media (prefers-color-scheme: dark) {
+    .MENUmodalBody {
+        border-bottom: 1px solid var(--grey);
+        border-right: 1px solid var(--grey);
+    }
+}
+
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .MENUmodalBody {
         bottom: 0 !important;
@@ -53,12 +60,14 @@
 }
 
 .MENUmodalItemContainer {
+    all: unset;
     position: relative;
     height: 2.5rem;
-    width: 100%;
+    width: calc(100% - 2px);
     display: flex;
     align-items: center;
     pointer-events: all;
+    inset: 1px;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -69,6 +78,24 @@
 
 .MENUmodalItemContainer:not(:last-child) {
     border-bottom: 1px solid var(--text-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+    .MENUmodalItemContainer:not(:last-child) {
+        border-bottom: 1px solid var(--grey);
+    }
+}
+
+.MENUmodalBody .MENUmodalItemContainer:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-bottom: 2px;
+}
+
+.MENUmodalBody .MENUmodalItemContainer:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-top: 1px;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
@@ -83,6 +110,16 @@
 
 .MENUmodalItemContainer:hover {
     background-color: var(--transparent-overlay-focus);
+}
+
+.MENUmodalItemContainer:focus {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
+}
+
+.MENUmodalItemContainer:active {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary);
 }
 
 .MENUmodalTextArranger {
@@ -119,6 +156,7 @@
     height: 90%;
     aspect-ratio: 1/1;
     pointer-events: none;
+    filter: var(--make-svg-black);
 }
 
 /* the image project updaters modal --------------------------------- */

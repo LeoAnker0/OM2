@@ -8,11 +8,10 @@ import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
 import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
 import lcd_mobile_queue_item from '../html/lcd_mobile_queue_item.html?raw';
 import { MAIN_CONST_EXPORT_mediaPath, MAIN_CONST_EXPORT_apiPath } from '../main.js';
-
-
+import { upload_image_files } from './file_upload.js';
+import { PROJECTVIEW_update } from './projectView.js';
 
 export function MENUdisplay(params, event, menu_type) {
-
     //undefined    
     if (menu_type === undefined) {
         handle_normal_context_menu(params, event);
@@ -27,7 +26,6 @@ export function MENUdisplay(params, event, menu_type) {
         handle_lcd_mobile_body(params, event);
     }
 }
-
 
 let queue_displayed = false;
 
@@ -381,7 +379,6 @@ function handle_normal_context_menu(params, event) {
         });
     }
 }
-import { upload_image_files } from './file_upload.js';
 
 function handle_update_project_image(params, event) {
     const X = event.clientX;
@@ -477,7 +474,7 @@ function handle_update_project_image(params, event) {
         fileInput.click();
     });
 }
-import { PROJECTVIEW_update } from './projectView.js';
+
 export function MENU_when_image_has_been_uploaded() {
     const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
     spinner.style.visibility = "hidden";
@@ -528,7 +525,8 @@ function addModalItem(param) {
         colour = "var(--text)";
         if (is_mobile()) {
             colour = "var(--text)";
-        }    }
+        }
+    }
 
     const MENUmodalBody = document.getElementById('MENUmodalBody');
 

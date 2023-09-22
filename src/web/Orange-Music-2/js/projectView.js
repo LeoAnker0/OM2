@@ -193,8 +193,6 @@ function loadContainer(details) {
 
         replacedContent = replacedContent.replace(regex, value);
     }
-
-
     document.getElementById(IDofElement).innerHTML = replacedContent;
     return;
 }
@@ -212,7 +210,6 @@ function descriptionButtonInteractions() {
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     const main = document.querySelector("main");
 
-
     function displayMenu() {
         background.style.display = "grid";
 
@@ -221,7 +218,6 @@ function descriptionButtonInteractions() {
             main.style.zIndex = "40";
         }
     };
-
 
     moreButton.addEventListener('click', function() {
         displayMenu();
@@ -241,7 +237,6 @@ function descriptionButtonInteractions() {
             event.stopPropagation();
             displayMenu();
         }
-
         lastTapTime = currentTime;
     });
 }
@@ -303,7 +298,6 @@ async function detectPlayAndShuffleButtons(details) {
 
     const project_details = await getProjectDetails(details.project_id);
 
-
     playButton.addEventListener("click", function() {
         //console.log("playButton pressed")
         PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
@@ -320,7 +314,6 @@ async function detectPlayAndShuffleButtons(details) {
 
     homeButton.addEventListener("click", () => {
         handleRoute("/")
-
     })
 }
 
@@ -366,8 +359,6 @@ function displayMenuForTop(event, project_details) {
 }
 
 
-
-
 export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     if (window.confirm("Are you sure you want to delete this project?")) {
         deleteProjectFromServer(project_id);
@@ -377,10 +368,8 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
         handleRoute(newRoute);
     } else {
         menuHide_foreign();
-
     }
 }
-
 
 async function deleteProjectFromServer(project_id) {
     try {
@@ -409,8 +398,6 @@ async function deleteProjectFromServer(project_id) {
         console.error('Error:', error);
     }
 }
-
-
 
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
@@ -446,8 +433,6 @@ function loadInTable(details) {
             const song = songData[i];
             loadInProjectViewRowItems(song);
         }
-
-
 
         // Attach an event listener to the container
         projectTable.addEventListener('click', function(event) {
@@ -498,8 +483,6 @@ async function updateLoadInTable() {
         }
     }
 
-
-
     /* event listeners */
     const parentDiv = document.getElementById("PROJECTview-projectTable");
     const childElements = parentDiv.children;
@@ -507,7 +490,6 @@ async function updateLoadInTable() {
     for (let i = childElements.length - 1; i > 0; i--) {
         parentDiv.removeChild(childElements[i]);
     }
-
 
     for (let i = 0; i < songData.length; i++) {
         songData[i].projectID = i;
@@ -745,14 +727,11 @@ function formatFileSize(size) {
     }
 }
 
-
 function update_mobile_header_project_title(project_name) {
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
 
     headerTitleText.innerText = project_name;
-
 }
-
 
 /* the top bar of the mobile project view */
 function detect_when_image_is_no_longer_visible() {

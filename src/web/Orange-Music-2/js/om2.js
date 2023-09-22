@@ -8,3 +8,13 @@ export function is_mobile() {
     }
 
 }
+
+export function is_dark() {
+    const mediaQuery = window.matchMedia("prefers-color-scheme: dark");
+    if (mediaQuery.matches) {
+        return true;
+    } else {
+        return false;
+    }
+
+}

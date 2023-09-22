@@ -37,6 +37,14 @@
     background-color: var(--text-third);
 }
 
+@media (prefers-color-scheme: dark) {
+    .LCDcontentContainer {
+        background-color: hsl(0, 0%, 25%);
+    }
+}
+
+
+
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .LCDcontentContainer {
         display: none;
@@ -116,6 +124,12 @@
     transition: opacity 30ms ease-in-out;
 
     filter: var(--make-svg-white);
+}
+
+@media (prefers-color-scheme: dark) {
+    .LCDrightTitleText-menuContainer img {
+        filter: var(--make-svg-black);
+    }
 }
 
 .LCDbody:hover img {
@@ -254,8 +268,15 @@
     position: absolute;
     left: 0;
     top: 0;
+    border-radius: 8px;
 
     background-color: var(--grey);
+}
+
+@media (prefers-color-scheme: dark) {
+    .LCDright-bottom-seekBar-indicator::before {
+        background-color: hsl(0, 0%, 90%);
+    }
 }
 
 .LCDright-bottom-seekBar-indicator {

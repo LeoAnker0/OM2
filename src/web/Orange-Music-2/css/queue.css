@@ -40,6 +40,16 @@
     background-color: var(--background-transparent);
 }
 
+@media (prefers-color-scheme: dark) {
+    .QUEUE-container {
+        border-right: 1px solid var(--grey);
+        border-bottom: 1px solid var(--grey);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        background-color: hsla(0, 0%, 10%, 0.7);
+    }
+}
+
 .QUEUE-containerL2 {
     position: relative;
     width: 100%;

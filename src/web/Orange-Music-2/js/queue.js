@@ -6,6 +6,9 @@ import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.
 import queueItem from '../html/queueItem.html?raw';
 
 import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
+import { MENUdisplay } from './menu.js';
+import { is_mobile, is_dark } from './om2.js';
+
 
 
 export function initialiseQueue() {
@@ -48,6 +51,10 @@ function queueStateChange(state) {
         queueIcon.style.filter = "var(--make-svg-grey)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 100%";
         queueEnvironment.style.right = "0%";
+
+        if (is_dark) {
+            queueIcon.style.filter = "var(--make-svg-white)";
+        }
 
         return
     }
@@ -174,7 +181,6 @@ function handleQueueItemRemove(event) {
     updateQueue();
 }
 
-import { MENUdisplay } from './menu.js';
 
 function handleQueueDisplayMenu(event) {
     event.stopPropagation();
