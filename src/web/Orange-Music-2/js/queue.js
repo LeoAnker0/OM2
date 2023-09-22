@@ -45,14 +45,14 @@ function queueStateChange(state) {
     const queueEnvironment = document.getElementById("QUEUEenvironment");
 
     if (state == "visible") {
-        queueIcon.style.filter = "var(--make-svg-black)";
+        queueIcon.style.filter = "var(--make-svg-grey)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 100%";
         queueEnvironment.style.right = "0%";
 
         return
     }
     if (state == "hidden") {
-        queueIcon.style.filter = "var(--make-svg-grey)";
+        queueIcon.style.filter = "var(--make-svg-black)";
         document.documentElement.style.cssText = "--TOPRIGHT-accountcontrols-queue-opacity: 0%";
         queueEnvironment.style.right = "calc((var(--width-of-left-bar-fortop) + 5rem) * -1)";
 

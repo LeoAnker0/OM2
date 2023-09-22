@@ -81,7 +81,7 @@
 #PLAYERbackButton,
 #PLAYERnextButton,
 #PLAYERloopButton {
-    filter: var(--make-svg-grey);
+    filter: var(--make-svg-black);
 
 }
 
@@ -200,6 +200,7 @@
 .TOPRIGHT-accountcontrols-volumeslider-volumeIcons-container img {
     position: absolute;
     left: -03%;
+    filter: var(--make-svg-black);
 }
 
 #volumeControlZero,
@@ -283,7 +284,7 @@
     border-radius: 5px;
     opacity: var(--TOPRIGHT-accountcontrols-queue-opacity);
 
-    background-color: var(--background);
+    background-color: var(--text-third);
 }
 
 #queueIcon {

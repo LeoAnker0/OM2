@@ -63,12 +63,12 @@ export function shuffleStateChange(state) {
 
     if (state === "on") {
         //console.log("filter was added");
-        shuffleButton.style.filter = "var(--make-svg-orange)";
+        shuffleButton.style.filter = "var(--make-svg-secondary)";
         return
     }
     if (state === "off") {
         //console.log("filter was removed");
-        shuffleButton.style.filter = "var(--make-svg-grey)";
+        shuffleButton.style.filter = "var(--make-svg-black)";
         return
     }
     return
@@ -84,20 +84,20 @@ export function loopStateChange(state) {
 
     if (state === "off") {
         //console.log("off state");
-        loopButton.style.filter = "var(--make-svg-grey)";
+        loopButton.style.filter = "var(--make-svg-black)";
         loopIcon.src = svgImports["icons_loopButton"];
         return
     }
     if (state === "on") {
         //console.log("on state");
-        loopButton.style.filter = "var(--make-svg-orange)";
+        loopButton.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_loopButton"];
 
         return
     }
     if (state === "song") {
         //console.log("song state");
-        loopButton.style.filter = "var(--make-svg-orange)";
+        loopButton.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_derpy"];
         return
     }

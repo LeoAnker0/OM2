@@ -31,8 +31,8 @@
     border-radius: 8px;
     pointer-events: visible;
     overflow: hidden;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 
     border-right: 1px solid var(--text-secondary);
     border-bottom: 1px solid var(--text-secondary);
