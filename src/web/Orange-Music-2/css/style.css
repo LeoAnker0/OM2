@@ -13,7 +13,7 @@
     --make-svg-grey: sepia(3%) saturate(965%) hue-rotate(41deg) brightness(116%) contrast(80%);
     --make-svg-black: invert(1) invert(2%) sepia(12%) saturate(135%) hue-rotate(314deg) brightness(108%) contrast(83%);
     --make-svg-white: invert(1) invert(99%) sepia(86%) saturate(57%) hue-rotate(235deg) brightness(110%) contrast(96%);
-    --make-svg-secondary: invert(48%) sepia(46%) saturate(887%) hue-rotate(190deg) brightness(102%) contrast(101%);
+    --make-svg-secondary: invert(48%) sepia(46%) saturate(887%) hue-rotate(190deg) brightness(90%) contrast(101%) brightness(95%);
 
     /* animations ? */
     --transition-speed: 18ms;
@@ -27,7 +27,7 @@
     --background-transparent: hsla(0, 0%, 90%, 0.7);
 
     --primary: hsl(210, 100%, 78%);
-    --secondary: hsl(222, 100%, 70%);
+    --secondary: hsl(222, 100%, 65%);
     --secondary-weak: hsl(222, 20%, 90%);
 
     --accent: hsl(165, 90%, 20%);

@@ -302,10 +302,14 @@ function handle_lcd_mobile_body(params) {
 
 }
 
-function handle_normal_context_menu(params, event) {
+let previously_focused_element;
 
-    const X = event.clientX;
-    const Y = event.clientY;
+function handle_normal_context_menu(params, event) {
+    previously_focused_element = document.activeElement;
+    const pointerType = event.pointerType;
+
+    let X = event.clientX;
+    let Y = event.clientY;
 
     const main = document.querySelector("main");
     const navBar = document.querySelector(".topHalf-container");
@@ -314,7 +318,6 @@ function handle_normal_context_menu(params, event) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
     }
-
 
 
     const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
@@ -331,17 +334,51 @@ function handle_normal_context_menu(params, event) {
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
 
+    if ((previously_focused_element) && (pointerType === "")) {
+        const rect = previously_focused_element.getBoundingClientRect();
+
+        // Calculate the X and Y coordinates
+        X = rect.left + window.scrollX;
+        Y = rect.top + window.scrollY;
+
+        let x = (X) + "px";
+        let y = (Y) + "px";
+        MENUmodalBody.style.left = x;
+        MENUmodalBody.style.top = y;
+    }
+
 
     for (let i = 0; i < params.length; i++) {
-        addModalItem(params[i]);
+        addModalItem(params[i])
     }
+
+    /* dealing with keyboard focus */
+    const children = MENUmodalBody.children;
+    const first_button = children[0];
+
+    if (pointerType === "") {
+        first_button.focus();
+    } else if (pointerType === "mouse") {
+        first_button.focus();
+        first_button.blur();
+    }
+
+    //add event listener for escape
+    function handleEscapeKey(event) {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            // Remove the event listener after the "Escape" key is detected
+            document.removeEventListener('keydown', handleEscapeKey);
+            menuHide_foreign();
+        }
+    }
+
+    // Add the event listener
+    document.addEventListener('keydown', handleEscapeKey);
 
     const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
     const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
 
     const overflowStates = showElementDetails('MENUmodalBody');
-    //console.log(overflowStates);
-
     if (overflowStates.xOverflow == true) {
         x = (X - MENUmodalBodyWidth) + "px";
         MENUmodalBody.style.left = x;
@@ -588,6 +625,8 @@ export function menuHide_foreign() {
         navBar.style.zIndex = "10";
     }
 
+    //set focus to the previously selected item
+    previously_focused_element.focus();
     return;
 }
 
