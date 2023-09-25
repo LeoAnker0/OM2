@@ -5,8 +5,15 @@ that generates should be here
 
 import { handleRoute } from './routing.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { updateProjectDetails } from './network_requests.js';
+import { updateProjectDetails, getProjectDetails } from './network_requests.js';
 import { is_mobile } from './om2.js';
+import { projectViewSongsArray } from './sharedArrays.js';
+import projectContainer from '../html/projectViewContainer.html?raw';
+import { svgImports } from './importAssets.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
+import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 
 
 export async function createNewProjectID() {
@@ -38,39 +45,6 @@ export async function createNewProjectID() {
         console.error('Error:', error);
     }
 }
-
-
-async function getProjectDetails(project_id) {
-    try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData)
-        });
-
-        const data = await response.json();
-        const projectDetailsRecord = data.project_details
-        return projectDetailsRecord;
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-
 
 export async function initProjectView(projectID) {
     /* detect if the route is /projects/ or /projects/id, if the first one 
@@ -128,14 +102,6 @@ export async function PROJECTVIEW_update() {
     imageTag.src = image;
 }
 
-
-import { projectViewSongsArray } from './sharedArrays.js';
-
-
-
-import projectContainer from '../html/projectViewContainer.html?raw';
-import { svgImports } from './importAssets.js';
-
 function set_event_listeners_for_titles(details) {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
 
@@ -146,18 +112,12 @@ function set_event_listeners_for_titles(details) {
         updateProjectDetails(details.project_id, "project_name", newTitleH1)
     });
 
-    /*
-    H3 isn 't meant to be set by the user, since it is by usernames, however the option
-    does now exist*/
-
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
 
     titleH3.addEventListener('blur', function(event) {
         const newTitleH3 = titleH3.innerText
-        console.log('Content changed:', newTitleH3);
+        updateProjectDetails(details.project_id, "project_contributors", newTitleH3)
     });
-
-
 
 }
 
@@ -286,7 +246,6 @@ function closeMoreDescription(details) {
     main.style.zIndex = "1";
 }
 
-import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
 
 /* project view top buttons */
 async function detectPlayAndShuffleButtons(details) {
@@ -317,7 +276,6 @@ async function detectPlayAndShuffleButtons(details) {
     })
 }
 
-import { MENUdisplay, menuHide_foreign } from './menu.js';
 
 function displayMenuForTop(event, project_details) {
     event.stopPropagation();
@@ -398,9 +356,6 @@ async function deleteProjectFromServer(project_id) {
         console.error('Error:', error);
     }
 }
-
-import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
-import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 
 /* load in the table */
 function loadInTable(details) {
@@ -729,9 +684,9 @@ function formatFileSize(size) {
 
 function update_mobile_header_project_title(project_name) {
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
-
     headerTitleText.innerText = project_name;
 }
+
 
 /* the top bar of the mobile project view */
 function detect_when_image_is_no_longer_visible() {

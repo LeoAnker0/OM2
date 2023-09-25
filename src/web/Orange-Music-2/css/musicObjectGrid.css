@@ -98,6 +98,14 @@
     outline: 1px solid var(--MOG-outline-colour);
 }
 
+@media (prefers-color-scheme: dark) {
+    .MOG-itemImageContainer {
+        outline: 1px solid var(--secondary-weak);
+    }
+}
+
+
+
 .MOG-itemImageContainer img {
     height: 100%;
     width: 100%;

@@ -609,7 +609,7 @@ async def update_project_details(request: Request):
 
     uuid = uuid["uuid"]
 
-    valid_columns_to_update = ["description", "project_name"]
+    valid_columns_to_update = ["description", "project_name", "project_contributors"]
     if column_to_update not in valid_columns_to_update:
         print("the column is not open to being changed")
         return {"authenticated": False}
