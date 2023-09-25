@@ -364,10 +364,10 @@ function loadInTable(details) {
 
 
     const jsonDetails = details;
-    const songsJsonString = jsonDetails.project_json;
+    const songsJsonString = jsonDetails;
 
     if (songsJsonString !== "{}") {
-        const songsJson = JSON.parse(songsJsonString).songs_json;
+        const songsJson = songsJsonString.songs_json;
         const songData = [];
 
         for (const song of songsJson) {
@@ -375,7 +375,7 @@ function loadInTable(details) {
                 "img": jsonDetails.picture_url,
                 "songTitle": song.song_name,
                 "artistName": jsonDetails.project_contributors,
-                "projectName": "cheese",
+                "projectName": formatFileSize(song.song_size),
                 "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
                 "song_sequence": song.song_sequence,
                 "url": song.url
@@ -429,7 +429,7 @@ async function updateLoadInTable() {
                 "img": jsonDetails.picture_url,
                 "songTitle": song.song_name,
                 "artistName": jsonDetails.project_contributors,
-                "projectName": "cheese",
+                "projectName": formatFileSize(song.song_size),
                 "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
                 "song_sequence": song.song_sequence,
                 "url": song.url
@@ -696,11 +696,11 @@ async function uploadFiles(files, details) {
 // Format file size
 function formatFileSize(size) {
     if (size < 1024) {
-        return `${size} B`;
+        return `${size} b`;
     } else if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(2)} KB`;
+        return `${(size / 1024).toFixed(2)} kb`;
     } else {
-        return `${(size / 1024 / 1024).toFixed(2)} MB`;
+        return `${(size / 1024 / 1024).toFixed(2)} mb`;
     }
 }
 

@@ -650,7 +650,9 @@
 
 .PROJECTview-projectTable-rowItem-2 {}
 
-.PROJECTview-projectTable-rowItem-3 {}
+.PROJECTview-projectTable-rowItem-3 div {
+    text-align: right;
+}
 
 .PROJECTview-projectTable-rowItem-4 {
     display: flex;
