@@ -48,7 +48,7 @@
     grid-template-areas:
         "MOG-image MOG-play MOG-text MOG-date MOG-menu"
     ;
-    grid-template-columns: 4rem 2.5rem calc(100% - 11.5rem) 2.5rem 2.5rem;
+    grid-template-columns: 4rem 2.5rem calc(100% - 12rem) 2.5rem 3rem;
 
     border-radius: 8px;
 }
@@ -197,12 +197,32 @@
 
 .MOG-item-controls-menu {
     grid-area: MOG-menu;
+
     height: 100%;
     width: 3rem;
     display: grid;
     place-items: center;
     justify-content: center;
     align-items: center;
+}
+
+.MOG-item-controls-menu:focus {
+    outline: none;
+}
+
+.MOG-item-controls-menu:active {
+    outline: none;
+}
+
+.MOG-item-controls-menu:focus div {
+    background-color: var(--MOG-hover-background);
+    outline: 1px solid var(--MOG-outline-colour);
+}
+
+.MOG-item-controls-menu:active div {
+    outline: 1px solid var(--MOG-outline-colour);
+    background-color: var(--accent);
+    background-color: red;
 }
 
 .MOG-item-controls-menu div {
