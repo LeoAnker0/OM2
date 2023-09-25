@@ -60,17 +60,17 @@ function loopClicked() {
 export function shuffleStateChange(state) {
     /* takes in two possible values: on or off */
     const shuffleButton = document.getElementById("PLAYERshuffleButton");
-    const loopIcon = document.getElementById("PLAYERshuffleIcon");
+    const shuffleIcon = document.getElementById("PLAYERshuffleIcon");
 
 
     if (state === "on") {
         //console.log("filter was added");
-        loopIcon.style.filter = "var(--make-svg-secondary)";
+        shuffleIcon.style.filter = "var(--make-svg-secondary)";
         return
     }
     if (state === "off") {
         //console.log("filter was removed");
-        loopIcon.style.filter = "var(--make-svg-black)";
+        shuffleIcon.style.filter = "var(--make-svg-black)";
         return
     }
     return
@@ -89,20 +89,20 @@ export function loopStateChange(state) {
     if (state === "off") {
         //console.log("off state");
         loopIcon.style.filter = "var(--make-svg-black)";
-        loopIcon.src = svgImports["icons_loopButton"];
+        loopIcon.src = svgImports["icons_loop"];
         return
     }
     if (state === "on") {
         //console.log("on state");
         loopIcon.style.filter = "var(--make-svg-secondary)";
-        loopIcon.src = svgImports["icons_loopButton"];
+        loopIcon.src = svgImports["icons_loop"];
 
         return
     }
     if (state === "song") {
         //console.log("song state");
         loopIcon.style.filter = "var(--make-svg-secondary)";
-        loopIcon.src = svgImports["icons_derpy"];
+        loopIcon.src = svgImports["icons_loop_song"];
         return
     }
     return
@@ -112,12 +112,11 @@ export function playStateChange(state) {
     /* takes in two possible values: playing, paused */
     const playIcon = document.getElementById("PLAYERplayIcon");
     if (state == "playing") {
-        playIcon.src = svgImports["icons_derpy"];
-
+        playIcon.src = svgImports["icons_pause"];
         return
     }
     if (state == "paused") {
-        playIcon.src = svgImports["icons_playButtonV2"];
+        playIcon.src = svgImports["icons_play"];
         return
     }
     return

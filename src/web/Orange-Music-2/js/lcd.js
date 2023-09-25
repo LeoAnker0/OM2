@@ -154,7 +154,7 @@ function handleQueueDisplayMenu(event) {
 
     }, {
         displayText: 'Bentulou',
-        optionalSVG: 'icons_derpy',
+        optionalSVG: 'icons_settings',
         function: 'None',
     }]
 

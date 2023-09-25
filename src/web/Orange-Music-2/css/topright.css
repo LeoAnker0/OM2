@@ -76,27 +76,6 @@
     }
 }
 
-#PLAYERplayButton,
-#PLAYERshuffleButton,
-#PLAYERbackButton,
-#PLAYERnextButton,
-#PLAYERloopButton {
-    /*
-    filter: var(--make-svg-black);
-    */
-
-}
-
-#PLAYERplayButton:hover,
-#PLAYERshuffleButton:hover,
-#PLAYERbackButton:hover,
-#PLAYERnextButton:hover,
-#PLAYERloopButton:hover {
-    /*
-    filter: none !important;
-    */
-}
-
 .TOPRIGHT-svg-image-buttons-relative-container {
     all: unset;
     position: relative;
@@ -107,7 +86,7 @@
 }
 
 .TOPRIGHT-svg-image-buttons-relative-container:hover .TOPRIGHT-svg-image-buttons-absolute-container img {
-    filter: var(--make-svg-orange) !important;
+    filter: var(--make-svg-orange);
 }
 
 .TOPRIGHT-svg-image-buttons-relative-container:hover .TOPRIGHT-svg-image-buttons-absolute-container {
@@ -115,7 +94,7 @@
 }
 
 .TOPRIGHT-svg-image-buttons-relative-container:focus .TOPRIGHT-svg-image-buttons-absolute-container img {
-    filter: var(--make-svg-orange) !important;
+    filter: var(--make-svg-orange);
 }
 
 .TOPRIGHT-svg-image-buttons-relative-container:focus .TOPRIGHT-svg-image-buttons-absolute-container {

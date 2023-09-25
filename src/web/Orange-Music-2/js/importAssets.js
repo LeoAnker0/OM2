@@ -42,6 +42,11 @@ import icons_MOGitems_add from '../assets/v3/icons_MOGitems_add.svg';
 import icons_back from '../assets/v3/back.svg';
 import icons_forwards from '../assets/v3/forwards.svg';
 import icons_close from '../assets/v3/icons_close.svg';
+import icons_pause from '../assets/v3/icons_pause.svg';
+import icons_loop from '../assets/v3/icons_loop.svg';
+import icons_loop_song from '../assets/v3/icons_loop_song.svg';
+import icons_play from '../assets/v3/icons_play.svg';
+import icons_settings from '../assets/v3/icons_settings.svg';
 
 export const svgImports = {
     icons_volumeNull,
@@ -87,5 +92,10 @@ export const svgImports = {
     icons_MOGitems_add,
     icons_back,
     icons_forwards,
-    icons_close
+    icons_close,
+    icons_pause,
+    icons_loop,
+    icons_loop_song,
+    icons_play,
+    icons_settings
 }

@@ -58,7 +58,7 @@ function handleQueueDisplayMenu(event) {
         function: 'None'
     }, {
         displayText: 'Settings',
-        optionalSVG: 'icons_derpy',
+        optionalSVG: 'icons_settings',
         function: 'None',
     }, {
         displayText: 'Sign Out',
