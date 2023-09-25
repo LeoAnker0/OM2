@@ -3,9 +3,9 @@ Orange music is a music streaming platform designed specifically for musicians a
 
 ![Mobile Views](/docs/images/om2_mobile_views_18:9:23.png)
 
-![Desktop View 1](/docs/images/om2_desktop_view_1_18:9:23.png)
+![Desktop View 1](/docs/images/dark_and_light_offset.webp)
 
-![Desktop View 2](/docs/images/om2_desktop_view_2_18:9:23.png)
+![Desktop View 2](/docs/images/dark_and_light_offset_2.webp)
 
 
 #### Notes:

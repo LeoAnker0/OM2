@@ -504,7 +504,11 @@ function loadInProjectViewRowTitles() {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
+    /*
+    document.getElementById(IDofElement).insertAdjacentHTML('afterbegin', replacedContent);
+    */
     document.getElementById(IDofElement).innerHTML += replacedContent;
+
     return;
 }
 
