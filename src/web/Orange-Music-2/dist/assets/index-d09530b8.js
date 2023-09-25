@@ -329,8 +329,7 @@
                 </div>
             </div>
         </div>
-        <div class="PROJECTview-filesAreaContainer"></div>
-    </div>
+<div class="PROJECTview-filesAreaContainer"></div>    </div>
     <div class="PROJECTviewMOREdescriptionboxEnvironment" id="PROJECTviewMOREdescriptionboxEnvironment">
         <div class="PROJECTviewMOREdescriptionContainer">
             <button class="PROJECTviewMOREcloseButton" id="PROJECTviewMOREcloseButton">
