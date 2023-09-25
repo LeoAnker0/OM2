@@ -316,7 +316,6 @@ function displayMenuForTop(event, project_details) {
     return;
 }
 
-
 export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     if (window.confirm("Are you sure you want to delete this project?")) {
         deleteProjectFromServer(project_id);
@@ -595,6 +594,8 @@ function loadFileDropArea(details) {
 }
 
 async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
+    isUploading = true;
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -623,12 +624,19 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
         }
     };
 
-    xhr.onload = function() {
+    xhr.onload = async function() {
         progressBar.classList.remove('opacity-animation');
         progressBar.style.opacity = "1";
         progressFill.classList.add('complete');
         fileNameLabel.textContent = `${file.name}`;
         updateLoadInTable();
+
+        /* add next file to the queue */
+        isUploading = false;
+        if (uploadQueue.length > 0) {
+            const current_file = uploadQueue.shift();
+            await uploadFileWithProgress(current_file.file, current_file.uploadBox, current_file.fileNameLabel, current_file.details);
+        }
 
         setTimeout(() => {
             uploadBox.classList.add('complete');
@@ -653,21 +661,35 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
     xhr.send(formData);
 }
 
+let isUploading = false;
+const uploadQueue = [];
+
 async function uploadFiles(files, details) {
     const uploadsContainer = document.getElementById('uploadsContainer');
 
     for (const file of files) {
+        /* styling */
         const uploadBox = document.createElement('div');
-        uploadBox.classList.add('upload-box');
-
         const fileNameLabel = document.createElement('div');
+        uploadBox.classList.add('upload-box');
         fileNameLabel.classList.add('PROJECTview_upload_nameLabel');
         fileNameLabel.textContent = `${file.name}`;
         uploadBox.appendChild(fileNameLabel);
-
         uploadsContainer.appendChild(uploadBox);
 
-        await uploadFileWithProgress(file, uploadBox, fileNameLabel, details);
+        /* add item to queue */
+        const new_file_item = {
+            file: file,
+            uploadBox: uploadBox,
+            fileNameLabel: fileNameLabel,
+            details: details
+        };
+        uploadQueue.push(new_file_item)
+
+        if (!isUploading) {
+            const current_file = uploadQueue.shift();
+            await uploadFileWithProgress(current_file.file, current_file.uploadBox, current_file.fileNameLabel, current_file.details);
+        }
     }
 }
 
