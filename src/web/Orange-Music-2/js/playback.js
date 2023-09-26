@@ -64,10 +64,12 @@ function PLAYBACK_prepare_project_details_array(project_details) {
     //fill PLAYBACK_songs_array with new data
     const array = [];
 
+
     const project_contributors = project_details.project_contributors;
     const project_name = project_details.project_name;
     const picture_url = project_details.picture_url;
-    const project_json = JSON.parse(project_details.project_json).songs_json
+    const project_json = project_details.songs_json;
+
     try {
         for (const song of project_json) {
             const song_name = song.song_name;
