@@ -30,19 +30,33 @@ app = FastAPI()
 # Temporary data store to store form data with tokens
 signup_data_store = {}
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        f'https://{str(os.environ.get("CORS_POLICIES_ALLOWED_ORIGINS"))}',
-        'http://localhost:5173', 'https://testom2.la0.uk',
-        'https://om2.la0.uk', 'http://localhost:11001'
-    ],
-    #allow_origins=[f"http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk", "http://localhost:11001"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+if str(os.environ.get("MODE")) == "dev":
+    # Configure CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            f'https://{str(os.environ.get("MAIN_DOMAIN"))}',
+            'http://localhost:5173', 'https://testom2.la0.uk',
+            'https://om2.la0.uk', 'http://localhost:11001'
+        ],
+        #allow_origins=[f"http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk", "http://localhost:11001"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    # Configure CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            f'https://{str(os.environ.get("MAIN_DOMAIN"))}'],
+        #allow_origins=[f"http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk", "http://localhost:11001"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
 
 
 async def create_db_pool():
