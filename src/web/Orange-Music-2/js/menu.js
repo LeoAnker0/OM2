@@ -632,6 +632,7 @@ export function menuHide_foreign() {
 
 import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
 import { PLAYBACK_handle_add_songs_to_queue } from './playback.js';
+import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 
 /* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
@@ -651,4 +652,8 @@ const MENU_ACTION_FUNCTIONS = {
         PLAYBACK_handle_add_songs_to_queue(params);
         return;
     },
+    SIGN_OUT_USER(params) {
+        HANDLE_SIGN_OUT_USER(params);
+        return;
+    }
 };

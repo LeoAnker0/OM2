@@ -1,13 +1,15 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { MENUdisplay } from './menu.js';
+import { getUserDetail } from './network_requests.js';
 
 export async function initAccountImg() {
     /* loading in the img */
     const accountImgSource = document.getElementById("TOPRIGHTaccountImg");
 
     try {
-        const url = await getAccountImageURL();
+        const data = await getUserDetail("profile_picture")
+        const url = data[0].profile_picture;
         const newImage = `${MAIN_CONST_EXPORT_mediaPath}/${url}/1/`;
-
         accountImgSource.src = newImage;
 
         /* adding event listeners for loading in the menu for the account menu */
@@ -18,38 +20,12 @@ export async function initAccountImg() {
     }
 }
 
-async function getAccountImageURL() {
-    const jwt = localStorage.getItem("JWT");
-    try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/get_account_image/`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ jwt })
-        });
-        const data = await response.json();
-
-        const authenticated = data.authenticated;
-        if (authenticated !== false) {
-            const url = data.url;
-            return url;
-        }
-
-        return false;
-    } catch (error) {
-        console.error("Error:", error);
-        return false;
-    }
-}
 
 function handleClick(event) {
     event.stopPropagation();
     handleQueueDisplayMenu(event);
     return;
 }
-
-import { MENUdisplay } from './menu.js';
 
 function handleQueueDisplayMenu(event) {
     const params = [{
@@ -63,9 +39,14 @@ function handleQueueDisplayMenu(event) {
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'None',
+        function: 'SIGN_OUT_USER',
     }];
 
     MENUdisplay(params, event);
     return;
+}
+
+export function HANDLE_SIGN_OUT_USER() {
+    localStorage.clear();
+    location.reload();
 }

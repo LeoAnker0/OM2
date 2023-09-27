@@ -180,13 +180,6 @@ async def is_email_unique(email):
         return result == 0
 
 
-async def get_account_profile_picture(uuid):
-    async with app.state.pool.acquire() as conn:
-        query = "SELECT profile_picture FROM users WHERE uuid = $1"
-        result = await conn.fetchval(query, uuid)
-        return result
-
-
 async def insert_user(data: dict):
     async with app.state.pool.acquire() as conn:
         data["description"] = "empty..."
@@ -417,26 +410,6 @@ async def test_endpoint(request: Request):
     print(request)
     print(data)
     return {"received_data": data}
-
-
-@app.post("/get_account_image/")
-async def get_account_image(request: Request):
-    data = await request.json()
-    access_token = data["jwt"]
-
-    real, uuid = await verify_jwt(access_token)
-
-    if real == False:
-        print("the jwt is not valid")
-        return {"authenticated": False}
-
-    uuid = uuid["uuid"]
-
-    url = await get_account_profile_picture(uuid)
-
-    return {"authenticated": True, "url": url}
-
-    #get the url of the account image
 
 
 def generate_uuid():
@@ -746,7 +719,7 @@ async def update_get_details(request: Request):
 
     uuid = uuid["uuid"]
 
-    valid_columns_to_retrieve = ["last_state", "username"]
+    valid_columns_to_retrieve = ["last_state", "username", "profile_picture"]
     if column_to_retrieve not in valid_columns_to_retrieve:
         print("the column is not open to being retrieved")
         return {"authenticated": False}
