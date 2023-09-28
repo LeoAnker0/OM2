@@ -1,4 +1,5 @@
-/* JS for the playback controls */
+import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_handle_PLAYER_loopButton, PLAYBACK_handle_shuffle_queue } from './playback.js';
+import { svgImports } from './importAssets.js';
 
 /* adds in the event listeners for the play back controls */
 export function setEventListenersForPlaybackcontrols() {
@@ -20,32 +21,25 @@ export function setEventListenersForPlaybackcontrols() {
     nextButton.addEventListener('click', nextClicked);
     loopButton.addEventListener('click', loopClicked);
     return
-
-
 }
-
-import { PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_handle_PLAYER_loopButton } from './playback.js';
 
 /* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
 function shuffleClicked() {
-    console.log("shuffleClicked");
+    PLAYBACK_handle_shuffle_queue();
     return
 }
 
 function backClicked() {
-    //console.log("backClicked");
     PLAYBACK_handle_PLAYER_backButton();
     return
 }
 
 function playClicked() {
-    //console.log("playClicked");
     PLAYBACK_handle_PLAYER_playButton();
     return
 }
 
 function nextClicked() {
-    //console.log("nextClicked");
     PLAYBACK_handle_PLAYER_nextButton();
     return
 }
@@ -55,36 +49,28 @@ function loopClicked() {
     return
 }
 
-
 /* adds the filters and changes the icons of the playback controls */
 export function shuffleStateChange(state) {
     /* takes in two possible values: on or off */
     const shuffleButton = document.getElementById("PLAYERshuffleButton");
     const shuffleIcon = document.getElementById("PLAYERshuffleIcon");
 
-
     if (state === "on") {
-        //console.log("filter was added");
         shuffleIcon.style.filter = "var(--make-svg-secondary)";
         return
     }
     if (state === "off") {
-        //console.log("filter was removed");
         shuffleIcon.style.filter = "var(--make-svg-black)";
         return
     }
     return
-
 }
 
-import { svgImports } from './importAssets.js';
 
 export function loopStateChange(state) {
     /* takes in three possible values: off, on, song */
     const loopButton = document.getElementById("PLAYERloopButton");
     const loopIcon = document.getElementById("PLAYERloopIcon");
-
-
 
     if (state === "off") {
         //console.log("off state");
@@ -93,10 +79,8 @@ export function loopStateChange(state) {
         return
     }
     if (state === "on") {
-        //console.log("on state");
         loopIcon.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_loop"];
-
         return
     }
     if (state === "song") {
@@ -120,7 +104,6 @@ export function playStateChange(state) {
         return
     }
     return
-
 }
 
 
@@ -134,7 +117,6 @@ export function setEventListenersForVolume() {
         const target = document.getElementById('volumeRangeSlider');
         target.value = playback_volume;
     }
-
 
     const rangeInputs = document.querySelectorAll('input[type="range"]#volumeRangeSlider')
 
@@ -172,10 +154,6 @@ function update_volumeBar(volume) {
         return
     }
 
-    // set the localstorage item
-
-
-
     localStorage.setItem('PLAYBACK_VOLUME', volume)
 
     const audio = document.getElementById("audio")
@@ -202,10 +180,3 @@ function update_volumeBar(volume) {
     return
 
 }
-
-
-
-
-
-
-/*  */

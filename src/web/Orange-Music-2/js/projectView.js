@@ -10,7 +10,7 @@ import { is_mobile } from './om2.js';
 import { projectViewSongsArray } from './sharedArrays.js';
 import projectContainer from '../html/projectViewContainer.html?raw';
 import { svgImports } from './importAssets.js';
-import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
@@ -262,7 +262,7 @@ async function detectPlayAndShuffleButtons(details) {
         PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
     });
     shuffleButton.addEventListener("click", function() {
-        console.log("shuffleButton pressed")
+        PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(project_details);
     });
     menuButton.addEventListener("click", function() {
         displayMenuForTop(event, project_details)

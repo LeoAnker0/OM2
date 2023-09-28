@@ -3,9 +3,10 @@ import { shuffleStateChange, loopStateChange, playStateChange } from './playback
 import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
 import { getProjectDetails } from './network_requests.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-
+import { shuffleArray } from './om2.js';
 
 export let PLAYBACK_songs_array = [];
+export let PLAYBACK_songs_copy_array = [];
 export let PLAYBACK_songs_array_index = 0;
 export let PLAYBACK_current_img = "";
 export let PLAYBACK_current_song_title = "";
@@ -13,11 +14,9 @@ export let PLAYBACK_current_song_artist = "";
 
 const PLAYBACK_audio_tag = document.getElementById("audio");
 const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
-
 let PLAYBACK_loop_state = "off";
 let PLAYBACK_shuffle_state = "off";
 let PLAYBACK_playing_state = "paused";
-
 
 function formatTime(val) {
     let h = 0,
@@ -45,26 +44,30 @@ then formatting into what playback.js can understand. In this particular case th
 and sets the index to 0, but some other functions with similar purpose won't do these things, rather they will just appened the data
 to the end of the array or other such ideas. */
 export function PLAYBACK_handle_input_project_details_array_with_start_playback(project_details) {
-    //console.log("PLAYBACK_handle_input_project_details_array")
-    //clear PLAYBACK_songs_array, and set index to 0
     PLAYBACK_songs_array = [];
     PLAYBACK_songs_array_index = 0;
-
     PLAYBACK_songs_array = PLAYBACK_prepare_project_details_array(project_details);
 
-    //call function to start playback
     if (PLAYBACK_songs_array.length > 0) {
         PLAYBACK_playing_state = "playing";
         PLAYBACK_start_playback()
     }
+}
+export function PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(project_details) {
+    PLAYBACK_songs_array = [];
+    PLAYBACK_songs_array_index = 0;
+    PLAYBACK_songs_array = PLAYBACK_prepare_project_details_array(project_details);
 
+    if (PLAYBACK_songs_array.length > 0) {
+        PLAYBACK_shuffle_state = "off";
+        PLAYBACK_handle_shuffle_queue();
+        PLAYBACK_playing_state = "playing";
+        PLAYBACK_start_playback()
+    }
 }
 
 function PLAYBACK_prepare_project_details_array(project_details) {
-    //fill PLAYBACK_songs_array with new data
     const array = [];
-
-
     const project_contributors = project_details.project_contributors;
     const project_name = project_details.project_name;
     const picture_url = project_details.picture_url;
@@ -92,7 +95,6 @@ function PLAYBACK_prepare_project_details_array(project_details) {
 }
 
 export function PLAYBACK_handle_input_sync_state(lastState) {
-    //fill PLAYBACK_songs_array with new data
     const current_queue = lastState.current_queue;
     const current_index = lastState.current_index;
     const loop_state = lastState.PLAYBACK_loop_state;
@@ -121,14 +123,22 @@ export async function PLAYBACK_handle_add_songs_to_queue(params) {
 
     if (queue_position === "later") {
         PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(new_array);
 
     } else if (queue_position === "next") {
-        const firstHalf = PLAYBACK_songs_array.slice(0, (PLAYBACK_songs_array_index + 1));
-        const secondHalf = PLAYBACK_songs_array.slice((PLAYBACK_songs_array_index + 1));
+        let firstHalf = PLAYBACK_songs_array.slice(0, (PLAYBACK_songs_array_index + 1));
+        let secondHalf = PLAYBACK_songs_array.slice((PLAYBACK_songs_array_index + 1));
 
         PLAYBACK_songs_array = firstHalf;
         PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
         PLAYBACK_songs_array = PLAYBACK_songs_array.concat(secondHalf);
+
+        firstHalf = PLAYBACK_songs_copy_array.slice(0, (PLAYBACK_songs_array_index + 1));
+        secondHalf = PLAYBACK_songs_copy_array.slice((PLAYBACK_songs_array_index + 1));
+
+        PLAYBACK_songs_copy_array = firstHalf;
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(new_array);
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(secondHalf);
     }
 
     updateQueue();
@@ -212,6 +222,33 @@ export function PLAYBACK_GET_progress() {
     return response;
 }
 
+
+export function PLAYBACK_handle_shuffle_queue() {
+    if (PLAYBACK_shuffle_state === "off") {
+        PLAYBACK_shuffle_state = "on";
+        shuffleStateChange(PLAYBACK_shuffle_state);
+        const items_after_currently_playing = PLAYBACK_songs_array_index + 1;
+        PLAYBACK_songs_copy_array = [...PLAYBACK_songs_array];
+
+        const elementsBeforeIndex = PLAYBACK_songs_array.slice(0, PLAYBACK_songs_array_index);
+
+        const new_shuffle_array = PLAYBACK_songs_array.slice(items_after_currently_playing);
+        shuffleArray(new_shuffle_array)
+
+        const elementsToRemove = new_shuffle_array.length;
+
+        PLAYBACK_songs_array.splice(PLAYBACK_songs_array_index, elementsToRemove, ...new_shuffle_array);
+        updateQueue();
+    } else {
+        PLAYBACK_shuffle_state = "off";
+        shuffleStateChange(PLAYBACK_shuffle_state);
+        console.log(PLAYBACK_songs_array, PLAYBACK_songs_copy_array)
+        PLAYBACK_songs_array = PLAYBACK_songs_copy_array;
+
+        updateQueue();
+
+    }
+}
 
 
 /* LOGIC -------------------------------------------------------*/

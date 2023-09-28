@@ -1,15 +1,11 @@
-let queueState = "hidden";
-
 import { loadQUEUEbody } from './exportHTMLchunks.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-
 import queueItem from '../html/queueItem.html?raw';
-
-import { PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
+import { PLAYBACK_songs_array, PLAYBACK_songs_copy_array, PLAYBACK_songs_array_index } from './playback.js';
 import { MENUdisplay } from './menu.js';
 import { is_mobile, is_dark } from './om2.js';
 
-
+let queueState = "hidden";
 
 export function initialiseQueue() {
     loadQUEUEbody();
@@ -38,7 +34,6 @@ function queueToggle() {
     }
     return
 }
-
 
 /* toggle the queue background */
 function queueStateChange(state) {
@@ -163,8 +158,11 @@ function handleDrop(event) {
 
     if (dragSourceIndex !== -1 && dropTargetIndex !== -1) {
         PLAYBACK_songs_array.splice(dragSourceIndex, 1);
-
         PLAYBACK_songs_array.splice(dropTargetIndex, 0, dragSourceSong);
+
+        PLAYBACK_songs_copy_array.splice(dragSourceIndex, 1);
+        PLAYBACK_songs_copy_array.splice(dropTargetIndex, 0, dragSourceSong);
+
         updateQueue();
     }
 }
@@ -177,10 +175,10 @@ function handleQueueItemRemove(event) {
     const indexToRemove = PLAYBACK_songs_array.findIndex(item => item.id === songID);
     if (indexToRemove !== -1) {
         PLAYBACK_songs_array.splice(indexToRemove, 1);
+        PLAYBACK_songs_copy_array.splice(indexToRemove, 1);
     }
     updateQueue();
 }
-
 
 function handleQueueDisplayMenu(event) {
     event.stopPropagation();
@@ -270,22 +268,5 @@ function hydrateItem(song) {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = replacedContent;
     const removeIndicator = tempElement.querySelector('.QUEUE-item-image-removeIndicator');
-    removeIndicator.addEventListener('click', function() {
-        console.log('Clicked remove indicator for song ID:', song.id);
-    });
-
     return tempElement.innerHTML;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*  */
