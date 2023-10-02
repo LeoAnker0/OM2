@@ -9,27 +9,20 @@ import { svgImports } from './importAssets.js';
 import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
 import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
-
-
-
-
+import { getLibraryData } from './network_requests.js';
 
 export async function initMusicObjectsGrid() {
     try {
         const contentEnvironment = document.getElementById("MAINcontentPages");
-
         loadInContainer();
 
         const libraryData = await getLibraryData(); // Wait for getLibraryData to complete
         loadObjects(libraryData);
-
         return;
     } catch (error) {
         console.error('Error in initMusicObjectsGrid:', error);
     }
 }
-
-
 
 export function hideMusicObjectsGrid() {
     const mainContent = document.getElementById("MAINcontentPages");
@@ -40,53 +33,6 @@ export function hideMusicObjectsGrid() {
     }
     mainContent.innerHTML = "";
 }
-
-
-
-async function getLibraryData() {
-    try {
-        const token = localStorage.getItem('JWT');
-        if (!token) {
-            console.log("no jwt");
-            return [];
-        }
-
-        const access_token = {
-            "access-token": token
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-projects/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(access_token)
-        });
-
-        const responseData = await response.json();
-        const projects = responseData.projects;
-
-        if (!Array.isArray(projects)) {
-            console.log("Projects is not an array:", projects);
-            return [];
-        }
-
-        const libraryData = projects.map(project => ({
-            img: project.picture_url,
-            top: project.project_name,
-            bottom: project.project_contributors,
-            days: project.time_created,
-            project_id: project.project_id
-        }));
-
-        return libraryData;
-
-    } catch (error) {
-        console.error('Error:', error);
-        return [];
-    }
-}
-
 
 function loadInContainer() {
     let IDofElement = "MAINcontentPages";
@@ -99,8 +45,6 @@ function loadInContainer() {
     document.getElementById(IDofElement).innerHTML += replacedContent;
     return;
 }
-
-
 
 function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");

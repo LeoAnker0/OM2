@@ -130,3 +130,48 @@ export async function getProjectDetails(project_id) {
         console.error('Error:', error);
     }
 }
+
+
+export async function getLibraryData() {
+    try {
+        const token = localStorage.getItem('JWT');
+        if (!token) {
+            console.log("no jwt");
+            return [];
+        }
+
+        const access_token = {
+            "access-token": token
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-projects/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(access_token)
+        });
+
+        const responseData = await response.json();
+        const projects = responseData.projects;
+
+        if (!Array.isArray(projects)) {
+            console.log("Projects is not an array:", projects);
+            return [];
+        }
+
+        const libraryData = projects.map(project => ({
+            img: project.picture_url,
+            top: project.project_name,
+            bottom: project.project_contributors,
+            days: project.time_created,
+            project_id: project.project_id
+        }));
+
+        return libraryData;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
+}

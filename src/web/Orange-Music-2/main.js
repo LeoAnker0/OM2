@@ -12,6 +12,19 @@ import './css/settings.css';
 import './css/projectView.css';
 import './css/lcd_mobile_body.css';
 
+/*
+import './js/service-worker.js';
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function(error) {
+            console.error('Service Worker registration failed:', error);
+        });
+}*/
+
 //export const MAIN_CONST_EXPORT_apiPath = "https://om2apis.la0.uk";
 //export const MAIN_CONST_EXPORT_mediaPath = "https://om2media.la0.uk";
 export const MAIN_CONST_EXPORT_apiPath =

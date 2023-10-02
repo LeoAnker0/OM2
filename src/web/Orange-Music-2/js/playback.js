@@ -218,7 +218,6 @@ export function PLAYBACK_GET_progress() {
         progress: progress,
     }
 
-    //console.log(response)
     return response;
 }
 
@@ -242,11 +241,28 @@ export function PLAYBACK_handle_shuffle_queue() {
     } else {
         PLAYBACK_shuffle_state = "off";
         shuffleStateChange(PLAYBACK_shuffle_state);
-        console.log(PLAYBACK_songs_array, PLAYBACK_songs_copy_array)
-        PLAYBACK_songs_array = PLAYBACK_songs_copy_array;
+        const copy = [...PLAYBACK_songs_copy_array];
+
+        /* the code below with the for loop allows the system to return the currently playing track as 
+        the  correct position in the queue, rather than it now being somewhere completely else, and this
+        is important to give a more smooth playback experience.
+         */
+        const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+        const full_url = PLAYBACK_audio_source.src
+        const sections = full_url.split('/');
+        const url = sections[sections.length - 3];
+
+        PLAYBACK_songs_array = copy;
+
+        for (var i = copy.length - 1; i >= 0; i--) {
+            const queue_item = copy[i];
+            if (queue_item.url === url) {
+                PLAYBACK_songs_array_index = i
+
+            }
+        }
 
         updateQueue();
-
     }
 }
 
