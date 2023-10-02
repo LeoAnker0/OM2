@@ -270,46 +270,48 @@ export function PLAYBACK_handle_shuffle_queue() {
 /* LOGIC -------------------------------------------------------*/
 
 
-
 /* the main playback function, is responsible for playing the audio, will be called from many different places, this means that there
 is only one piece of logic that deals with loading and playing and all of these things, there will be other functions that do some of 
 this type of thing, but no other function will be allowed to start playback of audio. */
 function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
-    const LCDtitleText = document.getElementById("LCDtitleText");
-    const LCDtitleTextMobile = document.getElementById("LCDtitleTextMobile");
-    const LCDbottomText = document.getElementById("LCDbottomText");
-    const root = document.documentElement;
-    const scrubInput = document.getElementById("LCDseekBar");
-    const LCDimage = document.getElementById("LCDimage");
-    const LCDimageMobile = document.getElementById("LCDimageMobile");
 
     //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
+    /* don't start playback if it's paused */
     if (PLAYBACK_playing_state === "playing") {
         PLAYBACK_audio_tag.play()
             .then(_ => PLAYBACK_update_external_metadata())
             .catch(error => console.log(error));
-
+        playStateChange("playing");
+    } else {
+        playStateChange("paused");
     }
 
+    PLAYBACK_update_top();
+    PLAYBACK_time_updates();
+}
 
-    //display the informations of text, and update queue and trigger a few actions
-    LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
-    LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
-    LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
-    resizeTitleText();
-    updateQueue();
-    playStateChange("playing");
-    LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
-    LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
-    /* update the export variables */
-    PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
-    PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
-    PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+function PLAYBACK_start_without_playback_and_update_progress(progress) {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
+    //set the source of the audio tag and start playback
+    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+    PLAYBACK_audio_tag.load();
+    PLAYBACK_audio_tag.currentTime = progress;
+
+    playStateChange("paused");
+    PLAYBACK_update_top();
+    PLAYBACK_time_updates();
+}
+
+function PLAYBACK_time_updates() {
+    const PLAYBACK_audio_tag = document.getElementById("audio");
+    const root = document.documentElement;
+    const scrubInput = document.getElementById("LCDseekBar");
 
     /* updates the top informations, which should really be it's own function? */
     PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
@@ -330,55 +332,25 @@ function PLAYBACK_start_playback() {
     });
 }
 
-function PLAYBACK_start_without_playback_and_update_progress(progress) {
-    const PLAYBACK_audio_tag = document.getElementById("audio");
-    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+function PLAYBACK_update_top() {
     const LCDtitleText = document.getElementById("LCDtitleText");
     const LCDtitleTextMobile = document.getElementById("LCDtitleTextMobile");
     const LCDbottomText = document.getElementById("LCDbottomText");
-    const root = document.documentElement;
-    const scrubInput = document.getElementById("LCDseekBar");
     const LCDimage = document.getElementById("LCDimage");
     const LCDimageMobile = document.getElementById("LCDimageMobile");
-
-    //set the source of the audio tag and start playback
-    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
-    PLAYBACK_audio_tag.load();
-    PLAYBACK_audio_tag.currentTime = progress;
 
     //display the informations of text, and update queue and trigger a few actions
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     resizeTitleText();
-    updateQueue();
-    playStateChange("paused");
     LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
     LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
     /* update the export variables */
     PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
     PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
-
-
-
-    /* updates the top informations, which should really be it's own function? */
-    PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
-        const endOfAudio = PLAYBACK_audio_tag.duration;
-        const currentTime = PLAYBACK_audio_tag.currentTime;
-        const timeRight = Math.floor(endOfAudio) - currentTime;
-        const timeRightFormatted = `"-${formatTime(timeRight)}"`;
-        const timeLeft = formatTime(Math.floor(currentTime));
-        const timeLeftFormatted = `"${timeLeft}"`
-        const progressPercent = (currentTime / endOfAudio) * 100;
-        const progressPercentFormatted = `${progressPercent}%`
-
-        updateTimeIndicatorsGlobal(timeLeftFormatted, timeRightFormatted)
-        root.style.setProperty('--LCD-seekbar-width', progressPercentFormatted);
-        root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
-        scrubInput.value = progressPercent;
-        updatePositionState();
-    });
+    updateQueue();
 }
 
 function PLAYBACK_update_external_metadata() {
@@ -424,7 +396,6 @@ function PLAYBACK_stop_playback() {
     console.log("PLAYBACK_stop_playback, clear top")
 }
 
-
 function PLAYBACK_on_song_end() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
@@ -459,10 +430,7 @@ function PLAYBACK_goto_next_song() {
     const length_of_queue = PLAYBACK_songs_array.length;
 
     if (length_of_queue > (PLAYBACK_songs_array_index + 1)) {
-        if (!PLAYBACK_audio_tag.paused) {
-
-            PLAYBACK_audio_tag.pause();
-        }
+        PLAYBACK_audio_tag.pause();
         PLAYBACK_songs_array_index += 1
         PLAYBACK_start_playback();
     }
@@ -471,9 +439,6 @@ function PLAYBACK_goto_next_song() {
 navigator.mediaSession.setActionHandler('nexttrack', function() {
     PLAYBACK_goto_next_song();
 });
-
-
-
 
 function PLAYBACK_goto_previous_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -494,8 +459,6 @@ function PLAYBACK_goto_previous_song() {
 navigator.mediaSession.setActionHandler('previoustrack', function() {
     PLAYBACK_goto_previous_song();
 });
-
-
 
 /* this funtion changes the value of the variable, however it will be on song end that deals with the logic for this  */
 function PLAYBACK_change_loop_state() {
