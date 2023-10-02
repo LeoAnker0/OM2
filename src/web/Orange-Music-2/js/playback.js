@@ -113,8 +113,6 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
     }
 }
 
-
-
 export async function PLAYBACK_handle_add_songs_to_queue(params) {
     const project_id = params.PROJECT_ID;
     const queue_position = params.QUEUE_POSITION;
@@ -202,11 +200,9 @@ export function PLAYBACK_handle_input_change_song_progress(progress) {
     PLAYBACK_audio_tag.currentTime = newCurrentTime;
 }
 
-
 export function PLAYBACK_handle_PLAYER_loopButton() {
     PLAYBACK_change_loop_state();
 }
-
 
 export function PLAYBACK_GET_progress() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
@@ -217,25 +213,22 @@ export function PLAYBACK_GET_progress() {
         PLAYBACK_shuffle_state: PLAYBACK_shuffle_state,
         progress: progress,
     }
-
     return response;
 }
-
 
 export function PLAYBACK_handle_shuffle_queue() {
     if (PLAYBACK_shuffle_state === "off") {
         PLAYBACK_shuffle_state = "on";
         shuffleStateChange(PLAYBACK_shuffle_state);
+
         const items_after_currently_playing = PLAYBACK_songs_array_index + 1;
         PLAYBACK_songs_copy_array = [...PLAYBACK_songs_array];
 
         const elementsBeforeIndex = PLAYBACK_songs_array.slice(0, PLAYBACK_songs_array_index);
-
         const new_shuffle_array = PLAYBACK_songs_array.slice(items_after_currently_playing);
         shuffleArray(new_shuffle_array)
 
         const elementsToRemove = new_shuffle_array.length;
-
         PLAYBACK_songs_array.splice(PLAYBACK_songs_array_index, elementsToRemove, ...new_shuffle_array);
         updateQueue();
     } else {
@@ -251,7 +244,6 @@ export function PLAYBACK_handle_shuffle_queue() {
         const full_url = PLAYBACK_audio_source.src
         const sections = full_url.split('/');
         const url = sections[sections.length - 3];
-
         PLAYBACK_songs_array = copy;
 
         for (var i = copy.length - 1; i >= 0; i--) {
@@ -261,11 +253,9 @@ export function PLAYBACK_handle_shuffle_queue() {
 
             }
         }
-
         updateQueue();
     }
 }
-
 
 /* LOGIC -------------------------------------------------------*/
 
@@ -449,6 +439,7 @@ function PLAYBACK_goto_previous_song() {
     from the start, then go to the start of the song, rather than the previous one, 
     but else go the previous song, if possible  */
 
+    //if there are more songs in the backwards direction
     if (PLAYBACK_songs_array_index > 0) {
         PLAYBACK_audio_tag.pause();
         PLAYBACK_songs_array_index -= 1
