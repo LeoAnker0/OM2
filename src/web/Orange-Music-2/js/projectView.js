@@ -473,7 +473,7 @@ function loadInProjectViewRowItems(songData) {
         let value = '';
 
         if (placeholder === 'PROJECTviewRow_img') {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/2/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/3/`;
             value = image;
         } else if (placeholder === 'PROJECTviewRow_songTitle') {
             value = songData.songTitle;

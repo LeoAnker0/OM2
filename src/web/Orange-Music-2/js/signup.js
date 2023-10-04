@@ -25,35 +25,6 @@ export function init_signup_form() {
     }, 1);
 }
 
-
-function previewImage(event) {
-    const input = event.target;
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-
-        // Check the image size before converting to Base64
-        if (file.size > 5 * 1024 * 1024) {
-            const errorMessage = "Image size exceeds 5 MB limit";
-            //console.log(errorMessage);
-            alert(errorMessage);
-            const imageInput = document.getElementById("profilePicture");
-            imageInput.value = ""; // Clear the file selection by setting the value to an empty string
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById("previewImage");
-            preview.src = e.target.result;
-        };
-
-        // Read the image file as a data URL.
-        reader.readAsDataURL(file);
-    }
-}
-
-
-
 async function signup(event) {
     console.log("the signup event was caught")
 
@@ -62,23 +33,6 @@ async function signup(event) {
 
     const form = document.getElementById("SETTINGSsignupForm");
     const formData = {};
-
-    // Function to convert the selected image to Base64
-    const convertImageToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            // Check the image size before converting to Base64
-            if (file.size > 5 * 1024 * 1024) {
-                //console.log("Image size exceeds 5 MB limit");
-                reject("Image size exceeds 5 MB limit");
-                return;
-            }
-
-            reader.onloadend = () => resolve(reader.result.split(",")[1]);
-            reader.readAsDataURL(file);
-        });
-    };
 
     try {
         // Step 1: Send only the email field first

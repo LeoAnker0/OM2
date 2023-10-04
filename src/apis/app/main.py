@@ -239,9 +239,6 @@ async def complete_signup(request: Request):
     username = html.escape(str(data["username"]))
     password = hash_password(data["password"])
     email = html.escape(str(data["email"]))
-    profilePicture = data["profilePicture"]
-
-    #print(f"token: {token} \t| username: {username} \t| password: {password} \t| email: {email}")
 
     signup_data = signup_data_store.get(token)
 
@@ -250,27 +247,11 @@ async def complete_signup(request: Request):
 
     del signup_data_store[token]
 
-    #send the image to chipmunk_processor
-    # Send a message to the chipmunk_processor container
-    chipmunk_processor_url = "http://chipmunk_processor:8001/process_image/base64/"
-    payload = {"imgData": profilePicture, "owner_email": email}
-    #print("we are sending an image to chipmunk_processor")
-    response = requests.post(chipmunk_processor_url, json=payload)
-
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=500,
-            detail="Error sending message to chipmunk_processor.")
-
-    # Get the response from the chipmunk_processor container
-    response_data = response.json()
-    url = response_data["url"]
-
     #add user to the db
     user_dict = dict(username=username,
                      password=password,
                      email=email,
-                     profile_picture=url)
+                     )
     await insert_user(user_dict)
 
     return {"message": "Signup successful"}
