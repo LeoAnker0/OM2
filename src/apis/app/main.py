@@ -24,7 +24,6 @@ import random
 import string
 
 load_dotenv()
-
 app = FastAPI()
 
 # Temporary data store to store form data with tokens
@@ -54,7 +53,6 @@ else:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
 
 async def create_db_pool():
     pool = await asyncpg.create_pool(
@@ -119,37 +117,25 @@ async def update_password_user_by_uuid(uuid, password):
 @app.on_event("startup")
 async def startup():
     app.state.pool = await create_db_pool()
-    #print(f"startup function in fastapi")
 
-    whimsy = generate_whimsical_name()
-    print(whimsy)
-
-    tablesExist = await startup_check_tables_exist()
-
-    if not tablesExist:
-        print(f"we need to create some tables")
+    #tablesExist = await startup_check_tables_exist()
+    #if not tablesExist:
+    #    print(f"we need to create some tables")
 
     admin_email = str(os.environ.get("OM2_ADMIN_USER_EMAIL"))
     adminExists = await startup_check_admin_exists(admin_email)
-
     if not adminExists:
         #print(f"adminExists:\t{adminExists}")
         username = "admin"
         password = hash_password(str(os.environ.get("OM2_ADMIN_PASSWORD")))
         email = admin_email
         url = "https://picsum.photos/10"
-
         user_dict = dict(username=username,
                          password=password,
                          email=email,
                          profile_picture=url)
         await insert_user(user_dict)
-
     elif adminExists:
-        #print(f"admin exists, yes:\t{adminExists}")
-
-        #get the current hash of the admin password
-        #current_hashed_password = await startup_get_admin_password_hash(admin_email)
         try:
             passwordMatches = await passwordHash_matches_email(
                 str(os.environ.get("OM2_ADMIN_PASSWORD")), admin_email)
@@ -158,20 +144,14 @@ async def startup():
             passwordMatches = False
 
         if not passwordMatches:
-            #print(f"passwordMatches:\t{passwordMatches}")
-
             uuid = await get_uuid_by_email(admin_email)
             new_password = hash_password(
                 str(os.environ.get("OM2_ADMIN_PASSWORD")))
             await update_password_user_by_uuid(uuid, new_password)
 
-            # lets now set the password of the user by uuid, by hashing the password
-
-
 @app.on_event("shutdown")
 async def shutdown():
     await app.state.pool.close()
-
 
 async def is_email_unique(email):
     async with app.state.pool.acquire() as conn:
@@ -179,22 +159,18 @@ async def is_email_unique(email):
         result = await conn.fetchval(query, email)
         return result == 0
 
-
 async def insert_user(data: dict):
     async with app.state.pool.acquire() as conn:
         data["description"] = "empty..."
         data["date_joined"] = int(datetime.datetime.now().timestamp() * 1000)
         data["profile_picture"] = "assets/default_pp"
 
+        # Generate a definitively unique UUID
         while True:
-            # Generate a UUID
             data["uuid"] = str(uuid.uuid4())
-
-            # Check if the UUID exists in the database
             query = "SELECT COUNT(*) FROM users WHERE uuid = $1"
             result = await conn.fetchval(query, data["uuid"])
             if result == 0:
-                # Unique UUID found, break out of the loop
                 break
 
         query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
@@ -203,45 +179,32 @@ async def insert_user(data: dict):
                            data["uuid"], data["description"],
                            data["date_joined"], 0, 0, False)
 
-
 @app.post("/signup/")
 async def signup(request: Request):
-
     raw_data = await request.body()
     data = json.loads(raw_data)
-
     email = html.escape(str(data["email"]))
-
     email_unique = await is_email_unique(email)
-
     if not email_unique:
         raise HTTPException(status_code=400, detail="Email already exists")
 
     email_valid = is_valid_email(email)
-
     if not email_valid:
         raise HTTPException(status_code=400, detail="Email invalid")
 
-    # Step 2: Generate a unique token and store the form data in the temporary data store
     token = secrets.token_urlsafe(16)
     signup_data_store[token] = email
-
-    # Return the token to the client-side
     return {"status": "email_validated", "token": token}
-
 
 @app.post("/signup/complete/")
 async def complete_signup(request: Request):
-    # Retrieve the form data from the temporary data store using the token
     raw_data = await request.body()
     data = json.loads(raw_data)
     token = data["token"]
     username = html.escape(str(data["username"]))
     password = hash_password(data["password"])
     email = html.escape(str(data["email"]))
-
     signup_data = signup_data_store.get(token)
-
     if not signup_data:
         raise HTTPException(status_code=400, detail="Invalid token")
 
@@ -256,31 +219,24 @@ async def complete_signup(request: Request):
 
     return {"message": "Signup successful"}
 
-
 async def passwordHash_matches_email(password, email):
     async with app.state.pool.acquire() as conn:
         query = "SELECT password FROM users WHERE email = $1"
         hashed_password = await conn.fetchval(query, email)
-
         if hashed_password:
             return bcrypt.checkpw(password.encode('utf-8'),
                                   hashed_password.encode('utf-8'))
         else:
             return False
 
-
 def genenerate_jwt(uuid):
     secret_key = str(os.environ.get("SECRET_JWT_KEY"))
-
     payload = {
         "uuid": uuid,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(days=4)
     }
-
     token = pyjwt.encode(payload, secret_key, algorithm="HS256")
-
     return token
-
 
 async def get_uuid_by_email(email):
     async with app.state.pool.acquire() as conn:
@@ -288,26 +244,18 @@ async def get_uuid_by_email(email):
         uuid = await conn.fetchval(query, email)
         return uuid
 
-
 @app.post("/login/")
 async def login(request: Request):
     raw_data = await request.body()
     data = json.loads(raw_data)
-
-    #validate that email is of valid form and is in database
-
     email = html.escape(str(data["email"]))
     email_unique = await is_email_unique(email)
-
     if email_unique == True:
         raise HTTPException(status_code=400, detail="Email doesn't exists")
 
     email_valid = is_valid_email(email)
-
     if not email_valid:
         raise HTTPException(status_code=400, detail="Email invalid")
-
-    # check that the passwordhash matches the one in the database
 
     password = data["password"]
     passwordMatches = await passwordHash_matches_email(password, email)
@@ -315,17 +263,13 @@ async def login(request: Request):
         print(f"the password didn't match")
         return {"success": "false", "message": "login failed"}
 
-    #get the real uuid
     uuid = await get_uuid_by_email(email)
-
     expiration_time = datetime.datetime.now(
         datetime.timezone.utc) + datetime.timedelta(days=5)
-
     user_data = {"uuid": uuid}
     access_token = genenerate_jwt(user_data)
     response = JSONResponse({"authenticated": True, "jwt": access_token})
     return response
-
 
 async def check_if_user_exists_by_uuid(uuid):
     async with app.state.pool.acquire() as conn:
@@ -333,58 +277,38 @@ async def check_if_user_exists_by_uuid(uuid):
         result = await conn.fetchval(query, uuid)
         return result
 
-
 async def verify_jwt(jwt_token):
     secret_key = str(os.environ.get("SECRET_JWT_KEY"))
-
     received_jwt = jwt_token
-
     try:
-        # Decode and verify the JWT
         payload = pyjwt.decode(received_jwt, secret_key, algorithms=["HS256"])
-
-        # You can now access the claims as needed, e.g., 'payload["user_id"]'
         uuid = payload.get("uuid", None)
-
-        #check if the uuid is in the users table:
         unpacked_uuid = uuid["uuid"]
-
         exists = await check_if_user_exists_by_uuid(unpacked_uuid)
-
         if uuid and exists:
             return True, uuid
-            # User is authenticated, you can proceed with their request
         else:
             print(
                 f"the user does not exist:\t{exists}\nthe user is not valid:\t{uuid}"
             )
             return False, "notuuid"
-            # Invalid JWT or missing 'user_id', consider the user not authenticated
     except pyjwt.ExpiredSignatureError:
         print("JWT is expired. Token has expired.")
         return False, "notuuid"
-        # Handle JWT expiration, consider the user not authenticated
     except pyjwt.InvalidTokenError:
         return False, "notuuid"
         print("Invalid JWT. Token verification failed.")
-        # Handle invalid JWT, consider the user not authenticated
-
 
 @app.post("/prelogin/")
 async def prelogin(request: Request):
-    print(f"prelogin called")
-
     raw_data = await request.body()
     data = json.loads(raw_data)
     access_token = data["jwt"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         return {"authenticated": False}
 
     return {"authenticated": True}
-
 
 @app.post("/test/")
 async def test_endpoint(request: Request):
@@ -393,43 +317,33 @@ async def test_endpoint(request: Request):
     print(data)
     return {"received_data": data}
 
-
 def generate_uuid():
     newUuid = str(uuid.uuid4())
     return newUuid
-
 
 @app.post("/files/upload/audio/")
 async def upload_file(
         file: UploadFile = File(...),
         jwt: str = Form(...),  # Get the JWT token from the form
         project_id: str = Form(...)):
-
     real, uuid = await verify_jwt(jwt)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     upload_dir = "/var/www/media/temp/"
-    # Check if the directory exists, if not, create it
     directory = os.path.dirname(upload_dir)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
     unique_filename_section = generate_uuid()
     unique_filename = f"{unique_filename_section}_{file.filename}"
-
-    # Save the file to the upload directory
     file_path = os.path.join(upload_dir, unique_filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
-
     song_name = file.filename
     song_name = os.path.splitext(song_name)[0]
-
     chipmunk_processor_url = "http://chipmunk_processor:8001/process_audio/compress_and_index/"
     payload = {
         "audioFilePath": file_path,
@@ -438,10 +352,8 @@ async def upload_file(
         "project_id": project_id
     }
     response = requests.post(chipmunk_processor_url, json=payload)
-
     message = f"File {file.filename} uploaded successfully"
     return JSONResponse(content={"message": message})
-
 
 def generate_whimsical_name():
     adjevctives = [
@@ -464,7 +376,6 @@ def generate_whimsical_name():
     random_noun = random.choice(nouns)
     return f"{random_adjective.title()} {random_noun.title()}"
 
-
 async def init_project_in_database(data: dict):
     async with app.state.pool.acquire() as conn:
         json_owner = {"owner": data["uuid"], "permissions": "owner"}
@@ -475,7 +386,6 @@ async def init_project_in_database(data: dict):
         picture_url = "assets/default_pfp"
         project_id = data["project_id"]
         project_name = generate_whimsical_name()
-
         project_contributors = data["owner_username"]
 
         query = "INSERT INTO projects (owner, time_created, project_json, description, picture_url, project_id, project_name, project_contributors) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
@@ -483,21 +393,18 @@ async def init_project_in_database(data: dict):
                            description, picture_url, project_id, project_name,
                            project_contributors)
 
-
 async def generate_unique_string():
     async with app.state.pool.acquire() as conn:
+        min_length = 2
         while True:
-            min_length = 4
+            min_length += 1
             new_string = ''.join(
                 random.choice(string.ascii_lowercase + string.digits)
                 for _ in range(min_length))
-
-            # Check if the string exists in the database
             query = "SELECT COUNT(*) FROM projects WHERE project_id = $1"
             result = await conn.fetchval(query, new_string)
             if result == 0:
                 return new_string
-
 
 async def get_users_username(uuid):
     async with app.state.pool.acquire() as conn:
@@ -505,31 +412,24 @@ async def get_users_username(uuid):
         username = await conn.fetchval(query, uuid)
         return username
 
-
 @app.post("/projects/new-project-id/")
 async def create_project(request: Request):
     data = await request.json()
     access_token = data["access-token"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     unique_string = await generate_unique_string()
-
     uuid = uuid["uuid"]
     project_id = unique_string
     username = await get_users_username(uuid)
-
     init_project_dict = dict(uuid=uuid,
                              project_id=project_id,
                              owner_username=username)
     await init_project_in_database(init_project_dict)
-
     return {"projectID": project_id}
-
 
 async def get_users_projects(uuid):
     async with app.state.pool.acquire() as conn:
@@ -537,22 +437,17 @@ async def get_users_projects(uuid):
         projects = await conn.fetch(query, uuid)
         return projects
 
-
 @app.post("/projects/get-projects/")
 async def create_project(request: Request):
     data = await request.json()
     access_token = data["access-token"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     projects = await get_users_projects(uuid)
-
     return {"projects": projects}
 
 
@@ -564,19 +459,16 @@ async def get_project_details_from_database(uuid, project_id):
         LIMIT 1"""
         project_details = await conn.fetch(query, uuid, project_id)
         json_string = project_details[0]['project_json']
-
         project_name = project_details[0]['project_name']
         project_contributors = project_details[0]['project_contributors']
         time_created = project_details[0]['time_created']
         description = project_details[0]['description']
         picture_url = project_details[0]['picture_url']
-
         project_json = json.loads(json_string)
         if not project_json:
             return project_details[0]
 
         project_json = project_json['songs_json']
-
         project_details = {
             "songs_json": [],
             "project_name": project_name,
@@ -585,7 +477,6 @@ async def get_project_details_from_database(uuid, project_id):
             "description": description,
             "picture_url": picture_url,
         }
-
         for song in project_json:
             url = song['url']
             folder_size = get_folder_size(f"/var/www/media/{url}/")
@@ -598,13 +489,10 @@ async def get_project_details_from_database(uuid, project_id):
             }
 
             project_details["songs_json"].append(new_song)
-
         return project_details
-
 
 def get_folder_size(folder_path):
     total_size = 0
-
     for dirpath, dirnames, filenames in os.walk(folder_path):
         for filename in filenames:
             file_path = os.path.join(dirpath, filename)
@@ -618,15 +506,12 @@ async def get_project_details(request: Request):
     data = await request.json()
     access_token = data["access-token"]
     project_id = data["project_id"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     project_details = await get_project_details_from_database(uuid, project_id)
 
     return {"project_details": project_details}
@@ -662,15 +547,12 @@ async def update_project_details(request: Request):
     project_id = data["project_id"]
     column_to_update = data["column_to_be_updated"]
     new_data = data["new_data"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     valid_columns_to_update = [
         "description", "project_name", "project_contributors"
     ]
@@ -680,7 +562,6 @@ async def update_project_details(request: Request):
 
     await update_project_detail_in_database(uuid, project_id, column_to_update,
                                             new_data)
-
     return {"updated": "success"}
 
 
@@ -690,22 +571,18 @@ async def update_user_details(request: Request):
     access_token = data["access-token"]
     column_to_update = data["column_to_be_updated"]
     new_data = data["new_data"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     valid_columns_to_update = ["last_state", "username"]
     if column_to_update not in valid_columns_to_update:
         print("the column is not open to being changed")
         return {"authenticated": False}
 
     await update_user_detail_in_database(uuid, column_to_update, new_data)
-
     return {"updated": "success"}
 
 
@@ -714,23 +591,18 @@ async def update_get_details(request: Request):
     data = await request.json()
     access_token = data["access-token"]
     column_to_retrieve = data["wanted_column"]
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     valid_columns_to_retrieve = ["last_state", "username", "profile_picture"]
     if column_to_retrieve not in valid_columns_to_retrieve:
         print("the column is not open to being retrieved")
         return {"authenticated": False}
 
     response = await get_user_detail_in_database(uuid, column_to_retrieve)
-    #print(f"response to get:\t{response}")
-
     return {"response": response}
 
 
@@ -767,29 +639,20 @@ async def update_project_details(request: Request):
     project_id = data["project_id"]
     data = project_id
     project_id = data['PROJECT_ID']
-
     real, uuid = await verify_jwt(access_token)
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-
     project = await get_users_projects_for_file_deletion(uuid, project_id)
     json_string = project[0]['project_json']
     project_dict = json.loads(json_string)
-
-    # delete the project files
     if json_string != "{}":
         url_list = [song['url'] for song in project_dict['songs_json']]
         picture_url = project[0]['picture_url']
-        #url_list.append(picture_url)
-
-        #delete files
         for url in url_list:
             folder_path = os.path.join("/var/www/media", url)
-
             if os.path.exists(folder_path):
                 shutil.rmtree(folder_path)
             else:
@@ -797,11 +660,9 @@ async def update_project_details(request: Request):
 
             await delete_files_row(url)
 
-    # delete the project from the table
     await delete_project_by_uuid_and_project_id(uuid, project_id)
 
     return {"response": "cheese"}
-
 
 # for image uploads
 @app.post("/files/upload/photo/")
@@ -811,12 +672,10 @@ async def upload_file_photo(
         project_id: str = Form(...)):
     real, uuid = await verify_jwt(jwt)
     uuid = uuid["uuid"]
-
     if real == False:
         print("the jwt is not valid")
         return {"authenticated": False}
 
-    # Check if the directory exists, if not, create it
     upload_dir = "/var/www/media/temp/"
     directory = os.path.dirname(upload_dir)
     if not os.path.exists(directory):
@@ -824,8 +683,6 @@ async def upload_file_photo(
 
     unique_filename_section = generate_uuid()
     unique_filename = f"{unique_filename_section}_{file.filename}"
-
-    # Save the file to the upload directory
     file_path = os.path.join(upload_dir, unique_filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -833,25 +690,19 @@ async def upload_file_photo(
     chipmunk_processor_url = "http://chipmunk_processor:8001/process_photo/compress_and_index/"
     payload = {"filePath": file_path, "uuid": uuid, "project_id": project_id}
     response = requests.post(chipmunk_processor_url, json=payload)
-
     if response.status_code != 200:
         print("Request failed with status code:", response.status_code)
 
     response_data = response.json()
     url = response_data.get("url", "")
-    #print("URL:", url)
-
-    #update the project database item so that the image url is this
     await update_project_detail_in_database(uuid, project_id, "picture_url",
                                             url)
-
     message = f"File {file.filename} uploaded successfully"
     return JSONResponse(content={"message": message})
-
 
 # for image uploads
 @app.get("/status/are_signups_allowed/")
 async def are_signups_allowed():
     signups_allowed = (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()
-    #print(f"signups_allowed:\t{signups_allowed}")
+    print(f"signups_allowed:\t{signups_allowed}")
     return {"signups_allowed": signups_allowed}
