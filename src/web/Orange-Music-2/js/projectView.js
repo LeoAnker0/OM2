@@ -1,50 +1,17 @@
-/* so i have decided that the generation of the new id should be 
-done somewhere else, and now that is a reality, so now the function
-that generates should be here
-*/
-
-import { handleRoute } from './routing.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes } from './om2.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
-import { is_mobile } from './om2.js';
-import { projectViewSongsArray } from './sharedArrays.js';
-import projectContainer from '../html/projectViewContainer.html?raw';
-import { svgImports } from './importAssets.js';
-import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
-import { MENUdisplay, menuHide_foreign } from './menu.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
+import projectContainer from '../html/projectViewContainer.html?raw';
+import { projectViewSongsArray } from './sharedArrays.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+import { svgImports } from './importAssets.js';
+import { handleRoute } from './routing.js';
 
-
-export async function createNewProjectID() {
-    try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/new-project-id/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData)
-        });
-
-        const data = await response.json();
-        const projectID = data.projectID;
-
-        const newRoute = `/projects/${projectID}`
-        handleRoute(newRoute);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
+const uploadQueue = [];
+let isUploading = false;
 
 export async function initProjectView(projectID) {
     /* detect if the route is /projects/ or /projects/id, if the first one 
@@ -53,8 +20,8 @@ export async function initProjectView(projectID) {
     setTimeout(async () => {
         const currentPath = window.location.pathname;
         const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-
         const details = await getProjectDetails(project_id);
+
         details.project_id = project_id
         loadVisible(details);
         set_event_listeners_for_titles(details);
@@ -62,15 +29,12 @@ export async function initProjectView(projectID) {
 
 
     function loadVisible(details) {
-
         loadContainer(details);
-
         const description = details.description;
+
         sessionStorage.setItem('description', description);
         updateDescription_display();
-
         descriptionButtonInteractions();
-
         handleDescriptionMoreText();
         detectOffClicks(details);
         detectPlayAndShuffleButtons(details);
@@ -81,8 +45,6 @@ export async function initProjectView(projectID) {
         detect_when_image_is_interacted(details.project_id);
     }
 }
-
-
 
 export function hideProjectView() {
     const MainContent = document.getElementById("MAINcontentPages");
@@ -104,21 +66,18 @@ export async function PROJECTVIEW_update() {
 
 function set_event_listeners_for_titles(details) {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
+    const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
 
     titleH1.addEventListener('blur', function(event) {
         const newTitleH1 = titleH1.innerText
         update_mobile_header_project_title(newTitleH1);
-
         updateProjectDetails(details.project_id, "project_name", newTitleH1)
     });
-
-    const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
 
     titleH3.addEventListener('blur', function(event) {
         const newTitleH3 = titleH3.innerText
         updateProjectDetails(details.project_id, "project_contributors", newTitleH3)
     });
-
 }
 
 function loadContainer(details) {
@@ -141,7 +100,8 @@ function loadContainer(details) {
         } else if (placeholder === 'PROJECTviewMOREartist') {
             value = details.project_contributors;
         } else if (placeholder === 'PROJECTviewMOREyear') {
-            value = details.time_created;
+            const formatted_time = formatTimeDaysToHuman(details.time_created);
+            value = formatted_time;
         } else if (placeholder === 'MOG_checkedDate') {
             value = "checkedIndicator";
         } else if (placeholder === 'MOGI_placeholder_itemID') {
@@ -209,20 +169,18 @@ function updateDescription() {
 
 function handleDescriptionMoreText() {
     const description = sessionStorage.getItem('description');
-
     const editorContainer = document.getElementById("PROJECTviewMOREdescriptionC");
     const editor = document.getElementById("PROJECTviewMOREdescriptionP");
-
     editor.innerText = description;
 }
 
 function detectOffClicks(details) {
     const xButton = document.getElementById("PROJECTviewMOREcloseButton");
+    const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     xButton.addEventListener('click', function() {
         closeMoreDescription(details);
     });
 
-    const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     background.addEventListener('click', function(event) {
         if (event.target === background) {
             closeMoreDescription(details)
@@ -232,20 +190,16 @@ function detectOffClicks(details) {
 
 function closeMoreDescription(details) {
     const editor = document.getElementById("PROJECTviewMOREdescriptionP");
-
     const newDescription = editor.value;
-    sessionStorage.setItem('description', newDescription);
-
-    updateProjectDetails(details.project_id, "description", newDescription)
-
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
+    const main = document.querySelector("main");
+
+    sessionStorage.setItem('description', newDescription);
+    updateProjectDetails(details.project_id, "description", newDescription)
     background.style.display = "none";
     updateDescription();
-
-    const main = document.querySelector("main");
     main.style.zIndex = "1";
 }
-
 
 /* project view top buttons */
 async function detectPlayAndShuffleButtons(details) {
@@ -254,7 +208,6 @@ async function detectPlayAndShuffleButtons(details) {
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
     const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
-
     const project_details = await getProjectDetails(details.project_id);
 
     playButton.addEventListener("click", function() {
@@ -280,10 +233,8 @@ async function detectPlayAndShuffleButtons(details) {
 function displayMenuForTop(event, project_details) {
     event.stopPropagation();
     const clickedItem = event.target;
-
     const currentPath = window.location.pathname;
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-
 
     const params = [{
         displayText: 'Play next',
@@ -318,10 +269,9 @@ function displayMenuForTop(event, project_details) {
 
 export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     if (window.confirm("Are you sure you want to delete this project?")) {
-        deleteProjectFromServer(project_id);
-
-        menuHide_foreign();
         const newRoute = "/";
+        deleteProjectFromServer(project_id);
+        menuHide_foreign();
         handleRoute(newRoute);
     } else {
         menuHide_foreign();
@@ -360,9 +310,8 @@ async function deleteProjectFromServer(project_id) {
 function loadInTable(details) {
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
     loadInProjectViewRowTitles();
+
     const projectTable = document.getElementById('PROJECTview-projectTable');
-
-
     const jsonDetails = details;
     const songsJsonString = jsonDetails;
 
@@ -370,17 +319,21 @@ function loadInTable(details) {
         const songsJson = songsJsonString.songs_json;
         const songData = [];
 
-        for (const song of songsJson) {
-            songData.push({
-                "img": jsonDetails.picture_url,
-                "songTitle": song.song_name,
-                "artistName": jsonDetails.project_contributors,
-                "projectName": formatFileSize(song.song_size),
-                "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
-                "song_sequence": song.song_sequence,
-                "url": song.url
-            })
+        if (songsJson) {
+            for (const song of songsJson) {
+                songData.push({
+                    "img": jsonDetails.picture_url,
+                    "songTitle": song.song_name,
+                    "artistName": jsonDetails.project_contributors,
+                    "projectName": formatFileSizeBytes(song.song_size),
+                    "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
+                    "song_sequence": song.song_sequence,
+                    "url": song.url
+                })
+            }
+
         }
+
 
         for (let i = 0; i < songData.length; i++) {
             songData[i].projectID = i;
@@ -404,22 +357,17 @@ function loadInTable(details) {
             }
         });
     }
-
 }
 
 async function updateLoadInTable() {
     const projectTable = document.getElementById('PROJECTview-projectTable');
-
-    // do a fetch request for the new table state
     const currentPath = window.location.pathname;
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-
     const details = await getProjectDetails(project_id);
     details.project_id = project_id
 
     const jsonDetails = details;
     const songsJsonString = jsonDetails.project_json;
-
     const songsJson = JSON.parse(songsJsonString).songs_json;
     const songData = [];
 
@@ -429,7 +377,7 @@ async function updateLoadInTable() {
                 "img": jsonDetails.picture_url,
                 "songTitle": song.song_name,
                 "artistName": jsonDetails.project_contributors,
-                "projectName": formatFileSize(song.song_size),
+                "projectName": formatFileSizeBytes(song.song_size),
                 "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
                 "song_sequence": song.song_sequence,
                 "url": song.url
@@ -504,9 +452,6 @@ function loadInProjectViewRowTitles() {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
-    /*
-    document.getElementById(IDofElement).insertAdjacentHTML('afterbegin', replacedContent);
-    */
     document.getElementById(IDofElement).innerHTML += replacedContent;
 
     return;
@@ -550,8 +495,6 @@ function loadInProjectViewRowItems(songData) {
 
 function loadFileDropArea(details) {
     const dropArea = document.getElementById("PROJECTview_dropArea");
-
-    // Prevent default behavior for drag-and-drop events
     dropArea.addEventListener("dragenter", (e) => {
         e.preventDefault();
         dropArea.classList.add("dragover");
@@ -577,7 +520,7 @@ function loadFileDropArea(details) {
     dropArea.addEventListener("click", () => {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
-        fileInput.accept = "audio/*"; // Specify accepted file types here
+        fileInput.accept = "audio/*";
         fileInput.multiple = true;
         fileInput.addEventListener("change", () => {
             const files = fileInput.files;
@@ -590,30 +533,23 @@ function loadFileDropArea(details) {
     function handleFiles(files, details) {
         for (const file of files) {
             projectViewSongsArray.push(file);
-            //console.log(file);
         }
-        //console.log(projectViewSongsArray);
         uploadFiles(files, details);
     }
 }
 
 async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
-    isUploading = true;
-
     const formData = new FormData();
-    formData.append('file', file);
-
-    formData.append("project_id", details.project_id);
-
     const jwtToken = localStorage.getItem('JWT');
-
-    formData.append('jwt', jwtToken);
-
     const xhr = new XMLHttpRequest();
-
     const progressBar = document.createElement('div');
-    progressBar.classList.add('progress-bar');
     const progressFill = document.createElement('div');
+
+    isUploading = true;
+    formData.append('file', file);
+    formData.append("project_id", details.project_id);
+    formData.append('jwt', jwtToken);
+    progressBar.classList.add('progress-bar');
     progressFill.classList.add('progress-fill');
     progressBar.appendChild(progressFill);
     uploadBox.appendChild(progressBar);
@@ -665,8 +601,6 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
     xhr.send(formData);
 }
 
-let isUploading = false;
-const uploadQueue = [];
 
 async function uploadFiles(files, details) {
     const uploadsContainer = document.getElementById('uploadsContainer');
@@ -697,22 +631,10 @@ async function uploadFiles(files, details) {
     }
 }
 
-// Format file size
-function formatFileSize(size) {
-    if (size < 1024) {
-        return `${size} b`;
-    } else if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(2)} kb`;
-    } else {
-        return `${(size / 1024 / 1024).toFixed(2)} mb`;
-    }
-}
-
 function update_mobile_header_project_title(project_name) {
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
     headerTitleText.innerText = project_name;
 }
-
 
 /* the top bar of the mobile project view */
 function detect_when_image_is_no_longer_visible() {
@@ -792,42 +714,17 @@ function detect_when_image_is_interacted(project_id) {
 }
 
 function displayMenuImage(event, project_id) {
-    event.stopPropagation();
     const clickedItem = event.target;
-
     const menu_type = "update_project_image";
     const params = {
         project_id: project_id
     }
 
+    event.stopPropagation();
+
     MENUdisplay(params, event, menu_type);
     return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

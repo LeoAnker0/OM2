@@ -579,6 +579,9 @@ async def get_project_details_from_database(uuid, project_id):
         picture_url = project_details[0]['picture_url']
 
         project_json = json.loads(json_string)
+        if not project_json:
+            return project_details[0]
+
         project_json = project_json['songs_json']
 
         project_details = {"songs_json": [],

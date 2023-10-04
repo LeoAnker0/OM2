@@ -1,15 +1,16 @@
 /* 
 JS for creating the music objects, and then hydrating them with dynamic data
 */
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { handleRoute } from './routing.js';
-import { MENUdisplay } from './menu.js';
-import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
-import { svgImports } from './importAssets.js';
-import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
-import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
-import { getLibraryData } from './network_requests.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
+import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
+import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
+import { handleRoute } from './routing.js';
+import { getLibraryData, getProjectDetails } from './network_requests.js';
+import { svgImports } from './importAssets.js';
+import { formatTimeDaysDelta } from './om2.js';
+import { MENUdisplay } from './menu.js';
 
 export async function initMusicObjectsGrid() {
     try {
@@ -68,22 +69,16 @@ function loadObjects(libraryData) {
         let replacedContent = musicObjectsGridItem
         const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate', 'MOGI_placeholder_itemID'];
         const temporaryIidentifier = i;
-
         const imgAddress = libraryData[i].img;
         const textTop = libraryData[i].top;
         const textBottom = libraryData[i].bottom;
         const lastCheckedInMillis = libraryData[i].days;
-
-        /* last checked display calculator */
-        const checkedIndicator = daysToDaysWeeksMonthsYears(lastCheckedInMillis);
-
-
+        const checkedIndicator = formatTimeDaysDelta(lastCheckedInMillis);
 
         for (const [placeholder, value] of Object.entries(svgImports)) {
             const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
             replacedContent = replacedContent.replace(regex, value);
         }
-
 
         for (let i = 0; i < listOfThings.length; i++) {
             const placeholder = listOfThings[i].toString();
@@ -109,7 +104,6 @@ function loadObjects(libraryData) {
     }
 
     const MOGcontainer = document.getElementById("MOGcontainer");
-
     /* detecting when the items in the grid are clicked, and then doing something about it */
     MOGcontainer.addEventListener('click', function(event) {
         addEventListeners_to_music_object_grid(event, libraryData)
@@ -152,41 +146,7 @@ function loadObjects(libraryData) {
 
         displayMenu(event, objectID);
     }
-
-
 };
-
-
-async function getProjectDetails(project_id) {
-    try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData)
-        });
-
-        const data = await response.json();
-        const projectDetailsRecord = data.project_details
-        return projectDetailsRecord;
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
 
 async function addEventListeners_to_music_object_grid(event, libraryData) {
     const clickedElement = event.target;
@@ -222,10 +182,7 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
     if (clickedElement.id === 'MOGaddNewItem') {
         addNewLibraryItem();
     }
-
 };
-
-
 
 function displayMenu(event, project_id) {
     event.stopPropagation();
@@ -253,35 +210,7 @@ function displayMenu(event, project_id) {
     return;
 }
 
-function daysToDaysWeeksMonthsYears(milliseconds) {
-    const now = Date.now();
-    const differenceDays = (now - milliseconds) / (1000 * 60 * 60 * 24);
 
-    let checkedIndicator;
-
-    if (differenceDays < 0.01) { // Less than 0.01 days (approximately 14 minutes)
-        checkedIndicator = "Now";
-        return checkedIndicator;
-    } else if (differenceDays < 1) {
-        checkedIndicator = "Now"; // Convert to hours
-        return checkedIndicator;
-    } else if (differenceDays < 8) {
-        checkedIndicator = Math.floor(differenceDays) + "d";
-        return checkedIndicator;
-    } else if (differenceDays < 29) {
-        const noWeeks = Math.floor(differenceDays / 7);
-        checkedIndicator = noWeeks + "w";
-        return checkedIndicator;
-    } else if (differenceDays < 365) {
-        const noMonths = Math.floor(differenceDays / 28);
-        checkedIndicator = noMonths + "m";
-        return checkedIndicator;
-    } else {
-        const noYears = Math.floor(differenceDays / 365);
-        checkedIndicator = noYears + "y";
-        return checkedIndicator;
-    }
-}
 
 
 function addNewLibraryItem() {

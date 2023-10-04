@@ -1,5 +1,5 @@
-import { updateUserDetails, getUserDetail } from './network_requests.js';
-import { initProjectView, hideProjectView, createNewProjectID } from './projectView.js';
+import { updateUserDetails, getUserDetail, createNewProjectID } from './network_requests.js';
+import { initProjectView, hideProjectView } from './projectView.js';
 import { initMusicObjectsGrid, hideMusicObjectsGrid } from './musicObjectGrid.js';
 import { PLAYBACK_init, PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_GET_progress, PLAYBACK_handle_input_sync_state } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';

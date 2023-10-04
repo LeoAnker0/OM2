@@ -47,3 +47,68 @@ export function formatTimeSeconds(val) {
 
     return val;
 };
+
+export function formatTimeDaysDelta(milliSeconds) {
+    const now = Date.now();
+    const differenceDays = (now - milliSeconds) / (1000 * 60 * 60 * 24);
+
+    let checkedIndicator;
+
+    if (differenceDays < 0.01) { // Less than 0.01 days (approximately 14 minutes)
+        checkedIndicator = "Now";
+        return checkedIndicator;
+    } else if (differenceDays < 1) {
+        checkedIndicator = "Now"; // Convert to hours
+        return checkedIndicator;
+    } else if (differenceDays < 8) {
+        checkedIndicator = Math.floor(differenceDays) + "d";
+        return checkedIndicator;
+    } else if (differenceDays < 29) {
+        const noWeeks = Math.floor(differenceDays / 7);
+        checkedIndicator = noWeeks + "w";
+        return checkedIndicator;
+    } else if (differenceDays < 365) {
+        const noMonths = Math.floor(differenceDays / 28);
+        checkedIndicator = noMonths + "m";
+        return checkedIndicator;
+    } else {
+        const noYears = Math.floor(differenceDays / 365);
+        checkedIndicator = noYears + "y";
+        return checkedIndicator;
+    }
+}
+
+export function formatTimeDaysToHuman(milliSeconds) {
+    const now = Date.now();
+    const differenceSeconds = (now - milliSeconds) / 1000;
+
+    if (differenceSeconds < 60) {
+        return `Now`;
+    } else if (differenceSeconds < 3600) {
+        const minutes = Math.floor(differenceSeconds / 60);
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else if (differenceSeconds < 86400) {
+        const hours = Math.floor(differenceSeconds / 3600);
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (differenceSeconds < 172800) {
+        return 'Yesterday';
+    } else if (differenceSeconds < 31536000) {
+        const days = Math.floor(differenceSeconds / 86400);
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else {
+        const date = new Date(milliSeconds);
+        const year = date.getFullYear();
+        return `${year}`;
+    }
+}
+
+// Format file size
+export function formatFileSizeBytes(size) {
+    if (size < 1024) {
+        return `${size} b`;
+    } else if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(2)} kb`;
+    } else {
+        return `${(size / 1024 / 1024).toFixed(2)} mb`;
+    }
+}

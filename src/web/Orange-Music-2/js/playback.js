@@ -3,7 +3,7 @@ import { shuffleStateChange, loopStateChange, playStateChange } from './playback
 import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
 import { getProjectDetails } from './network_requests.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { shuffleArray } from './om2.js';
+import { shuffleArray, formatTimeSeconds } from './om2.js';
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_copy_array = [];
@@ -17,27 +17,6 @@ const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 let PLAYBACK_loop_state = "off";
 let PLAYBACK_shuffle_state = "off";
 let PLAYBACK_playing_state = "paused";
-
-function formatTime(val) {
-    let h = 0,
-        m = 0,
-        s;
-    val = parseInt(val, 10);
-    if (val > 60 * 60) {
-        h = parseInt(val / (60 * 60), 10);
-        val -= h * 60 * 60;
-    };
-    if (val > 60) {
-        m = parseInt(val / 60, 10);
-        val -= m * 60;
-    };
-    s = val;
-    val = (h > 0) ? h + ':' : '';
-    val += (m > 0) ? ((m < 10 && h > 0) ? '0' : '') + m + ':' : '0:';
-    val += ((s < 10) ? '0' : '') + s;
-
-    return val;
-};
 
 /* this functions is responsible for taking in an array of song data, as it is recieved from the database, and
 then formatting into what playback.js can understand. In this particular case this function clears the playback array
@@ -308,8 +287,8 @@ function PLAYBACK_time_updates() {
         const endOfAudio = PLAYBACK_audio_tag.duration;
         const currentTime = PLAYBACK_audio_tag.currentTime;
         const timeRight = Math.floor(endOfAudio) - currentTime;
-        const timeRightFormatted = `"-${formatTime(timeRight)}"`;
-        const timeLeft = formatTime(Math.floor(currentTime));
+        const timeRightFormatted = `"-${formatTimeSeconds(timeRight)}"`;
+        const timeLeft = formatTimeSeconds(Math.floor(currentTime));
         const timeLeftFormatted = `"${timeLeft}"`
         const progressPercent = (currentTime / endOfAudio) * 100;
         const progressPercentFormatted = `${progressPercent}%`

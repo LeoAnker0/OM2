@@ -1,4 +1,5 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { handleRoute } from './routing.js';
 
 export async function updateProjectDetails(project_id, column, newInfo) {
     try {
@@ -173,5 +174,34 @@ export async function getLibraryData() {
     } catch (error) {
         console.error('Error:', error);
         return [];
+    }
+}
+export async function createNewProjectID() {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/new-project-id/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const projectID = data.projectID;
+        const newRoute = `/projects/${projectID}`
+        handleRoute(newRoute);
+
+    } catch (error) {
+        console.error('Error:', error);
     }
 }

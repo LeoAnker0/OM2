@@ -81,7 +81,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    ..MENUmodalItemContainer:not(:last-child) {
+    .MENUmodalItemContainer:not(:last-child) {
         border-bottom: 1px solid var(--text-secondary) border-right: 1px solid var(--grey);
     }
 }
