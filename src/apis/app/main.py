@@ -181,6 +181,9 @@ async def insert_user(data: dict):
 
 @app.post("/signup/")
 async def signup(request: Request):
+    if (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()  == "false":
+        raise HTTPException(status_code=403, detail="Signups are turned off")
+
     raw_data = await request.body()
     data = json.loads(raw_data)
     email = html.escape(str(data["email"]))
@@ -198,6 +201,9 @@ async def signup(request: Request):
 
 @app.post("/signup/complete/")
 async def complete_signup(request: Request):
+     if (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()  == "false":
+        raise HTTPException(status_code=403, detail="Signups are turned off")
+        
     raw_data = await request.body()
     data = json.loads(raw_data)
     token = data["token"]
