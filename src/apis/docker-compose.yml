@@ -74,6 +74,18 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - om2data:/var/www/media
+      - ./files/default_pfp_1.webp:/var/www/media/assets/default_pfp/1.webp
+      - ./files/default_pfp_2.webp:/var/www/media/assets/default_pfp/2.webp
+      - ./files/default_pfp_3.webp:/var/www/media/assets/default_pfp/3.webp
+      - ./files/default_pfp_4.webp:/var/www/media/assets/default_pfp/4.webp
+      - ./files/default_pfp_5.webp:/var/www/media/assets/default_pfp/5.webp
+      - ./files/default_pfp_6.webp:/var/www/media/assets/default_pfp/6.webp
+      - ./files/default_pp_1.webp:/var/www/media/assets/default_pp/1.webp
+      - ./files/default_pp_2.webp:/var/www/media/assets/default_pp/2.webp
+      - ./files/default_pp_3.webp:/var/www/media/assets/default_pp/3.webp
+      - ./files/default_pp_4.webp:/var/www/media/assets/default_pp/4.webp
+      - ./files/default_pp_5.webp:/var/www/media/assets/default_pp/5.webp
+      - ./files/default_pp_6.webp:/var/www/media/assets/default_pp/6.webp
     networks:
       - tunnel
 

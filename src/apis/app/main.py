@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from requests_toolbelt import MultipartEncoder
 from starlette.websockets import WebSocketDisconnect
-
 from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, EmailStr
+from re import sub
 import json
 import asyncpg
 import os
@@ -48,15 +48,12 @@ else:
     # Configure CORS
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            f'https://{str(os.environ.get("MAIN_DOMAIN"))}'],
+        allow_origins=[f'https://{str(os.environ.get("MAIN_DOMAIN"))}'],
         #allow_origins=[f"http://localhost:5173", "http://localhost:4173", "http://localhost:5175", "https://om2.la0.uk", "http://localhost:11001"],  # Set the appropriate origins or use ["http://localhost:8000"] for a specific origin
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-
 
 
 async def create_db_pool():
@@ -124,6 +121,9 @@ async def startup():
     app.state.pool = await create_db_pool()
     #print(f"startup function in fastapi")
 
+    whimsy = generate_whimsical_name()
+    print(whimsy)
+
     tablesExist = await startup_check_tables_exist()
 
     if not tablesExist:
@@ -184,6 +184,7 @@ async def insert_user(data: dict):
     async with app.state.pool.acquire() as conn:
         data["description"] = "empty..."
         data["date_joined"] = int(datetime.datetime.now().timestamp() * 1000)
+        data["profile_picture"] = "assets/default_pp"
 
         while True:
             # Generate a UUID
@@ -438,7 +439,6 @@ async def upload_file(
         os.makedirs(directory)
 
     unique_filename_section = generate_uuid()
-
     unique_filename = f"{unique_filename_section}_{file.filename}"
 
     # Save the file to the upload directory
@@ -458,30 +458,42 @@ async def upload_file(
     }
     response = requests.post(chipmunk_processor_url, json=payload)
 
-    # Continue with the file upload if the JWT is valid
-    # ... (your existing code for file upload)
-
     message = f"File {file.filename} uploaded successfully"
     return JSONResponse(content={"message": message})
 
 
+def generate_whimsical_name():
+    adjevctives = [
+        "happy", "sad", "brave", "shy", "friendly", "clever", "silly", "loud",
+        "quiet", "colorful", "spicy", "sweet", "bitter", "tall", "short",
+        "young", "old", "big", "small", "fast", "slow", "hot", "cold",
+        "bright", "dark", "soft", "hard", "smooth", "rough", "smooth", "fuzzy",
+        "noisy", "peaceful", "lucky", "unlucky", "heavy", "light", "wild",
+        "gentle", "serious", "playful", "proud", "humble", "sleepy", "awake",
+        "clumsy", "graceful", "curious", "wise", "foolish", "orange", "red",
+        "yellow", "blue", "teal", "purple", "ochre", "umbre"
+    ]
+    nouns = [
+        "apple", "banana", "cat", "dog", "elephant", "flower", "guitar",
+        "house", "ice cream", "jacket", "kite", "lamp", "mountain", "nest",
+        "ocean", "pencil", "queen", "river", "sun", "tree", "umbrella",
+        "volcano", "waterfall", "xylophone", "yacht", "zebra"
+    ]
+    random_adjective = random.choice(adjevctives)
+    random_noun = random.choice(nouns)
+    return f"{random_adjective.title()} {random_noun.title()}"
+
+
 async def init_project_in_database(data: dict):
     async with app.state.pool.acquire() as conn:
-
         json_owner = {"owner": data["uuid"], "permissions": "owner"}
         owner = json.dumps(json_owner)
-
         file_created_time = int(datetime.datetime.now().timestamp() * 1000)
-
         project_json = "{}"
-
         description = "Notes..."
-
-        picture_url = "https://picsum.photos/200"
-
+        picture_url = "assets/default_pfp"
         project_id = data["project_id"]
-
-        project_name = "Project Title"
+        project_name = generate_whimsical_name()
 
         project_contributors = data["owner_username"]
 
@@ -584,18 +596,25 @@ async def get_project_details_from_database(uuid, project_id):
 
         project_json = project_json['songs_json']
 
-        project_details = {"songs_json": [],
-            "project_name":project_name, 
-            "project_contributors":project_contributors, 
-            "time_created":time_created, 
-            "description":description, 
-            "picture_url":picture_url, 
+        project_details = {
+            "songs_json": [],
+            "project_name": project_name,
+            "project_contributors": project_contributors,
+            "time_created": time_created,
+            "description": description,
+            "picture_url": picture_url,
         }
 
         for song in project_json:
             url = song['url']
             folder_size = get_folder_size(f"/var/www/media/{url}/")
-            new_song = {"url": song["url"], "song_name": song["song_name"], "duration": song["duration"], "song_sequence": song["song_sequence"], "song_size": folder_size}
+            new_song = {
+                "url": song["url"],
+                "song_name": song["song_name"],
+                "duration": song["duration"],
+                "song_sequence": song["song_sequence"],
+                "song_size": folder_size
+            }
 
             project_details["songs_json"].append(new_song)
 
@@ -611,6 +630,7 @@ def get_folder_size(folder_path):
             total_size += os.path.getsize(file_path)
 
     return total_size
+
 
 @app.post("/projects/get-project-details/")
 async def get_project_details(request: Request):

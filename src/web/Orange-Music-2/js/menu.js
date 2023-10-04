@@ -626,7 +626,9 @@ export function menuHide_foreign() {
     }
 
     //set focus to the previously selected item
-    previously_focused_element.focus();
+    if (previously_focused_element) {
+        previously_focused_element.focus();
+    }
     return;
 }
 
