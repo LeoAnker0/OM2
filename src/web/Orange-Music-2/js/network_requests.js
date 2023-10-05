@@ -178,6 +178,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
         return [];
     }
 }
+
 export async function createNewProjectID() {
     try {
         const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key

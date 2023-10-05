@@ -19,10 +19,7 @@ export function is_dark() {
 
 export function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        // Generate a random index between 0 and i (inclusive)
         const randomIndex = Math.floor(Math.random() * (i + 1));
-
-        // Swap the elements at randomIndex and i
         [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
     }
 }
@@ -51,7 +48,6 @@ export function formatTimeSeconds(val) {
 export function formatTimeDaysDelta(milliSeconds) {
     const now = Date.now();
     const differenceDays = (now - milliSeconds) / (1000 * 60 * 60 * 24);
-
     let checkedIndicator;
 
     if (differenceDays < 0.01) { // Less than 0.01 days (approximately 14 minutes)

@@ -267,11 +267,9 @@ function PLAYBACK_start_without_playback_and_update_progress(progress) {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
-    //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.currentTime = progress;
-
     playStateChange("paused");
     PLAYBACK_update_top();
     PLAYBACK_time_updates();
@@ -308,14 +306,12 @@ function PLAYBACK_update_top() {
     const LCDimage = document.getElementById("LCDimage");
     const LCDimageMobile = document.getElementById("LCDimageMobile");
 
-    //display the informations of text, and update queue and trigger a few actions
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     resizeTitleText();
     LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
     LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
-    /* update the export variables */
     PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
     PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
@@ -342,7 +338,6 @@ function PLAYBACK_update_external_metadata() {
         artwork: formatted_img
     });
 
-    // Media is loaded, set the duration.
     updatePositionState();
 }
 

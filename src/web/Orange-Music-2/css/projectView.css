@@ -129,7 +129,6 @@
     user-select: text;
     pointer-events: auto;
     width: 90%;
-
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

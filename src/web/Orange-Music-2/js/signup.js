@@ -1,24 +1,12 @@
-import form from '../html/signupForm.html?raw';
-
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-
+import form from '../html/signupForm.html?raw';
 
 export function init_signup_form() {
     setTimeout(() => {
         let IDofElement = "MAINcontentPages";
         let replacedContent = form;
 
-        /*
-        for (const [placeholder, value] of Object.entries(svgImports)) {
-            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-            replacedContent = replacedContent.replace(regex, value);
-        }
-        */
         document.getElementById(IDofElement).innerHTML += replacedContent;
-
-        //const imageInput = document.getElementById("profilePicture");
-        //imageInput.addEventListener("change", previewImage);
-
         const signupForm = document.getElementById("SETTINGSsignupForm");
         signupForm.addEventListener("submit", signup);
 
@@ -27,15 +15,12 @@ export function init_signup_form() {
 
 async function signup(event) {
     console.log("the signup event was caught")
-
     event.preventDefault();
     startSpinner();
-
     const form = document.getElementById("SETTINGSsignupForm");
     const formData = {};
 
     try {
-        // Step 1: Send only the email field first
         for (const element of form.elements) {
             if (element.type === "email") {
                 formData[element.name] = element.value;
@@ -51,21 +36,14 @@ async function signup(event) {
         });
 
         if (!response.ok) {
-            // Handle error response from the server if needed
             const errorData = await response.json();
-            //console.error(errorData);
-
+            const errorMessage = "There was an error with the email, check that the details are correct.";
             stopSpinner();
             loginErrorAnimation()
-
-            const errorMessage = "There was an error with the email, check that the details are correct.";
             alert(errorMessage);
 
         } else {
-            // If the email is valid, continue with the second step
             const responseData = await response.json();
-
-            // Step 2: Update formData with the received token and send the rest of the form data
             formData["token"] = responseData.token;
             for (const element of form.elements) {
                 if (element.type === "file") {
@@ -80,7 +58,6 @@ async function signup(event) {
                 }
 
             }
-            // Send the rest of the form data
             const secondResponse = await fetch(
                 `${MAIN_CONST_EXPORT_apiPath}/signup/complete/`, {
                     method: "POST",
@@ -92,17 +69,11 @@ async function signup(event) {
             );
 
             if (!secondResponse.ok) {
-                // Handle error response from the server if needed
                 const errorData = await secondResponse.json();
-                //console.error(errorData);
-
                 const errorMessage = "There was an error, try again";
                 alert(errorMessage);
             } else {
-                // Handle successful response from the server if needed
                 const responseData = await secondResponse.json();
-                // Do something with the response, e.g., show a success message to the user
-
                 stopSpinner();
                 loginSuccessAnimation()
 
@@ -110,12 +81,9 @@ async function signup(event) {
                     console.log("signup very successful move to normal pages and stuff")
                     window.location.href = '/';
                 }, 2000);
-
             }
         }
     } catch (error) {
-        // Handle network errors or other exceptions
-        //console.error(error);
         stopSpinner();
         loginErrorAnimation()
         const errorMessage = "There was an error, try again";
@@ -133,39 +101,22 @@ function stopSpinner() {
     spinner.style.display = "none";
 }
 
-
 function loginSuccessAnimation() {
     const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-
-    // Remove the animation classes to reset the animation state
     element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-
-    // Add the animation class to start the animation
     element.classList.add('SETTINGSanimateGreen');
-
-    // Add an event listener to detect when the animation ends
     element.addEventListener('animationend', () => {
-        // Remove the animation class after the animation ends
         element.classList.remove('SETTINGSanimateGreen');
     });
-
     return;
 }
 
 function loginErrorAnimation() {
     const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-
-    // Remove the animation classes to reset the animation state
     element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-
-    // Add the animation class to start the animation
     element.classList.add('SETTINGSanimateError');
-
-    // Add an event listener to detect when the animation ends
     element.addEventListener('animationend', () => {
-        // Remove the animation class after the animation ends
         element.classList.remove('SETTINGSanimateError');
     });
-
     return;
 }

@@ -232,17 +232,6 @@ function displayMenu(event, project_id) {
     return;
 }
 
-
-
-
 function addNewLibraryItem() {
     handleRoute("/new-project/")
 }
-
-
-
-
-
-
-
-/**/

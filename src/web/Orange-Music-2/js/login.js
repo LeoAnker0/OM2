@@ -152,9 +152,7 @@ function hideContainer() {
     try {
         settingsModal.remove();
 
-    } catch {
-
-    }
+    } catch {}
     return
 }
 

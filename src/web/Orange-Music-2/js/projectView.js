@@ -235,7 +235,6 @@ function displayMenuForTop(event, project_details) {
     const clickedItem = event.target;
     const currentPath = window.location.pathname;
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
@@ -285,12 +284,10 @@ async function deleteProjectFromServer(project_id) {
             console.log("no jwt")
             return;
         }
-
         const projectData = {
             "access-token": token,
             "project_id": project_id
         };
-
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/`, {
             method: 'DELETE',
             headers: {
@@ -298,7 +295,6 @@ async function deleteProjectFromServer(project_id) {
             },
             body: JSON.stringify(projectData)
         });
-
         const data = await response.json();
 
     } catch (error) {
@@ -331,9 +327,7 @@ function loadInTable(details) {
                     "url": song.url
                 })
             }
-
         }
-
 
         for (let i = 0; i < songData.length; i++) {
             songData[i].projectID = i;

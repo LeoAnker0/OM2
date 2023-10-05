@@ -86,6 +86,7 @@ services:
       - ./files/default_pp_4.webp:/var/www/media/assets/default_pfp/4.webp
       - ./files/default_pp_5.webp:/var/www/media/assets/default_pfp/5.webp
       - ./files/default_pp_6.webp:/var/www/media/assets/default_pfp/6.webp
+      - ./files/hippo.webp:/var/www/media/assets/hippo.webp
     networks:
       - tunnel
 
