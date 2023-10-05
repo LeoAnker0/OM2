@@ -670,7 +670,6 @@ async def update_project_details(request: Request):
 
     return {"response": "cheese"}
 
-# for image uploads
 @app.post("/files/upload/photo/")
 async def upload_file_photo(
         file: UploadFile = File(...),
@@ -706,9 +705,7 @@ async def upload_file_photo(
     message = f"File {file.filename} uploaded successfully"
     return JSONResponse(content={"message": message})
 
-# for image uploads
 @app.get("/status/are_signups_allowed/")
 async def are_signups_allowed():
     signups_allowed = (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()
-    print(f"signups_allowed:\t{signups_allowed}")
     return {"signups_allowed": signups_allowed}

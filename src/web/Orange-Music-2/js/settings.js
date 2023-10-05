@@ -147,9 +147,14 @@ function hideContainer() {
     if (containerHid === true) {
         return
     }
-    const settingsModal = document.getElementById("SETTINGSmodalID");
-    settingsModal.remove();
     containerHid = true;
+    const settingsModal = document.getElementById("SETTINGSmodalID");
+    try {
+        settingsModal.remove();
+
+    } catch {
+
+    }
     return
 }
 

@@ -431,14 +431,9 @@ function displayMenuForRow(event) {
     const clickedItem = event.target;
 
     const params = [{
-        displayText: 'Play next',
-        optionalSVG: 'icons_yourUploadedSongs'
-    }, {
-        displayText: 'Play later',
-        optionalSVG: 'None'
-    }, {
-        displayText: 'Delete',
-        optionalSVG: 'None'
+        displayText: 'Not Selected',
+        optionalSVG: 'icons_yourUploadedSongs',
+        function: 'TEST'
     }]
 
     MENUdisplay(params, event);
