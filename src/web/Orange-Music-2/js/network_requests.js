@@ -133,7 +133,7 @@ export async function getProjectDetails(project_id) {
 }
 
 
-export async function getLibraryData() {
+export async function getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected) {
     try {
         const token = localStorage.getItem('JWT');
         if (!token) {
@@ -141,8 +141,10 @@ export async function getLibraryData() {
             return [];
         }
 
-        const access_token = {
-            "access-token": token
+        const data_body = {
+            "access-token": token,
+            library_items_to_request_at_a_time,
+            no_library_datas_collected
         };
 
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-projects/`, {
@@ -150,7 +152,7 @@ export async function getLibraryData() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(access_token)
+            body: JSON.stringify(data_body)
         });
 
         const responseData = await response.json();

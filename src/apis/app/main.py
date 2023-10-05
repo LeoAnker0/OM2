@@ -437,10 +437,20 @@ async def create_project(request: Request):
     await init_project_in_database(init_project_dict)
     return {"projectID": project_id}
 
-async def get_users_projects(uuid):
+async def get_users_projects(uuid, library_items_to_request_at_a_time, no_library_datas_collected):
     async with app.state.pool.acquire() as conn:
-        query = "SELECT time_created, picture_url, project_id, project_name, project_contributors FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 ORDER BY time_created DESC LIMIT 15"
-        projects = await conn.fetch(query, uuid)
+        offset = no_library_datas_collected
+
+        query = """
+            SELECT time_created, picture_url, project_id, project_name, project_contributors
+            FROM projects
+            WHERE (SELECT unnest(owner)->>'owner')::uuid = $1
+            ORDER BY time_created DESC
+            LIMIT $2
+            OFFSET $3
+        """
+
+        projects = await conn.fetch(query, uuid, library_items_to_request_at_a_time, offset)
         return projects
 
 @app.post("/projects/get-projects/")
@@ -453,7 +463,12 @@ async def create_project(request: Request):
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-    projects = await get_users_projects(uuid)
+    library_items_to_request_at_a_time = data["library_items_to_request_at_a_time"]
+    if library_items_to_request_at_a_time > 30:
+        library_items_to_request_at_a_time = 30
+
+    no_library_datas_collected = data["no_library_datas_collected"]
+    projects = await get_users_projects(uuid, library_items_to_request_at_a_time, no_library_datas_collected)
     return {"projects": projects}
 
 

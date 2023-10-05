@@ -5,19 +5,23 @@ import { PLAYBACK_handle_input_project_details_array_with_start_playback } from 
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
 import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
-import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
-import { handleRoute } from './routing.js';
 import { getLibraryData, getProjectDetails } from './network_requests.js';
+import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
 import { svgImports } from './importAssets.js';
 import { formatTimeDaysDelta } from './om2.js';
+import { handleRoute } from './routing.js';
 import { MENUdisplay } from './menu.js';
+
+const library_items_to_request_at_a_time = 15;
+let no_library_datas_collected = 0;
 
 export async function initMusicObjectsGrid() {
     try {
         const contentEnvironment = document.getElementById("MAINcontentPages");
         loadInContainer();
 
-        const libraryData = await getLibraryData(); // Wait for getLibraryData to complete
+        const libraryData = await getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected); // Wait for getLibraryData to complete
+        no_library_datas_collected += libraryData.length;
         loadObjects(libraryData);
         return;
     } catch (error) {
@@ -26,6 +30,7 @@ export async function initMusicObjectsGrid() {
 }
 
 export function hideMusicObjectsGrid() {
+    no_library_datas_collected = 0;
     const mainContent = document.getElementById("MAINcontentPages");
     const MOGcontainer = document.getElementById("MOGcontainer");
 
@@ -49,59 +54,15 @@ function loadInContainer() {
 
 function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
-
     parentContainer.innerHTML = "";
-
-    /* the add new project button */
     let replacedContent = musicObjectsGridAdd
-
     for (const [placeholder, value] of Object.entries(svgImports)) {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
     parentContainer.innerHTML += replacedContent
 
-    /* from the users libraries ----- */
-    const loadEvents = libraryData.length;
-
-
-    for (var i = 0; i <= loadEvents - 1; i++) {
-        let replacedContent = musicObjectsGridItem
-        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate', 'MOGI_placeholder_itemID'];
-        const temporaryIidentifier = i;
-        const imgAddress = libraryData[i].img;
-        const textTop = libraryData[i].top;
-        const textBottom = libraryData[i].bottom;
-        const lastCheckedInMillis = libraryData[i].days;
-        const checkedIndicator = formatTimeDaysDelta(lastCheckedInMillis);
-
-        for (const [placeholder, value] of Object.entries(svgImports)) {
-            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-            replacedContent = replacedContent.replace(regex, value);
-        }
-
-        for (let i = 0; i < listOfThings.length; i++) {
-            const placeholder = listOfThings[i].toString();
-            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-            let value = '';
-
-            if (placeholder === 'MOG_image') {
-                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/4/`;
-                value = image
-            } else if (placeholder === 'MOG_text1') {
-                value = textTop;
-            } else if (placeholder === 'MOG_text2') {
-                value = textBottom;
-            } else if (placeholder === 'MOG_checkedDate') {
-                value = checkedIndicator;
-            } else if (placeholder === 'MOGI_placeholder_itemID') {
-                value = temporaryIidentifier;
-            }
-
-            replacedContent = replacedContent.replace(regex, value);
-        }
-        parentContainer.innerHTML += replacedContent;
-    }
+    add_in_library_data_to_MOG(libraryData);
 
     const MOGcontainer = document.getElementById("MOGcontainer");
     /* detecting when the items in the grid are clicked, and then doing something about it */
@@ -146,7 +107,68 @@ function loadObjects(libraryData) {
 
         displayMenu(event, objectID);
     }
+
+    // Detect if scrolled to the bottom and then if there are more projects load those in.
+    parentContainer.addEventListener('scroll', async function() {
+        const scrollTop = parentContainer.scrollTop;
+        const scrollHeight = parentContainer.scrollHeight;
+        const clientHeight = parentContainer.clientHeight;
+
+        // Check if the parentContainer has been scrolled to the bottom
+        if (scrollTop >= scrollHeight - clientHeight) {
+            // get another 15 items
+            const libraryData = await getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected); // Wait for getLibraryData to complete
+            no_library_datas_collected += libraryData.length;
+
+            if (libraryData.length > 0) {
+                add_in_library_data_to_MOG(libraryData);
+            }
+        }
+    })
 };
+
+function add_in_library_data_to_MOG(libraryData) {
+    const parentContainer = document.getElementById("MOGgridContainer");
+    /* from the users libraries ----- */
+    const loadEvents = libraryData.length;
+    for (var i = 0; i <= loadEvents - 1; i++) {
+        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate', 'MOGI_placeholder_itemID'];
+        const temporaryIidentifier = i;
+        const imgAddress = libraryData[i].img;
+        const textTop = libraryData[i].top;
+        const textBottom = libraryData[i].bottom;
+        const lastCheckedInMillis = libraryData[i].days;
+        const checkedIndicator = formatTimeDaysDelta(lastCheckedInMillis);
+        let replacedContent = musicObjectsGridItem
+
+        for (const [placeholder, value] of Object.entries(svgImports)) {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            replacedContent = replacedContent.replace(regex, value);
+        }
+
+        for (let i = 0; i < listOfThings.length; i++) {
+            const placeholder = listOfThings[i].toString();
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            let value = '';
+
+            if (placeholder === 'MOG_image') {
+                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/4/`;
+                value = image
+            } else if (placeholder === 'MOG_text1') {
+                value = textTop;
+            } else if (placeholder === 'MOG_text2') {
+                value = textBottom;
+            } else if (placeholder === 'MOG_checkedDate') {
+                value = checkedIndicator;
+            } else if (placeholder === 'MOGI_placeholder_itemID') {
+                value = temporaryIidentifier;
+            }
+
+            replacedContent = replacedContent.replace(regex, value);
+        }
+        parentContainer.innerHTML += replacedContent;
+    }
+}
 
 async function addEventListeners_to_music_object_grid(event, libraryData) {
     const clickedElement = event.target;
