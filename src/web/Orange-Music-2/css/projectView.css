@@ -129,8 +129,12 @@
     user-select: text;
     pointer-events: auto;
     width: 90%;
-    white-space: nowrap;
+
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 
     color: var(--PV-text);
 }
