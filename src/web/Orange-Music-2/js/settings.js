@@ -4,21 +4,27 @@ import { handleRoute } from './routing.js';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
 import admin_view from '../html/settings_views_admin.html?raw';
+import { users_image } from './loadAccountImage.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
 
-let current_view = "general";
+
+let current_view = "admin";
 const views = [{
     name: "general",
     markup: general_view,
-    button_id: "settings_button_general"
+    button_id: "settings_button_general",
+    function: views_general
 }, {
     name: "user",
     markup: user_view,
-    button_id: "settings_button_user"
+    button_id: "settings_button_user",
+    function: views_user
 }, {
     name: "admin",
     markup: admin_view,
-    button_id: "settings_button_admin"
+    button_id: "settings_button_admin",
+    function: views_admin
 }]
 
 export function show_settings() {
@@ -59,7 +65,7 @@ export function hide_settings() {
 
 function load_view(view) {
     current_view = view;
-
+    const things_to_replace = ['users_img'];
     const view_container = document.getElementById("view_container");
     const wanted_view = views.find(obj => obj.name === view);
     let replacedContent = wanted_view.markup;
@@ -68,6 +74,34 @@ function load_view(view) {
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
         replacedContent = replacedContent.replace(regex, value);
     }
+
+
+    for (let i = 0; i < things_to_replace.length; i++) {
+        const placeholder = things_to_replace[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'users_img') {
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${users_image}/4/`;
+            value = image;
+        }
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
     view_container.innerHTML = replacedContent;
 
+
+
+}
+
+function views_general() {
+    console.log("general")
+}
+
+function views_user() {
+    console.log("user")
+}
+
+function views_admin() {
+    console.log("admin")
 }

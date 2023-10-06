@@ -47,6 +47,7 @@ import icons_loop from '../assets/v3/icons_loop.svg';
 import icons_loop_song from '../assets/v3/icons_loop_song.svg';
 import icons_play from '../assets/v3/icons_play.svg';
 import icons_settings from '../assets/v3/icons_settings.svg';
+import icons_love from '../assets/v3/love.svg';
 
 export const svgImports = {
     icons_volumeNull,
@@ -98,5 +99,6 @@ export const svgImports = {
     icons_loop_song,
     icons_play,
     icons_settings,
-    current_year: new Date().getFullYear()
+    current_year: new Date().getFullYear(),
+    icons_love
 }

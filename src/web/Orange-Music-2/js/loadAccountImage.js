@@ -2,11 +2,14 @@ import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.
 import { getUserDetail } from './network_requests.js';
 import { MENUdisplay } from './menu.js';
 
+export let users_image;
+
 export async function initAccountImg() {
     const accountImgSource = document.getElementById("TOPRIGHTaccountImg");
     try {
         const data = await getUserDetail("profile_picture")
         const url = data[0].profile_picture;
+        users_image = url;
         const newImage = `${MAIN_CONST_EXPORT_mediaPath}/${url}/1/`;
         const accountImgButton = document.getElementById("TOPRIGHTaccountImgButton");
 

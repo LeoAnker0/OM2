@@ -183,6 +183,13 @@
     color: var(--accent);
 }
 
+.settings_interaction_container .user_img {
+    border-radius: 8px;
+    object-fit: cover;
+    height: 20rem;
+    aspect-ratio: 1/1;
+}
+
 .settings_all_colours_display {
     position: relative;
     display: flex;
@@ -263,6 +270,10 @@
 
 .settings_all_colours_display span:nth-child(18) {
     background-color: var(--text-dark-secondary);
+}
+
+.settings_all_colours_display span:nth-child(19) {
+    background-color: var(--orange);
 }
 
 

@@ -33,6 +33,7 @@
     --secondary-weak: hsl(222, 20%, 90%);
     --secondary-dark: hsl(222, 80%, 70%);
     --secondary-weak-dark: hsl(222, 20%, 30%);
+    --orange: hsl(40, 100%, 45%);
 
     --accent: hsl(165, 90%, 20%);
     --success: hsl(165, 90%, 35%);
@@ -69,6 +70,8 @@
         --primary: hsl(210, 100%, 78%);
         --secondary: hsl(222, 80%, 70%);
         --secondary-weak: hsl(222, 20%, 30%);
+        --orange: hsl(40, 100%, 65%);
+
 
         --accent: hsl(165, 40%, 80%);
     }
