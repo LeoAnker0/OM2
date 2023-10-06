@@ -97,5 +97,6 @@ export const svgImports = {
     icons_loop,
     icons_loop_song,
     icons_play,
-    icons_settings
+    icons_settings,
+    current_year: new Date().getFullYear()
 }

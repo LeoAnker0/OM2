@@ -12,7 +12,7 @@
     --PV-transparent-overlay: var(--transparent-overlay);
     --PV-success: var(--success);
 
-    --PV-background-dark: var(--background-dark);
+    --PV-background-dark:var(--background-dark);
     --PV-text-dark: var(--text-dark);
     --PV-text-secondary: var(--text-dark-secondary);
 }

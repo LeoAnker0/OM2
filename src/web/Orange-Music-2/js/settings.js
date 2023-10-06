@@ -1,10 +1,12 @@
 import settings_body from '../html/settings_body.html?raw';
 import { svgImports } from './importAssets.js';
+import { handleRoute } from './routing.js';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
 import admin_view from '../html/settings_views_admin.html?raw';
 
-const init_view = "general";
+
+let current_view = "general";
 const views = [{
     name: "general",
     markup: general_view,
@@ -28,7 +30,9 @@ export function show_settings() {
     }
     contentContainer.innerHTML = replacedContent;
 
-    load_view(init_view);
+    const settings_go_to_other_content_button = document.getElementById("settings_go_to_other_content_button");
+
+    load_view(current_view);
 
     /* add event listeners to the buttons and then when clicked get them to open their view */
     for (var i = views.length - 1; i >= 0; i--) {
@@ -41,6 +45,11 @@ export function show_settings() {
             load_view(name);
         })
     }
+
+    settings_go_to_other_content_button.addEventListener("click", function() {
+        handleRoute('/');
+    })
+
 }
 
 export function hide_settings() {
@@ -49,6 +58,8 @@ export function hide_settings() {
 }
 
 function load_view(view) {
+    current_view = view;
+
     const view_container = document.getElementById("view_container");
     const wanted_view = views.find(obj => obj.name === view);
     let replacedContent = wanted_view.markup;
