@@ -1,0 +1,109 @@
+.settings_container {
+    --top-offset: 4rem;
+    width: 100%;
+    height: calc(100% - var(--top-offset));
+    top: var(--top-offset);
+    position: relative;
+    display: grid;
+    overflow: hidden;
+}
+
+.settings_body_top_banner {
+    position: absolute;
+    width: 100%;
+    height: 3rem;
+    top: 0;
+
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1;
+}
+
+.settings_content {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.settings_content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* the list of the different settings views  */
+.settings_views_container {
+    position: relative;
+    height: 100%;
+    width: var(--width-of-left-bar-fortop);
+}
+
+.settings_views_positioner {
+    position: absolute;
+    height: calc(100% - 4rem);
+    top: 4rem;
+    width: 100%;
+    border-top-right-radius: 3rem;
+
+    outline: 1px solid var(--accent);
+}
+
+.settings_views_positioner h1 {
+    width: 100%;
+    height: 2rem;
+    text-align: center;
+}
+
+.settings_views_list {
+    position: relative;
+    height: calc(100% - 2rem);
+    width: 100%;
+}
+
+.settings_views_list_item {
+    all: unset;
+    position: relative;
+    width: calc(90% - 1rem);
+    left: 5%;
+    height: 2.5rem;
+    display: grid;
+    border-radius: 10px;
+    align-content: center;
+    padding-left: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 1rem;
+
+    outline: 1px solid var(--transparent-overlay-focus);
+    background-color: var(--transparent-overlay);
+}
+
+.settings_views_list_item:nth-child(even) {
+    outline: 1px solid var(--transparent-overlay);
+    background-color: var(--background);
+}
+
+.settings_views_list_item:hover {
+    background-color: var(--secondary-weak);
+
+}
+
+.settings_views_list_item:focus {
+    background-color: var(--secondary-weak);
+    outline: 1px solid var(--secondary);
+}
+
+.settings_views_list_item:active {
+    background-color: var(--secondary);
+    outline: 1px solid var(--secondary);
+}
+
+
+/* the individual settings view */
+.settings_interaction_view {
+    height: 100%;
+    width: calc(100% - var(--width-of-left-bar-fortop));
+}

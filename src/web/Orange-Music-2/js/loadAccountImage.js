@@ -31,7 +31,7 @@ function handleQueueDisplayMenu(event) {
     }, {
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
-        function: 'None',
+        function: 'OPEN_SETTINGS_PAGE',
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',

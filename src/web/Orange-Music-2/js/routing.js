@@ -3,6 +3,7 @@ import { updateUserDetails, getUserDetail, createNewProjectID } from './network_
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { initMusicObjectsGrid, hideMusicObjectsGrid } from './musicObjectGrid.js';
 import { initProjectView, hideProjectView } from './projectView.js';
+import { show_settings, hide_settings } from './settings.js';
 
 export async function init_routing() {
     const lastStateRecord = await getUserDetail("last_state");
@@ -51,18 +52,27 @@ export async function init_routing() {
 
 function handleMusicObjectsGrid() {
     hideProjectView();
+    hide_settings();
     initMusicObjectsGrid();
 }
 
 function handleProjectView(projectID) {
     hideMusicObjectsGrid();
+    hide_settings();
     initProjectView(projectID);
+}
+
+function handleSettingsView() {
+    hideMusicObjectsGrid();
+    hideProjectView();
+    show_settings();
 }
 
 const routeHandlers = {
     '/': handleMusicObjectsGrid,
     '/new-project/': createNewProjectID,
     '/projects/:projectID': handleProjectView,
+    '/settings/': handleSettingsView,
 };
 
 function notFoundHandler() {

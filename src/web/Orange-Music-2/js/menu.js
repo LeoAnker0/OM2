@@ -9,6 +9,7 @@ import menuItem from '../html/menuModalItem.html?raw';
 import { upload_image_files } from './file_upload.js';
 import menuModal from '../html/menuModal.html?raw';
 import { svgImports } from './importAssets.js';
+import { handleRoute } from './routing.js';
 import { is_mobile } from './om2.js';
 
 let previously_focused_element;
@@ -531,5 +532,9 @@ const MENU_ACTION_FUNCTIONS = {
     SIGN_OUT_USER(params) {
         HANDLE_SIGN_OUT_USER(params);
         return;
+    },
+    OPEN_SETTINGS_PAGE(params) {
+        handleRoute("/settings/");
+        return
     }
 };
