@@ -3,9 +3,11 @@ import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
-import admin_view from '../html/settings_views_admin.html?raw';
+import admin_default_view from '../html/settings_views_admin_default.html?raw';
+import admin_protected_view from '../html/settings_views_admin_protected.html?raw';
 import { users_image } from './loadAccountImage.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { getUserDetail } from './network_requests.js';
 
 let current_view = "admin";
 const views = [{
@@ -20,7 +22,7 @@ const views = [{
     function: views_user
 }, {
     name: "admin",
-    markup: admin_view,
+    markup: admin_default_view,
     button_id: "settings_button_admin",
     function: views_admin
 }]
@@ -88,8 +90,7 @@ function load_view(view) {
     }
     view_container.innerHTML = replacedContent;
 
-
-
+    wanted_view.function();
 }
 
 function views_general() {
@@ -100,6 +101,67 @@ function views_user() {
     console.log("user")
 }
 
-function views_admin() {
+async function views_admin() {
     console.log("admin")
+    const admin = await getUserDetail("admin")
+    const allowed = admin[0].admin
+    if (allowed !== true) {
+        return
+    }
+
+
+    const things_to_replace = ['users_img'];
+    const view_container = document.getElementById("view_container");
+    let replacedContent = admin_protected_view;
+
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        replacedContent = replacedContent.replace(regex, value);
+    }
+
+    for (let i = 0; i < things_to_replace.length; i++) {
+        const placeholder = things_to_replace[i].toString();
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        let value = '';
+
+        if (placeholder === 'users_img') {
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${users_image}/4/`;
+            value = image;
+        }
+
+        replacedContent = replacedContent.replace(regex, value);
+    }
+    view_container.innerHTML = replacedContent;
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/

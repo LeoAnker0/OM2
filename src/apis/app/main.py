@@ -149,8 +149,7 @@ async def startup():
                 str(os.environ.get("OM2_ADMIN_PASSWORD")))
             await update_password_user_by_uuid(uuid, new_password)
 
-    #we defo have an admin user
-    #set this user to be an admin
+    #make sure that admin as admin creds.
     try:
         uuid = await get_uuid_by_email(admin_email)
         column_to_update = "admin"
@@ -422,12 +421,6 @@ async def generate_unique_string():
             if result == 0:
                 return new_string
 
-async def get_users_username(uuid):
-    async with app.state.pool.acquire() as conn:
-        query = "SELECT username FROM users WHERE uuid = $1"
-        username = await conn.fetchval(query, uuid)
-        return username
-
 @app.post("/projects/new-project-id/")
 async def create_project(request: Request):
     data = await request.json()
@@ -440,7 +433,8 @@ async def create_project(request: Request):
     unique_string = await generate_unique_string()
     uuid = uuid["uuid"]
     project_id = unique_string
-    username = await get_users_username(uuid)
+    username = await get_user_detail_in_database(uuid, "username")
+    username = username[0]["username"]
     init_project_dict = dict(uuid=uuid,
                              project_id=project_id,
                              owner_username=username)
@@ -628,7 +622,7 @@ async def update_get_details(request: Request):
         return {"authenticated": False}
 
     uuid = uuid["uuid"]
-    valid_columns_to_retrieve = ["last_state", "username", "profile_picture"]
+    valid_columns_to_retrieve = ["last_state", "username", "profile_picture", "admin"]
     if column_to_retrieve not in valid_columns_to_retrieve:
         print("the column is not open to being retrieved")
         return {"authenticated": False}
