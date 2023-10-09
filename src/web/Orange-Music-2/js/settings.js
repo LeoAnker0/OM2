@@ -7,8 +7,6 @@ import admin_view from '../html/settings_views_admin.html?raw';
 import { users_image } from './loadAccountImage.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 
-
-
 let current_view = "admin";
 const views = [{
     name: "general",

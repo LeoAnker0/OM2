@@ -149,6 +149,16 @@ async def startup():
                 str(os.environ.get("OM2_ADMIN_PASSWORD")))
             await update_password_user_by_uuid(uuid, new_password)
 
+    #we defo have an admin user
+    #set this user to be an admin
+    try:
+        uuid = await get_uuid_by_email(admin_email)
+        column_to_update = "admin"
+        new_data = True
+        await update_user_detail_in_database(uuid, column_to_update, new_data)
+    except ValueError as e:
+            print(f"Error: {e}")
+
 @app.on_event("shutdown")
 async def shutdown():
     await app.state.pool.close()
@@ -724,3 +734,11 @@ async def upload_file_photo(
 async def are_signups_allowed():
     signups_allowed = (str(os.environ.get("NEW_SIGNUPS_ALLOWED"))).lower()
     return {"signups_allowed": signups_allowed}
+
+
+
+"""
+
+admin protected routes
+
+"""
