@@ -1,2 +1,24 @@
 <h1>Admin</h1>
 <p>You are an admin user</p>
+<br>
+<p id="settings_admin_selected_items_visualition">Selected Items: 0</p>
+<div class="ADMINusersTableEnvironment" id="usersTableEnvironment">
+    <div class="ADMINusersTableTopRow">
+        <div></div>
+        <div>Username</div>
+        <div>Email</div>
+        <div>UUID</div>
+        <div>Payee</div>
+        <admin>Admin</admin>
+        <div>Bytes</div>
+    </div>
+    <div class="ADMINusersTableInforRowsContainer" id="usersTableInforRowsContainer">
+    </div>
+</div>
+<br><br>
+<form class="SETTINGSmodalFormAreaContainer" id="SETTINGSloginForm">
+    <label for="user_to_delete" class="SETTINGSmodalFormAreaText">DELETE: User ID</label><br>
+    <input type="text" name="user_to_delete" id="user_to_delete" class="SETTINGSmodalFormInput" required>
+    <br><br>
+    <input class="SETTINGSmodalSubmit" type="submit" name="Submit" value="Submit">
+</form>

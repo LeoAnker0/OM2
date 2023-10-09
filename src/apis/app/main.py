@@ -735,4 +735,67 @@ async def are_signups_allowed():
 
 admin protected routes
 
+get users table  
+
 """
+
+
+async def get_files_table(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = """
+        SELECT * 
+        FROM files 
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1;
+        """
+        result = await conn.fetch(query, uuid)
+        return result
+
+async def get_users_table_from_database():
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT email, verified, uuid, username, profile_picture, admin FROM users LIMIT 100;"
+        users_table = await conn.fetch(query)
+        return users_table
+
+@app.post("/admin/get_users_table/")
+async def get_users_table(request: Request):
+    data = await request.json()
+    access_token = data["access-token"]
+    real, uuid = await verify_jwt(access_token)
+    uuid = uuid["uuid"]
+
+    # is admin?
+    admin = await get_user_detail_in_database(uuid, "admin")
+    admin = admin[0]["admin"]
+    if admin != True:
+        raise HTTPException(status_code=403, detail="Permissions Error: Not admin user")
+
+    users_table = await get_users_table_from_database()
+    updated_users_table = []
+    for user in users_table:
+        access_token = user['uuid']
+        users_files = await get_files_table(access_token)
+        storage_used = 0
+        for file in users_files:
+            storage_used += file['file_size']
+
+        updated_user = dict(user)
+        updated_user["storage_used"] = storage_used
+        updated_users_table.append(updated_user)
+
+    return {"response": updated_users_table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

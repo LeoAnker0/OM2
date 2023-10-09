@@ -276,5 +276,103 @@
     background-color: var(--orange);
 }
 
+/* admin */
+
+.ADMINusersTableEnvironment {
+    position: relative;
+    width: 100%;
+}
+
+:root {
+    --admin-users-table-grid: 0.2fr 0.8fr 1.3fr 1.3fr 0.4fr 0.4fr 0.5fr;
+}
+
+.ADMINusersTableTopRow {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--admin-users-table-grid);
+    padding: 8px;
+    height: 1.3rem;
+    width: 95%;
+    margin-bottom: 1rem;
+}
+
+.ADMINusersTableTopRow::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0.1rem;
+    bottom: 0;
+
+    background-color: var(--text-third);
+}
+
+.ADMINusersTableInfoRow {
+    display: grid;
+    grid-template-columns: var(--admin-users-table-grid);
+    grid-gap: 0.5rem;
+    padding: 8px;
+    height: 1.3rem;
+    width: 95%;
+    font-weight: 400;
+    font-size: 0.9em;
+    border-radius: 8px;
+}
+
+.ADMINusersTableInfoRow:nth-child(odd) {
+    background-color: var(--transparent-overlay);
+}
+
+.admin_users_table_checkbox {}
+
+.ADMINusersTableInfoRow:nth-child(1) {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.ADMINusersTableInfoRow:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(7) {
+    text-align: right;
+}
+
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(7),
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(6),
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(5) {
+    text-transform: capitalize;
+}
+
+.settings_admin_views_users_table_view {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.USERNAMEfieldWithImageContainer {
+    position: relative;
+    display: inline-flex;
+}
+
+.USERNAMEfieldWithImageContainer img {
+    margin-right: 0.3rem;
+    border-radius: 4px;
+}
+
+.ADMINusersTableInforRowsContainer {
+    position: relative;
+    max-height: 25rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.ADMINusersTableInforRowsContainer::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+
+
 
 /**/

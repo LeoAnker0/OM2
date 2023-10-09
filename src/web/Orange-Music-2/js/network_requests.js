@@ -208,3 +208,31 @@ export async function createNewProjectID() {
         console.error('Error:', error);
     }
 }
+
+export async function get_users_table() {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/get_users_table/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        return data.response;
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
