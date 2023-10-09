@@ -785,6 +785,96 @@ async def get_users_table(request: Request):
     return {"response": updated_users_table}
 
 
+"""
+
+async def is_uuid_in_database(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "SELECT COUNT(*) FROM users WHERE uuid = $1"
+        result = await conn.fetchval(query, uuid)
+        return result == 1
+
+async def delete_user_from_database(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "DELETE FROM users WHERE uuid = $1"
+        await conn.execute(query, uuid)
+
+async def delete_files_row(url):
+    async with app.state.pool.acquire() as conn:
+        query = "DELETE FROM files WHERE file_url = $1"
+        await conn.execute(query, url)
+
+async def delete_user_from_projects_database(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1"
+        await conn.execute(query, uuid)
+
+
+async def get_files_table(uuid):
+    async with app.state.pool.acquire() as conn:
+        query = "
+        SELECT * 
+        FROM files 
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1;
+        "
+        result = await conn.fetch(query, uuid)
+        return result
+
+
+
+
+
+
+@app.post("/delete_user/")
+async def send_message(request: Request):
+    data = await request.json()
+    uuid = data.get("user_to_delete")
+
+    if uuid is None:
+        return {"error": "UUID field not found in JSON payload."}
+
+    # check if uuid is in the db
+    uuid_in_users = await is_uuid_in_database(uuid)
+    if uuid_in_users is False:
+        print(f"uuid is not in users")
+        return {"error" : f"{uuid} is not in Users Table"}
+
+    # we have now verified that the uuid is valid
+    await delete_user_from_database(uuid)
+
+    users_files = await get_files_table(uuid);
+
+    for i in range(len(users_files)):
+        owners = users_files[i]['owner']
+        url = users_files[i]['file_url']
+        if len(owners) > 2:
+            #don't delete where there are more than two owners, ofcourse at the moment that state doesn't exist
+            # and ideally at some point it would also update the table, alas...
+            continue
+
+        # delete *url* folder
+        folder_path = os.path.join("/var/www/media", url)
+
+        if os.path.exists(folder_path):
+            shutil.rmtree(folder_path)
+        else:
+            print(f"The folder does not exist: {folder_path}")
+
+        await delete_files_row(url)
+
+    await delete_user_from_projects_database(uuid)
+
+    # delete projects
+
+
+
+
+    response_message = f"DELETED: {uuid}"
+
+    return {"response": response_message}
+
+    """
+
+
 
 
 
