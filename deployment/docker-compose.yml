@@ -2,7 +2,7 @@ version: '0.1'
 services:
   # Public facing API
   main:
-    image: leoanker/om2_main:0.0.4-arm64
+    image: leoanker/om2_main:0.0.5-arm64
     ports:
       - "6000:80"
     networks:
@@ -35,7 +35,7 @@ services:
 
   # File Processing
   chipmunk_processor:
-    image: leoanker/om2_chipmunk:0.0.4-arm64
+    image: leoanker/om2_chipmunk:0.0.5-arm64
     ports:
       - "8001:80"
     volumes:
@@ -75,7 +75,7 @@ services:
 
   # Front end
   front_end:
-    image: leoanker/om2_frontend:0.0.4-arm64
+    image: leoanker/om2_frontend:0.0.5-arm64
     ports:
       - "11001:80"
     networks:

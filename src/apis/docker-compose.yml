@@ -90,24 +90,6 @@ services:
     networks:
       - tunnel
 
-  # Admin Tools
-  admin_tools:
-    build:
-      context: ./admin_tools
-    volumes:
-      - ./admin_tools/app:/app
-      - admin_tools_data:/admin_tools_data
-      - om2data:/var/www/media
-    ports:
-      - "10001:80"
-    networks:
-      - tunnel
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-    restart: always
-
   # Front end
   front_end:
     build:
@@ -117,7 +99,6 @@ services:
     networks:
       - tunnel
     volumes:
-    #  - ./templates:/etc/nginx/templates 
       - ./nginx-frontend.conf:/etc/nginx/templates/nginx.conf.template
     environment:
       - NGINX_ENVSUBST_OUTPUT_DIR
@@ -141,7 +122,6 @@ volumes:
       o: bind
       device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  
   chipmunk_data:
-  admin_tools_data:
 
 
 

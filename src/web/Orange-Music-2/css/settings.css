@@ -82,7 +82,7 @@
     height: calc(100% - (8rem));
     top: 4rem;
     width: 100%;
-    border-top-right-radius: 3rem;
+    border-top-right-radius: 4rem;
 
     border-top: 1px solid var(--grey);
     border-right: 1px solid var(--grey);
@@ -153,7 +153,7 @@
     position: absolute;
     height: 4rem;
     width: 100%;
-    border-bottom-left-radius: 3rem;
+    border-bottom-left-radius: 4rem;
     bottom: 0;
 
     border-left: 1px solid var(--grey);
@@ -304,7 +304,7 @@
     height: 0.1rem;
     bottom: 0;
 
-    background-color: var(--text-third);
+    background-color: var(--grey);
 }
 
 .ADMINusersTableInfoRow {

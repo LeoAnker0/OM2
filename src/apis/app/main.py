@@ -23,6 +23,8 @@ import shutil
 import random
 import string
 
+import admin_tools
+
 load_dotenv()
 app = FastAPI()
 
@@ -752,7 +754,7 @@ async def get_files_table(uuid):
 
 async def get_users_table_from_database():
     async with app.state.pool.acquire() as conn:
-        query = "SELECT email, verified, uuid, username, profile_picture, admin FROM users LIMIT 100;"
+        query = "SELECT email, verified, uuid, username, profile_picture, admin FROM users;"
         users_table = await conn.fetch(query)
         return users_table
 
