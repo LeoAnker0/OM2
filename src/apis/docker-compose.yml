@@ -1,23 +1,5 @@
 version: '0.1'
 services:
-  # Public facing API
-  fastapi:
-    build: 
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - "6000:80"
-    networks:
-      - tunnel
-    env_file:
-      - .env
-    volumes:
-      - om2data:/var/www/media
-      - fastapi_code:/app
-    depends_on:
-      - postgres
-    restart: always
-
   # For Exposing apis and file hosting to the internet
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -36,6 +18,23 @@ services:
     networks:
       - tunnel
 
+  # Api
+  go:
+    build:
+      context: ./go_api
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - om2data:/var/www/media
+    ports:
+      - "6000:6000"
+    networks:
+      - tunnel
+    depends_on:
+      - postgres
+
+
   # Postgres admin - not for prod
   #pgadmin:
   #  image: dpage/pgadmin4
@@ -50,61 +49,60 @@ services:
   #    - tunnel
       
   # File Processing
-  chipmunk_processor:
-    build:
-      context: ./chipmunk_processor
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./chipmunk_processor/app:/app
-      - chipmunk_data:/chipmunk_data
-      - om2data:/var/www/media
-    networks:
-      - tunnel
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-    restart: always
+  #chipmunk_processor:
+  #  build:
+  #    context: ./chipmunk_processor
+  #    dockerfile: Dockerfile.dev
+  #  volumes:
+  #    - ./chipmunk_processor/app:/app
+  #    - chipmunk_data:/chipmunk_data
+  #    - om2data:/var/www/media
+  #  networks:
+  #    - tunnel
+  #  env_file:
+  #    - .env
+  #  restart: always
+
 
   # File Serving
-  nginx:
-    image: nginx:latest
-    ports:
-      - "9000:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - om2data:/var/www/media
-      - ./files/default_pfp_1.webp:/var/www/media/assets/default_pp/1.webp
-      - ./files/default_pfp_2.webp:/var/www/media/assets/default_pp/2.webp
-      - ./files/default_pfp_3.webp:/var/www/media/assets/default_pp/3.webp
-      - ./files/default_pfp_4.webp:/var/www/media/assets/default_pp/4.webp
-      - ./files/default_pfp_5.webp:/var/www/media/assets/default_pp/5.webp
-      - ./files/default_pfp_6.webp:/var/www/media/assets/default_pp/6.webp
-      - ./files/default_pp_1.webp:/var/www/media/assets/default_pfp/1.webp
-      - ./files/default_pp_2.webp:/var/www/media/assets/default_pfp/2.webp
-      - ./files/default_pp_3.webp:/var/www/media/assets/default_pfp/3.webp
-      - ./files/default_pp_4.webp:/var/www/media/assets/default_pfp/4.webp
-      - ./files/default_pp_5.webp:/var/www/media/assets/default_pfp/5.webp
-      - ./files/default_pp_6.webp:/var/www/media/assets/default_pfp/6.webp
-      - ./files/hippo.webp:/var/www/media/assets/hippo.webp
-    networks:
-      - tunnel
-
-  # Front end
-  front_end:
-    build:
-      context: ../web/Orange-Music-2
-    ports:
-      - "11001:80"
-    networks:
-      - tunnel
-    volumes:
-      - ./nginx-frontend.conf:/etc/nginx/templates/nginx.conf.template
-    environment:
-      - NGINX_ENVSUBST_OUTPUT_DIR
-      - API_DOMAIN=${API_DOMAIN}  
-      - MEDIA_DOMAIN=${MEDIA_DOMAIN}  
-      - MAIN_DOMAIN=${MAIN_DOMAIN}  
+  #nginx:
+  #  image: nginx:latest
+  #  ports:
+  #    - "9000:80"
+  #  volumes:
+  #    - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  #    - om2data:/var/www/media
+  #    - ./files/default_pfp_1.webp:/var/www/media/assets/default_pp/1.webp
+  #    - ./files/default_pfp_2.webp:/var/www/media/assets/default_pp/2.webp
+  #    - ./files/default_pfp_3.webp:/var/www/media/assets/default_pp/3.webp
+  #    - ./files/default_pfp_4.webp:/var/www/media/assets/default_pp/4.webp
+  #    - ./files/default_pfp_5.webp:/var/www/media/assets/default_pp/5.webp
+  #    - ./files/default_pfp_6.webp:/var/www/media/assets/default_pp/6.webp
+  #    - ./files/default_pp_1.webp:/var/www/media/assets/default_pfp/1.webp
+  #    - ./files/default_pp_2.webp:/var/www/media/assets/default_pfp/2.webp
+  #    - ./files/default_pp_3.webp:/var/www/media/assets/default_pfp/3.webp
+  #    - ./files/default_pp_4.webp:/var/www/media/assets/default_pfp/4.webp
+  #    - ./files/default_pp_5.webp:/var/www/media/assets/default_pfp/5.webp
+  #    - ./files/default_pp_6.webp:/var/www/media/assets/default_pfp/6.webp
+  #    - ./files/hippo.webp:/var/www/media/assets/hippo.webp
+  #  networks:
+  #    - tunnel
+#
+  ## Front end
+  #front_end:
+  #  build:
+  #    context: ../web/Orange-Music-2
+  #  ports:
+  #    - "11001:80"
+  #  networks:
+  #    - tunnel
+  #  volumes:
+  #    - ./nginx-frontend.conf:/etc/nginx/templates/nginx.conf.template
+  #  environment:
+  #    - NGINX_ENVSUBST_OUTPUT_DIR
+  #    - API_DOMAIN=${API_DOMAIN}  
+  #    - MEDIA_DOMAIN=${MEDIA_DOMAIN}  
+  #    - MAIN_DOMAIN=${MAIN_DOMAIN}  
 
 
 networks:
@@ -115,13 +113,12 @@ volumes:
   pgdata:
   pgadmin_data:
   om2data:
-  fastapi_code:
-    driver: local  # Use the local driver to map a local directory
-    driver_opts:
-      type: none
-      o: bind
-      device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis  
-  chipmunk_data:
+  #chipmunk_data:
+  #  driver: local  # Use the local driver to map a local directory
+  #  driver_opts:
+  #    type: none
+  #    o: bind
+  #    device: /Users/Leo/Documents/programming/web/orange-music-2/src/apis/chipmunk_processor  
 
 
 
