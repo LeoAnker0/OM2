@@ -83,6 +83,43 @@ func Get_UUID_by_email(email string) (string, error) {
     return uuid, nil
 }
 
+func Get_user_detail_by_column(uuid, column string) (string, error) {
+    query := fmt.Sprintf("SELECT %s FROM users WHERE uuid = $1;", column)
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return "", err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the UUID
+    var detail string
+    err = stmt.QueryRow(uuid).Scan(&detail)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return "", nil // uuid not found in the database
+        }
+        return "", err
+    }
+
+    return detail, nil
+}
+
+func Update_user_detail_by_column(uuid, column_to_update, new_data string) (error) {
+    query := fmt.Sprintf("UPDATE users SET %s = $1 WHERE uuid = $2", column_to_update)
+
+    response, err := db.Exec(query, new_data, uuid)
+    if response != nil {
+        fmt.Println("error in Update_user_detail_by_column", response)
+    }
+    if err != nil {
+        fmt.Println("error in Update_user_detail_by_column", err)
+    }
+
+    return nil
+}
+
 
 // PasswordHashMatchesEmail checks if the hashed password matches the email in the database
 func PasswordHashMatchesEmail(password, email string) (bool, error) {
@@ -135,4 +172,45 @@ func checkIfUserExistsByUUID(uuid string) (bool, error) {
     } else {
         return false, nil
     }
+}
+
+type Project struct {
+    TimeCreated          int
+    PictureURL           string
+    ProjectID            string
+    ProjectName          string
+    ProjectContributors  string
+}
+
+func GetUsersProjects(uuid string, No_Library_Items_Wanted, No_Library_Items_Collected int) ([]Project, error) {
+    offset := No_Library_Items_Collected
+
+    query := `
+        SELECT time_created, picture_url, project_id, project_name, project_contributors
+        FROM projects
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1
+        ORDER BY time_created DESC
+        LIMIT $2
+        OFFSET $3
+    `
+
+    rows, err := db.Query(query, uuid, No_Library_Items_Wanted, offset)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var projects []Project
+    for rows.Next() {
+        var project Project
+        if err := rows.Scan(&project.TimeCreated, &project.PictureURL, &project.ProjectID, &project.ProjectName, &project.ProjectContributors); err != nil {
+            return nil, err
+        }
+        projects = append(projects, project)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return projects, nil
 }

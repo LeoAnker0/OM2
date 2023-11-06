@@ -2,8 +2,8 @@ package routes
 
 import (
     "github.com/gin-gonic/gin"
-    "io/ioutil"
     "fmt"
+    "io/ioutil"
     "encoding/json"
     "go_api/internal/app/helpers"
 )
@@ -13,6 +13,8 @@ func SetupUserRoutes(router *gin.Engine) {
     {
         userRoutes.POST("/prelogin", prelogin)
         userRoutes.POST("/login", login)
+        userRoutes.POST("/get_user_details", get_user_details)
+        userRoutes.POST("/update_user_details", update_user_details)
         // ... other user routes
     }
 }
@@ -120,3 +122,122 @@ func login(c *gin.Context) {
     c.JSON(200, gin.H{"Authenticated": true, "jwt":jwt})
     return
 }
+
+type New_Data struct {
+    JWT    string `json:"access-token"`
+    Wanted_Column string `json:"wanted_column"`
+}
+
+func get_user_details(c *gin.Context) {
+    // Read the request body
+    body, err := ioutil.ReadAll(c.Request.Body)
+    if err != nil {
+        c.JSON(400, gin.H{"error": "Failed to read request body"})
+        return
+    }
+
+    // Convert the request body to a string
+    requestBody := string(body)
+    var new_data New_Data
+    err = json.Unmarshal([]byte(requestBody), &new_data)
+    if err != nil {
+        // Handle the error, e.g., invalid JSON
+        fmt.Println("there was a problem with unmarshaling the JSON", err)
+        return
+    }
+
+    jwt := new_data.JWT
+    Wanted_Column := new_data.Wanted_Column
+    clientIP := c.ClientIP()
+
+    // Authenticate the user and if they aren't valid return them false.
+    valid, uuid := helpers.Authenticate(jwt, clientIP)
+    if valid != true {
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
+    }
+
+    // Get the item from the database
+    validColumnsToRetrieve := []string{"last_state", "username", "profile_picture", "admin"}
+
+    column_is_valid := helpers.Contains(validColumnsToRetrieve, Wanted_Column)
+
+    if !column_is_valid {
+
+        fmt.Println("The column is not open to being retrieved")
+        response := map[string]interface{}{"authenticated": false}
+        fmt.Println(response)
+        c.JSON(400, gin.H{"Authenticated": false})
+    }
+
+    return_data, err := helpers.Get_user_detail_by_column(uuid, Wanted_Column)
+    if err != nil {
+        fmt.Println("there was a problem with getting the details", err)
+        return
+    }
+
+    c.JSON(200, gin.H{"response": return_data})
+}
+
+type New_Update_Data struct {
+    JWT    string `json:"access-token"`
+    Column_To_Update string `json:"column_to_be_updated"`
+    New_Data string `json:"new_data"`
+}
+
+func update_user_details(c *gin.Context) {
+    // Read the request body
+    body, err := ioutil.ReadAll(c.Request.Body)
+    if err != nil {
+        c.JSON(400, gin.H{"error": "Failed to read request body"})
+        return
+    }
+
+    // Convert the request body to a string
+    requestBody := string(body)
+    var new_data New_Update_Data
+    err = json.Unmarshal([]byte(requestBody), &new_data)
+    if err != nil {
+        // Handle the error, e.g., invalid JSON
+        fmt.Println("there was a problem with unmarshaling the JSON", err)
+        return
+    }
+
+    jwt := new_data.JWT
+    Column_To_Update := new_data.Column_To_Update
+    New_Data := new_data.New_Data
+    clientIP := c.ClientIP()
+
+    // Authenticate the user and if they aren't valid return them false.
+    valid, uuid := helpers.Authenticate(jwt, clientIP)
+    if valid != true {
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
+    }
+
+    // Get the item from the database
+    validColumnsToUpdate := []string{"last_state", "username"}
+
+    column_is_valid := helpers.Contains(validColumnsToUpdate, Column_To_Update)
+
+    if !column_is_valid {
+        fmt.Println("The column is not open to being updated")
+        response := map[string]interface{}{"authenticated": false}
+        fmt.Println(response)
+        c.JSON(400, gin.H{"Authenticated": false})
+    }
+
+    response := helpers.Update_user_detail_by_column(uuid, Column_To_Update, New_Data)
+    if response != nil {
+        fmt.Println("error in Update_user_detail_by_column", response)
+    }
+
+    c.JSON(200, gin.H{"updated": "success"})
+}
+
+
+
+
+
+
+

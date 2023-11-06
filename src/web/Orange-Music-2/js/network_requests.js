@@ -1,42 +1,6 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { handleRoute } from './routing.js';
 
-export async function updateProjectDetails(project_id, column, newInfo) {
-    try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id,
-            "column_to_be_updated": column,
-            "new_data": newInfo
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData)
-        });
-
-        const data = await response.json();
-        const update = data["updated"]
-        if (update === "success") {
-            return
-        } else {
-            console.log("there was an error")
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
 export async function updateUserDetails(column, newInfo) {
     try {
         const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
@@ -51,7 +15,7 @@ export async function updateUserDetails(column, newInfo) {
             "new_data": JSON.stringify(newInfo)
         };
 
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/update_details/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/update_user_details`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +49,7 @@ export async function getUserDetail(wantedColumn) {
             "wanted_column": wantedColumn
         };
 
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/get_details/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/get_user_details`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -96,6 +60,42 @@ export async function getUserDetail(wantedColumn) {
         const data = await response.json();
         const info = data["response"]
         return info
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function updateProjectDetails(project_id, column, newInfo) {
+    try {
+        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
+        if (!token) {
+            console.log("no jwt")
+            return;
+        }
+
+        const projectData = {
+            "access-token": token,
+            "project_id": project_id,
+            "column_to_be_updated": column,
+            "new_data": newInfo
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        const data = await response.json();
+        const update = data["updated"]
+        if (update === "success") {
+            return
+        } else {
+            console.log("there was an error")
+        }
 
     } catch (error) {
         console.error('Error:', error);
@@ -147,7 +147,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
             no_library_datas_collected
         };
 
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-projects/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_projects`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -164,11 +164,11 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
         }
 
         const libraryData = projects.map(project => ({
-            img: project.picture_url,
-            top: project.project_name,
-            bottom: project.project_contributors,
-            days: project.time_created,
-            project_id: project.project_id
+            img: project.PictureURL,
+            top: project.ProjectName,
+            bottom: project.ProjectContributors,
+            days: project.TimeCreated,
+            project_id: project.ProjectID
         }));
 
         return libraryData;

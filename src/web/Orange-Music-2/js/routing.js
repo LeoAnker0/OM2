@@ -7,7 +7,7 @@ import { show_settings, hide_settings } from './settings.js';
 
 export async function init_routing() {
     const lastStateRecord = await getUserDetail("last_state");
-    const lastState = JSON.parse(lastStateRecord[0].last_state);
+    const lastState = JSON.parse(lastStateRecord);
     const hashedValuesMap = new Map();
     const intervalId = setInterval(update_user_sync, 10000);
     let last_hashed_playback_states = "";
