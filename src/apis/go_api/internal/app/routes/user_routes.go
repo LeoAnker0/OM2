@@ -31,6 +31,7 @@ func prelogin(c *gin.Context) {
 
     // Convert the request body to a string
     requestBody := string(body)
+    clientIP := c.ClientIP()
     var jwt_token MyJSON
     err = json.Unmarshal([]byte(requestBody), &jwt_token) // Use the existing 'err' variable
     if err != nil {
@@ -39,12 +40,16 @@ func prelogin(c *gin.Context) {
         return
     }
 
-    fmt.Println("Request Body:", jwt_token.JWT)
-    valid, uuid := helpers.Authenticate(jwt_token.JWT)
+    valid, _ := helpers.Authenticate(jwt_token.JWT, clientIP)
 
-    fmt.Println(valid, uuid)
+    if valid == true {
+        c.JSON(200, gin.H{"Authenticated": true})
+        return
 
-    c.JSON(200, gin.H{"message": "Request body processed successfully"})
+    } else {
+        c.JSON(400, gin.H{"Authenticated": false})
+    }
+
 }
 
 type Credentials struct {
@@ -54,9 +59,6 @@ type Credentials struct {
 
 func login(c *gin.Context) {
     // Read the request body
-    c.Status(200)
-
-
     body, err := ioutil.ReadAll(c.Request.Body)
     if err != nil {
         c.JSON(400, gin.H{"error": "Failed to read request body"})
@@ -93,7 +95,6 @@ func login(c *gin.Context) {
     isValid := helpers.IsValidEmail(email)
     if !isValid {
         fmt.Println("Email is not valid")
-        fmt.Println("Email is not valid")
         c.JSON(400, gin.H{"error": "Email is not valid"})
         return
     }
@@ -116,9 +117,6 @@ func login(c *gin.Context) {
         return
     }
 
-    fmt.Println(jwt)
-
     c.JSON(200, gin.H{"Authenticated": true, "jwt":jwt})
     return
-
 }

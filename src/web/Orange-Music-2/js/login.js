@@ -128,7 +128,8 @@ export async function prelogin() {
             body: JSON.stringify({ jwt })
         });
         const data = await response.json();
-        return data.authenticated;
+        console.log(data)
+        return data.Authenticated;
     } catch (error) {
         console.error("Error:", error);
         return false;

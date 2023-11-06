@@ -110,3 +110,29 @@ func PasswordHashMatchesEmail(password, email string) (bool, error) {
     passwordMatch := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
     return passwordMatch == nil, nil
 }
+
+func checkIfUserExistsByUUID(uuid string) (bool, error) {
+    // Define your SQL query to count rows with the given uuid
+    query := "SELECT COUNT(*) FROM users WHERE uuid = $1"
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return false, err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var count int
+    err = stmt.QueryRow(uuid).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+
+    // Check if the uuid is unique (count == 0)
+    if count > 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
+}
