@@ -54,6 +54,9 @@ type Credentials struct {
 
 func login(c *gin.Context) {
     // Read the request body
+    c.Status(200)
+
+
     body, err := ioutil.ReadAll(c.Request.Body)
     if err != nil {
         c.JSON(400, gin.H{"error": "Failed to read request body"})
@@ -75,42 +78,47 @@ func login(c *gin.Context) {
     clientIP := c.ClientIP()
 
     // Check if the email is unique
-    isUnique, err := helpers.IsEmailUnique(email)
+    emailExists, err := helpers.DoesEmailExist(email)
     if err != nil {
         c.JSON(500, gin.H{"error": "Error checking email uniqueness"})
         return
     }
-    if !isUnique {
+    if !emailExists {
+        fmt.Println("Email doesn't exist")
         c.JSON(400, gin.H{"error": "Email doesn't exist"})
+        return
     }
 
     // Check if the email is a valid format
     isValid := helpers.IsValidEmail(email)
     if !isValid {
+        fmt.Println("Email is not valid")
+        fmt.Println("Email is not valid")
         c.JSON(400, gin.H{"error": "Email is not valid"})
+        return
     }
 
     // Check if password matches with the DB
-    passwordMatches, err := helpers.PasswordHashMatchesEmail(password, email)
-    if err != nil {
-        fmt.Println(err)
+    passwordMatches, erro := helpers.PasswordHashMatchesEmail(password, email)
+    if erro != nil {
+        fmt.Println(erro)
     }
     if !passwordMatches {
+        fmt.Println("the password didn't match")
         c.JSON(400, gin.H{"error": "login failed"})
+        return
     }
 
     // call a helper function to genereate a jwt from  email
-    jwt, err := helpers.Generate_JWT_by_email(email, clientIP)
-    if err != nil {
-        fmt.Println("there was a jwt error:", err)
+    jwt, error := helpers.Generate_JWT_by_email(email, clientIP)
+    if error != nil {
+        fmt.Println("there was a jwt error:", error)
+        return
     }
 
-    fmt.Println("new jwt", jwt)
+    fmt.Println(jwt)
 
-    // Return the user a JWT
-
-
-
-
+    c.JSON(200, gin.H{"Authenticated": true, "jwt":jwt})
+    return
 
 }

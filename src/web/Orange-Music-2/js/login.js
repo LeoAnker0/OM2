@@ -97,13 +97,13 @@ async function login(email, password) {
             body: JSON.stringify({ email, password })
         });
         const data = await response.json();
-        if (data.authenticated === true) {
+        if (data.Authenticated === true) {
             const jwt = data.jwt
             localStorage.setItem("JWT", jwt)
         }
-        return data.authenticated;
+        return data.Authenticated;
     } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
         return false;
     }
 }

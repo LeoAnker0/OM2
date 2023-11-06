@@ -34,7 +34,7 @@ func init() {
 }
 
 // IsEmailUnique checks if an email is unique in the database
-func IsEmailUnique(email string) (bool, error) {
+func DoesEmailExist(email string) (bool, error) {
     // Define your SQL query to count rows with the given email
     query := "SELECT COUNT(*) FROM users WHERE email = $1"
 
@@ -53,7 +53,11 @@ func IsEmailUnique(email string) (bool, error) {
     }
 
     // Check if the email is unique (count == 0)
-    return count == 0, nil
+    if count > 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
 }
 
 func Get_UUID_by_email(email string) (string, error) {
