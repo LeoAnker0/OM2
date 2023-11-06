@@ -1,9 +1,9 @@
 # Use an official Go runtime as the base image
 FROM golang:1.21
 
-ENV PROJECT_DIR=/app \
-    GO111MODULE=on \
-    CGO_ENABLED=0
+#ENV PROJECT_DIR=/app \
+#    GO111MODULE=on \
+#    CGO_ENABLED=0
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -19,13 +19,13 @@ RUN go mod download
 COPY . .
 
 # Build your Go application
-#RUN go build -o main .
-RUN go get github.com/githubnemo/CompileDaemon
-RUN go install github.com/githubnemo/CompileDaemon
+RUN go build -o main .
+#RUN go get github.com/githubnemo/CompileDaemon
+#RUN go install github.com/githubnemo/CompileDaemon
 
 # Expose the port your API will run on
 EXPOSE 6000
 
 # Command to run your application
-#CMD ["./main"]
-ENTRYPOINT CompileDaemon -build="go build -o /build/app" -command="/build/app"
+CMD ["./main"]
+#ENTRYPOINT CompileDaemon -build="go build -o /build/app" -command="/build/app"

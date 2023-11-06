@@ -27,7 +27,7 @@ function loadLoginForm() {
     let signups_allowed;
 
     /* check if signups are allowed, and if not then don't  */
-    fetch(`${MAIN_CONST_EXPORT_apiPath}/status/are_signups_allowed/`)
+    fetch(`${MAIN_CONST_EXPORT_apiPath}/meta/are_signups_allowed`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -89,7 +89,7 @@ function loadLoginForm() {
 
 async function login(email, password) {
     try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/login/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ export async function prelogin() {
     }
     try {
         const jwt = localStorage.getItem('JWT');
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/prelogin/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/prelogin`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

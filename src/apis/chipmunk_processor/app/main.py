@@ -235,7 +235,7 @@ async def complete_signup(request: Request):
     user_dict = dict(username=username,
                      password=password,
                      email=email,
-                     )
+                     ) 
     await insert_user(user_dict)
 
     return {"message": "Signup successful"}
@@ -285,8 +285,6 @@ async def login(request: Request):
         return {"success": "false", "message": "login failed"}
 
     uuid = await get_uuid_by_email(email)
-    expiration_time = datetime.datetime.now(
-        datetime.timezone.utc) + datetime.timedelta(days=5)
     user_data = {"uuid": uuid}
     access_token = genenerate_jwt(user_data)
     response = JSONResponse({"authenticated": True, "jwt": access_token})

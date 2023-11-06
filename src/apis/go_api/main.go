@@ -4,7 +4,8 @@ import (
     "fmt"
     "os"
     "github.com/gin-gonic/gin"
-    "go_api/internal/middlewares"
+    "github.com/gin-contrib/cors"
+    "go_api/internal/app/routes"
     "database/sql"
     _ "github.com/lib/pq"
 )
@@ -33,17 +34,16 @@ func main() {
         panic(err)
     }
 
-    fmt.Println("Successfully connected! and what ads's more, we've eaten cake")
-
     // Create a new Gin router
     r := gin.Default()
 
-    r.Use(middlewares.CorsMiddleware())
+    // Use CORS middleware
+    config := cors.DefaultConfig()
+    config.AllowOrigins = []string{"http://localhost:5173"} // Change this to the specific origins you want to allow
+    config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+    r.Use(cors.New(config))
 
-    // Define a route for the root endpoint
-    r.GET("/", func(c *gin.Context) {
-        c.String(200, "Hello, World!")
-    })
+    routes.SetupRoutes(r)
 
     // Run the application on port 6000
     r.Run(":6000")
