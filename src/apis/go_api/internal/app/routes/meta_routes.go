@@ -6,7 +6,7 @@ import (
 )
 
 func SetupMetaRoutes(router *gin.Engine) {
-    metaRoutes := router.Group("/meta")
+    metaRoutes := router.Group("/apis/meta")
     {
         metaRoutes.GET("/are_signups_allowed", are_signups_allowed)
         // ... other user routes

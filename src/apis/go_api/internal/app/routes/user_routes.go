@@ -9,7 +9,7 @@ import (
 )
 
 func SetupUserRoutes(router *gin.Engine) {
-    userRoutes := router.Group("/users")
+    userRoutes := router.Group("/apis/users")
     {
         userRoutes.POST("/prelogin", prelogin)
         userRoutes.POST("/login", login)
