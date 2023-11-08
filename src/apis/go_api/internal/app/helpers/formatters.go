@@ -3,6 +3,8 @@ package helpers
 import (
     "net/mail"
     "regexp"
+    "os"
+    "path/filepath"
 )
 
 // IsValidEmail checks if an email address is valid
@@ -26,4 +28,19 @@ func Contains(slice []string, s string) bool {
         }
     }
     return false
+}
+
+// getFolderSize calculates the total size of all files in a folder.
+func getFolderSize(folderPath string) int64 {
+    var totalSize int64
+    filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+        if err != nil {
+            return err
+        }
+        if !info.IsDir() {
+            totalSize += info.Size()
+        }
+        return nil
+    })
+    return totalSize
 }

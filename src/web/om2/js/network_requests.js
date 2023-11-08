@@ -106,18 +106,12 @@ export async function getProjectDetails(project_id) {
 
 export async function getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected) {
     try {
-        const data_body = {
-            library_items_to_request_at_a_time,
-            no_library_datas_collected
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_projects`, {
-            method: 'POST',
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_projects?l=${library_items_to_request_at_a_time}&c=${no_library_datas_collected}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify(data_body)
         });
 
         const responseData = await response.json();

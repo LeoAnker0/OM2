@@ -5,7 +5,9 @@ import (
     "os"
     "database/sql"
     _ "github.com/lib/pq"
+    "time"
     "golang.org/x/crypto/bcrypt"
+    "encoding/json"
 
 
 )
@@ -13,18 +15,30 @@ import (
 var db *sql.DB
 
 func init() {
-    user := os.Getenv("POSTGRES_USER")
-    password := os.Getenv("POSTGRES_PASSWORD")
-    dbname := os.Getenv("POSTGRES_DB")
-    host := "postgres"
-    port := 5432
-
-    psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+    maxRetries := 75
+    retryInterval := 5 * time.Second
 
     var err error
-    db, err = sql.Open("postgres", psqlInfo)
-    if err != nil {
-        panic(err)
+    for attempt := 1; attempt <= maxRetries; attempt++ {
+        user := os.Getenv("POSTGRES_USER")
+        password := os.Getenv("POSTGRES_PASSWORD")
+        dbname := os.Getenv("POSTGRES_DB")
+        host := "postgres"
+        port := 5432
+
+        psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+        db, err = sql.Open("postgres", psqlInfo)
+        if err == nil {
+            break
+        }
+
+        if attempt < maxRetries {
+            fmt.Printf("Database connection attempt %d failed. Retrying in %v...\n", attempt, retryInterval)
+            time.Sleep(retryInterval)
+        } else {
+            panic(err)
+        }
     }
 
     err = db.Ping()
@@ -180,6 +194,8 @@ type Project struct {
     ProjectID            string
     ProjectName          string
     ProjectContributors  string
+    ProjectJSON          string
+    Description          string
 }
 
 func GetUsersProjects(uuid string, No_Library_Items_Wanted, No_Library_Items_Collected int) ([]Project, error) {
@@ -213,4 +229,76 @@ func GetUsersProjects(uuid string, No_Library_Items_Wanted, No_Library_Items_Col
     }
 
     return projects, nil
+}
+
+type Song struct {
+    SongName     string `json:"song_name"`
+    URL          string `json:"url"`
+    Duration     json.Number    `json:"duration"`
+    SongSequence int    `json:"song_sequence"`
+    SongSize     int64
+}
+
+type SongsJSON struct {
+    Songs []Song `json:"songs_json"`
+}
+
+func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){    
+    query := `
+        SELECT time_created, project_json, description, picture_url, project_name, project_contributors
+        FROM projects
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2
+        LIMIT 1
+    `
+
+    rows, err := db.Query(query, uuid, projectID)
+    if err != nil {
+        return "", err
+    }
+    defer rows.Close()
+
+    var project Project
+    for rows.Next() {
+        if err := rows.Scan(&project.TimeCreated, &project.ProjectJSON, &project.Description, &project.PictureURL, &project.ProjectName, &project.ProjectContributors); err != nil {
+            return "", err
+        }
+    }
+
+    jsonStr := project.ProjectJSON
+
+    var songsData SongsJSON
+    err2 := json.Unmarshal([]byte(jsonStr), &songsData)
+    if err2 != nil {
+        fmt.Println("Error:", err2)
+        return "", err2
+    }
+
+    var updatedSongsData SongsJSON
+    for _, song := range songsData.Songs {
+        folderSize := getFolderSize("/var/www/media/" + song.URL + "/")
+        song.SongSize = folderSize
+        updatedSongsData.Songs = append(updatedSongsData.Songs, song)
+    }
+
+     // Marshal the updated songsData into a JSON string
+    updatedJSON, err := json.Marshal(updatedSongsData)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return "", err
+    }
+
+    // Create json strings of objects
+    updatedJSONString := string(updatedJSON)
+    project.ProjectJSON = updatedJSONString
+
+    projectJSON, err := json.Marshal(project)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return "", err
+    }
+
+    // Create final return string
+    projectJSONString := string(projectJSON)
+
+    return projectJSONString, nil
 }

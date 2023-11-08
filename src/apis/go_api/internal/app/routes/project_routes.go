@@ -3,29 +3,30 @@ package routes
 import (
     "github.com/gin-gonic/gin"
     "fmt"
-    "io/ioutil"
-    "encoding/json"
+    "strconv"
     "go_api/internal/app/helpers"
 )
 
 func SetupProjectRoutes(router *gin.Engine) {
     projectRoutes := router.Group("/apis/projects")
     {
-        projectRoutes.POST("/get_projects", get_projects)
+        projectRoutes.GET("/get_projects", get_projects)
         projectRoutes.GET("/get_project_details/:projectID", get_project_details)
     }
 }
 
-type Get_Projects_Data_Struct struct {
-    No_Library_Items_Wanted int `json:"library_items_to_request_at_a_time"`
-    No_Library_Items_Collected int `json:"no_library_datas_collected"`
-}
-
 func get_projects(c *gin.Context) {
-    // Read the request body
-    body, err := ioutil.ReadAll(c.Request.Body)
-    if err != nil {
-        c.JSON(400, gin.H{"error": "Failed to read request body"})
+    // Get the query parametres as strings
+    lStr := c.DefaultQuery("l", "15")
+    cStr := c.DefaultQuery("c", "0")
+
+    // Parse the string values to integers
+    No_Library_Items_Wanted, err1 := strconv.Atoi(lStr)
+    No_Library_Items_Collected, err2 := strconv.Atoi(cStr)
+
+    if err1 != nil || err2 != nil {
+        fmt.Println(err1, err2)
+        c.JSON(400, gin.H{"error": "ERROR with searchQuery"})
         return
     }
 
@@ -34,19 +35,6 @@ func get_projects(c *gin.Context) {
     if err != nil {
         fmt.Println("cookie error", err)
     }
-
-    // Convert the request body to a string
-    requestBody := string(body)
-    var new_data Get_Projects_Data_Struct
-    err = json.Unmarshal([]byte(requestBody), &new_data)
-    if err != nil {
-        // Handle the error, e.g., invalid JSON
-        fmt.Println("there was a problem with unmarshaling the JSON", err)
-        return
-    }
-
-    No_Library_Items_Wanted := new_data.No_Library_Items_Wanted
-    No_Library_Items_Collected := new_data.No_Library_Items_Collected
 
     if No_Library_Items_Wanted > 40 {
         No_Library_Items_Wanted = 40
@@ -61,13 +49,13 @@ func get_projects(c *gin.Context) {
 
     projects, err := helpers.GetUsersProjects(uuid, No_Library_Items_Wanted, No_Library_Items_Collected)
     if err != nil {
-        fmt.Println("Error at get_projects, getting the project detailss", err)
+        fmt.Println("Error at get_projects, getting the project details", err)
         c.JSON(400, gin.H{"Authenticated": false})
         return
     }
 
     c.JSON(200, gin.H{"projects": projects})
-
+    return
 }
 
 
@@ -86,13 +74,12 @@ func get_project_details(c *gin.Context) {
         return
     }
 
-    // Now that we have the project that is wanted, we can mirror the python code to return that project
+    project_json, err2 := helpers.GetProjectDetailsFromDatabase(uuid, projectID)
+    if err2 != nil {
+        fmt.Println(err)
+    }
 
-    fmt.Println("get_project_details:", projectID)
-
-    fmt.Println(uuid)
-
-    c.JSON(200, gin.H{"projectID": projectID})
+    c.JSON(200, gin.H{"project_details": project_json})
 }
 
 

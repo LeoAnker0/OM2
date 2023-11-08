@@ -6,9 +6,7 @@ import (
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
     "go_api/internal/app/routes"
-    "database/sql"
     "mime"
-    _ "github.com/lib/pq"
     "strings"
     "path/filepath" // Add this line for the filepath package
 )
@@ -17,6 +15,7 @@ func main() {
     // Initialize MIME types
     mime.AddExtensionType(".js", "application/javascript")
 
+    /*
     user := os.Getenv("POSTGRES_USER")
     password := os.Getenv("POSTGRES_PASSWORD")
     dbname := os.Getenv("POSTGRES_DB")
@@ -38,7 +37,7 @@ func main() {
     err = db.Ping()
     if err != nil {
         panic(err)
-    }
+    }*/
 
     // Create a new Gin router
     r := gin.Default()

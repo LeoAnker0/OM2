@@ -18,10 +18,10 @@ export async function initProjectView(projectID) {
     ask the server nicely for a new project
     else load an existing project */
     setTimeout(async () => {
-        console.log("projectID: ", projectID)
         const currentPath = window.location.pathname;
         //const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
         const details = await getProjectDetails(projectID);
+        console.log("details: ", details)
 
         details.project_id = projectID
         loadVisible(details);
