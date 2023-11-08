@@ -94,7 +94,8 @@ async function login(email, password) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password })
+            credentials: 'include',
+            body: JSON.stringify({ email, password }),
         });
         const data = await response.json();
         if (data.Authenticated === true) {
@@ -125,7 +126,8 @@ export async function prelogin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ jwt })
+            credentials: 'include',
+            body: JSON.stringify({ jwt }),
         });
         const data = await response.json();
         console.log(data)

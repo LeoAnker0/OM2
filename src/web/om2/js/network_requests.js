@@ -3,14 +3,7 @@ import { handleRoute } from './routing.js';
 
 export async function updateUserDetails(column, newInfo) {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
         const new_data = {
-            "access-token": token,
             "column_to_be_updated": column,
             "new_data": JSON.stringify(newInfo)
         };
@@ -20,6 +13,7 @@ export async function updateUserDetails(column, newInfo) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify(new_data)
         });
 
@@ -38,14 +32,7 @@ export async function updateUserDetails(column, newInfo) {
 
 export async function getUserDetail(wantedColumn) {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
         const new_data = {
-            "access-token": token,
             "wanted_column": wantedColumn
         };
 
@@ -54,6 +41,7 @@ export async function getUserDetail(wantedColumn) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify(new_data)
         });
 
@@ -68,14 +56,7 @@ export async function getUserDetail(wantedColumn) {
 
 export async function updateProjectDetails(project_id, column, newInfo) {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
         const projectData = {
-            "access-token": token,
             "project_id": project_id,
             "column_to_be_updated": column,
             "new_data": newInfo
@@ -86,6 +67,7 @@ export async function updateProjectDetails(project_id, column, newInfo) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify(projectData)
         });
 
@@ -104,23 +86,12 @@ export async function updateProjectDetails(project_id, column, newInfo) {
 
 export async function getProjectDetails(project_id) {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get-project-details/`, {
-            method: 'POST',
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_project_details/${project_id}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(projectData)
+            credentials: 'include',
         });
 
         const data = await response.json();
@@ -135,14 +106,7 @@ export async function getProjectDetails(project_id) {
 
 export async function getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected) {
     try {
-        const token = localStorage.getItem('JWT');
-        if (!token) {
-            console.log("no jwt");
-            return [];
-        }
-
         const data_body = {
-            "access-token": token,
             library_items_to_request_at_a_time,
             no_library_datas_collected
         };
@@ -152,6 +116,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify(data_body)
         });
 
@@ -181,22 +146,12 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
 
 export async function createNewProjectID() {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token
-        };
-
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/new-project-id/`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(projectData)
+            credentials: 'include',
         });
 
         const data = await response.json();
@@ -211,22 +166,12 @@ export async function createNewProjectID() {
 
 export async function get_users_table() {
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-
-        const projectData = {
-            "access-token": token
-        };
-
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/get_users_table/`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(projectData)
+            credentials: 'include',
         });
 
         const data = await response.json();

@@ -6,6 +6,8 @@ import (
     "io/ioutil"
     "encoding/json"
     "go_api/internal/app/helpers"
+    "net/http"
+    "time"
 )
 
 func SetupUserRoutes(router *gin.Engine) {
@@ -24,25 +26,14 @@ type MyJSON struct {
 }
 
 func prelogin(c *gin.Context) {
-    // Read the request body
-    body, err := ioutil.ReadAll(c.Request.Body)
-    if err != nil {
-        c.JSON(400, gin.H{"error": "Failed to read request body"})
-        return
-    }
-
-    // Convert the request body to a string
-    requestBody := string(body)
+    // Get cookies and IP
     clientIP := c.ClientIP()
-    var jwt_token MyJSON
-    err = json.Unmarshal([]byte(requestBody), &jwt_token) // Use the existing 'err' variable
+    jwt_token, err := c.Cookie("access-token")
     if err != nil {
-        // Handle the error, e.g., invalid JSON
-        fmt.Println("there was a problem with unmarshaling the JSON", err)
-        return
+        fmt.Println("cookie error", err)
     }
 
-    valid, _ := helpers.Authenticate(jwt_token.JWT, clientIP)
+    valid, _ := helpers.Authenticate(jwt_token, clientIP)
 
     if valid == true {
         c.JSON(200, gin.H{"Authenticated": true})
@@ -119,12 +110,23 @@ func login(c *gin.Context) {
         return
     }
 
-    c.JSON(200, gin.H{"Authenticated": true, "jwt":jwt})
+    expiration := time.Now().Add((24 * 1) * time.Hour)
+
+    cookie := &http.Cookie{
+            Name:     "access-token",
+            Value:    jwt,
+            Path:     "/",
+            Expires: expiration,
+            HttpOnly: true, // Set the HttpOnly flag to true
+        }
+
+    http.SetCookie(c.Writer, cookie)
+
+    c.JSON(200, gin.H{"Authenticated": true})
     return
 }
 
 type New_Data struct {
-    JWT    string `json:"access-token"`
     Wanted_Column string `json:"wanted_column"`
 }
 
@@ -134,6 +136,12 @@ func get_user_details(c *gin.Context) {
     if err != nil {
         c.JSON(400, gin.H{"error": "Failed to read request body"})
         return
+    }
+
+    clientIP := c.ClientIP()
+    jwt_token, err := c.Cookie("access-token")
+    if err != nil {
+        fmt.Println("cookie error", err)
     }
 
     // Convert the request body to a string
@@ -146,12 +154,10 @@ func get_user_details(c *gin.Context) {
         return
     }
 
-    jwt := new_data.JWT
     Wanted_Column := new_data.Wanted_Column
-    clientIP := c.ClientIP()
 
     // Authenticate the user and if they aren't valid return them false.
-    valid, uuid := helpers.Authenticate(jwt, clientIP)
+    valid, uuid := helpers.Authenticate(jwt_token, clientIP)
     if valid != true {
         c.JSON(400, gin.H{"Authenticated": false})
         return
@@ -180,7 +186,6 @@ func get_user_details(c *gin.Context) {
 }
 
 type New_Update_Data struct {
-    JWT    string `json:"access-token"`
     Column_To_Update string `json:"column_to_be_updated"`
     New_Data string `json:"new_data"`
 }
@@ -193,6 +198,12 @@ func update_user_details(c *gin.Context) {
         return
     }
 
+    clientIP := c.ClientIP()
+    jwt_token, err := c.Cookie("access-token")
+    if err != nil {
+        fmt.Println("cookie error", err)
+    }
+
     // Convert the request body to a string
     requestBody := string(body)
     var new_data New_Update_Data
@@ -203,13 +214,11 @@ func update_user_details(c *gin.Context) {
         return
     }
 
-    jwt := new_data.JWT
     Column_To_Update := new_data.Column_To_Update
     New_Data := new_data.New_Data
-    clientIP := c.ClientIP()
 
     // Authenticate the user and if they aren't valid return them false.
-    valid, uuid := helpers.Authenticate(jwt, clientIP)
+    valid, uuid := helpers.Authenticate(jwt_token, clientIP)
     if valid != true {
         c.JSON(400, gin.H{"Authenticated": false})
         return

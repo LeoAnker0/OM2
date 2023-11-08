@@ -45,7 +45,7 @@ func main() {
 
     // Use CORS middleware
     config := cors.DefaultConfig()
-    config.AllowOrigins = []string{"http://localhost:5173"} // Change this to the specific origins you want to allow
+    config.AllowOrigins = []string{"http://localhost:5173", "https://testom2.la0.uk"} // Change this to the specific origins you want to allow
     config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
     r.Use(cors.New(config))
 

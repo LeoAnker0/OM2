@@ -18,6 +18,8 @@ type Claims struct {
 
 // VerifyJWT verifies a JWT token and checks if the user exists.
 func Authenticate(jwtToken, clientIP string) (bool, string) {
+    //fmt.Println("Authenticate: ", jwtToken)
+
     secretKey := os.Getenv("SECRET_JWT_KEY")
     claims := &Claims{}
 
@@ -26,7 +28,7 @@ func Authenticate(jwtToken, clientIP string) (bool, string) {
     })
 
     if err != nil {
-        fmt.Printf("JWT verification failed: %v\n", err)
+        fmt.Printf("JWT verification failed: %v\n", err, "%v\nThe token: ", jwtToken)
         return false, "notuuid"
     }
 
@@ -36,6 +38,7 @@ func Authenticate(jwtToken, clientIP string) (bool, string) {
     }
 
     // Access the IP field from the claims
+    /*
     if claims.IP != "" {
         ip := claims.IP
         geo_jwt, err := getGeolocation(ip)
@@ -57,6 +60,9 @@ func Authenticate(jwtToken, clientIP string) (bool, string) {
 
     } else {
         fmt.Println("IP field not found in JWT claims")
+    }*/
+    if 2 < 1 {
+        fmt.Println(claims.IP)
     }
 
     if uuid := claims.UUID; uuid != "" {

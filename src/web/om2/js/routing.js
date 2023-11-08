@@ -57,6 +57,8 @@ function handleMusicObjectsGrid() {
 }
 
 function handleProjectView(projectID) {
+    console.log("handle project view called")
+
     hideMusicObjectsGrid();
     hide_settings();
     initProjectView(projectID);
