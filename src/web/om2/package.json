@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build-and-move": "vite build && cp -r dist/* ../../apis/go_api/static_web",
+    "build-and-move": "rm -rf ../../apis/go_api/static_web/* && vite build && cp -r dist/* ../../apis/go_api/static_web",
     "preview": "vite preview"
   },
   "devDependencies": {
