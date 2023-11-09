@@ -1,11 +1,11 @@
 version: '0.1'
 services:
   # For Exposing apis and file hosting to the internet
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
-    networks:
-      - tunnel
+  #cloudflared:
+  #  image: cloudflare/cloudflared:latest
+  #  command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
+  #  networks:
+  #    - tunnel
 
   # Database
   postgres:
@@ -28,7 +28,7 @@ services:
     volumes:
       - om2data:/var/www/media
     ports:
-      - "6000:6000"
+      - "6001:6000"
     networks:
       - tunnel
     depends_on:

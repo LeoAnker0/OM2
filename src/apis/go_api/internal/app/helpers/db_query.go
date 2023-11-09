@@ -8,6 +8,7 @@ import (
     "time"
     "golang.org/x/crypto/bcrypt"
     "encoding/json"
+    _ "strings"
 
 
 )
@@ -297,8 +298,8 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
         return "", err
     }
 
-    // Create final return string
+    // Use strings.Replace to remove backslashes
+    //projectJSONString := strings.Replace(string(projectJSON), `\"`, `"`, -1)
     projectJSONString := string(projectJSON)
-
     return projectJSONString, nil
 }

@@ -76,7 +76,7 @@ export async function updateProjectDetails(project_id, column, newInfo) {
         if (update === "success") {
             return
         } else {
-            console.log("there was an error")
+            console.log("there was an error, yes")
         }
 
     } catch (error) {

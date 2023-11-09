@@ -46,11 +46,14 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback_
 }
 
 function PLAYBACK_prepare_project_details_array(project_details) {
+    project_details = JSON.parse(project_details)
     const array = [];
-    const project_contributors = project_details.project_contributors;
-    const project_name = project_details.project_name;
-    const picture_url = project_details.picture_url;
-    const project_json = project_details.songs_json;
+    const project_contributors = project_details.ProjectContributors;
+    const project_name = project_details.ProjectName;
+    const picture_url = project_details.PictureURL;
+    let project_json = project_details.ProjectJSON;
+    project_json = JSON.parse(project_json)
+    project_json = project_json.songs_json
 
     try {
         for (const song of project_json) {
@@ -68,7 +71,7 @@ function PLAYBACK_prepare_project_details_array(project_details) {
             })
         }
     } catch (e) {
-
+        console.log(e)
     }
     return array;
 }

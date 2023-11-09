@@ -42,19 +42,20 @@ func main() {
     // Create a new Gin router
     r := gin.Default()
 
-    // Use CORS middleware
+    //// Use CORS middleware
     config := cors.DefaultConfig()
     config.AllowOrigins = []string{"http://localhost:5173", "https://testom2.la0.uk"} // Change this to the specific origins you want to allow
     config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+    config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+    config.AllowCredentials = true
     r.Use(cors.New(config))
 
     // Define a wildcard route to serve files from ./static_web
     r.NoRoute(func(c *gin.Context) {
         // Capture the requested path
         requestedPath := c.Request.URL.Path
-        fmt.Println(requestedPath)
 
-         // Check if the requested path starts with "/media" and serve from "/var/www/media/"
+        // Check if the requested path starts with "/media" and serve from "/var/www/media/"
         if strings.HasPrefix(requestedPath, "/media/") {
         // Remove the "/media/" prefix
         subPath := strings.TrimPrefix(requestedPath, "/media/")

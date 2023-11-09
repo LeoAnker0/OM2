@@ -20,12 +20,9 @@ COPY . .
 
 # Build your Go application
 RUN go build -o main .
-#RUN go get github.com/githubnemo/CompileDaemon
-#RUN go install github.com/githubnemo/CompileDaemon
 
 # Expose the port your API will run on
 EXPOSE 6000
 
 # Command to run your application
 CMD ["./main"]
-#ENTRYPOINT CompileDaemon -build="go build -o /build/app" -command="/build/app"

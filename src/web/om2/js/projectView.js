@@ -19,11 +19,10 @@ export async function initProjectView(projectID) {
     else load an existing project */
     setTimeout(async () => {
         const currentPath = window.location.pathname;
-        //const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-        const details = await getProjectDetails(projectID);
-        console.log("details: ", details)
+        const result = await getProjectDetails(projectID);
+        const details = JSON.parse(result);
 
-        details.project_id = projectID
+        details.ProjectID = projectID;
         loadVisible(details);
         set_event_listeners_for_titles(details);
     }, 1);
@@ -31,7 +30,7 @@ export async function initProjectView(projectID) {
 
     function loadVisible(details) {
         loadContainer(details);
-        const description = details.description;
+        const description = details.Description;
 
         sessionStorage.setItem('description', description);
         updateDescription_display();
@@ -42,8 +41,8 @@ export async function initProjectView(projectID) {
         loadInTable(details);
         loadFileDropArea(details);
         detect_when_image_is_no_longer_visible();
-        update_mobile_header_project_title(details.project_name)
-        detect_when_image_is_interacted(details.project_id);
+        update_mobile_header_project_title(details.ProjectName)
+        detect_when_image_is_interacted(details.ProjectID);
     }
 }
 
@@ -59,8 +58,11 @@ export async function PROJECTVIEW_update() {
     const currentPath = window.location.pathname;
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
     const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
-    const details = await getProjectDetails(project_id);
-    const newImageUrl = details.picture_url;
+    const result = await getProjectDetails(project_id);
+    const details = JSON.parse(result)
+    const newImageUrl = details.PictureURL;
+
+
     const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/5/`;
     imageTag.src = image;
 }
@@ -97,18 +99,18 @@ function loadContainer(details) {
         let value = '';
 
         if (placeholder === 'PROJECTviewMOREtitle') {
-            value = details.project_name
+            value = details.ProjectName
         } else if (placeholder === 'PROJECTviewMOREartist') {
-            value = details.project_contributors;
+            value = details.ProjectContributors;
         } else if (placeholder === 'PROJECTviewMOREyear') {
-            const formatted_time = formatTimeDaysToHuman(details.time_created);
+            const formatted_time = formatTimeDaysToHuman(details.TimeCreated);
             value = formatted_time;
         } else if (placeholder === 'MOG_checkedDate') {
             value = "checkedIndicator";
         } else if (placeholder === 'MOGI_placeholder_itemID') {
             value = "temporaryIidentifier";
         } else if (placeholder === "PROJECTviewDisplayImage") {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.picture_url}/5/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5/`;
             value = image
         }
 
@@ -196,7 +198,7 @@ function closeMoreDescription(details) {
     const main = document.querySelector("main");
 
     sessionStorage.setItem('description', newDescription);
-    updateProjectDetails(details.project_id, "description", newDescription)
+    updateProjectDetails(details.ProjectID, "description", newDescription)
     background.style.display = "none";
     updateDescription();
     main.style.zIndex = "1";
@@ -209,7 +211,7 @@ async function detectPlayAndShuffleButtons(details) {
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
     const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
-    const project_details = await getProjectDetails(details.project_id);
+    const project_details = await getProjectDetails(details.ProjectID);
 
     playButton.addEventListener("click", function() {
         //console.log("playButton pressed")
@@ -313,16 +315,18 @@ function loadInTable(details) {
     const songsJsonString = jsonDetails;
 
     if (songsJsonString !== "{}") {
-        const songsJson = songsJsonString.songs_json;
+        let songsJson = songsJsonString.ProjectJSON;
+        songsJson = JSON.parse(songsJson)
+        songsJson = songsJson.songs_json
         const songData = [];
 
         if (songsJson) {
             for (const song of songsJson) {
                 songData.push({
-                    "img": jsonDetails.picture_url,
+                    "img": jsonDetails.PictureURL,
                     "songTitle": song.song_name,
-                    "artistName": jsonDetails.project_contributors,
-                    "projectName": formatFileSizeBytes(song.song_size),
+                    "artistName": jsonDetails.ProjectContributors,
+                    "projectName": formatFileSizeBytes(song.SongSize),
                     "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
                     "song_sequence": song.song_sequence,
                     "url": song.url
@@ -331,7 +335,7 @@ function loadInTable(details) {
         }
 
         for (let i = 0; i < songData.length; i++) {
-            songData[i].projectID = i;
+            songData[i].ProjectID = i;
             const song = songData[i];
             loadInProjectViewRowItems(song);
         }
@@ -358,11 +362,12 @@ async function updateLoadInTable() {
     const projectTable = document.getElementById('PROJECTview-projectTable');
     const currentPath = window.location.pathname;
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-    const details = await getProjectDetails(project_id);
-    details.project_id = project_id
+    const result = await getProjectDetails(project_id);
+    const details = JSON.parse(result)
+    details.ProjectID = ProjectID
 
     const jsonDetails = details;
-    const songsJsonString = jsonDetails.project_json;
+    const songsJsonString = jsonDetails.ProjectJSON;
     const songsJson = JSON.parse(songsJsonString).songs_json;
     const songData = [];
 

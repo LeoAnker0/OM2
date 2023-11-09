@@ -112,12 +112,18 @@ func login(c *gin.Context) {
 
     expiration := time.Now().Add((24 * 1) * time.Hour)
 
+    // access-token set here
+    /* in future add a switch so that when in prod mode
+    the cookie has the correct security settings, but that
+    dev gives me the needed flexibility. */
     cookie := &http.Cookie{
-            Name:     "access-token",
-            Value:    jwt,
-            Path:     "/",
-            Expires: expiration,
-            HttpOnly: true, // Set the HttpOnly flag to true
+            Name:       "access-token",
+            Value:      jwt,
+            Path:       "/",
+            Expires:    expiration,
+            //HttpOnly:   true, // Set the HttpOnly flag to true
+            //SameSite:   http.SameSiteNoneMode,
+            //Secure:     true
         }
 
     http.SetCookie(c.Writer, cookie)

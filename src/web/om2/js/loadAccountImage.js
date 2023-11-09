@@ -7,9 +7,7 @@ export let users_image;
 export async function initAccountImg() {
     const accountImgSource = document.getElementById("TOPRIGHTaccountImg");
     try {
-        const data = await getUserDetail("profile_picture")
-        const url = data[0].profile_picture;
-        users_image = url;
+        const url = await getUserDetail("profile_picture")
         const newImage = `${MAIN_CONST_EXPORT_mediaPath}/${url}/1/`;
         const accountImgButton = document.getElementById("TOPRIGHTaccountImgButton");
 

@@ -8,10 +8,15 @@ export default defineConfig({
     // Configure the server to handle custom routes
     server: {
         proxy: {
-            // You can define proxy rules for specific routes if needed
-            '/signup': {
-                target: resolve(__dirname, './signup/index.html'), // Use 'resolve' to get the absolute path
+            '/apis': {
+                target: 'http://localhost:6001',
                 changeOrigin: true,
+                withCredentials: true,
+            },
+            '/media': {
+                target: 'http://localhost:6001',
+                changeOrigin: true,
+                withCredentials: true,
             },
         },
     },
