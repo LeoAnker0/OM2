@@ -15,30 +15,6 @@ func main() {
     // Initialize MIME types
     mime.AddExtensionType(".js", "application/javascript")
 
-    /*
-    user := os.Getenv("POSTGRES_USER")
-    password := os.Getenv("POSTGRES_PASSWORD")
-    dbname := os.Getenv("POSTGRES_DB")
-
-    const (
-        host     = "postgres"
-        port     = 5432
-    )
-
-    psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-        "password=%s dbname=%s sslmode=disable",
-        host, port, user, password, dbname)
-
-    db, err := sql.Open("postgres", psqlInfo)
-    if err != nil {
-        panic(err)
-    }
-    defer db.Close()
-    err = db.Ping()
-    if err != nil {
-        panic(err)
-    }*/
-
     // Create a new Gin router
     r := gin.Default()
 
@@ -65,6 +41,72 @@ func main() {
         if len(parts) >= 2 {
             id := parts[0]
             requestedFileNumber := parts[1]
+
+            if id == "static" {
+                id := parts[1]
+                requestedFileNumber := parts[2]
+
+                // Construct the directory path for the "id"
+                idDirPath := "./static_assets/" + id
+
+                // Check if the "id" directory exists
+                _, err := os.Stat(idDirPath)
+                if err != nil {
+                    // Handle the case when the "id" directory does not exist
+                    fmt.Println("the id doesn't exist, ", idDirPath)
+                    return
+                }
+
+                // Find a file with the requested number in the "id" directory
+                var fileExtension string
+                switch requestedFileNumber {
+                case "1":
+                    fileExtension = "1.*"
+                case "2":
+                    fileExtension = "2.*"
+                case "3":
+                    fileExtension = "3.*"
+                case "4":
+                    fileExtension = "4.*"
+                case "5":
+                    fileExtension = "5.*"
+                case "6":
+                    fileExtension = "6.*"
+                case "7":
+                    fileExtension = "7.*"
+                case "8":
+                    fileExtension = "8.*"
+                case "9":
+                    fileExtension = "9.*"
+                case "0":
+                    fileExtension = "0.*"
+
+                default:
+                    // Handle the case when the requested number is not valid
+                    fmt.Println("File number not found", requestedFileNumber)
+                    return
+                }
+
+                // List files in the "id" directory
+                files, err := filepath.Glob(idDirPath + "/*" + fileExtension)
+                if err != nil {
+                    // Handle the error when listing files
+                    fmt.Println("Error listing files, ", err, files)
+                    return
+                }
+
+                if len(files) == 0 {
+                    // Handle the case when no matching file is found
+                    fmt.Println("File not found")
+                } else {
+                    // Serve the first matching file
+                    c.File(files[0])
+                    return
+                }
+            } else {
+                // Handle the case when the path is incomplete
+                fmt.Println("Path not found")
+                }
 
             // Construct the directory path for the "id"
             idDirPath := "/var/www/media/" + id
@@ -125,6 +167,7 @@ func main() {
         } else {
             // Handle the case when the path is incomplete
             fmt.Println("Path not found")
+            return
         }
 } else {
             // Construct the file path for the local "static_web" directory
@@ -132,29 +175,13 @@ func main() {
 
             // Serve the file with the correct MIME type
             c.File(filePath)
+            return
         }
     })
 
     // Create Gin routes
     routes.SetupRoutes(r)
 
-
     // Run the application on port 6000
     r.Run(":6000")
-}
-
-// Define a function to get the content type based on file extension
-func getContentType(ext string) string {
-    switch ext {
-    case ".js":
-        return "application/javascript"
-    case ".css":
-        return "text/css"
-    case ".png":
-        return "image/png"
-    case ".jpg", ".jpeg":
-        return "image/jpeg"
-    default:
-        return "application/octet-stream"
-    }
 }

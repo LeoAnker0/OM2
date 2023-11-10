@@ -32,17 +32,12 @@ export async function updateUserDetails(column, newInfo) {
 
 export async function getUserDetail(wantedColumn) {
     try {
-        const new_data = {
-            "wanted_column": wantedColumn
-        };
-
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/get_user_details`, {
-            method: 'POST',
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/get_user_details/${wantedColumn}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify(new_data)
         });
 
         const data = await response.json();
@@ -140,7 +135,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
 
 export async function createNewProjectID() {
     try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/new-project-id/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_new_project_id/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

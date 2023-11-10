@@ -13,9 +13,9 @@ import (
 func SetupUserRoutes(router *gin.Engine) {
     userRoutes := router.Group("/apis/users")
     {
-        userRoutes.POST("/prelogin", prelogin)
+        userRoutes.GET("/prelogin", prelogin)
         userRoutes.POST("/login", login)
-        userRoutes.POST("/get_user_details", get_user_details)
+        userRoutes.GET("/get_user_details/:Wanted_Column", get_user_details)
         userRoutes.POST("/update_user_details", update_user_details)
         // ... other user routes
     }
@@ -40,7 +40,7 @@ func prelogin(c *gin.Context) {
         return
 
     } else {
-        c.JSON(400, gin.H{"Authenticated": false})
+        c.JSON(401, gin.H{"Authenticated": false})
     }
 
 }
@@ -137,30 +137,12 @@ type New_Data struct {
 }
 
 func get_user_details(c *gin.Context) {
-    // Read the request body
-    body, err := ioutil.ReadAll(c.Request.Body)
-    if err != nil {
-        c.JSON(400, gin.H{"error": "Failed to read request body"})
-        return
-    }
-
+    Wanted_Column := c.Param("Wanted_Column")
     clientIP := c.ClientIP()
     jwt_token, err := c.Cookie("access-token")
     if err != nil {
         fmt.Println("cookie error", err)
     }
-
-    // Convert the request body to a string
-    requestBody := string(body)
-    var new_data New_Data
-    err = json.Unmarshal([]byte(requestBody), &new_data)
-    if err != nil {
-        // Handle the error, e.g., invalid JSON
-        fmt.Println("there was a problem with unmarshaling the JSON", err)
-        return
-    }
-
-    Wanted_Column := new_data.Wanted_Column
 
     // Authenticate the user and if they aren't valid return them false.
     valid, uuid := helpers.Authenticate(jwt_token, clientIP)

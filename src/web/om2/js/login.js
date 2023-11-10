@@ -111,26 +111,14 @@ async function login(email, password) {
 
 export async function prelogin() {
     try {
-        const jwt = localStorage.getItem('JWT');
-        if (jwt == null) {
-            return false
-        }
-    } catch (error) {
-        console.error('Error accessing localStorage:', error);
-        return false;
-    }
-    try {
-        const jwt = localStorage.getItem('JWT');
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/prelogin`, {
-            method: "POST",
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ jwt }),
         });
         const data = await response.json();
-        console.log(data)
         return data.Authenticated;
     } catch (error) {
         console.error("Error:", error);

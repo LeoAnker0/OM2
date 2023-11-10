@@ -30,7 +30,10 @@ func init() {
         psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
         db, err = sql.Open("postgres", psqlInfo)
-        if err == nil {
+        if err != nil {
+            fmt.Println("Error in connecting to database: ", err)
+        } else if err == nil {
+            fmt.Println("Connection to database a success")
             break
         }
 
@@ -124,12 +127,10 @@ func Get_user_detail_by_column(uuid, column string) (string, error) {
 func Update_user_detail_by_column(uuid, column_to_update, new_data string) (error) {
     query := fmt.Sprintf("UPDATE users SET %s = $1 WHERE uuid = $2", column_to_update)
 
-    response, err := db.Exec(query, new_data, uuid)
-    if response != nil {
-        fmt.Println("error in Update_user_detail_by_column", response)
-    }
+    _, err := db.Exec(query, new_data, uuid)
     if err != nil {
         fmt.Println("error in Update_user_detail_by_column", err)
+        return err
     }
 
     return nil
@@ -299,7 +300,58 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
     }
 
     // Use strings.Replace to remove backslashes
-    //projectJSONString := strings.Replace(string(projectJSON), `\"`, `"`, -1)
     projectJSONString := string(projectJSON)
     return projectJSONString, nil
+}
+
+func CheckIfProjectIdUnique(projectID string) (bool, error) {
+    // Define your SQL query to count rows with the given projectID
+    query := "SELECT COUNT(*) FROM projects WHERE project_id = $1"
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return false, err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var count int
+    err = stmt.QueryRow(projectID).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+
+    // Check if the uuid is unique (count == 0)
+    if count == 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
+
+}
+
+func InitProjectInDatabase(Username, uuid, ProjectID string) error {
+    jsonOwner := map[string]interface{}{
+        "owner":       uuid,
+        "permissions": "owner",
+    }
+    ownerJSON, err := json.Marshal(jsonOwner)
+    if err != nil {
+        return err
+    }
+
+    owner := string(ownerJSON)
+
+    fileCreatedTime := int(time.Now().UnixNano() / int64(time.Millisecond))
+    projectJSON := "{}"
+    description := "Notes..."
+    pictureURL := "static/default_pp"
+    projectName := GenerateWhimsicalName()
+    projectContributors := Username
+
+    query := "INSERT INTO projects (owner, time_created, project_json, description, picture_url, project_id, project_name, project_contributors) VALUES (ARRAY[$1]::JSON[], $2, $3, $4, $5, $6, $7, $8)"
+    _, err = db.Exec(query, owner, fileCreatedTime, projectJSON, description, pictureURL, ProjectID, projectName, projectContributors)
+
+    return err
 }
