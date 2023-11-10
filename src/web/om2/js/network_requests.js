@@ -57,7 +57,7 @@ export async function updateProjectDetails(project_id, column, newInfo) {
             "new_data": newInfo
         };
 
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/update_details`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
 
 export async function createNewProjectID() {
     try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_new_project_id/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/get_new_project_id`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

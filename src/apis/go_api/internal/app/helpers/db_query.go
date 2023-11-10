@@ -355,3 +355,52 @@ func InitProjectInDatabase(Username, uuid, ProjectID string) error {
 
     return err
 }
+
+func Update_project_detail_by_column(uuid, column_to_update, new_data, ProjectID string) (error) {
+    query := fmt.Sprintf("UPDATE projects SET %s = $1 WHERE (SELECT unnest(owner)->>'owner')::uuid = $2 AND project_id = $3", column_to_update)
+
+    _, err := db.Exec(query, new_data, uuid, ProjectID)
+    if err != nil {
+        fmt.Println("error in Update_project_detail_by_column", err)
+        return err
+    }
+
+    return nil
+}
+
+func DELETE_files_row(url string) error {
+    query := "DELETE FROM files WHERE file_url = $1"
+
+    _, err := db.Exec(query, url)
+    if err != nil {
+        fmt.Println("error in DELETE_files_row ", err)
+        return err
+    }
+
+    return nil
+}
+
+func DELETE_project_by_uuid_and_projectID(uuid, ProjectID string) error {
+    query := "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2"
+    _, err := db.Exec(query, uuid, ProjectID)
+    if err != nil {
+        fmt.Println("error in Update_project_detail_by_column", err)
+        return err
+    }
+
+    return nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

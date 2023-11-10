@@ -74,12 +74,12 @@ function set_event_listeners_for_titles(details) {
     titleH1.addEventListener('blur', function(event) {
         const newTitleH1 = titleH1.innerText
         update_mobile_header_project_title(newTitleH1);
-        updateProjectDetails(details.project_id, "project_name", newTitleH1)
+        updateProjectDetails(details.ProjectID, "project_name", newTitleH1)
     });
 
     titleH3.addEventListener('blur', function(event) {
         const newTitleH3 = titleH3.innerText
-        updateProjectDetails(details.project_id, "project_contributors", newTitleH3)
+        updateProjectDetails(details.ProjectID, "project_contributors", newTitleH3)
     });
 }
 
@@ -235,9 +235,11 @@ async function detectPlayAndShuffleButtons(details) {
 
 function displayMenuForTop(event, project_details) {
     event.stopPropagation();
+    project_details = JSON.parse(project_details)
     const clickedItem = event.target;
     const currentPath = window.location.pathname;
-    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
+    const parts = currentPath.split("/");
+    const project_id = parts[parts.length - 1];
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
@@ -281,22 +283,13 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 }
 
 async function deleteProjectFromServer(project_id) {
+    project_id = project_id.PROJECT_ID
     try {
-        const token = localStorage.getItem('JWT'); // Replace 'jwt' with your token key
-        if (!token) {
-            console.log("no jwt")
-            return;
-        }
-        const projectData = {
-            "access-token": token,
-            "project_id": project_id
-        };
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/${project_id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(projectData)
         });
         const data = await response.json();
 
