@@ -90,8 +90,18 @@ func upload_image_file(c *gin.Context) {
     */
 
     // Generate the proper filename string that we used before
+    new_url, err2 := helpers.Generate_Unique_URL_String()
+    if err2 != nil {
+        fmt.Println("error creating url:", err2)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create an url"})
+        return
+    }
+
+    fmt.Println("new_url", new_url)
     
     // Create the different qualities of images that we are looking for
+
+    // Store the image either on system or in object storage mode which will be implemented at a later date.
 
     // Delete the temporary file
 

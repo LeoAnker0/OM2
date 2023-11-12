@@ -5,6 +5,8 @@ FROM golang:1.21
 #    GO111MODULE=on \
 #    CGO_ENABLED=0
 
+ENV STORAGE_MODE=system
+
 # Set the working directory inside the container
 WORKDIR /app
 

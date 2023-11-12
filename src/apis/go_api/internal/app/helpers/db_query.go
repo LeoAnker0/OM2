@@ -328,7 +328,32 @@ func CheckIfProjectIdUnique(projectID string) (bool, error) {
     } else {
         return false, nil
     }
+}
 
+func CheckIfMediaURLUnique(url string) (bool, error) {
+    // Define your SQL query to count rows with the given projectID
+    query := "SELECT COUNT(*) FROM files WHERE file_url = $1"
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return false, err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var count int
+    err = stmt.QueryRow(url).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+
+    // Check if the uuid is unique (count == 0)
+    if count == 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
 }
 
 func InitProjectInDatabase(Username, uuid, ProjectID string) error {
@@ -390,10 +415,6 @@ func DELETE_project_by_uuid_and_projectID(uuid, ProjectID string) error {
 
     return nil
 }
-
-
-
-
 
 
 

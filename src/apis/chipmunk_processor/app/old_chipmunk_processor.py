@@ -29,11 +29,6 @@ async def create_db_pool():
     )
     return pool
 
-async def is_url_unique(url):
-	async with app.state.pool.acquire() as conn:
-		query = "SELECT COUNT(*) FROM files WHERE file_url = $1"
-		result = await conn.fetchval(query, url)
-		return result == 0
 
 def generate_url():
 	url_length = 96  # You can adjust this value to make longer or shorter URLs as needed

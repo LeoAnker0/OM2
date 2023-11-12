@@ -43,6 +43,47 @@ func GenerateUUID() string {
 	return uuidString
 }
 
+func generateURL() string {
+	urlLength := 96
+	urlCharacters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	// Seed the random number generator
+	rand.Seed(time.Now().UnixNano())
+
+	// Generate the random URL
+	var result string
+	for i := 0; i < urlLength; i++ {
+		result += string(urlCharacters[rand.Intn(len(urlCharacters))])
+	}
+
+	return result
+}
+
+func Generate_Unique_URL_String() (string, error) {
+	rand.Seed(time.Now().UnixNano())
+	repetitions := 0
+
+	for {
+		url := generateURL()
+		IsUnique, err := CheckIfMediaURLUnique(url) 
+		if err != nil {
+			fmt.Println(err)
+			return "", err
+		}
+
+		if IsUnique == true {
+			return url, err
+		}
+
+		repetitions++
+		if repetitions > 100 {
+			fmt.Println("error generating new url string")
+			panic("couldn't generate a urlstring")
+		}
+
+	}
+}
+
 func generateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 	var result strings.Builder

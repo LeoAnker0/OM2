@@ -361,16 +361,36 @@ function handle_update_project_image(params, event) {
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
 
-    function handleFileSelection(selectedFile, params) {
-        if (selectedFile) {
-            const imageURL = URL.createObjectURL(selectedFile);
+    let image_upload_file;
+
+    let debounceTimer; // Declare a global debounce timer
+
+    function debounce(func, delay) {
+        return function() {
+            const context = this;
+            const args = arguments;
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                func.apply(context, args);
+            }, delay);
+        };
+    }
+
+    function uploadImageFilesDebounced(file, projectId) {
+        debounce(upload_image_files, 100)(file, projectId);
+    }
+
+    function handleFileSelection(params) {
+        if (image_upload_file) {
+            const imageURL = URL.createObjectURL(image_upload_file);
             const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
 
             previewImage.src = imageURL;
             submitButton.style.visibility = "visible";
             submitButtonContainer.style.outline = "3px solid var(--primary)";
             submitButton.addEventListener('click', () => {
-                upload_image_files(selectedFile, params.project_id);
+                uploadImageFilesDebounced(image_upload_file, params.project_id);
                 spinner.style.visibility = "visible";
             });
         } else {
@@ -385,7 +405,8 @@ function handle_update_project_image(params, event) {
     dropArea.addEventListener('drop', (e) => {
         e.preventDefault();
         const files = e.dataTransfer.files;
-        handleFileSelection(files[0], params);
+        image_upload_file = files[0]
+        handleFileSelection(params);
     });
 
     fileInputButton.addEventListener('click', () => {
@@ -394,7 +415,8 @@ function handle_update_project_image(params, event) {
         fileInput.accept = 'image/*';
         fileInput.addEventListener('change', (e) => {
             const selectedFile = e.target.files[0]; // Get the first selected file
-            handleFileSelection(selectedFile, params);
+            image_upload_file = selectedFile
+            handleFileSelection(params);
         });
 
         fileInput.click();
