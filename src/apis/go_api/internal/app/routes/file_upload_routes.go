@@ -8,6 +8,8 @@ import (
     "path/filepath"
     "github.com/gin-gonic/gin"
     "go_api/internal/app/helpers"
+    "gopkg.in/gographics/imagick.v2/imagick"
+    "time"
 
 )
 
@@ -18,26 +20,7 @@ func SetupFileUploadRoutes(router *gin.Engine) {
     }
 }
 
-/*
-unique_filename_section = generate_uuid()
-unique_filename = f"{unique_filename_section}_{file.filename}"
-file_path = os.path.join(upload_dir, unique_filename)
-with open(file_path, "wb") as f:
-    shutil.copyfileobj(file.file, f)
 
-chipmunk_processor_url = "http://chipmunk_processor:8001/process_photo/compress_and_index/"
-payload = {"filePath": file_path, "uuid": uuid, "project_id": project_id}
-response = requests.post(chipmunk_processor_url, json=payload)
-if response.status_code != 200:
-    print("Request failed with status code:", response.status_code)
-
-response_data = response.json()
-url = response_data.get("url", "")
-await update_project_detail_in_database(uuid, project_id, "picture_url",
-                                        url)
-message = f"File {file.filename} uploaded successfully"
-return JSONResponse(content={"message": message})
-*/
 
 func upload_image_file(c *gin.Context) {
     file, header, err := c.Request.FormFile("file")
@@ -96,22 +79,125 @@ func upload_image_file(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create an url"})
         return
     }
-
-    fmt.Println("new_url", new_url)
     
     // Create the different qualities of images that we are looking for
+    StorageMode := os.Getenv("STORAGE_MODE")
+    if StorageMode == "system" {
+        var err error
 
-    // Store the image either on system or in object storage mode which will be implemented at a later date.
+        // Create a folder for these images
+        dirPath := fmt.Sprintf("/var/www/media/%s", new_url)
 
-    // Delete the temporary file
+        // Create the directory with 0755 permissions (you can adjust this)
+        err1 := os.MkdirAll(dirPath, 0777)
+        if err1 != nil {
+            fmt.Println("Error creating directory:", err1)
+            return
+        }
 
-    // Initiate the different database things
+        imagick.Initialize()
+        // Schedule cleanup
+        defer imagick.Terminate()
 
-    fmt.Println(uuid)
+        mw := imagick.NewMagickWand()
+        defer mw.Destroy()
+
+        err = mw.ReadImage(filename)
+        if err != nil {
+            panic(err)
+        }
+
+        // Define qualities and sizes for the six copies
+        qualities := []int{1, 40, 70, 80, 90, 95}
+        sizes := []uint{10, 40, 160, 320, 720, 1080}
+
+        // Iterate over qualities and sizes
+        for i, quality := range qualities {
+            size := sizes[i]
+
+            // Clone the MagickWand to avoid modifying the original
+            croppedWand := mw.Clone()
+            defer croppedWand.Destroy()
+
+            // Get the dimensions of the image
+            width := croppedWand.GetImageWidth()
+            height := croppedWand.GetImageHeight()
+
+            // Determine the size for the square crop (choose the smaller dimension)
+            var cropSize uint
+            if width < height {
+                cropSize = width
+            } else {
+                cropSize = height
+            }
+
+            // Crop the image to a square
+            croppedWand.CropImage(cropSize, cropSize, 0, 0)
+            croppedWand.ResizeImage(size, size, imagick.FILTER_LANCZOS, 1)
 
 
+            // Set the compression quality
+            croppedWand.SetImageCompressionQuality(uint(quality))
+
+            // Store to the correct location
+            identifier := i + 1
+            outputPath := fmt.Sprintf("%s/%d.webp", dirPath, identifier)
+
+            // Write the cropped and compressed image to a file
+            if notError := croppedWand.WriteImage(outputPath); notError != nil {
+                fmt.Printf("%v\n", notError)
+            }
+        }
+
+        // Save a copy of the original file with a different name
+        originalCopyPath := fmt.Sprintf("%s/0%s", dirPath, filepath.Ext(filename))
+        if notError := mw.WriteImage(originalCopyPath); notError != nil {
+            fmt.Printf("%v\n", notError)
+        }
+
+        // Delete the temporary file
+        if err := os.Remove(filename); err != nil {
+            fmt.Println("error deleting temporary file:", err)
+            // Handle the error if necessary
+        }
+
+        // Initiate the different database things
+            // Get the size of the folder
+        folderSize := helpers.GetFolderSize(dirPath)
+        
+        currentTime := time.Now()
+        unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
+
+        fileDataVar := helpers.FilesTableStruct {
+            FolderSize:         folderSize,
+            ProcessedState:     "finished",
+            URL:                new_url,
+            FileCreationTime:   unixMillis,
+            UUID:               uuid,
+            FileType:           "local/image",
+        }
+
+        // Update the files database to now have this image
+        err2 := helpers.INIT_photo_files_database(fileDataVar)
+        if err2 != nil {
+            fmt.Println("there was an error intialising the image in the files database: ", err2)
+        }
+
+        // Update the projects database, to set the column_to_update to "picture_url", and new data as new_url
+        err3 := helpers.Update_project_detail_by_column(uuid, "picture_url", new_url, ProjectID)
+        if err3 != nil {
+            fmt.Println("there was an error intialising the image in the project database: ", err3)
+        }
+
+    } else {
+        fmt.Println("that storage mode isn't supported yet: ", StorageMode)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid Storage Mode"})
+        return
+    }
+
+    
 
 
-    c.JSON(200, gin.H{"ProjectID": ProjectID})
+    c.JSON(200, gin.H{"message": "success"})
     return
 }

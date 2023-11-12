@@ -357,7 +357,7 @@ async function updateLoadInTable() {
     const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
     const result = await getProjectDetails(project_id);
     const details = JSON.parse(result)
-    details.ProjectID = ProjectID
+    details.ProjectID = project_id
 
     const jsonDetails = details;
     const songsJsonString = jsonDetails.ProjectJSON;
@@ -367,10 +367,10 @@ async function updateLoadInTable() {
     if (Array.isArray(songsJson)) {
         for (const song of songsJson) {
             songData.push({
-                "img": jsonDetails.picture_url,
+                "img": jsonDetails.PictureURL,
                 "songTitle": song.song_name,
-                "artistName": jsonDetails.project_contributors,
-                "projectName": formatFileSizeBytes(song.song_size),
+                "artistName": jsonDetails.ProjectContributors,
+                "projectName": formatFileSizeBytes(song.SongSize),
                 "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
                 "song_sequence": song.song_sequence,
                 "url": song.url

@@ -30,8 +30,8 @@ func Contains(slice []string, s string) bool {
     return false
 }
 
-// getFolderSize calculates the total size of all files in a folder.
-func getFolderSize(folderPath string) int64 {
+// GetFolderSize calculates the total size of all files in a folder.
+func GetFolderSize(folderPath string) int64 {
     var totalSize int64
     filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
         if err != nil {

@@ -5,6 +5,7 @@ import (
     "os"
     "database/sql"
     _ "github.com/lib/pq"
+    "github.com/lib/pq"
     "time"
     "golang.org/x/crypto/bcrypt"
     "encoding/json"
@@ -277,7 +278,7 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
 
     var updatedSongsData SongsJSON
     for _, song := range songsData.Songs {
-        folderSize := getFolderSize("/var/www/media/" + song.URL + "/")
+        folderSize := GetFolderSize("/var/www/media/" + song.URL + "/")
         song.SongSize = folderSize
         updatedSongsData.Songs = append(updatedSongsData.Songs, song)
     }
@@ -415,6 +416,46 @@ func DELETE_project_by_uuid_and_projectID(uuid, ProjectID string) error {
 
     return nil
 }
+
+type FilesTableStruct struct {
+    FolderSize          int64
+    ProcessedState      string
+    URL                 string
+    FileCreationTime    int64
+    UUID                string
+    FileType            string
+}
+
+func INIT_photo_files_database(data FilesTableStruct) error {
+    // Assuming the owner column is of type json[]
+    jsonOwner := map[string]interface{}{
+        "owner":       data.UUID,
+        "permissions": "owner",
+    }
+
+    // Convert the JSON-like object to a JSON string
+    ownerJSON, err := json.Marshal(jsonOwner)
+    if err != nil {
+        return err
+    }
+
+    // Create a slice of JSON strings
+    owners := pq.Array([]string{string(ownerJSON)})
+
+    // Execute the INSERT statement
+    query := "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
+    _, err2 := db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime)
+    if err2 != nil {
+        fmt.Println("error in INIT_photo_files_database", err2)
+        return err2
+    }
+
+    return nil
+}
+
+
+
+
 
 
 
