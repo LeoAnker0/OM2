@@ -8,8 +8,6 @@ async function uploadFileWithProgress(file, project_id) {
     const jwtToken = localStorage.getItem('JWT');
 
     formData.append('file', file);
-    formData.append("project_id", project_id);
-    formData.append('jwt', jwtToken);
 
     // get the progress updates
     xhr.upload.onprogress = function(event) {
@@ -36,7 +34,7 @@ async function uploadFileWithProgress(file, project_id) {
         console.log("there was an error with the upload")
     };
 
-    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload/photo/`, true);
+    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_photo/${project_id}`, true);
     xhr.send(formData);
 }
 

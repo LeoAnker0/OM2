@@ -224,7 +224,6 @@ func delete_project(c *gin.Context) {
         return
     }
 
-
     project_json, err2 := helpers.GetProjectDetailsFromDatabase(uuid, ProjectID)
     if err2 != nil {
         fmt.Println(err)
@@ -237,8 +236,6 @@ func delete_project(c *gin.Context) {
         fmt.Println("Error parsing JSON:", err3)
         return
     }
-
-
     var songsData SongsJSON
     err4 := json.Unmarshal([]byte(project.ProjectJSON), &songsData)
     if err4 != nil {
@@ -260,8 +257,7 @@ func delete_project(c *gin.Context) {
         }
     } 
 
-    /* At this stage here we have all of the files that are associated with this project, 
-    what we want to do is to delete these files*/
+    // Loop through all songs and delete their files and files database entry
     for _, song := range songsData.Songs {
         FileToDelete := song.URL
         err5 := helpers.DELETE_files_row(FileToDelete)
@@ -275,9 +271,7 @@ func delete_project(c *gin.Context) {
         }
     }
 
-    /* Now that we have deleted the files, we can delete the database entry and 
-    files table entry
-    */
+    // Delete the projects table row for the project
     err7 := helpers.DELETE_project_by_uuid_and_projectID(uuid, ProjectID)
     if err7 != nil {
         fmt.Println("there was an error deleting the project from the database: ", err7)

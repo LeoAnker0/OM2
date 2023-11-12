@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+	"github.com/google/uuid"
 )
 
 func Generate_Unique_Short_String() (string, error) {
@@ -30,6 +31,16 @@ func Generate_Unique_Short_String() (string, error) {
 		}
 
 	}
+}
+
+func GenerateUUID() string {
+	// Generate a new UUID (UUIDv4)
+	uuidV4 := uuid.New()
+
+	// Convert UUID to string representation
+	uuidString := uuidV4.String()
+
+	return uuidString
 }
 
 func generateRandomString(length int) string {
