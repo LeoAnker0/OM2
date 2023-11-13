@@ -426,7 +426,7 @@ type FilesTableStruct struct {
     FileType            string
 }
 
-func INIT_photo_files_database(data FilesTableStruct) error {
+func INIT_item_in_files_database(data FilesTableStruct) error {
     // Assuming the owner column is of type json[]
     jsonOwner := map[string]interface{}{
         "owner":       data.UUID,

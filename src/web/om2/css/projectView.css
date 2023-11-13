@@ -12,9 +12,9 @@
     --PV-transparent-overlay: var(--transparent-overlay);
     --PV-success: var(--success);
 
-    --PV-background-dark:var(--background-dark);
-    --PV-text-dark: var(--text-dark);
-    --PV-text-secondary: var(--text-dark-secondary);
+    --PV-background-dark: var(--background);
+    --PV-text-dark: var(--text);
+    --PV-text-secondary: var(--text-secondary);
 }
 
 .PROJECTviewContainerEnvironment {
@@ -507,7 +507,7 @@
 }
 
 .PROJECTviewMOREcloseButton img {
-    filter: var(--make-svg-white);
+    filter: var(--make-svg-black);
 }
 
 
@@ -752,6 +752,58 @@
 
     border: 2px dashed var(--PV-outline-colour);
 }
+
+.PROJECTview_dropArea button {
+    border: none;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--PV-text);
+}
+
+.PROJECTview_dropArea button:hover {
+    outline: 1px solid var(--PV-outline-colour);
+}
+
+.PROJECTview_dropArea button:focus {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary-weak);
+}
+
+.PROJECTview_dropArea button:active {
+    outline: 1px solid var(--secondary);
+    background-color: var(--secondary);
+}
+
+
+#PROJECTview_dropArea_submit_button {
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 5px;
+    cursor: pointer;
+
+    color: var(--PV-text);
+    background-color: transparent;
+    outline-offset: 0;
+    outline: 1px solid var(--PV-outline-colour);
+}
+
+#PROJECTview_dropArea_submit_button:hover {
+    background-color: var(--secondary-weak);
+}
+
+#PROJECTview_dropArea_submit_button:focus {
+    background-color: var(--secondary-weak);
+    outline: 1px solid var(--secondary);
+}
+
+#PROJECTview_dropArea_submit_button:active {
+    background-color: var(--secondary);
+    outline: 1px solid var(--secondary);
+}
+
 
 .uploadsContainer {
     padding-top: 1rem;

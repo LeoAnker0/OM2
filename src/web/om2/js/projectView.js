@@ -483,6 +483,8 @@ function loadInProjectViewRowItems(songData) {
 
 function loadFileDropArea(details) {
     const dropArea = document.getElementById("PROJECTview_dropArea");
+    const submitButton = document.getElementById("PROJECTview_dropArea_submit_button");
+
     dropArea.addEventListener("dragenter", (e) => {
         e.preventDefault();
         dropArea.classList.add("dragover");
@@ -504,17 +506,26 @@ function loadFileDropArea(details) {
         handleFiles(files, details);
     });
 
+    let Files = [];
+
     // Handle selected files when files are chosen using the file input
-    dropArea.addEventListener("click", () => {
+    dropArea.addEventListener("click", (e) => {
+        const targetID = e.target.id
         const fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = "audio/*";
-        fileInput.multiple = true;
-        fileInput.addEventListener("change", () => {
-            const files = fileInput.files;
-            handleFiles(files, details);
-        });
-        fileInput.click();
+
+        if (targetID !== "PROJECTview_dropArea_submit_button") {
+            fileInput.type = "file";
+            fileInput.accept = "audio/*";
+            fileInput.multiple = true;
+            fileInput.addEventListener("change", () => {
+                Files = fileInput.files;
+                console.log(Files)
+            });
+            fileInput.click();
+        } else {
+            console.log("the submit files button was clicked ", Files);
+            handleFiles(Files, details);
+        }
     });
 
     // Handle uploaded files
@@ -585,7 +596,7 @@ async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
         }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
-    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload/audio/`, true);
+    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${details.ProjectID}`, true);
     xhr.send(formData);
 }
 
