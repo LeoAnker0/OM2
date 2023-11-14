@@ -50,6 +50,9 @@ import icons_settings from '../assets/v3/icons_settings.svg';
 import icons_love from '../assets/v3/love.svg';
 import marketing1 from '../assets/marketing/dark_and_light_offset.webp';
 import marketing2 from '../assets/marketing/dark_and_light_offset_2.webp';
+import home from '../assets/marketing/om2_dark_home.webp';
+import projects from '../assets/marketing/om2_light_project.webp';
+import transitionWave from '../assets/v4/wave.svg';
 
 export const svgImports = {
     icons_volumeNull,
@@ -105,4 +108,7 @@ export const svgImports = {
     icons_love,
     marketing1,
     marketing2,
+    home,
+    projects,
+    transitionWave,
 }
