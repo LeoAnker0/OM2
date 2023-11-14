@@ -80,8 +80,8 @@ func get_project_details(c *gin.Context) {
         return
     }
 
-    project_json, err2 := helpers.GetProjectDetailsFromDatabase(uuid, projectID)
-    if err2 != nil {
+    project_json, err := helpers.GetProjectDetailsFromDatabase(uuid, projectID)
+    if err != nil {
         fmt.Println(err)
     }
 
@@ -113,9 +113,9 @@ func get_new_project_id(c *gin.Context) {
     }
 
     // Creating the project
-    err2 := helpers.InitProjectInDatabase(Username, uuid, ProjectID)
-    if err2 != nil {
-        fmt.Println("error creating project: ", err2)
+    err = helpers.InitProjectInDatabase(Username, uuid, ProjectID)
+    if err != nil {
+        fmt.Println("error creating project: ", err)
     }
 
 
@@ -185,13 +185,6 @@ func update_project_details(c *gin.Context) {
     return
 }
 
-/*
-    await delete_project_by_uuid_and_project_id(uuid, project_id)
-
-    return {"response": "cheese"}
-
-*/
-
 type Project struct {
     ProjectJSON string `json:"ProjectJSON"`
     URL         string `json:"PictureURL"`
@@ -224,57 +217,57 @@ func delete_project(c *gin.Context) {
         return
     }
 
-    project_json, err2 := helpers.GetProjectDetailsFromDatabase(uuid, ProjectID)
-    if err2 != nil {
+    project_json, err := helpers.GetProjectDetailsFromDatabase(uuid, ProjectID)
+    if err != nil {
         fmt.Println(err)
     }
 
     // Properly parse project_json as json, and then get .ProjectJSON
     var project Project
-    err3 := json.Unmarshal([]byte(project_json), &project)
-    if err3 != nil {
-        fmt.Println("Error parsing JSON:", err3)
+    err = json.Unmarshal([]byte(project_json), &project)
+    if err != nil {
+        fmt.Println("Error parsing JSON:", err)
         return
     }
     var songsData SongsJSON
-    err4 := json.Unmarshal([]byte(project.ProjectJSON), &songsData)
-    if err4 != nil {
-        fmt.Println("Error:", err4)
+    err = json.Unmarshal([]byte(project.ProjectJSON), &songsData)
+    if err != nil {
+        fmt.Println("Error:", err)
     }
 
     // Delete the photo, unless the photo path starts with static/
     PhotoURL := project.URL
     prefix := "static/"
     if !strings.HasPrefix(PhotoURL, prefix) {
-        err5 := helpers.DELETE_files_row(PhotoURL)
-        if err5 != nil {
-            fmt.Println("there was an error deleting the file from the files table: ", err5)
+        err = helpers.DELETE_files_row(PhotoURL)
+        if err != nil {
+            fmt.Println("there was an error deleting the file from the files table: ", err)
         }
 
-        err6 := helpers.DeleteFolder(PhotoURL)
-        if err6 != nil {
-            fmt.Println("there was an error deleting the file: ", err6)
+        err = helpers.DeleteFolder(PhotoURL)
+        if err != nil {
+            fmt.Println("there was an error deleting the file: ", err)
         }
     } 
 
     // Loop through all songs and delete their files and files database entry
     for _, song := range songsData.Songs {
         FileToDelete := song.URL
-        err5 := helpers.DELETE_files_row(FileToDelete)
-        if err5 != nil {
-            fmt.Println("there was an error deleting the file from the files table: ", err5)
+        err = helpers.DELETE_files_row(FileToDelete)
+        if err != nil {
+            fmt.Println("there was an error deleting the file from the files table: ", err)
         }
 
-        err6 := helpers.DeleteFolder(FileToDelete)
-        if err6 != nil {
-            fmt.Println("there was an error deleting the file: ", err6)
+        err = helpers.DeleteFolder(FileToDelete)
+        if err != nil {
+            fmt.Println("there was an error deleting the file: ", err)
         }
     }
 
     // Delete the projects table row for the project
-    err7 := helpers.DELETE_project_by_uuid_and_projectID(uuid, ProjectID)
-    if err7 != nil {
-        fmt.Println("there was an error deleting the project from the database: ", err7)
+    err = helpers.DELETE_project_by_uuid_and_projectID(uuid, ProjectID)
+    if err != nil {
+        fmt.Println("there was an error deleting the project from the database: ", err)
     }
 
 

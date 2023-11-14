@@ -7,6 +7,7 @@ import (
     "github.com/dgrijalva/jwt-go"
     "os"
     "time"
+    "encoding/json"
 )
 
 // Claims represents the JWT claims structure.
@@ -80,6 +81,45 @@ func Authenticate(jwtToken, clientIP string) (bool, string) {
 
     return false, "notuuid"
 }
+
+// Ownership represents the JSON structure
+type Ownership struct {
+    Owner       string `json:"owner"`
+    Permissions string `json:"permissions"`
+}
+
+func Authorise(ProjectID, uuid, authLevel string) (bool, error) {
+    var err error
+
+    // Get status of the uuid in ProjectID
+    var owners string
+    owners, err = checkOwnershipLevelOfProject(ProjectID)
+    if err != nil {
+        fmt.Println("There was an error getting the owner string: ", err)
+    }
+
+    // Manually correct the owners string format
+    owners = `{"owners": [` + owners + `]}`
+
+    // Unmarshal the owners string into a slice of Ownership structs
+    var result map[string][]Ownership
+    err = json.Unmarshal([]byte(owners), &result)
+    if err != nil {
+        fmt.Println("Error parsing JSON: ", err)
+        return false, err
+    }
+
+    // Iterate through the slice to check each ownership
+    for _, ownership := range result["owners"] {
+        if ownership.Owner == uuid && ownership.Permissions == authLevel {
+            fmt.Println(ownership.Owner, ownership.Permissions)
+            return true, nil
+        }
+    }
+
+    return false, nil
+}
+
 
 func Generate_JWT_by_email(email, clientIP string) (string, error) {
     uuid, err := Get_UUID_by_email(email)

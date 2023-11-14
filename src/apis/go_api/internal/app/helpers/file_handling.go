@@ -44,7 +44,7 @@ func ConvertAudioToMP3(inputPath, outputLow, outputMedium, outputHigh, outputOri
 
 	// Convert audio to MP3 at low quality
 	err = ffmpeg.Input(inputPath).
-		Output(outputLow, ffmpeg.KwArgs{"q:a": "8"}).
+		Output(outputLow, ffmpeg.KwArgs{"q:a": "9"}).
 		OverWriteOutput().
 		Run()
 	if err != nil {
@@ -53,7 +53,7 @@ func ConvertAudioToMP3(inputPath, outputLow, outputMedium, outputHigh, outputOri
 
 	// Convert audio to MP3 at medium quality
 	err = ffmpeg.Input(inputPath).
-		Output(outputMedium, ffmpeg.KwArgs{"c:a": "libmp3lame", "q:a": "3"}).
+		Output(outputMedium, ffmpeg.KwArgs{"c:a": "libmp3lame", "q:a": "4"}).
 		OverWriteOutput().
 		Run()
 	if err != nil {

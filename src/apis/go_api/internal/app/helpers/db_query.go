@@ -270,10 +270,10 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
     jsonStr := project.ProjectJSON
 
     var songsData SongsJSON
-    err2 := json.Unmarshal([]byte(jsonStr), &songsData)
-    if err2 != nil {
-        fmt.Println("Error:", err2)
-        return "", err2
+    err = json.Unmarshal([]byte(jsonStr), &songsData)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return "", err
     }
 
     var updatedSongsData SongsJSON
@@ -444,13 +444,33 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
 
     // Execute the INSERT statement
     query := "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
-    _, err2 := db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime)
-    if err2 != nil {
-        fmt.Println("error in INIT_photo_files_database", err2)
-        return err2
+    _, err = db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime)
+    if err != nil {
+        fmt.Println("error in INIT_photo_files_database", err)
+        return err
     }
 
     return nil
+}
+
+func checkOwnershipLevelOfProject(ProjectID string) (string, error) {
+    query := "SELECT owner FROM projects WHERE project_id = $1"
+
+     // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return "", err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var owners string
+    err = stmt.QueryRow(ProjectID).Scan(&owners)
+    if err != nil {
+        return "", err
+    }
+
+    return owners, nil
 }
 
 

@@ -42,10 +42,23 @@ func upload_image_file(c *gin.Context) {
     }
 
     // Authenticate the user and if they aren't valid return them false.
-    valid, uuid := helpers.Authenticate(jwt_token, clientIP)
-    if valid != true {
+    authenticated, uuid := helpers.Authenticate(jwt_token, clientIP)
+    if authenticated != true {
         c.JSON(400, gin.H{"Authenticated": false})
         return
+    }
+
+    // Verify that the user should actually have access to the project
+    authorised, err := helpers.Authorise(ProjectID, uuid, "owner")
+    if err != nil {
+        fmt.Println("There was an error with authorising the user: ", err)
+    }
+    if authorised != true {
+        fmt.Println("The user is not authorised for this path.")
+        c.JSON(403, gin.H{"error": "unauthorised"})
+        return
+    } else if authorised == true {
+        fmt.Println("the user has the correct auth level")
     }
 
     // Create the file on the server
@@ -178,15 +191,15 @@ func upload_image_file(c *gin.Context) {
         }
 
         // Update the files database to now have this image
-        err2 := helpers.INIT_item_in_files_database(fileDataVar)
-        if err2 != nil {
-            fmt.Println("there was an error intialising the image in the files database: ", err2)
+        err = helpers.INIT_item_in_files_database(fileDataVar)
+        if err != nil {
+            fmt.Println("there was an error intialising the image in the files database: ", err)
         }
 
         // Update the projects database, to set the column_to_update to "picture_url", and new data as new_url
-        err3 := helpers.Update_project_detail_by_column(uuid, "picture_url", new_url, ProjectID)
-        if err3 != nil {
-            fmt.Println("there was an error intialising the image in the project database: ", err3)
+        err = helpers.Update_project_detail_by_column(uuid, "picture_url", new_url, ProjectID)
+        if err != nil {
+            fmt.Println("there was an error intialising the image in the project database: ", err)
         }
 
     } else {

@@ -93,9 +93,9 @@ func login(c *gin.Context) {
     }
 
     // Check if password matches with the DB
-    passwordMatches, erro := helpers.PasswordHashMatchesEmail(password, email)
-    if erro != nil {
-        fmt.Println(erro)
+    passwordMatches, err := helpers.PasswordHashMatchesEmail(password, email)
+    if err != nil {
+        fmt.Println(err)
     }
     if !passwordMatches {
         fmt.Println("the password didn't match")
@@ -104,9 +104,9 @@ func login(c *gin.Context) {
     }
 
     // call a helper function to genereate a jwt from  email
-    jwt, error := helpers.Generate_JWT_by_email(email, clientIP)
-    if error != nil {
-        fmt.Println("there was a jwt error:", error)
+    jwt, err := helpers.Generate_JWT_by_email(email, clientIP)
+    if err != nil {
+        fmt.Println("there was a jwt error:", err)
         return
     }
 
