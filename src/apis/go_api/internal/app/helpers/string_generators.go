@@ -84,6 +84,31 @@ func Generate_Unique_URL_String() (string, error) {
 	}
 }
 
+func Generate_Unique_UUID_String() (string, error) {
+	rand.Seed(time.Now().UnixNano())
+	repetitions := 0
+
+	for {
+		uuid := GenerateUUID()
+		IsUnique, err := CheckIfUUIDUnique(uuid) 
+		if err != nil {
+			fmt.Println(err)
+			return "", err
+		}
+
+		if IsUnique == true {
+			return uuid, err
+		}
+
+		repetitions++
+		if repetitions > 100 {
+			fmt.Println("error generating new url string")
+			panic("couldn't generate a urlstring")
+		}
+
+	}
+}
+
 func generateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 	var result strings.Builder

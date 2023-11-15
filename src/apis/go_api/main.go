@@ -6,8 +6,10 @@ import (
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
     "go_api/internal/app/routes"
+    "go_api/internal/app/helpers"
     "mime"
     "strings"
+    "time"
     "path/filepath" // Add this line for the filepath package
 )
 
@@ -18,6 +20,50 @@ func main() {
     //Make sure that there is an admin user
     adminEmail := os.Getenv("OM2_ADMIN_USER_EMAIL")
     adminPassword := os.Getenv("OM2_ADMIN_PASSWORD")
+    adminExists, err := helpers.CheckIfUserExistsByEmail(adminEmail)
+    if err != nil {
+        fmt.Println("Error in checking if admin email exists: ", err)
+    }
+
+    if adminExists {
+        fmt.Println("admin exists")
+    } else {
+        // Since the admin user doesn't exist we will add an admin user to the database
+        password, err := helpers.HashPassword(adminPassword)
+        if err != nil {
+            fmt.Println("There was an error with hashing the password: ", err)
+        }
+
+        // Get time
+        currentTime := time.Now()
+        unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
+
+        //Generate UUID
+        uuid, err := helpers.Generate_Unique_UUID_String()
+        if err != nil {
+            fmt.Println("Error Generate_Unique_UUID_String: ",err)
+        }
+
+        userData := helpers.UsersTableStruct {
+            Username:           "admin",
+            Password:           password,
+            Email:              adminEmail,
+            Description:        "...",
+            UserCreationTime:   unixMillis,
+            ProfileURL:         "static/default_pfp",
+            UUID:               uuid,
+            LastLoggedIn:       0,
+            Admin:              true,
+            Verified:           true,
+            StorageAllowance:   1073741824/*1gb*/,
+        }
+
+        err = helpers.INIT_user_in_database(userData)
+        if err != nil {
+            fmt.Println("there was an error with putting the user into the database: ", err)
+        }
+    }
+
     /*
         Check if admin exists
             if not

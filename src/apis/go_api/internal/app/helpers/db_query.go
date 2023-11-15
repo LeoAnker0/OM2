@@ -44,12 +44,12 @@ func init() {
         } else {
             panic(err)
         }
+        err = db.Ping()
+        if err != nil {
+            fmt.Println("Attempt %s, Error: %s", attempt, err)
+        }
     }
 
-    err = db.Ping()
-    if err != nil {
-        panic(err)
-    }
 }
 
 // IsEmailUnique checks if an email is unique in the database
@@ -179,6 +179,32 @@ func checkIfUserExistsByUUID(uuid string) (bool, error) {
     // Execute the query and retrieve the count
     var count int
     err = stmt.QueryRow(uuid).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+
+    // Check if the uuid is unique (count == 0)
+    if count > 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
+}
+
+func CheckIfUserExistsByEmail(email string) (bool, error) {
+    // Define your SQL query to count rows with the given email
+    query := "SELECT COUNT(*) FROM users WHERE email = $1"
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return false, err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var count int
+    err = stmt.QueryRow(email).Scan(&count)
     if err != nil {
         return false, err
     }
@@ -357,6 +383,32 @@ func CheckIfMediaURLUnique(url string) (bool, error) {
     }
 }
 
+func CheckIfUUIDUnique(uuid string) (bool, error) {
+    // Define your SQL query to count rows with the given projectID
+    query := "SELECT COUNT(*) FROM users WHERE uuid = $1"
+
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return false, err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the count
+    var count int
+    err = stmt.QueryRow(uuid).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+
+    // Check if the uuid is unique (count == 0)
+    if count == 0 {
+        return true, nil
+    } else {
+        return false, nil
+    }
+}
+
 func InitProjectInDatabase(Username, uuid, ProjectID string) error {
     jsonOwner := map[string]interface{}{
         "owner":       uuid,
@@ -452,6 +504,54 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
 
     return nil
 }
+
+
+type UsersTableStruct struct {
+    Username            string
+    Password            string
+    Email               string
+    UserCreationTime    int64
+    ProfileURL          string
+    Description         string
+    UUID                string
+    LastLoggedIn        int64
+    Admin               bool
+    Verified            bool
+    StorageAllowance    int64
+}
+
+func INIT_user_in_database(data UsersTableStruct) error {
+    query := "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, verified, admin, storage_allowance) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
+    _, err := db.Exec(query, data.Username, data.Email, data.Password, data.ProfileURL, data.UUID, data.Description, data.UserCreationTime, data.LastLoggedIn, data.Verified, data.Admin, data.StorageAllowance)
+    if err != nil {
+        fmt.Println("error in INIT_user_in_database", err)
+        return err
+    }
+
+    return nil
+}
+
+/*
+async def insert_user(data: dict):
+    async with app.state.pool.acquire() as conn:
+        data["description"] = "empty..."
+        data["date_joined"] = int(datetime.datetime.now().timestamp() * 1000)
+        data["profile_picture"] = "assets/default_pp"
+
+        # Generate a definitively unique UUID
+        while True:
+            data["uuid"] = str(uuid.uuid4())
+            query = "SELECT COUNT(*) FROM users WHERE uuid = $1"
+            result = await conn.fetchval(query, data["uuid"])
+            if result == 0:
+                break
+
+        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+        await conn.execute(query, data["username"], data["email"],
+                           data["password"], data["profile_picture"],
+                           data["uuid"], data["description"],
+                           data["date_joined"], 0, 0, False)
+*/
 
 func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
     query := `SELECT (SELECT unnest(owner)->>'permissions' 

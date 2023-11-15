@@ -128,6 +128,8 @@ func login(c *gin.Context) {
 
     http.SetCookie(c.Writer, cookie)
 
+    /* tell the database to update the last logged in for this user. */
+
     c.JSON(200, gin.H{"Authenticated": true})
     return
 }
