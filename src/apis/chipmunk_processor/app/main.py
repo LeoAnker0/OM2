@@ -23,8 +23,6 @@ import shutil
 import random
 import string
 
-print(f"1cheese")
-
 load_dotenv()
 app = FastAPI()
 

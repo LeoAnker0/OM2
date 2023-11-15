@@ -49,7 +49,7 @@ func upload_image_file(c *gin.Context) {
     }
 
     // Verify that the user should actually have access to the project
-    authorised, err := helpers.Authorise(ProjectID, uuid, "owner")
+    authorised, err := helpers.Authorise(ProjectID, uuid, "editor")
     if err != nil {
         fmt.Println("There was an error with authorising the user: ", err)
     }
@@ -57,9 +57,7 @@ func upload_image_file(c *gin.Context) {
         fmt.Println("The user is not authorised for this path.")
         c.JSON(403, gin.H{"error": "unauthorised"})
         return
-    } else if authorised == true {
-        fmt.Println("the user has the correct auth level")
-    }
+    } 
 
     // Create the file on the server
     newFile, err := os.Create(filename)
@@ -240,6 +238,17 @@ func upload_audio_file(c *gin.Context) {
         c.JSON(400, gin.H{"Authenticated": false})
         return
     }
+
+    // Verify that the user should actually have access to the project
+    authorised, err := helpers.Authorise(ProjectID, uuid, "editor")
+    if err != nil {
+        fmt.Println("There was an error with authorising the user: ", err)
+    }
+    if authorised != true {
+        fmt.Println("The user is not authorised for this path.")
+        c.JSON(403, gin.H{"error": "unauthorised"})
+        return
+    } 
 
     // Create the file on the server
     newFile, err := os.Create(filename)

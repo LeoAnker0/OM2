@@ -453,24 +453,31 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
     return nil
 }
 
-func checkOwnershipLevelOfProject(ProjectID string) (string, error) {
-    query := "SELECT owner FROM projects WHERE project_id = $1"
+func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
+    query := `SELECT (SELECT unnest(owner)->>'permissions' 
+              FROM projects 
+              WHERE project_id = $1 
+              AND (SELECT unnest(owner)->>'owner')::uuid = $2) AS permissions;
+            `
 
-     // Prepare the SQL statement
-    stmt, err := db.Prepare(query)
+    // Prepare the SQL statement
+    rows, err := db.Query(query, ProjectID, uuid)
     if err != nil {
         return "", err
     }
-    defer stmt.Close()
+    defer rows.Close()
 
-    // Execute the query and retrieve the count
-    var owners string
-    err = stmt.QueryRow(ProjectID).Scan(&owners)
-    if err != nil {
-        return "", err
+    // Get the result
+    var permissionLevel string
+    for rows.Next() {
+        err := rows.Scan(&permissionLevel)
+        if err != nil {
+            return "", err
+        }
     }
 
-    return owners, nil
+    // Return the result
+    return permissionLevel, nil
 }
 
 
