@@ -7,5 +7,6 @@ func SetupRoutes(router *gin.Engine) {
     SetupMetaRoutes(router)
     SetupProjectRoutes(router)
     SetupFileUploadRoutes(router)
+    StaticFileRoutes(router)
     // Add other route setup functions for different categories
 }

@@ -10,34 +10,62 @@ import (
     "golang.org/x/crypto/bcrypt"
     "encoding/json"
     _ "strings"
+    "sync"
 
 
 )
 
 var db *sql.DB
+var dbReady chan struct{}
+var once sync.Once
 
 func init() {
-    maxRetries := 75
-    retryInterval := 5 * time.Second
+    /* we now have it set up so that this is the first function that runs.
+    We make sure that there is a successful database connection, and then when 
+    there is we can then allow the main.go function to continue, this means that
+    there will *hopefully* never be situations where the database connection
+    has failed, but that the rest of the code which is reliant on that connection
+    has started, which would result only in bitter tears. 
+     */
+
+    // Create the db ready struc
+    dbReady = make(chan struct{})
+
+    // Use sync.Once to ensure that the initialization is performed only once
+    once.Do(initializeDatabase)    
+}
+
+func initializeDatabase() {
+    /* Allow up to 15 connection attempts (perhaps excessive, however there might be an 
+        occasion that calls for it, who knows.)
+       As well as setting the retry interval to 10 seconds which is fair.
+    */
+    maxRetries := 15
+    retryInterval := 10 * time.Second
 
     var err error
     for attempt := 1; attempt <= maxRetries; attempt++ {
+        // Initialise values
         user := os.Getenv("POSTGRES_USER")
         password := os.Getenv("POSTGRES_PASSWORD")
         dbname := os.Getenv("POSTGRES_DB")
         host := "postgres"
         port := 5432
-
         psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
+        // Try and connect to the database
         db, err = sql.Open("postgres", psqlInfo)
-        if err != nil {
-            fmt.Println("Error in connecting to database: ", err)
-        } else if err == nil {
+        if err == nil {
+            // Success in connecting to the database
             fmt.Println("Connection to database a success")
+            // Get the main process to start
+            close(dbReady)
             break
+        } else {
+            fmt.Println("Error in connecting to database: ", err)
         }
 
+        // A thing that will print the connection attempts 
         if attempt < maxRetries {
             fmt.Printf("Database connection attempt %d failed. Retrying in %v...\n", attempt, retryInterval)
             time.Sleep(retryInterval)
@@ -51,6 +79,11 @@ func init() {
     }
 
 }
+
+func WaitUntilDBReady() {
+    <-dbReady
+}
+
 
 // IsEmailUnique checks if an email is unique in the database
 func DoesEmailExist(email string) (bool, error) {
@@ -510,7 +543,7 @@ type UsersTableStruct struct {
     Username            string
     Password            string
     Email               string
-    UserCreationTime    int64
+    JoinDate    int64
     ProfileURL          string
     Description         string
     UUID                string
@@ -522,7 +555,7 @@ type UsersTableStruct struct {
 
 func INIT_user_in_database(data UsersTableStruct) error {
     query := "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, verified, admin, storage_allowance) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
-    _, err := db.Exec(query, data.Username, data.Email, data.Password, data.ProfileURL, data.UUID, data.Description, data.UserCreationTime, data.LastLoggedIn, data.Verified, data.Admin, data.StorageAllowance)
+    _, err := db.Exec(query, data.Username, data.Email, data.Password, data.ProfileURL, data.UUID, data.Description, data.JoinDate, data.LastLoggedIn, data.Verified, data.Admin, data.StorageAllowance)
     if err != nil {
         fmt.Println("error in INIT_user_in_database", err)
         return err
@@ -530,28 +563,6 @@ func INIT_user_in_database(data UsersTableStruct) error {
 
     return nil
 }
-
-/*
-async def insert_user(data: dict):
-    async with app.state.pool.acquire() as conn:
-        data["description"] = "empty..."
-        data["date_joined"] = int(datetime.datetime.now().timestamp() * 1000)
-        data["profile_picture"] = "assets/default_pp"
-
-        # Generate a definitively unique UUID
-        while True:
-            data["uuid"] = str(uuid.uuid4())
-            query = "SELECT COUNT(*) FROM users WHERE uuid = $1"
-            result = await conn.fetchval(query, data["uuid"])
-            if result == 0:
-                break
-
-        query = "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, last_time_media_accessed, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
-        await conn.execute(query, data["username"], data["email"],
-                           data["password"], data["profile_picture"],
-                           data["uuid"], data["description"],
-                           data["date_joined"], 0, 0, False)
-*/
 
 func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
     query := `SELECT (SELECT unnest(owner)->>'permissions' 
@@ -580,10 +591,60 @@ func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
     return permissionLevel, nil
 }
 
+/* init functions */
+func EnsureAdminUserExists() {
+    //Make sure that there is an admin user
+    adminEmail := os.Getenv("OM2_ADMIN_USER_EMAIL")
+    adminPassword := os.Getenv("OM2_ADMIN_PASSWORD")
+    adminExists, err := CheckIfUserExistsByEmail(adminEmail)
+    if err != nil {
+        fmt.Println("Error in checking if admin email exists: ", err)
+    }
 
+    if adminExists {
+        fmt.Println("Admin exists")
+        /*
+            does passwordMatch the one ^
+                update password
+        */
+    } else {
+        // Since the admin user doesn't exist we will add an admin user to the database
+        fmt.Println("Admin doesn't exist, creating")
+        password, err := HashPassword(adminPassword)
+        if err != nil {
+            fmt.Println("There was an error with hashing the password: ", err)
+        }
 
+        // Get time
+        currentTime := time.Now()
+        unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
 
+        //Generate UUID
+        uuid, err := Generate_Unique_UUID_String()
+        if err != nil {
+            fmt.Println("Error Generate_Unique_UUID_String: ",err)
+        }
 
+        userData := UsersTableStruct {
+            Username:           "admin",
+            Password:           password,
+            Email:              adminEmail,
+            Description:        "...",
+            JoinDate:           unixMillis,
+            ProfileURL:         "static/default_pfp",
+            UUID:               uuid,
+            LastLoggedIn:       0,
+            Admin:              true,
+            Verified:           true,
+            StorageAllowance:   1073741824/*1gb*/,
+        }
+
+        err = INIT_user_in_database(userData)
+        if err != nil {
+            fmt.Println("there was an error with putting the user into the database: ", err)
+        }
+    }
+}
 
 
 
