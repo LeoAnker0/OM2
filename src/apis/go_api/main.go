@@ -12,16 +12,8 @@ func main() {
     // Ensure that everything is in order before the startup of the server part.
     helpers.WaitUntilDBReady()
 
-    // Ensure that the database is in a proper state
-
     // Ensure that the admin user exists (so that the service is always accessible)
     helpers.EnsureAdminUserExists()
-
-
-    /*
-        Make sure that the admin has creds
-        set the admin column of the user table for uuid to True
-    */
 
     // Initialize MIME types
     mime.AddExtensionType(".js", "application/javascript")

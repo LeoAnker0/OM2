@@ -11,8 +11,6 @@ import (
     "encoding/json"
     _ "strings"
     "sync"
-
-
 )
 
 var db *sql.DB
@@ -46,9 +44,9 @@ func initializeDatabase() {
     var err error
     for attempt := 1; attempt <= maxRetries; attempt++ {
         // Initialise values
-        user := os.Getenv("POSTGRES_USER")
+        user := "postgres"
         password := os.Getenv("POSTGRES_PASSWORD")
-        dbname := os.Getenv("POSTGRES_DB")
+        dbname := "music_streaming"
         host := "postgres"
         port := 5432
         psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
@@ -543,19 +541,20 @@ type UsersTableStruct struct {
     Username            string
     Password            string
     Email               string
-    JoinDate    int64
+    JoinDate            int64
     ProfileURL          string
     Description         string
     UUID                string
     LastLoggedIn        int64
+    LastState           string
     Admin               bool
     Verified            bool
     StorageAllowance    int64
 }
 
 func INIT_user_in_database(data UsersTableStruct) error {
-    query := "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, verified, admin, storage_allowance) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
-    _, err := db.Exec(query, data.Username, data.Email, data.Password, data.ProfileURL, data.UUID, data.Description, data.JoinDate, data.LastLoggedIn, data.Verified, data.Admin, data.StorageAllowance)
+    query := "INSERT INTO users (username, email, password, profile_picture, uuid, description, date_joined, last_logged_in, verified, admin, storage_allowance, last_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+    _, err := db.Exec(query, data.Username, data.Email, data.Password, data.ProfileURL, data.UUID, data.Description, data.JoinDate, data.LastLoggedIn, data.Verified, data.Admin, data.StorageAllowance, data.LastState)
     if err != nil {
         fmt.Println("error in INIT_user_in_database", err)
         return err
@@ -590,67 +589,3 @@ func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
     // Return the result
     return permissionLevel, nil
 }
-
-/* init functions */
-func EnsureAdminUserExists() {
-    //Make sure that there is an admin user
-    adminEmail := os.Getenv("OM2_ADMIN_USER_EMAIL")
-    adminPassword := os.Getenv("OM2_ADMIN_PASSWORD")
-    adminExists, err := CheckIfUserExistsByEmail(adminEmail)
-    if err != nil {
-        fmt.Println("Error in checking if admin email exists: ", err)
-    }
-
-    if adminExists {
-        fmt.Println("Admin exists")
-        /*
-            does passwordMatch the one ^
-                update password
-        */
-    } else {
-        // Since the admin user doesn't exist we will add an admin user to the database
-        fmt.Println("Admin doesn't exist, creating")
-        password, err := HashPassword(adminPassword)
-        if err != nil {
-            fmt.Println("There was an error with hashing the password: ", err)
-        }
-
-        // Get time
-        currentTime := time.Now()
-        unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
-
-        //Generate UUID
-        uuid, err := Generate_Unique_UUID_String()
-        if err != nil {
-            fmt.Println("Error Generate_Unique_UUID_String: ",err)
-        }
-
-        userData := UsersTableStruct {
-            Username:           "admin",
-            Password:           password,
-            Email:              adminEmail,
-            Description:        "...",
-            JoinDate:           unixMillis,
-            ProfileURL:         "static/default_pfp",
-            UUID:               uuid,
-            LastLoggedIn:       0,
-            Admin:              true,
-            Verified:           true,
-            StorageAllowance:   1073741824/*1gb*/,
-        }
-
-        err = INIT_user_in_database(userData)
-        if err != nil {
-            fmt.Println("there was an error with putting the user into the database: ", err)
-        }
-    }
-}
-
-
-
-
-
-
-
-
-

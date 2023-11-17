@@ -9,14 +9,16 @@ services:
 
   # Database
   postgres:
-    image: postgres
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./init_scripts:/docker-entrypoint-initdb.d 
     networks:
       - tunnel
+
 
   # Api
   go:
@@ -35,17 +37,17 @@ services:
       - postgres
 
   # Postgres admin - not for prod
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - tunnel
+  #pgadmin:
+  #  image: dpage/pgadmin4
+  #  environment:
+  #    - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+  #    - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+  #  ports:
+  #    - "5050:80"
+  #  volumes:
+  #    - pgadmin_data:/var/lib/pgadmin
+  #  networks:
+  #    - tunnel
 
 networks:
   tunnel:

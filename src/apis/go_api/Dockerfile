@@ -50,5 +50,11 @@ RUN go build -o main .
 # Expose the port your API will run on
 EXPOSE 6000
 
+# Enable wait for it script
+COPY ./templates/wait-for-it.sh ./wait-for-it.sh
+RUN chmod +x ./wait-for-it.sh
+
 # Command to run your application
-CMD ["./main"]
+#CMD ["./main"]
+
+CMD ["./wait-for-it.sh", "postgres:5432", "-t", "600000000", "--", "./main"]
