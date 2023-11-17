@@ -291,27 +291,26 @@ func GetUsersProjects(uuid string, No_Library_Items_Wanted, No_Library_Items_Col
     return projects, nil
 }
 
-type Song struct {
-    SongName     string `json:"song_name"`
-    URL          string `json:"url"`
-    Duration     json.Number    `json:"duration"`
-    SongSequence int    `json:"song_sequence"`
-    SongSize     int64
+type SongTableStruct struct {
+    URL             string  
+    SongName        string
+    Duration        int64
+    SongSequence    int64
+    Favourited      bool
+    FolderSize      int64
+    Version         int64
 }
 
-type SongsJSON struct {
-    Songs []Song `json:"songs_json"`
-}
 
-func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){    
+func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){    
     query := `
-        SELECT time_created, project_json, description, picture_url, project_name, project_contributors
+        SELECT time_created, description, picture_url, project_name, project_contributors
         FROM projects
         WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2
         LIMIT 1
     `
 
-    rows, err := db.Query(query, uuid, projectID)
+    rows, err := db.Query(query, uuid, ProjectID)
     if err != nil {
         return "", err
     }
@@ -319,27 +318,44 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
 
     var project Project
     for rows.Next() {
-        if err := rows.Scan(&project.TimeCreated, &project.ProjectJSON, &project.Description, &project.PictureURL, &project.ProjectName, &project.ProjectContributors); err != nil {
+        if err := rows.Scan(&project.TimeCreated, &project.Description, &project.PictureURL, &project.ProjectName, &project.ProjectContributors); err != nil {
             return "", err
         }
     }
 
-    jsonStr := project.ProjectJSON
+    // Get all the songs which ProjectID =  ProjectID
+    query = `
+        SELECT "URL", "SongName", "Duration", "SongSequence", "Favourited", "FolderSize", "Version"
+        FROM songs
+        WHERE "ProjectID" = $1
+    `
 
-    var songsData SongsJSON
-    err = json.Unmarshal([]byte(jsonStr), &songsData)
+    rows, err = db.Query(query, ProjectID)
+    if err != nil {
+        return "", err
+    }
+    defer rows.Close()
+
+    var songs[] SongTableStruct
+    for rows.Next() {
+        var song SongTableStruct 
+        if err := rows.Scan(&song.URL, &song.SongName, &song.Duration, &song.SongSequence, &song.Favourited, &song.FolderSize, &song.Version); err != nil {
+            return "", err
+        }
+        songs = append(songs, song)
+    }
+
+    // Marshal the songs into a JSON string
+    songsJSON, err := json.Marshal(songs)
     if err != nil {
         fmt.Println("Error:", err)
         return "", err
     }
 
-    var updatedSongsData SongsJSON
-    for _, song := range songsData.Songs {
-        folderSize := GetFolderSize("/var/www/media/" + song.URL + "/")
-        song.SongSize = folderSize
-        updatedSongsData.Songs = append(updatedSongsData.Songs, song)
-    }
+    fmt.Println(songsJSON[0])
 
+
+    /*
      // Marshal the updated songsData into a JSON string
     updatedJSON, err := json.Marshal(updatedSongsData)
     if err != nil {
@@ -360,6 +376,9 @@ func GetProjectDetailsFromDatabase(uuid, projectID string) (string, error){
     // Use strings.Replace to remove backslashes
     projectJSONString := string(projectJSON)
     return projectJSONString, nil
+    */
+
+    return "", nil
 }
 
 func CheckIfProjectIdUnique(projectID string) (bool, error) {

@@ -14,17 +14,19 @@ const uploadQueue = [];
 let isUploading = false;
 
 export async function initProjectView(projectID) {
-    /* detect if the route is /projects/ or /projects/id, if the first one 
-    ask the server nicely for a new project
-    else load an existing project */
     setTimeout(async () => {
         const currentPath = window.location.pathname;
         const result = await getProjectDetails(projectID);
-        const details = JSON.parse(result);
 
-        details.ProjectID = projectID;
-        loadVisible(details);
-        set_event_listeners_for_titles(details);
+        if (result == "") {
+            console.log(result)
+        } else {
+            const details = JSON.parse(result);
+
+            details.ProjectID = projectID;
+            loadVisible(details);
+            set_event_listeners_for_titles(details);
+        }
     }, 1);
 
 

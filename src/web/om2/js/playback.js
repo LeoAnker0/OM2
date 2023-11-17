@@ -90,8 +90,10 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
     PLAYBACK_set_loop_state(loop_state)
 
     //call function to start playback
-    if (PLAYBACK_songs_array.length > 0) {
-        PLAYBACK_start_without_playback_and_update_progress(progress)
+    if (PLAYBACK_songs_array !== undefined) {
+        if (PLAYBACK_songs_array.length > 0) {
+            PLAYBACK_start_without_playback_and_update_progress(progress)
+        }
     }
 }
 
