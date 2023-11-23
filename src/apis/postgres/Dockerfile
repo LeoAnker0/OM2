@@ -1,5 +1,5 @@
 # Use the official PostgreSQL image as the base image
-FROM postgres:16.1
+FROM postgres:16.1-alpine
 
 # Copy your bootstrap script into the container
 COPY init.sql /docker-entrypoint-initdb.d/

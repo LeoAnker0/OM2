@@ -345,6 +345,16 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
         songs = append(songs, song)
     }
 
+    // Prepare the project JSON
+    projectJSON, err := json.Marshal(project)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return "", err
+    }
+    fmt.Println(string(projectJSON))
+
+    fmt.Println(songs)
+
     // Marshal the songs into a JSON string
     songsJSON, err := json.Marshal(songs)
     if err != nil {
@@ -352,7 +362,7 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
         return "", err
     }
 
-    fmt.Println(songsJSON[0])
+    fmt.Println(string(songsJSON))
 
 
     /*

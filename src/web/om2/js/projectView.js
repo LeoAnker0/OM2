@@ -14,6 +14,28 @@ const uploadQueue = [];
 let isUploading = false;
 
 export async function initProjectView(projectID) {
+    /* This alteration will load in certain visible elements IE the frame
+    before the network request has been completed, this means that the whole 
+    will seem responsive, even if there's an issue getting the data.
+    Plus it leaves it open to making fancier 'waiting' screens, with those sort
+    of fake loading bars on top of the different elements.
+    */
+    const fakeDetails = {
+        ProjectName: "Loading...",
+        ProjectContributors: "This might take a while",
+        TimeCreated: 0,
+        PictureURL: "static/default_pfp",
+    }
+    loadContainer(fakeDetails);
+    sessionStorage.setItem('description', "If this is taking a very long time to load, consider reloading the page, this might be an error from our side.");
+    updateDescription_display();
+
+    const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
+    homeButton.addEventListener("click", () => {
+        handleRoute("/")
+    })
+
+
     setTimeout(async () => {
         const currentPath = window.location.pathname;
         const result = await getProjectDetails(projectID);
@@ -22,6 +44,7 @@ export async function initProjectView(projectID) {
             console.log(result)
         } else {
             const details = JSON.parse(result);
+            console.log(details)
 
             details.ProjectID = projectID;
             loadVisible(details);
@@ -31,7 +54,7 @@ export async function initProjectView(projectID) {
 
 
     function loadVisible(details) {
-        loadContainer(details);
+        //loadContainer(details);
         const description = details.Description;
 
         sessionStorage.setItem('description', description);
@@ -212,7 +235,6 @@ async function detectPlayAndShuffleButtons(details) {
     const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
     const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
-    const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
     const project_details = await getProjectDetails(details.ProjectID);
 
     playButton.addEventListener("click", function() {
@@ -228,10 +250,6 @@ async function detectPlayAndShuffleButtons(details) {
     mobileMenuButton.addEventListener("click", function() {
         displayMenuForTop(event, project_details)
     });
-
-    homeButton.addEventListener("click", () => {
-        handleRoute("/")
-    })
 }
 
 
