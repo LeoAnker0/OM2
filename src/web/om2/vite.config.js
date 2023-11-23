@@ -9,12 +9,14 @@ export default defineConfig({
     server: {
         proxy: {
             '/apis': {
-                target: 'http://localhost:6001',
+                target: 'https://testom2.la0.uk',
+                //target: 'http://localhost:6001',
                 changeOrigin: true,
                 withCredentials: true,
             },
             '/media': {
-                target: 'http://localhost:6001',
+                target: 'https://testom2.la0.uk',
+                //target: 'http://localhost:6001',
                 changeOrigin: true,
                 withCredentials: true,
             },

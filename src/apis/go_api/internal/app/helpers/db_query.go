@@ -355,6 +355,8 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
 
     fmt.Println(songs)
 
+    fmt.Println("How long does a single build take arm64?")
+
     // Marshal the songs into a JSON string
     songsJSON, err := json.Marshal(songs)
     if err != nil {
