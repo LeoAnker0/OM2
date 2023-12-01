@@ -12,6 +12,7 @@ import { handleRoute } from './routing.js';
 
 const uploadQueue = [];
 let isUploading = false;
+let UserIsEditor = true;
 
 export async function initProjectView(projectID) {
     /* This alteration will load in certain visible elements IE the frame
@@ -44,7 +45,6 @@ export async function initProjectView(projectID) {
             console.log(result)
         } else {
             const details = JSON.parse(result);
-            console.log(details)
 
             details.ProjectID = projectID;
             loadVisible(details);
@@ -57,11 +57,15 @@ export async function initProjectView(projectID) {
         //loadContainer(details);
         const description = details.Description;
 
+        //Load real details, instead of temp
+        updateTempVisible(details);
+
         sessionStorage.setItem('description', description);
         updateDescription_display();
         descriptionButtonInteractions();
         handleDescriptionMoreText();
         detectOffClicks(details);
+
         detectPlayAndShuffleButtons(details);
         loadInTable(details);
         loadFileDropArea(details);
@@ -90,6 +94,17 @@ export async function PROJECTVIEW_update() {
 
     const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/5/`;
     imageTag.src = image;
+}
+
+function updateTempVisible(details) {
+    const title = document.getElementById("PROJECTviewDisplayTitleH1");
+    const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
+    const displayImage = document.getElementById("PROJECTviewDisplayImage_imgTag");
+    const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5/`;
+
+    title.innerText = details.ProjectName;
+    contributors.innerText = details.ProjectContributors;
+    displayImage.src = image;
 }
 
 function set_event_listeners_for_titles(details) {
@@ -324,25 +339,22 @@ function loadInTable(details) {
     loadInProjectViewRowTitles();
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
-    const jsonDetails = details;
-    const songsJsonString = jsonDetails;
+    const songsJsonString = details.ProjectJSON;
 
-    if (songsJsonString !== "{}") {
-        let songsJson = songsJsonString.ProjectJSON;
-        songsJson = JSON.parse(songsJson)
-        songsJson = songsJson.songs_json
+    if (songsJsonString !== null) {
+
         const songData = [];
 
-        if (songsJson) {
-            for (const song of songsJson) {
+        if (songsJsonString) {
+            for (const song of songsJsonString) {
                 songData.push({
-                    "img": jsonDetails.PictureURL,
-                    "songTitle": song.song_name,
-                    "artistName": jsonDetails.ProjectContributors,
-                    "projectName": formatFileSizeBytes(song.SongSize),
-                    "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
-                    "song_sequence": song.song_sequence,
-                    "url": song.url
+                    "img": details.PictureURL,
+                    "songTitle": song.SongName,
+                    "artistName": details.ProjectContributors,
+                    "projectName": formatFileSizeBytes(song.FolderSize),
+                    "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
+                    "song_sequence": song.SongSequence,
+                    "url": song.URL
                 })
             }
         }
@@ -353,7 +365,7 @@ function loadInTable(details) {
             loadInProjectViewRowItems(song);
         }
 
-        // Attach an event listener to the container
+        // Attach a click event listener to the container
         projectTable.addEventListener('click', function(event) {
             const target = event.target;
             event.stopPropagation();
@@ -367,7 +379,90 @@ function loadInTable(details) {
                     displayMenuForRow(event);
                 }
             }
+            /* else if (target.tagName === 'DIV') {
+                            const dataIsTitle = target.getAttribute('data-is-title');
+                            if (dataIsTitle === true) {
+                                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+                                if (rowContainer) {
+                                    //const rowId = rowContainer.getAttribute('data-row-id');
+                                    //console.log(rowId)
+                                }
+
+
+                            } else {
+                                console.log(dataIsTitle)
+
+                                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+                                if (rowContainer) {
+                                    const rowId = rowContainer.getAttribute('data-row-id');
+                                    console.log(rowId)
+                                }
+                            }
+                        }
+                            */
         });
+
+        if (UserIsEditor === true) {
+            projectTable.addEventListener('click', function(event) {
+                const target = event.target;
+
+                // Check if the clicked element is a contenteditable DIV
+                if (target.tagName === 'DIV' && target.isContentEditable) {
+                    const dataIsTitle = target.getAttribute('data-is-title');
+
+                    // Assuming 'true' is a string, not a boolean
+                    if (dataIsTitle === 'true') {
+                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+                        if (rowContainer) {
+                            const rowId = rowContainer.getAttribute('data-row-id');
+                            console.log("Change", rowId, "New value:", target.textContent);
+                        }
+                    } else {
+                        console.log(dataIsTitle);
+
+                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+                        if (rowContainer) {
+                            const rowId = rowContainer.getAttribute('data-row-id');
+                            console.log(rowId, "New value:", target.textContent);
+                        }
+                    }
+                }
+            });
+        }
+
+        if (UserIsEditor === true) {
+            projectTable.addEventListener('blur', function(event) {
+                const target = event.target;
+                event.stopPropagation();
+
+                console.log("change", event)
+
+                // Check if the clicked element is a button within a row
+                if (target.tagName === 'DIV') {
+                    const dataIsTitle = target.getAttribute('data-is-title');
+                    if (dataIsTitle === true) {
+                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+                        if (rowContainer) {
+                            const rowId = rowContainer.getAttribute('data-row-id');
+                            console.log("Change", rowId)
+                        }
+
+
+                    } else {
+                        console.log(dataIsTitle)
+
+                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+                        if (rowContainer) {
+                            const rowId = rowContainer.getAttribute('data-row-id');
+                            console.log(rowId)
+                        }
+                    }
+                }
+            });
+
+        }
     }
 }
 
@@ -473,7 +568,7 @@ function loadInProjectViewRowItems(songData) {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration', 'PROJECTviewRow_projectID'];
+    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration', 'PROJECTviewRow_projectID', 'PROJECTviewRow_contentEditable'];
 
     for (let i = 0; i < listOfThings.length; i++) {
         const placeholder = listOfThings[i].toString();
@@ -492,7 +587,11 @@ function loadInProjectViewRowItems(songData) {
         } else if (placeholder === 'PROJECTviewRow_songDuration') {
             value = songData.songDuration;
         } else if (placeholder === 'PROJECTviewRow_projectID') {
-            value = songData.projectID;
+            value = songData.ProjectID;
+        } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === true)) {
+            value = true;
+        } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === false)) {
+            value = false;
         }
         replacedContent = replacedContent.replace(regex, value);
     }

@@ -41,6 +41,7 @@ func prelogin(c *gin.Context) {
 
     } else {
         c.JSON(401, gin.H{"Authenticated": false})
+        return
     }
 
 }

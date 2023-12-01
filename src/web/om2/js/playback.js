@@ -51,15 +51,13 @@ function PLAYBACK_prepare_project_details_array(project_details) {
     const project_contributors = project_details.ProjectContributors;
     const project_name = project_details.ProjectName;
     const picture_url = project_details.PictureURL;
-    let project_json = project_details.ProjectJSON;
-    project_json = JSON.parse(project_json)
-    project_json = project_json.songs_json
+    let projectJSON = project_details.ProjectJSON;
 
     try {
-        for (const song of project_json) {
-            const song_name = song.song_name;
-            const duration = song.duration;
-            const url = song.url;
+        for (const song of projectJSON) {
+            const song_name = song.SongName;
+            const duration = song.Duration;
+            const url = song.URL;
 
             array.push({
                 "img": picture_url,

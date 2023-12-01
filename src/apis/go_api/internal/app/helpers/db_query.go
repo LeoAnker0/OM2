@@ -299,98 +299,45 @@ type SongTableStruct struct {
     Favourited      bool
     FolderSize      int64
     Version         int64
+    ProjectID       string    
 }
 
 
 func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){    
     query := `
-        SELECT time_created, description, picture_url, project_name, project_contributors
-        FROM projects
-        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2
-        LIMIT 1
+        SELECT
+        json_build_object(
+            'TimeCreated', p.time_created,
+            'Description', p.description,
+            'PictureURL', p.picture_url,
+            'ProjectName', p.project_name,
+            'ProjectContributors', p.project_contributors,
+            'ProjectJSON', (
+                SELECT json_agg(
+                    json_build_object(
+                        'URL', s."URL",
+                        'SongName', s."SongName",
+                        'Duration', s."Duration",
+                        'SongSequence', s."SongSequence",
+                        'Favourited', s."Favourited",
+                        'FolderSize', s."FolderSize",
+                        'Version', s."Version"
+                    )
+                )
+                FROM songs s
+                WHERE s."ProjectID" = p.project_id
+            )
+        ) AS combined_data
+    FROM projects p
+    WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND p.project_id = $2;
     `
-
-    rows, err := db.Query(query, uuid, ProjectID)
+    var combinedData string
+    err := db.QueryRow(query, uuid, ProjectID).Scan(&combinedData)
     if err != nil {
         return "", err
     }
-    defer rows.Close()
 
-    var project Project
-    for rows.Next() {
-        if err := rows.Scan(&project.TimeCreated, &project.Description, &project.PictureURL, &project.ProjectName, &project.ProjectContributors); err != nil {
-            return "", err
-        }
-    }
-
-    // Get all the songs which ProjectID =  ProjectID
-    query = `
-        SELECT "URL", "SongName", "Duration", "SongSequence", "Favourited", "FolderSize", "Version"
-        FROM songs
-        WHERE "ProjectID" = $1
-    `
-
-    rows, err = db.Query(query, ProjectID)
-    if err != nil {
-        return "", err
-    }
-    defer rows.Close()
-
-    var songs[] SongTableStruct
-    for rows.Next() {
-        var song SongTableStruct 
-        if err := rows.Scan(&song.URL, &song.SongName, &song.Duration, &song.SongSequence, &song.Favourited, &song.FolderSize, &song.Version); err != nil {
-            return "", err
-        }
-        songs = append(songs, song)
-    }
-
-    // Prepare the project JSON
-    projectJSON, err := json.Marshal(project)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return "", err
-    }
-    fmt.Println(string(projectJSON))
-
-    fmt.Println(songs)
-
-    fmt.Println("How long does a single build take arm64?")
-
-    // Marshal the songs into a JSON string
-    songsJSON, err := json.Marshal(songs)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return "", err
-    }
-
-    fmt.Println(string(songsJSON))
-
-
-    /*
-     // Marshal the updated songsData into a JSON string
-    updatedJSON, err := json.Marshal(updatedSongsData)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return "", err
-    }
-
-    // Create json strings of objects
-    updatedJSONString := string(updatedJSON)
-    project.ProjectJSON = updatedJSONString
-
-    projectJSON, err := json.Marshal(project)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return "", err
-    }
-
-    // Use strings.Replace to remove backslashes
-    projectJSONString := string(projectJSON)
-    return projectJSONString, nil
-    */
-
-    return "", nil
+    return combinedData, nil
 }
 
 func CheckIfProjectIdUnique(projectID string) (bool, error) {
@@ -484,14 +431,13 @@ func InitProjectInDatabase(Username, uuid, ProjectID string) error {
     owner := string(ownerJSON)
 
     fileCreatedTime := int(time.Now().UnixNano() / int64(time.Millisecond))
-    projectJSON := "{}"
     description := "Notes..."
     pictureURL := "static/default_pp"
     projectName := GenerateWhimsicalName()
     projectContributors := Username
 
-    query := "INSERT INTO projects (owner, time_created, project_json, description, picture_url, project_id, project_name, project_contributors) VALUES (ARRAY[$1]::JSON[], $2, $3, $4, $5, $6, $7, $8)"
-    _, err = db.Exec(query, owner, fileCreatedTime, projectJSON, description, pictureURL, ProjectID, projectName, projectContributors)
+    query := "INSERT INTO projects (owner, time_created, description, picture_url, project_id, project_name, project_contributors) VALUES (ARRAY[$1]::JSON[], $2, $3, $4, $5, $6, $7)"
+    _, err = db.Exec(query, owner, fileCreatedTime, description, pictureURL, ProjectID, projectName, projectContributors)
 
     return err
 }
@@ -593,6 +539,51 @@ func INIT_user_in_database(data UsersTableStruct) error {
 
     return nil
 }
+
+func INIT_song_in_songs_database(data SongTableStruct) error {
+    query := `
+        WITH seq_query AS (
+            SELECT COALESCE(MAX("SongSequence"), 0) + 1 AS next_sequence
+            FROM songs
+            WHERE "ProjectID" = $1
+        )
+        INSERT INTO songs 
+        (
+            "URL", 
+            "ProjectID", 
+            "SongName", 
+            "Duration", 
+            "SongSequence", 
+            "Favourited", 
+            "FolderSize", 
+            "Version"
+        ) 
+        SELECT 
+            $2, $3, $4, $5, 
+            sq.next_sequence, 
+            $6, $7, $8
+        FROM seq_query sq
+    `
+
+    // Execute the main query with the dynamic value for $5
+    _, err := db.Exec(query, 
+        data.ProjectID, 
+        data.URL, 
+        data.ProjectID,  // Corrected order of parameters
+        data.SongName, 
+        data.Duration, 
+        data.Favourited, 
+        data.FolderSize, 
+        data.Version)
+
+    if err != nil {
+        fmt.Println("error in INIT_song_in_songs_database", err)
+        return err
+    }
+
+    return nil
+}
+
 
 func checkOwnershipLevelOfProject(ProjectID, uuid string) (string, error) {
     query := `SELECT (SELECT unnest(owner)->>'permissions' 

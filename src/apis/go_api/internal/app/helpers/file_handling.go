@@ -4,6 +4,9 @@ import (
 	"fmt"
     "path/filepath"
     "os"
+    "encoding/json"
+    "strconv"
+    "regexp"
     ffmpeg "github.com/u2takey/ffmpeg-go"
 
 )
@@ -70,4 +73,55 @@ func ConvertAudioToMP3(inputPath, outputLow, outputMedium, outputHigh, outputOri
 	}
 
 	return nil
+}
+
+
+// AudioInfo represents the structure of the JSON data returned by ffmpeg.Probe
+type AudioInfo struct {
+	Streams []struct {
+		Duration string `json:"duration"`
+	} `json:"streams"`
+	Format struct {
+		Duration string `json:"duration"`
+	} `json:"format"`
+}
+
+func GetAudioFileDuration(filename string) (int64, error) {
+	info, err := ffmpeg.Probe(filename)
+	if err != nil {
+		return 0, err
+	}
+
+	// Unmarshal the JSON string into the AudioInfo struct
+	var audioInfo AudioInfo
+	err = json.Unmarshal([]byte(info), &audioInfo)
+	if err != nil {
+		return 0, err
+	}
+
+	str := fmt.Sprintf("%#v", audioInfo)
+	number, err := extractNumber(str)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return 0, err
+	}
+
+	returnNumber := int64(number)
+
+	return returnNumber, nil
+}
+
+func extractNumber(input string) (float64, error) {
+	re := regexp.MustCompile(`[-+]?\d*\.?\d+`)
+	matches := re.FindAllString(input, -1)
+
+	if len(matches) > 0 {
+		number, err := strconv.ParseFloat(matches[0], 64)
+		if err != nil {
+			return 0, err
+		}
+		return number, nil
+	}
+
+	return 0, fmt.Errorf("No number found in the input string")
 }

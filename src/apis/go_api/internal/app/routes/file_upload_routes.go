@@ -10,6 +10,7 @@ import (
     "go_api/internal/app/helpers"
     "gopkg.in/gographics/imagick.v2/imagick"
     "time"
+    "strings"
 
 )
 
@@ -62,9 +63,28 @@ func upload_image_file(c *gin.Context) {
     // Create the file on the server
     newFile, err := os.Create(filename)
     if err != nil {
-        fmt.Println("error creating file:", err)
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
-        return
+        if os.IsNotExist(err) {
+            // Directory does not exist, create it
+            dir := filepath.Dir(filename)
+            if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+                fmt.Println("error creating directory:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create directory on server"})
+                return
+            }
+
+            // Retry file creation after creating the directory
+            newFile, err = os.Create(filename)
+            if err != nil {
+                fmt.Println("error creating file:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
+                return
+            }
+        } else {
+            // Handle other errors
+            fmt.Println("error creating file:", err)
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
+            return
+        }
     }
     defer newFile.Close()
 
@@ -224,6 +244,9 @@ func upload_audio_file(c *gin.Context) {
     // Create a unique filename
     temporary_file_uuid := helpers.GenerateUUID()
     filename := filepath.Join("/var/www/media/temp", temporary_file_uuid + "_" + header.Filename)
+    original_file_extension := filepath.Ext(filename)
+    original_file_name := strings.TrimSuffix(header.Filename, original_file_extension)
+
 
     ProjectID := c.Param("ProjectID")
     clientIP := c.ClientIP()
@@ -304,6 +327,12 @@ func upload_audio_file(c *gin.Context) {
         outputHigh := fmt.Sprintf("%s/3.mp3", dirPath)
         outputOriginal := fmt.Sprintf("%s/0%s", dirPath, filepath.Ext(filename))
 
+        // Get the duration of the song
+        duration, err := helpers.GetAudioFileDuration(filename)
+        if err != nil {
+            fmt.Println("Error:", err)
+        }
+
         // Process the audio
         err = helpers.ConvertAudioToMP3(inputFile, outputLow, outputMedium, outputHigh, outputOriginal)
         if err != nil {
@@ -337,10 +366,28 @@ func upload_audio_file(c *gin.Context) {
             fmt.Println("there was an error intialising the image in the files database: ", err)
         }
 
-        // Update the ProjectJSON to add a song to the end of it.
+
+        
+
+        // Update the SongsData to add a song to the end of it.
+        songsData := helpers.SongTableStruct {
+            URL:                new_url,
+            SongName:           original_file_name,
+            Duration:           duration,
+            Favourited:         false,
+            FolderSize:         folderSize,
+            SongSequence:       0,
+            Version:            1,    
+            ProjectID:          ProjectID,                                 
+        }
+
+        err = helpers.INIT_song_in_songs_database(songsData)
+        if err != nil {
+            fmt.Println("there was an error intialising the image in the files database: ", err)
+        }
 
 
-        fmt.Println(ProjectID, err, fileDataVar)
+        //fmt.Println(ProjectID, err, fileDataVar, songsData)
 
     } else {
         fmt.Println("that storage mode isn't supported yet: ", StorageMode)
