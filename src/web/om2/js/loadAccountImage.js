@@ -1,5 +1,5 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { getUserDetail } from './network_requests.js';
+import { getUserDetail, signout } from './network_requests.js';
 import { MENUdisplay } from './menu.js';
 
 export let users_image;
@@ -43,7 +43,8 @@ function handleQueueDisplayMenu(event) {
     return;
 }
 
-export function HANDLE_SIGN_OUT_USER() {
-    localStorage.clear();
-    location.reload();
+export async function HANDLE_SIGN_OUT_USER() {
+    // Tell server to delete all cookies
+    await signout();
+    //location.reload();
 }

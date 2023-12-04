@@ -13,6 +13,7 @@ import { handleRoute } from './routing.js';
 const uploadQueue = [];
 let isUploading = false;
 let UserIsEditor = true;
+let Details;
 
 export async function initProjectView(projectID) {
     /* This alteration will load in certain visible elements IE the frame
@@ -28,7 +29,8 @@ export async function initProjectView(projectID) {
         PictureURL: "static/default_pfp",
     }
     loadContainer(fakeDetails);
-    sessionStorage.setItem('description', "If this is taking a very long time to load, consider reloading the page, this might be an error from our side.");
+
+    sessionStorage.setItem('description', "Wonderful notes are loading...");
     updateDescription_display();
 
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
@@ -47,6 +49,7 @@ export async function initProjectView(projectID) {
             const details = JSON.parse(result);
 
             details.ProjectID = projectID;
+            Details = details;
             loadVisible(details);
             set_event_listeners_for_titles(details);
         }
@@ -54,6 +57,12 @@ export async function initProjectView(projectID) {
 
 
     function loadVisible(details) {
+        if (UserIsEditor === false) {
+            // Delete the file drop area
+            const fileDropArea = document.getElementById("PROJECTview_upload_area_files_upload_box");
+            fileDropArea.remove();
+
+        }
         //loadContainer(details);
         const description = details.Description;
 
@@ -68,10 +77,14 @@ export async function initProjectView(projectID) {
 
         detectPlayAndShuffleButtons(details);
         loadInTable(details);
-        loadFileDropArea(details);
         detect_when_image_is_no_longer_visible();
         update_mobile_header_project_title(details.ProjectName)
-        detect_when_image_is_interacted(details.ProjectID);
+
+        if (UserIsEditor === true) {
+            detect_when_image_is_interacted(details.ProjectID);
+            loadFileDropArea(details);
+
+        }
     }
 }
 
@@ -110,6 +123,12 @@ function updateTempVisible(details) {
 function set_event_listeners_for_titles(details) {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
+
+    if (UserIsEditor === false) {
+        titleH1.contentEditable = false;
+        titleH3.contentEditable = false;
+    }
+
 
     titleH1.addEventListener('blur', function(event) {
         const newTitleH1 = titleH1.innerText
@@ -353,7 +372,8 @@ function loadInTable(details) {
                     "artistName": details.ProjectContributors,
                     "projectName": formatFileSizeBytes(song.FolderSize),
                     "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
-                    "song_sequence": song.SongSequence,
+                    "songSequence": song.SongSequence,
+                    "version": song.Version,
                     "url": song.URL
                 })
             }
@@ -379,89 +399,26 @@ function loadInTable(details) {
                     displayMenuForRow(event);
                 }
             }
-            /* else if (target.tagName === 'DIV') {
-                            const dataIsTitle = target.getAttribute('data-is-title');
-                            if (dataIsTitle === true) {
-                                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-                                if (rowContainer) {
-                                    //const rowId = rowContainer.getAttribute('data-row-id');
-                                    //console.log(rowId)
-                                }
-
-
-                            } else {
-                                console.log(dataIsTitle)
-
-                                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-
-                                if (rowContainer) {
-                                    const rowId = rowContainer.getAttribute('data-row-id');
-                                    console.log(rowId)
-                                }
-                            }
-                        }
-                            */
         });
 
-        if (UserIsEditor === true) {
-            projectTable.addEventListener('click', function(event) {
-                const target = event.target;
-
-                // Check if the clicked element is a contenteditable DIV
-                if (target.tagName === 'DIV' && target.isContentEditable) {
-                    const dataIsTitle = target.getAttribute('data-is-title');
-
-                    // Assuming 'true' is a string, not a boolean
-                    if (dataIsTitle === 'true') {
-                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-                        if (rowContainer) {
-                            const rowId = rowContainer.getAttribute('data-row-id');
-                            console.log("Change", rowId, "New value:", target.textContent);
-                        }
-                    } else {
-                        console.log(dataIsTitle);
-
-                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-                        if (rowContainer) {
-                            const rowId = rowContainer.getAttribute('data-row-id');
-                            console.log(rowId, "New value:", target.textContent);
-                        }
-                    }
-                }
-            });
-        }
 
         if (UserIsEditor === true) {
-            projectTable.addEventListener('blur', function(event) {
-                const target = event.target;
-                event.stopPropagation();
+            // Get all divs with contenteditable attribute within the container
+            const contentEditableDivs = projectTable.querySelectorAll('[contenteditable]');
 
-                console.log("change", event)
+            // Define the blur event handler
+            const blurEventHandler = (event) => {
+                // Get the correct data and tell the database to update the title of that track
+                const rowContainer = event.target.closest('.PROJECTview-projectTable-rowContainer');
+                const songSequenceNumber = rowContainer.getAttribute('data-row-id');
+                const updateString = `${songSequenceNumber}-${event.target.textContent}`;
+                updateProjectDetails(Details.ProjectID, "project_song_title", updateString)
+            };
 
-                // Check if the clicked element is a button within a row
-                if (target.tagName === 'DIV') {
-                    const dataIsTitle = target.getAttribute('data-is-title');
-                    if (dataIsTitle === true) {
-                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-                        if (rowContainer) {
-                            const rowId = rowContainer.getAttribute('data-row-id');
-                            console.log("Change", rowId)
-                        }
-
-
-                    } else {
-                        console.log(dataIsTitle)
-
-                        const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-
-                        if (rowContainer) {
-                            const rowId = rowContainer.getAttribute('data-row-id');
-                            console.log(rowId)
-                        }
-                    }
-                }
+            // Add blur event listener to each contenteditable div
+            contentEditableDivs.forEach((div) => {
+                div.addEventListener('blur', blurEventHandler);
             });
-
         }
     }
 }
@@ -587,7 +544,7 @@ function loadInProjectViewRowItems(songData) {
         } else if (placeholder === 'PROJECTviewRow_songDuration') {
             value = songData.songDuration;
         } else if (placeholder === 'PROJECTviewRow_projectID') {
-            value = songData.ProjectID;
+            value = `${songData.songSequence}-${songData.version}`;
         } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === true)) {
             value = true;
         } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === false)) {

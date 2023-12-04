@@ -1,6 +1,7 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import settingsModal from '../html/settingsModal.html?raw';
 import { init_signup_form } from './signup.js';
+import { MENUdisplay } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { main } from '../main.js';
 
@@ -121,7 +122,7 @@ export async function prelogin() {
     const data = await response.json();
 
     if ((!response.ok) && (response.status === 401) && (data.Authenticated == false)) {
-        console.log("Deal with JWT not valid");
+        //displayNotice("event", "please excuse the state of the codebase")
         return false;
     } else if (!response.ok) {
         console.log("There was an unknown error:", response)
@@ -136,7 +137,18 @@ export async function prelogin() {
         console.log("Catch all that shouldn't be needed.");
         return false;
     }
+}
 
+function displayNotice(event, project_id) {
+    const menu_type = "notice";
+    const params = [{
+        displayText: 'Your JWT has expired, please sign in.',
+        optionalSVG: 'None',
+        function: 'None'
+    }]
+
+    MENUdisplay(params, event, menu_type);
+    return;
 }
 
 function loadInContainer() {

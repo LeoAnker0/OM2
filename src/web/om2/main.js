@@ -5,8 +5,8 @@ import { initAccountImg } from './js/loadAccountImage.js';
 import { svgImports } from './js/importAssets.js';
 import { PLAYBACK_init } from './js/playback.js';
 import { initialiseQueue } from './js/queue.js';
-import { initSettings } from './js/login.js';
 import { init_routing } from './js/routing.js';
+import { initSettings } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 import layout from './html/layout.html?raw';
 import './css/lcd_mobile_body.css';
@@ -54,7 +54,6 @@ export async function main() {
     initialiseQueue();
     init_routing();
 }
-
 
 // Make sure that all the code only ever runs once.
 if (!window.hasCodeRun) {

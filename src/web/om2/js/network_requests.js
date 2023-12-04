@@ -170,3 +170,21 @@ export async function get_users_table() {
         console.error('Error:', error);
     }
 }
+
+export async function signout() {
+    try {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/meta/signout`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        console.log(data)
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

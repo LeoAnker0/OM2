@@ -29,6 +29,94 @@ export function MENUdisplay(params, event, menu_type) {
     if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
         handle_lcd_mobile_body(params, event);
     }
+    //defined and type == notice
+    if ((menu_type !== undefined) && menu_type === "notice") {
+        handle_notice(params, event);
+    }
+}
+
+function handle_notice(params, event) {
+    let X = 20;
+    let Y = 80;
+    const main = document.querySelector("main");
+    const navBar = document.querySelector(".topHalf-container");
+    if (is_mobile()) {
+        main.style.zIndex = "40";
+        navBar.style.zIndex = "0";
+    }
+    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
+    MENUmodalEnvironment.innerHTML = menuModal;
+    MENUmodalEnvironment.style.display = "block";
+
+    const MENUmodalBody = document.getElementById('MENUmodalBody');
+    let x = (X) + "px";
+    let y = (Y) + "px";
+
+    MENUmodalEnvironment.addEventListener('click', menuHide);
+    MENUmodalBody.style.left = x;
+    MENUmodalBody.style.top = y;
+    MENUmodalBody.style.padding = "5px";
+
+    if ((previously_focused_element) && (pointerType === "")) {
+        const rect = previously_focused_element.getBoundingClientRect();
+        X = rect.left + window.scrollX;
+        Y = rect.top + window.scrollY;
+        let x = (X) + "px";
+        let y = (Y) + "px";
+        MENUmodalBody.style.left = x;
+        MENUmodalBody.style.top = y;
+    }
+
+    for (let i = 0; i < params.length; i++) {
+        addModalItem(params[i])
+    }
+
+    const children = MENUmodalBody.children;
+    const first_button = children[0];
+    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
+    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
+    const overflowStates = showElementDetails('MENUmodalBody')
+    const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
+
+    document.addEventListener('keydown', handleEscapeKey);
+
+    if (overflowStates.xOverflow == true) {
+        x = (X - MENUmodalBodyWidth) + "px";
+        MENUmodalBody.style.left = x;
+    }
+    if (overflowStates.yOverflow == true) {
+        y = (Y - MENUmodalBodyHeight) + "px";
+        MENUmodalBody.style.top = y;
+    }
+
+    for (let i = 0; i < menuItems.length; i++) {
+        const menuItem = menuItems[i];
+        menuItem.setAttribute('data-menu-item-id', i);
+        menuItem.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const clickedElement = event.target;
+            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
+            const functionToCall = params[menuItemId].function;
+            const optionalParams = params[menuItemId].optionalParams;
+
+            if (functionToCall == "TEST") {
+                console.log("the button worked");
+            } else if (functionToCall != "None") {
+                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
+                return;
+            } else {
+                return;
+
+            }
+        });
+    }
+
+    function handleEscapeKey(event) {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            document.removeEventListener('keydown', handleEscapeKey);
+            menuHide_foreign();
+        }
+    }
 }
 
 function handle_lcd_mobile_body(params) {

@@ -165,20 +165,34 @@ func update_project_details(c *gin.Context) {
     }
 
     // Get the item from the database
-    validColumnsToUpdate := []string{"description", "project_name", "project_contributors"}
+    validColumnsToUpdate := []string{"description", "project_name", "project_contributors", "project_song_title"}
     column_is_valid := helpers.Contains(validColumnsToUpdate, Column_To_Update)
     if !column_is_valid {
         fmt.Println("The column is not open to being updated")
         response := map[string]interface{}{"authenticated": false}
         fmt.Println(response)
         c.JSON(400, gin.H{"Authenticated": false})
+        return
     }
 
-    response := helpers.Update_project_detail_by_column(uuid, Column_To_Update, New_Data, ProjectID)
-    if response != nil {
-        fmt.Println("error in Update_user_detail_by_column", response)
-        c.JSON(400, gin.H{"updated": "error"})
-        return
+    if Column_To_Update == "project_song_title" {
+        SongSequence, SemiString, _ := strings.Cut(New_Data, "-")
+        Version, NewSongTitle, _ := strings.Cut(SemiString, "-")
+
+        response := helpers.Update_song_detail_by_column(SongSequence, "SongName", NewSongTitle, ProjectID, Version)
+        if response != nil {
+            fmt.Println("error in Update_user_detail_by_column", response)
+            c.JSON(400, gin.H{"updated": "error"})
+            return
+        }
+    } else {
+
+        response := helpers.Update_project_detail_by_column(uuid, Column_To_Update, New_Data, ProjectID)
+        if response != nil {
+            fmt.Println("error in Update_user_detail_by_column", response)
+            c.JSON(400, gin.H{"updated": "error"})
+            return
+        }
     }
 
     c.JSON(200, gin.H{"updated": "success"})

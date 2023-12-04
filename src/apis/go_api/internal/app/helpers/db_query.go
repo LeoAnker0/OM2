@@ -169,6 +169,19 @@ func Update_user_detail_by_column(uuid, column_to_update, new_data string) (erro
 }
 
 
+func Update_song_detail_by_column(SongSequence, column_to_update, new_data, ProjectID, Version string) (error) {
+    query := fmt.Sprintf(`UPDATE songs SET "%s" = $1 WHERE "SongSequence" = $2 AND "ProjectID" = $3 AND "Version" = $4`, column_to_update)
+
+    _, err := db.Exec(query, new_data, SongSequence, ProjectID, Version)
+    if err != nil {
+        fmt.Println("error in Update_user_detail_by_column", err)
+        return err
+    }
+
+    return nil
+}
+
+
 // PasswordHashMatchesEmail checks if the hashed password matches the email in the database
 func PasswordHashMatchesEmail(password, email string) (bool, error) {
     // Define your SQL query to fetch the hashed password for the given email
@@ -323,6 +336,7 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
                         'FolderSize', s."FolderSize",
                         'Version', s."Version"
                     )
+                    ORDER BY s."SongSequence" ASC -- Add this line to order by SongSequence
                 )
                 FROM songs s
                 WHERE s."ProjectID" = p.project_id
