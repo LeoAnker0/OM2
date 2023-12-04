@@ -17,6 +17,10 @@ export function is_dark() {
     }
 }
 
+export function is_odd(num) {
+    return (num % 2) == 1;
+}
+
 export function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const randomIndex = Math.floor(Math.random() * (i + 1));
@@ -107,4 +111,13 @@ export function formatFileSizeBytes(size) {
     } else {
         return `${(size / 1024 / 1024).toFixed(2)} mb`;
     }
+}
+
+export function getPositionInParentElement(el) {
+    if (!el) return -1;
+    var i = 0;
+    do {
+        i++;
+    } while (el = el.previousElementSibling);
+    return i;
 }

@@ -1,5 +1,5 @@
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes } from './om2.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd } from './om2.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
@@ -359,6 +359,8 @@ function loadInTable(details) {
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
     const songsJsonString = details.ProjectJSON;
+    let songsTableDraggedSongBackground;
+    let draggedRow;
 
     if (songsJsonString !== null) {
 
@@ -384,6 +386,77 @@ function loadInTable(details) {
             const song = songData[i];
             loadInProjectViewRowItems(song);
         }
+
+        // Function to handle drag start
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.rowId);
+            const draggedRowId = e.dataTransfer.getData('text/plain');
+            draggedRow = e.srcElement;
+
+            // Changing the colours of the items based on drag state
+            draggedRow.style.backgroundColor = "hsl(0, 0%, 65%)";
+            const listNumber = getPositionInParentElement(e.srcElement);
+            const listNumberIsOdd = is_odd(listNumber)
+            if (listNumberIsOdd === true) {
+                songsTableDraggedSongBackground = "var(--background)";
+            } else {
+                songsTableDraggedSongBackground = "var(--PV-transparent-overlay)";
+            }
+
+        }
+
+
+        // Function to handle drag over
+        function handleDragOver(e) {
+            // Prevent the default behavior to allow the drop
+            e.preventDefault();
+        }
+
+        // Function to handle drop
+        function handleDrop(e) {
+            // Prevent the default behavior
+            e.preventDefault();
+
+            // Changing the colours of the items based on drag state
+            const draggedRowBackground = draggedRow.style;
+            //draggedRow.style.backgroundColor = songsTableDraggedSongBackground;
+            draggedRow.style.backgroundColor = "";
+
+            // Get the data (row ID) from the drag-and-drop operation
+            const draggedRowId = e.dataTransfer.getData('text/plain');
+
+            // Find the dragged element
+            const draggedElement = document.querySelector(`[data-row-id="${draggedRowId}"]`);
+
+            // Identify the target element (the one you're dropping onto)
+            const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
+
+            if (targetRowContainer) {
+                const targetRowId = targetRowContainer.getAttribute('data-row-id');
+
+                //Move the items visually
+                targetRowContainer.before(draggedElement);
+                //Update the database with the new data
+                /*I figure it needn't be more complicated on the front end than
+                just sending over the one that's moving, and the one that should be moved, 
+                and then the database can do some magic with that data, because we are 
+                already making the data look good on the front end, so now its a simple case
+                of making these changes permaneant.
+
+                */
+                //console.log(draggedRowId, targetRowId)
+            }
+        }
+
+        // Attach drag-related event listeners to each draggable element
+        const draggableElements = document.querySelectorAll('.PROJECTview-projectTable-rowContainer');
+
+        draggableElements.forEach((element) => {
+            element.draggable = true;
+            element.addEventListener('dragstart', handleDragStart);
+            element.addEventListener('dragover', handleDragOver);
+            element.addEventListener('drop', handleDrop);
+        });
 
         // Attach a click event listener to the container
         projectTable.addEventListener('click', function(event) {
