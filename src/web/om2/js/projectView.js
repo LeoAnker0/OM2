@@ -1,5 +1,5 @@
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd } from './om2.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
@@ -359,6 +359,8 @@ function loadInTable(details) {
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
     const songsJsonString = details.ProjectJSON;
+    const hexOrange = getHexColorFromCssVariable('--orange');
+    const rgb2hex = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
     let songsTableDraggedSongBackground;
     let draggedRow;
 
@@ -402,15 +404,23 @@ function loadInTable(details) {
             } else {
                 songsTableDraggedSongBackground = "var(--PV-transparent-overlay)";
             }
-
         }
 
-
-        // Function to handle drag over
         function handleDragOver(e) {
             // Prevent the default behavior to allow the drop
             e.preventDefault();
+            const hoveredOver = e.target.closest('.PROJECTview-projectTable-rowContainer');
+
+            if (hoveredOver !== draggedRow) {
+                const originalColor = getComputedStyle(hoveredOver).backgroundColor;
+                const originalColorHex = rgb2hex(originalColor)
+
+                // Start the color change process
+                changeColourOnHover(hoveredOver, originalColorHex, hexOrange);
+            }
+
         }
+        const debouncedHandleDragOver = debounce(handleDragOver, 10);
 
         // Function to handle drop
         function handleDrop(e) {
@@ -419,16 +429,11 @@ function loadInTable(details) {
 
             // Changing the colours of the items based on drag state
             const draggedRowBackground = draggedRow.style;
-            //draggedRow.style.backgroundColor = songsTableDraggedSongBackground;
             draggedRow.style.backgroundColor = "";
 
             // Get the data (row ID) from the drag-and-drop operation
             const draggedRowId = e.dataTransfer.getData('text/plain');
-
-            // Find the dragged element
             const draggedElement = document.querySelector(`[data-row-id="${draggedRowId}"]`);
-
-            // Identify the target element (the one you're dropping onto)
             const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
 
             if (targetRowContainer) {
@@ -448,15 +453,6 @@ function loadInTable(details) {
             }
         }
 
-        // Attach drag-related event listeners to each draggable element
-        const draggableElements = document.querySelectorAll('.PROJECTview-projectTable-rowContainer');
-
-        draggableElements.forEach((element) => {
-            element.draggable = true;
-            element.addEventListener('dragstart', handleDragStart);
-            element.addEventListener('dragover', handleDragOver);
-            element.addEventListener('drop', handleDrop);
-        });
 
         // Attach a click event listener to the container
         projectTable.addEventListener('click', function(event) {
@@ -491,6 +487,16 @@ function loadInTable(details) {
             // Add blur event listener to each contenteditable div
             contentEditableDivs.forEach((div) => {
                 div.addEventListener('blur', blurEventHandler);
+            });
+
+            // Attach drag-related event listeners to each draggable element
+            const draggableElements = document.querySelectorAll('.PROJECTview-projectTable-rowContainer');
+
+            draggableElements.forEach((element) => {
+                element.draggable = true;
+                element.addEventListener('dragstart', handleDragStart);
+                element.addEventListener('dragover', debouncedHandleDragOver);
+                element.addEventListener('drop', handleDrop);
             });
         }
     }

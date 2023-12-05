@@ -121,3 +121,149 @@ export function getPositionInParentElement(el) {
     } while (el = el.previousElementSibling);
     return i;
 }
+
+export function debounce(func, delay) {
+    let timeoutId;
+
+    return function() {
+        const context = this;
+        const args = arguments;
+
+        clearTimeout(timeoutId);
+
+        timeoutId = setTimeout(function() {
+            func.apply(context, args);
+        }, delay);
+    };
+}
+
+let hoverTimeout;
+let isChangingColor = false;
+
+export function changeColourOnHover(element, originalColor, newColour) {
+    const start = Date.now();
+
+    function updateColor() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - start;
+
+        // Calculate the progress from 0 to 1 based on the elapsed time
+        const progress = Math.min(elapsed / 1000, 1);
+
+        // Calculate the new color based on the progress
+        const newColor = calculateColor(originalColor, progress, newColour);
+        console.log(newColor)
+
+        // Apply the new color to the element
+        element.style.backgroundColor = `${newColor}`;
+
+        if (progress < 1 || isChangingColor) {
+            // Continue updating the color until the transition is complete
+            requestAnimationFrame(updateColor);
+        } else {
+            // Reset the color to the original after the transition is complete
+            element.style.backgroundColor = originalColor;
+        }
+    }
+
+    function calculateColor(originalColor, progress, newColour) {
+        // Replace this with your color calculation logic
+        // Example: Blend white with the original color based on progress
+        const blendedColor = blendColors(newColour, originalColor, progress);
+        return blendedColor;
+    }
+
+    function blendColors(color1, color2, ratio) {
+        const hex = function(x) {
+            x = x.toString(16);
+            return (x.length === 1) ? '0' + x : x;
+        };
+
+        const r1 = parseInt(color1.substring(1, 3), 16);
+        const g1 = parseInt(color1.substring(3, 5), 16);
+        const b1 = parseInt(color1.substring(5, 7), 16);
+
+        const r2 = parseInt(color2.substring(1, 3), 16);
+        const g2 = parseInt(color2.substring(3, 5), 16);
+        const b2 = parseInt(color2.substring(5, 7), 16);
+
+        const r = Math.round(r1 * (1 - ratio) + r2 * ratio);
+        const g = Math.round(g1 * (1 - ratio) + g2 * ratio);
+        const b = Math.round(b1 * (1 - ratio) + b2 * ratio);
+
+        return '#' + hex(r) + hex(g) + hex(b);
+    }
+
+    // Clear previous timeout
+    clearTimeout(hoverTimeout);
+
+    // Set a timeout to stop the color change after a certain duration
+    hoverTimeout = setTimeout(() => {
+        isChangingColor = false;
+    }, 500);
+
+    // Set the flag to indicate that color change is active
+    isChangingColor = true;
+
+    // Start the color update
+    updateColor();
+}
+
+export function getHexColorFromCssVariable(variableName) {
+    // Get the HSL value from the CSS variable
+    const hslValue = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+    const matches = hslValue.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    let hue;
+    let saturation;
+    let lightness;
+
+
+    // Extracted values
+    hue = parseInt(matches[1], 10); // Convert to integer
+    saturation = parseInt(matches[2], 10); // Convert to integer
+    saturation = saturation / 100;
+    lightness = parseInt(matches[3], 10); // Convert to integer
+    lightness = lightness / 100;
+
+    const rgbValue = hsl2rgb(hue, saturation, lightness);
+    const red = scaleTo255(rgbValue[0]);
+    const green = scaleTo255(rgbValue[1]);
+    const blue = scaleTo255(rgbValue[2]);
+
+    const rgb = {
+        r: red,
+        g: green,
+        b: blue
+    }
+
+    // Convert RGB to hex
+    const hexValue = rgbToHex(rgb);
+
+    return hexValue;
+}
+
+// input: h as an angle in [0,360] and s,l in [0,1] - output: r,g,b in [0,1]
+function hsl2rgb(h, s, l) {
+    let a = s * Math.min(l, 1 - l);
+    let f = (n, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return [f(0), f(8), f(4)];
+}
+
+function scaleTo255(value) {
+    // Ensure that the input value is within the [0, 1] range
+    const clampedValue = Math.min(1, Math.max(0, value));
+
+    // Scale the value to the [0, 255] range
+    const scaledValue = Math.round(clampedValue * 255);
+
+    return scaledValue;
+}
+
+function rgbToHex(rgb) {
+    const componentToHex = c => {
+        const hex = c.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    };
+
+    return '#' + componentToHex(rgb.r) + componentToHex(rgb.g) + componentToHex(rgb.b);
+}
