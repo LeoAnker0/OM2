@@ -398,16 +398,12 @@ function loadInTable(details) {
 
         // Function to handle drag start
         function handleDragStart(e) {
-            console.log("handle drag start")
-
             e.dataTransfer.setData('text/plain', e.target.dataset.rowId);
             const draggedRowId = e.dataTransfer.getData('text/plain');
             draggedRow = e.srcElement;
 
-            /* set the html editable of all the eleements to false */
 
             // Changing the colours of the items based on drag state
-            //draggedRow.style.backgroundColor = "hsl(0, 0%, 85%)";
             const listNumber = getPositionInParentElement(e.srcElement);
             const listNumberIsOdd = is_odd(listNumber)
             if (listNumberIsOdd === true) {

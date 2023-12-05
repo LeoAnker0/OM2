@@ -146,6 +146,7 @@ export function changeColourOnHover(element, originalColor, newColour) {
         elementColorMap.set(element, {
             originalColor: originalColor,
             isChanging: false,
+            animationFrameId: null, // Track animation frame ID
         });
     }
 
@@ -178,7 +179,7 @@ export function changeColourOnHover(element, originalColor, newColour) {
 
         if (progress < 1 || elementColorMap.get(element).isChanging) {
             // Continue updating the color until the transition is complete
-            requestAnimationFrame(updateColor);
+            elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
         } else {
             // Reset the color to the original after the transition is complete
             console.log("hide this thang");
@@ -200,6 +201,9 @@ export function changeColourOnHover(element, originalColor, newColour) {
             console.log("hide this thang");
             element.style.backgroundColor = "";
 
+            // Cancel the animation frame
+            cancelAnimationFrame(elementColorMap.get(element).animationFrameId);
+
             // Remove the element from the color map
             elementColorMap.delete(element);
         }
@@ -212,7 +216,33 @@ export function changeColourOnHover(element, originalColor, newColour) {
     const start = Date.now();
 
     // Start the color update
-    updateColor();
+    elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
+}
+
+function cancelAnimationFrameForFunction(func) {
+    const animationFrames = new Map();
+
+    function wrappedFunction(...args) {
+        // Execute the original function and store the returned animation frame ID
+        const animationFrameId = func(...args);
+
+        // Store the animation frame ID in the map
+        animationFrames.set(func, animationFrameId);
+
+        return animationFrameId;
+    }
+
+    // Add a method to cancel the animation frame for the specific function
+    wrappedFunction.cancelAnimationFrame = function() {
+        const animationFrameId = animationFrames.get(func);
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrames.delete(func);
+        }
+    };
+
+    return wrappedFunction;
 }
 
 function calculateColor(originalColor, progress, newColour) {
