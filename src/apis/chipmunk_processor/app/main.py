@@ -119,9 +119,6 @@ async def update_password_user_by_uuid(uuid, password):
 @app.on_event("startup")
 async def startup():
     app.state.pool = await create_db_pool()
-
-    print(f"cheese")
-
     #tablesExist = await startup_check_tables_exist()
     #if not tablesExist:
     #    print(f"we need to create some tables")

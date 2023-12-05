@@ -138,60 +138,55 @@ export function debounce(func, delay) {
 }
 
 let hoverTimeout;
-let isChangingColor = false;
+const elementColorMap = new Map();
 
 export function changeColourOnHover(element, originalColor, newColour) {
-    const start = Date.now();
+    // Add the element to the color map if not present
+    if (!elementColorMap.has(element)) {
+        elementColorMap.set(element, {
+            originalColor: originalColor,
+            isChanging: false,
+        });
+    }
 
     function updateColor() {
         const currentTime = Date.now();
         const elapsed = currentTime - start;
 
+        // Check if the element is still in the map
+        if (!elementColorMap.has(element)) {
+            return;
+        }
+
         // Calculate the progress from 0 to 1 based on the elapsed time
-        const progress = Math.min(elapsed / 1000, 1);
+        const progress = Math.min(elapsed / 500, 1); // Return to original color more quickly (500ms)
+
+        // Check if the element is still in the map
+        if (!elementColorMap.has(element)) {
+            return;
+        }
 
         // Calculate the new color based on the progress
-        const newColor = calculateColor(originalColor, progress, newColour);
-        console.log(newColor)
+        const newColor = calculateColor(
+            elementColorMap.get(element).originalColor,
+            progress,
+            newColour
+        );
 
         // Apply the new color to the element
-        element.style.backgroundColor = `${newColor}`;
+        element.style.backgroundColor = newColor;
 
-        if (progress < 1 || isChangingColor) {
+        if (progress < 1 || elementColorMap.get(element).isChanging) {
             // Continue updating the color until the transition is complete
             requestAnimationFrame(updateColor);
         } else {
             // Reset the color to the original after the transition is complete
-            element.style.backgroundColor = originalColor;
+            console.log("hide this thang");
+            element.style.backgroundColor = "";
+
+            // Remove the element from the color map
+            elementColorMap.delete(element);
         }
-    }
-
-    function calculateColor(originalColor, progress, newColour) {
-        // Replace this with your color calculation logic
-        // Example: Blend white with the original color based on progress
-        const blendedColor = blendColors(newColour, originalColor, progress);
-        return blendedColor;
-    }
-
-    function blendColors(color1, color2, ratio) {
-        const hex = function(x) {
-            x = x.toString(16);
-            return (x.length === 1) ? '0' + x : x;
-        };
-
-        const r1 = parseInt(color1.substring(1, 3), 16);
-        const g1 = parseInt(color1.substring(3, 5), 16);
-        const b1 = parseInt(color1.substring(5, 7), 16);
-
-        const r2 = parseInt(color2.substring(1, 3), 16);
-        const g2 = parseInt(color2.substring(3, 5), 16);
-        const b2 = parseInt(color2.substring(5, 7), 16);
-
-        const r = Math.round(r1 * (1 - ratio) + r2 * ratio);
-        const g = Math.round(g1 * (1 - ratio) + g2 * ratio);
-        const b = Math.round(b1 * (1 - ratio) + b2 * ratio);
-
-        return '#' + hex(r) + hex(g) + hex(b);
     }
 
     // Clear previous timeout
@@ -199,14 +194,57 @@ export function changeColourOnHover(element, originalColor, newColour) {
 
     // Set a timeout to stop the color change after a certain duration
     hoverTimeout = setTimeout(() => {
-        isChangingColor = false;
+        // Check if the element is still in the map and is not changing
+        if (elementColorMap.has(element) && !elementColorMap.get(element).isChanging) {
+            // Reset the color to the original after the transition is complete
+            console.log("hide this thang");
+            element.style.backgroundColor = "";
+
+            // Remove the element from the color map
+            elementColorMap.delete(element);
+        }
     }, 500);
 
     // Set the flag to indicate that color change is active
-    isChangingColor = true;
+    elementColorMap.get(element).isChanging = true;
+
+    // Capture the start time for elapsed time calculation
+    const start = Date.now();
 
     // Start the color update
     updateColor();
+}
+
+function calculateColor(originalColor, progress, newColour) {
+    // Replace this with your color calculation logic
+    // Example: Blend white with the original color based on progress
+    const blendedColor = blendColors(
+        newColour,
+        originalColor,
+        progress
+    );
+    return blendedColor;
+}
+
+function blendColors(color1, color2, ratio) {
+    const hex = function(x) {
+        x = x.toString(16);
+        return x.length === 1 ? '0' + x : x;
+    };
+
+    const r1 = parseInt(color1.substring(1, 3), 16);
+    const g1 = parseInt(color1.substring(3, 5), 16);
+    const b1 = parseInt(color1.substring(5, 7), 16);
+
+    const r2 = parseInt(color2.substring(1, 3), 16);
+    const g2 = parseInt(color2.substring(3, 5), 16);
+    const b2 = parseInt(color2.substring(5, 7), 16);
+
+    const r = Math.round(r1 * (1 - ratio) + r2 * ratio);
+    const g = Math.round(g1 * (1 - ratio) + g2 * ratio);
+    const b = Math.round(b1 * (1 - ratio) + b2 * ratio);
+
+    return '#' + hex(r) + hex(g) + hex(b);
 }
 
 export function getHexColorFromCssVariable(variableName) {

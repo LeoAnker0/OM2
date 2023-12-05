@@ -203,7 +203,6 @@ function descriptionButtonInteractions() {
 
     moreButton.addEventListener('click', function() {
         displayMenu();
-        // Perform any actions you want when the button is pressed
     });
 
     descriptionBox.addEventListener('dblclick', function() {
@@ -272,7 +271,6 @@ async function detectPlayAndShuffleButtons(details) {
     const project_details = await getProjectDetails(details.ProjectID);
 
     playButton.addEventListener("click", function() {
-        //console.log("playButton pressed")
         PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
     });
     shuffleButton.addEventListener("click", function() {
@@ -386,17 +384,30 @@ function loadInTable(details) {
         for (let i = 0; i < songData.length; i++) {
             songData[i].ProjectID = i;
             const song = songData[i];
-            loadInProjectViewRowItems(song);
+            const songRowItem = loadInProjectViewRowItems(song);
+
+            projectTable.insertAdjacentHTML('beforeend', songRowItem);
+
+            const div = projectTable.lastElementChild;
+            if (UserIsEditor === true) {
+                div.addEventListener("dragstart", handleDragStart);
+                div.addEventListener("dragover", handleDragOver);
+                div.addEventListener("drop", handleDrop);
+            }
         }
 
         // Function to handle drag start
         function handleDragStart(e) {
+            console.log("handle drag start")
+
             e.dataTransfer.setData('text/plain', e.target.dataset.rowId);
             const draggedRowId = e.dataTransfer.getData('text/plain');
             draggedRow = e.srcElement;
 
+            /* set the html editable of all the eleements to false */
+
             // Changing the colours of the items based on drag state
-            draggedRow.style.backgroundColor = "hsl(0, 0%, 65%)";
+            //draggedRow.style.backgroundColor = "hsl(0, 0%, 85%)";
             const listNumber = getPositionInParentElement(e.srcElement);
             const listNumberIsOdd = is_odd(listNumber)
             if (listNumberIsOdd === true) {
@@ -406,9 +417,12 @@ function loadInTable(details) {
             }
         }
 
+        const debouncedHandleChangeHover = debounce(changeColourOnHover, 0);
+
         function handleDragOver(e) {
             // Prevent the default behavior to allow the drop
             e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
             const hoveredOver = e.target.closest('.PROJECTview-projectTable-rowContainer');
 
             if (hoveredOver !== draggedRow) {
@@ -416,11 +430,10 @@ function loadInTable(details) {
                 const originalColorHex = rgb2hex(originalColor)
 
                 // Start the color change process
-                changeColourOnHover(hoveredOver, originalColorHex, hexOrange);
+                debouncedHandleChangeHover(hoveredOver, originalColorHex, hexOrange);
             }
 
         }
-        const debouncedHandleDragOver = debounce(handleDragOver, 10);
 
         // Function to handle drop
         function handleDrop(e) {
@@ -429,7 +442,7 @@ function loadInTable(details) {
 
             // Changing the colours of the items based on drag state
             const draggedRowBackground = draggedRow.style;
-            draggedRow.style.backgroundColor = "";
+            draggedRow.style.backgroundColor = "yellow !important";
 
             // Get the data (row ID) from the drag-and-drop operation
             const draggedRowId = e.dataTransfer.getData('text/plain');
@@ -449,8 +462,16 @@ function loadInTable(details) {
                 of making these changes permaneant.
 
                 */
-                //console.log(draggedRowId, targetRowId)
+                console.log(draggedRowId, targetRowId)
             }
+
+
+            // This isn't working as intended for some reason, and i will have too look into it
+            for (const childElement of projectTable.children) {
+                console.log(childElement.style.backgroundColor)
+                childElement.style.backgroundColor = "";
+            }
+
         }
 
 
@@ -487,16 +508,6 @@ function loadInTable(details) {
             // Add blur event listener to each contenteditable div
             contentEditableDivs.forEach((div) => {
                 div.addEventListener('blur', blurEventHandler);
-            });
-
-            // Attach drag-related event listeners to each draggable element
-            const draggableElements = document.querySelectorAll('.PROJECTview-projectTable-rowContainer');
-
-            draggableElements.forEach((element) => {
-                element.draggable = true;
-                element.addEventListener('dragstart', handleDragStart);
-                element.addEventListener('dragover', debouncedHandleDragOver);
-                element.addEventListener('drop', handleDrop);
             });
         }
     }
@@ -631,8 +642,7 @@ function loadInProjectViewRowItems(songData) {
         }
         replacedContent = replacedContent.replace(regex, value);
     }
-    document.getElementById(IDofElement).innerHTML += replacedContent;
-    return;
+    return replacedContent;
 
 }
 
