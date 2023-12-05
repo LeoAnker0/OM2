@@ -46,7 +46,6 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback_
 }
 
 function PLAYBACK_prepare_project_details_array(project_details) {
-    project_details = JSON.parse(project_details)
     const array = [];
     const project_contributors = project_details.ProjectContributors;
     const project_name = project_details.ProjectName;

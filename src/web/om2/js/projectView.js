@@ -47,42 +47,39 @@ export async function initProjectView(projectID) {
             console.log(result)
         } else {
             const details = JSON.parse(result);
-
             details.ProjectID = projectID;
+
             Details = details;
-            loadVisible(details);
-            set_event_listeners_for_titles(details);
+            loadVisible();
+            set_event_listeners_for_titles();
         }
     }, 1);
 
 
-    function loadVisible(details) {
+    function loadVisible() {
         if (UserIsEditor === false) {
             // Delete the file drop area
             const fileDropArea = document.getElementById("PROJECTview_upload_area_files_upload_box");
             fileDropArea.remove();
 
         }
-        //loadContainer(details);
-        const description = details.Description;
-
         //Load real details, instead of temp
-        updateTempVisible(details);
+        updateTempVisible();
 
-        sessionStorage.setItem('description', description);
+        sessionStorage.setItem('description', Details.Description);
         updateDescription_display();
         descriptionButtonInteractions();
         handleDescriptionMoreText();
-        detectOffClicks(details);
+        detectOffClicks();
 
-        detectPlayAndShuffleButtons(details);
-        loadInTable(details);
+        detectPlayAndShuffleButtons();
+        loadInTable();
         detect_when_image_is_no_longer_visible();
-        update_mobile_header_project_title(details.ProjectName)
+        update_mobile_header_project_title(Details.ProjectName)
 
         if (UserIsEditor === true) {
-            detect_when_image_is_interacted(details.ProjectID);
-            loadFileDropArea(details);
+            detect_when_image_is_interacted(Details.ProjectID);
+            loadFileDropArea();
 
         }
     }
@@ -94,33 +91,40 @@ export function hideProjectView() {
 }
 
 export async function PROJECTVIEW_update() {
-    updateLoadInTable();
+    const projectID = Details.ProjectID;
 
-    /* update the image src of the top image. */
-    const currentPath = window.location.pathname;
-    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-    const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
-    const result = await getProjectDetails(project_id);
-    const details = JSON.parse(result)
-    const newImageUrl = details.PictureURL;
+    // Update details
+    const result = await getProjectDetails(projectID);
 
+    if (result == "") {
+        console.log(result)
+    } else {
+        const details = JSON.parse(result);
+        details.ProjectID = projectID;
+        Details = details;
 
-    const image = `${MAIN_CONST_EXPORT_mediaPath}/${newImageUrl}/5/`;
-    imageTag.src = image;
+        loadInTable();
+        /* update the image src of the top image. */
+        const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
+        const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5/`;
+
+        imageTag.src = image;
+    }
+    return;
 }
 
-function updateTempVisible(details) {
+function updateTempVisible() {
     const title = document.getElementById("PROJECTviewDisplayTitleH1");
     const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
     const displayImage = document.getElementById("PROJECTviewDisplayImage_imgTag");
-    const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5/`;
+    const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5/`;
 
-    title.innerText = details.ProjectName;
-    contributors.innerText = details.ProjectContributors;
+    title.innerText = Details.ProjectName;
+    contributors.innerText = Details.ProjectContributors;
     displayImage.src = image;
 }
 
-function set_event_listeners_for_titles(details) {
+function set_event_listeners_for_titles() {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
 
@@ -133,12 +137,12 @@ function set_event_listeners_for_titles(details) {
     titleH1.addEventListener('blur', function(event) {
         const newTitleH1 = titleH1.innerText
         update_mobile_header_project_title(newTitleH1);
-        updateProjectDetails(details.ProjectID, "project_name", newTitleH1)
+        updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
     });
 
     titleH3.addEventListener('blur', function(event) {
         const newTitleH3 = titleH3.innerText
-        updateProjectDetails(details.ProjectID, "project_contributors", newTitleH3)
+        updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
     });
 }
 
@@ -235,16 +239,16 @@ function handleDescriptionMoreText() {
     editor.innerText = description;
 }
 
-function detectOffClicks(details) {
+function detectOffClicks() {
     const xButton = document.getElementById("PROJECTviewMOREcloseButton");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     xButton.addEventListener('click', function() {
-        closeMoreDescription(details);
+        closeMoreDescription(Details);
     });
 
     background.addEventListener('click', function(event) {
         if (event.target === background) {
-            closeMoreDescription(details)
+            closeMoreDescription(Details)
         }
     });
 }
@@ -263,24 +267,23 @@ function closeMoreDescription(details) {
 }
 
 /* project view top buttons */
-async function detectPlayAndShuffleButtons(details) {
+async function detectPlayAndShuffleButtons() {
     const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
     const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
     const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
     const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
-    const project_details = await getProjectDetails(details.ProjectID);
 
     playButton.addEventListener("click", function() {
-        PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
+        PLAYBACK_handle_input_project_details_array_with_start_playback(Details);
     });
     shuffleButton.addEventListener("click", function() {
-        PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(project_details);
+        PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(Details);
     });
     menuButton.addEventListener("click", function() {
-        displayMenuForTop(event, project_details)
+        displayMenuForTop(event, Details)
     });
     mobileMenuButton.addEventListener("click", function() {
-        displayMenuForTop(event, project_details)
+        displayMenuForTop(event, Details)
     });
 }
 
@@ -351,12 +354,18 @@ async function deleteProjectFromServer(project_id) {
 }
 
 /* load in the table */
-function loadInTable(details) {
+function loadInTable() {
+    //Empty table if it exists
+    const projectTableBeforeLoad = document.getElementById('PROJECTview-projectTable');
+    if (projectTableBeforeLoad !== null) {
+        projectTableBeforeLoad.remove();
+    }
+
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
     loadInProjectViewRowTitles();
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
-    const songsJsonString = details.ProjectJSON;
+    const songsJsonString = Details.ProjectJSON;
     const hexOrange = getHexColorFromCssVariable('--orange');
     const rgb2hex = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
     let songsTableDraggedSongBackground;
@@ -369,9 +378,9 @@ function loadInTable(details) {
         if (songsJsonString) {
             for (const song of songsJsonString) {
                 songData.push({
-                    "img": details.PictureURL,
+                    "img": Details.PictureURL,
                     "songTitle": song.SongName,
-                    "artistName": details.ProjectContributors,
+                    "artistName": Details.ProjectContributors,
                     "projectName": formatFileSizeBytes(song.FolderSize),
                     "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
                     "songSequence": song.SongSequence,
@@ -428,7 +437,6 @@ function loadInTable(details) {
                 // Start the color change process
                 debouncedHandleChangeHover(hoveredOver, originalColorHex, hexOrange);
             }
-
         }
 
         // Function to handle drop
@@ -461,15 +469,12 @@ function loadInTable(details) {
                 console.log(draggedRowId, targetRowId)
             }
 
-
             // This isn't working as intended for some reason, and i will have too look into it
             for (const childElement of projectTable.children) {
                 console.log(childElement.style.backgroundColor)
                 childElement.style.backgroundColor = "";
             }
-
         }
-
 
         // Attach a click event listener to the container
         projectTable.addEventListener('click', function(event) {
@@ -486,7 +491,6 @@ function loadInTable(details) {
                 }
             }
         });
-
 
         if (UserIsEditor === true) {
             // Get all divs with contenteditable attribute within the container
@@ -507,65 +511,6 @@ function loadInTable(details) {
             });
         }
     }
-}
-
-async function updateLoadInTable() {
-    const projectTable = document.getElementById('PROJECTview-projectTable');
-    const currentPath = window.location.pathname;
-    const project_id = currentPath.replace(/^\/projects\//, ''); // Replace "/projects/" with an empty string
-    const result = await getProjectDetails(project_id);
-    const details = JSON.parse(result)
-    details.ProjectID = project_id
-
-    const jsonDetails = details;
-    const songsJsonString = jsonDetails.ProjectJSON;
-    const songsJson = JSON.parse(songsJsonString).songs_json;
-    const songData = [];
-
-    if (Array.isArray(songsJson)) {
-        for (const song of songsJson) {
-            songData.push({
-                "img": jsonDetails.PictureURL,
-                "songTitle": song.song_name,
-                "artistName": jsonDetails.ProjectContributors,
-                "projectName": formatFileSizeBytes(song.SongSize),
-                "songDuration": `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}`,
-                "song_sequence": song.song_sequence,
-                "url": song.url
-            });
-        }
-    }
-
-    /* event listeners */
-    const parentDiv = document.getElementById("PROJECTview-projectTable");
-    const childElements = parentDiv.children;
-
-    for (let i = childElements.length - 1; i > 0; i--) {
-        parentDiv.removeChild(childElements[i]);
-    }
-
-    for (let i = 0; i < songData.length; i++) {
-        songData[i].projectID = i;
-        const song = songData[i];
-        loadInProjectViewRowItems(song);
-    }
-
-    // Attach an event listener to the container
-    projectTable.addEventListener('click', function(event) {
-        const target = event.target;
-        event.stopPropagation();
-
-        // Check if the clicked element is a button within a row
-        if (target.tagName === 'BUTTON') {
-            const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-
-            if (rowContainer) {
-                const rowId = rowContainer.getAttribute('data-row-id');
-                displayMenuForRow(event);
-                console.log(`Button in row ${rowId} clicked.`);
-            }
-        }
-    });
 }
 
 function removeLastExtension(filename) {
@@ -642,7 +587,7 @@ function loadInProjectViewRowItems(songData) {
 
 }
 
-function loadFileDropArea(details) {
+function loadFileDropArea() {
     const dropArea = document.getElementById("PROJECTview_dropArea");
     const submitButton = document.getElementById("PROJECTview_dropArea_submit_button");
 
@@ -664,7 +609,7 @@ function loadFileDropArea(details) {
         dropArea.classList.remove("dragover");
 
         const files = e.dataTransfer.files;
-        handleFiles(files, details);
+        handleFiles(files, Details);
     });
 
     let Files = [];
@@ -685,79 +630,56 @@ function loadFileDropArea(details) {
             fileInput.click();
         } else {
             console.log("the submit files button was clicked ", Files);
-            handleFiles(Files, details);
+            handleFiles(Files, Details);
         }
     });
 
     // Handle uploaded files
-    function handleFiles(files, details) {
+    function handleFiles(files, Details) {
         for (const file of files) {
             projectViewSongsArray.push(file);
         }
-        uploadFiles(files, details);
+        uploadFiles(files, Details);
     }
 }
 
-async function uploadFileWithProgress(file, uploadBox, fileNameLabel, details) {
+async function uploadFileWithProgress(file, details) {
     const formData = new FormData();
-    const jwtToken = localStorage.getItem('JWT');
     const xhr = new XMLHttpRequest();
-    const progressBar = document.createElement('div');
-    const progressFill = document.createElement('div');
 
     isUploading = true;
     formData.append('file', file);
     formData.append("project_id", details.project_id);
-    formData.append('jwt', jwtToken);
-    progressBar.classList.add('progress-bar');
-    progressFill.classList.add('progress-fill');
-    progressBar.appendChild(progressFill);
-    uploadBox.appendChild(progressBar);
-
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
-            progressFill.style.width = percentCompleted + "%";
+            console.log(percentCompleted)
             if (percentCompleted === 100) {
-                progressBar.classList.add('opacity-animation');
+                console.log("upload completed")
             }
         }
     };
 
     xhr.onload = async function() {
-        progressBar.classList.remove('opacity-animation');
-        progressBar.style.opacity = "1";
-        progressFill.classList.add('complete');
-        fileNameLabel.textContent = `${file.name}`;
-        updateLoadInTable();
+        console.log("Upload fully complete")
 
         /* add next file to the queue */
         isUploading = false;
         if (uploadQueue.length > 0) {
             const current_file = uploadQueue.shift();
-            await uploadFileWithProgress(current_file.file, current_file.uploadBox, current_file.fileNameLabel, current_file.details);
+            await uploadFileWithProgress(current_file.file, current_file.details);
         }
 
-        setTimeout(() => {
-            uploadBox.classList.add('complete');
-        }, 2000); // Adjust the time (in milliseconds) as needed
-        setTimeout(() => {
-            uploadBox.parentNode.removeChild(uploadBox);
+        // Update the project tables
+        PROJECTVIEW_update();
 
-
-        }, 3000); // Adjust the time (in milliseconds) as needed
     };
 
     xhr.onerror = function() {
-        progressBar.classList.remove('opacity-animation');
-        progressBar.style.opacity = "1";
-        progressFill.style.backgroundColor = "#e74c3c"; // Set a color to indicate error
-        setTimeout(() => {
-            uploadBox.parentNode.removeChild(uploadBox);
-        }, 3000); // Adjust the time (in milliseconds) as needed
+        console.log("Upload failed")
     };
 
-    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${details.ProjectID}`, true);
+    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${Details.ProjectID}`, true);
     xhr.send(formData);
 }
 
@@ -766,27 +688,16 @@ async function uploadFiles(files, details) {
     const uploadsContainer = document.getElementById('uploadsContainer');
 
     for (const file of files) {
-        /* styling */
-        const uploadBox = document.createElement('div');
-        const fileNameLabel = document.createElement('div');
-        uploadBox.classList.add('upload-box');
-        fileNameLabel.classList.add('PROJECTview_upload_nameLabel');
-        fileNameLabel.textContent = `${file.name}`;
-        uploadBox.appendChild(fileNameLabel);
-        uploadsContainer.appendChild(uploadBox);
-
         /* add item to queue */
         const new_file_item = {
             file: file,
-            uploadBox: uploadBox,
-            fileNameLabel: fileNameLabel,
             details: details
         };
         uploadQueue.push(new_file_item)
 
         if (!isUploading) {
             const current_file = uploadQueue.shift();
-            await uploadFileWithProgress(current_file.file, current_file.uploadBox, current_file.fileNameLabel, current_file.details);
+            await uploadFileWithProgress(current_file.file, current_file.details);
         }
     }
 }
