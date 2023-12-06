@@ -1,0 +1,186 @@
+:root {
+    line-height: 1;
+    font-weight: 400;
+    font-family: 'Source Sans 3', sans-serif;
+    background-color: transparent;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.embed-core {
+    position: relative;
+    top: 0%;
+    height: 100%;
+    width: 100%;
+    background-color: pink;
+    overflow: hidden;
+
+    display: grid;
+    /*
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    */
+    grid-template-areas:
+        "image-container hintTitle-container"
+        "image-container logo-container"
+        "image-container songContributors-container"
+        "image-container songTitle-container"
+        "image-container play-container";
+}
+
+/* image area left */
+.image-container {
+    grid-area: image-container;
+    overflow: hidden;
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.image-container img {
+    object-fit: cover;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    transform: scale(0.9);
+    z-index: 1;
+}
+
+/*
+.image-container img:nth-child(2) {
+    position: relative;
+    top: -100%;
+    z-index: 0;
+    filter: blur(2px);
+}*/
+
+.logo-container {
+    grid-area: logo-container;
+    position: relative;
+    width: 88%;
+    left: 7%;
+}
+
+.logo-container div {
+    position: relative;
+    height: 1rem;
+    padding: 0.3rem;
+    background-color: hsl(0, 0%, 10%);
+    border-radius: 1rem;
+    overflow: hidden;
+    left: 82%;
+    width: 5.5rem;
+}
+
+.logo-container div a {
+    text-decoration: none;
+    color: white;
+}
+
+.hintTitle-container {
+    grid-area: hintTitle-container;
+}
+
+.songTitle-container {
+    grid-area: songTitle-container;
+    position: relative;
+    width: 88%;
+    left: 7%;
+}
+
+.songTitle-container div {
+    font-family: 'Playfair Display';
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.songContributors-container {
+    grid-area: songContributors-container;
+    position: relative;
+    width: 88%;
+    left: 7%;
+}
+
+.songContributors-container div {
+    font-family: 'Playfair Display';
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: black;
+    background: -webkit-linear-gradient(50deg, hsl(240, 50%, 10%), hsl(200, 70%, 20%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+}
+
+.play-container {
+    grid-area: play-container;
+    position: relative;
+    width: 88%;
+    left: 7%;
+}
+
+audio::-webkit-media-controls-panel {
+    position: relative;
+    background-color: pink;
+}
+
+
+audio::-webkit-media-controls-toggle-closed-captions-button {
+    display: none;
+    width: 0px;
+    height: 0px;
+}
+
+audio::-webkit-media-controls-play-button {}
+
+/*
+
+audio::-webkit-media-controls-play-button
+
+audio::-webkit-media-controls-timeline-container
+
+audio::-webkit-media-controls-current-time-display
+
+audio::-webkit-media-controls-time-remaining-display
+
+
+
+audio::-webkit-media-controls-volume-slider-container
+
+audio::-webkit-media-controls-volume-slider
+
+audio::-webkit-media-controls-seek-back-button
+
+audio::-webkit-media-controls-seek-forward-button
+
+audio::-webkit-media-controls-fullscreen-button
+
+audio::-webkit-media-controls-rewind-button
+
+audio::-webkit-media-controls-return-to-realtime-button
+
+*/
