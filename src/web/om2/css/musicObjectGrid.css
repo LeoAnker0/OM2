@@ -311,7 +311,7 @@
 .MOG_add_text {
     width: 100%;
     font-size: 3rem;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Playfair Display', serif;
     pointer-events: none;
 
     color: var(--text);
