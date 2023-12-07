@@ -22,16 +22,20 @@ export function MENUdisplay(params, event, menu_type) {
     }
 
     //defined and type == update_project_image
-    if ((menu_type !== undefined) && menu_type === "update_project_image") {
-        handle_update_project_image(params, event);
+    else if ((menu_type !== undefined) && menu_type === "update_project_image") {
+        handle_update_project_image(params, event, "update_project_image");
+    } else if ((menu_type !== undefined) && menu_type === "update_user_pfp") {
+        handle_update_project_image(params, event, "update_user_pfp");
     }
     //defined and type == lcd_mobile_body
-    if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
+    else if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
         handle_lcd_mobile_body(params, event);
     }
     //defined and type == notice
-    if ((menu_type !== undefined) && menu_type === "notice") {
+    else if ((menu_type !== undefined) && menu_type === "notice") {
         handle_notice(params, event);
+    } else {
+        console.log("invalid menu display inputs")
     }
 }
 
@@ -420,7 +424,7 @@ function handle_normal_context_menu(params, event) {
     }
 }
 
-function handle_update_project_image(params, event) {
+function handle_update_project_image(params, event, menu_type) {
     const X = event.clientX;
     const Y = event.clientY;
     const main = document.querySelector("main");
@@ -433,6 +437,8 @@ function handle_update_project_image(params, event) {
         main.style.zIndex = "40";
         navBar.style.zIndex = "0";
     }
+
+    params.MenuType = menu_type;
 
     main.style.zIndex = "2";
     MENUmodalEnvironment.innerHTML = update_project_imageModal;
@@ -465,8 +471,8 @@ function handle_update_project_image(params, event) {
         };
     }
 
-    function uploadImageFilesDebounced(file, projectId) {
-        debounce(upload_image_files, 100)(file, projectId);
+    function uploadImageFilesDebounced(file, projectId, menuType) {
+        debounce(upload_image_files, 100)(file, projectId, menuType);
     }
 
     function handleFileSelection(params) {
@@ -478,7 +484,7 @@ function handle_update_project_image(params, event) {
             submitButton.style.visibility = "visible";
             submitButtonContainer.style.outline = "3px solid var(--primary)";
             submitButton.addEventListener('click', () => {
-                uploadImageFilesDebounced(image_upload_file, params.project_id);
+                uploadImageFilesDebounced(image_upload_file, params.project_id, params.MenuType);
                 spinner.style.visibility = "visible";
             });
         } else {
@@ -516,6 +522,12 @@ export function MENU_when_image_has_been_uploaded() {
     spinner.style.visibility = "hidden";
     menuHide_foreign();
     PROJECTVIEW_update();
+}
+
+export function MENU_when_image_has_been_uploaded_pfp() {
+    const spinner = document.getElementById("MENUmodalBody_image_submit_area_loader_spinner");
+    spinner.style.visibility = "hidden";
+    menuHide_foreign();
 }
 
 function showElementDetails(elementId) {

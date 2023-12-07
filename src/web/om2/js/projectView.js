@@ -2,6 +2,7 @@ import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBy
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
+import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -37,6 +38,14 @@ export async function initProjectView(projectID) {
     homeButton.addEventListener("click", () => {
         handleRoute("/")
     })
+
+    /*
+    setTimeout(async () => {
+    }, 1);
+
+    setTimeout(() => {
+    }, 1);
+    */
 
 
     setTimeout(async () => {
@@ -78,7 +87,7 @@ export async function initProjectView(projectID) {
         update_mobile_header_project_title(Details.ProjectName)
 
         if (UserIsEditor === true) {
-            detect_when_image_is_interacted(Details.ProjectID);
+            detect_when_image_is_interacted(Details.ProjectID, "PROJECTviewDisplayImage", "update_project_image");
             loadFileDropArea();
 
         }
@@ -747,58 +756,4 @@ function detect_when_image_is_no_longer_visible() {
         });
     }
 }
-
-function detect_when_image_is_interacted(project_id) {
-    const image = document.getElementById("PROJECTviewDisplayImage");
-    let touchStartTimestamp;
-    let pressTimer;
-
-    // Add touchstart event listener to record the touch start timestamp
-    image.addEventListener('touchstart', function(e) {
-        touchStartTimestamp = e.timeStamp;
-
-        // Start the timer for long press
-        pressTimer = setTimeout(function() {
-            // Long press detected
-            show_image_options(e, project_id);
-        }, 500); // Adjust the time (in milliseconds) for a long press as needed
-    });
-
-    // Add touchend event listener to detect when the touch ends
-    image.addEventListener('touchend', function(e) {
-        // Calculate the duration of the touch event
-        const touchEndTimestamp = e.timeStamp;
-        const touchDuration = touchEndTimestamp - touchStartTimestamp;
-
-        // Clear the long press timer
-        clearTimeout(pressTimer);
-    });
-
-    image.addEventListener('dblclick', function(e) {
-        show_image_options(e, project_id);
-    })
-
-    function show_image_options(e, project_id) {
-        //console.log("Long press detected on PROJECTviewDisplayImage", e, project_id);
-        displayMenuImage(e, project_id);
-    }
-}
-
-function displayMenuImage(event, project_id) {
-    const clickedItem = event.target;
-    const menu_type = "update_project_image";
-    const params = {
-        project_id: project_id
-    }
-
-    event.stopPropagation();
-
-    MENUdisplay(params, event, menu_type);
-    return;
-}
-
-
-
-
-
 /**/

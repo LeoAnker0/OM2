@@ -2,6 +2,7 @@ import admin_p_users_table_row from '../html/settings_views_admin_p_users_table_
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import admin_protected_view from '../html/settings_views_admin_protected.html?raw';
 import admin_default_view from '../html/settings_views_admin_default.html?raw';
+import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
 import settings_body from '../html/settings_body.html?raw';
@@ -11,7 +12,8 @@ import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import { formatFileSizeBytes } from './om2.js';
 
-let current_view = "admin";
+
+let current_view = "user";
 const views = [{
     name: "general",
     markup: general_view,
@@ -77,7 +79,6 @@ function load_view(view) {
         replacedContent = replacedContent.replace(regex, value);
     }
 
-
     for (let i = 0; i < things_to_replace.length; i++) {
         const placeholder = things_to_replace[i].toString();
         const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
@@ -87,6 +88,7 @@ function load_view(view) {
             const image = `${MAIN_CONST_EXPORT_mediaPath}/${users_image}/4/`;
             value = image;
         }
+
 
         replacedContent = replacedContent.replace(regex, value);
     }
@@ -100,7 +102,7 @@ function views_general() {
 }
 
 function views_user() {
-    console.log("user")
+    detect_when_image_is_interacted("user-id", "settings_views_user_pfp_img", "update_user_pfp");
 }
 
 async function views_admin() {

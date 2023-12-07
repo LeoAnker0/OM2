@@ -17,13 +17,16 @@ import (
 func SetupFileUploadRoutes(router *gin.Engine) {
     projectRoutes := router.Group("/apis/files")
     {
-        projectRoutes.POST("/upload_photo/:ProjectID", upload_image_file)
+        projectRoutes.POST("/upload_photo", upload_image_file)
         projectRoutes.POST("/upload_audio/:ProjectID", upload_audio_file)
     }
 }
 
 
 func upload_image_file(c *gin.Context) {
+    ProjectID := c.Query("pi")
+    menuType := c.Query("mt")
+
     file, header, err := c.Request.FormFile("file")
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "No file provided"})
@@ -31,11 +34,6 @@ func upload_image_file(c *gin.Context) {
     }
     defer file.Close()
 
-    // Create a unique filename
-    temporary_file_uuid := helpers.GenerateUUID()
-    filename := filepath.Join("/var/www/media/temp", temporary_file_uuid + "_" + header.Filename)
-
-    ProjectID := c.Param("ProjectID")
     clientIP := c.ClientIP()
     jwt_token, err := c.Cookie("access-token")
     if err != nil {
@@ -49,16 +47,32 @@ func upload_image_file(c *gin.Context) {
         return
     }
 
-    // Verify that the user should actually have access to the project
-    authorised, err := helpers.Authorise(ProjectID, uuid, "editor")
-    if err != nil {
-        fmt.Println("There was an error with authorising the user: ", err)
-    }
-    if authorised != true {
-        fmt.Println("The user is not authorised for this path.")
+    if menuType == "update_project_image" {
+        // Verify that the user should actually have access to the project
+        authorised, err := helpers.Authorise(ProjectID, uuid, "editor")
+        if err != nil {
+            fmt.Println("There was an error with authorising the user: ", err)
+        }
+        if authorised != true {
+            fmt.Println("The user is not authorised for this path.")
+            c.JSON(403, gin.H{"error": "unauthorised"})
+            return
+        } 
+    } else if menuType == "update_user_pfp" {
+
+    } else {
+        fmt.Println("there was an invalid image upload directive")
         c.JSON(403, gin.H{"error": "unauthorised"})
         return
-    } 
+    }
+
+
+    // Create a unique filename
+    temporary_file_uuid := helpers.GenerateUUID()
+    filename := filepath.Join("/var/www/media/temp", temporary_file_uuid + "_" + header.Filename)
+
+    
+    
 
     // Create the file on the server
     newFile, err := os.Create(filename)
@@ -214,11 +228,21 @@ func upload_image_file(c *gin.Context) {
             fmt.Println("there was an error intialising the image in the files database: ", err)
         }
 
-        // Update the projects database, to set the column_to_update to "picture_url", and new data as new_url
-        err = helpers.Update_project_detail_by_column(uuid, "picture_url", new_url, ProjectID)
-        if err != nil {
-            fmt.Println("there was an error intialising the image in the project database: ", err)
+        if menuType == "update_project_image" {
+            // Update the projects database, to set the column_to_update to "picture_url", and new data as new_url
+            err = helpers.Update_project_detail_by_column(uuid, "picture_url", new_url, ProjectID)
+            if err != nil {
+                fmt.Println("there was an error intialising the image in the project database: ", err)
+            }
+        } else if menuType == "update_user_pfp" {
+            err = helpers.Update_user_detail_by_column(uuid, "profile_picture", new_url)
+            if err != nil {
+                fmt.Println("there was an error intialising the image in the project database: ", err)
+            }
+
         }
+
+        
 
     } else {
         fmt.Println("that storage mode isn't supported yet: ", StorageMode)
