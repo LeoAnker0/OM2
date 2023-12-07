@@ -44,3 +44,22 @@ func GetFolderSize(folderPath string) int64 {
     })
     return totalSize
 }
+
+// RegecReplaceMap represents a map of replacements.
+type RegexReplaceMap map[string]string
+
+// RegexReplace replaces multiple placeholders in the original text with their respective replacement strings.
+func RegexReplace(input string, replacements RegexReplaceMap) string {
+    for placeholder, replacement := range replacements {
+        // Escape special characters in the placeholder
+        escapedPlaceholder := regexp.QuoteMeta(placeholder)
+
+        // Create a regular expression pattern for the placeholder
+        pattern := regexp.MustCompile("{{" + escapedPlaceholder + "}}")
+
+        // Replace the placeholder with the replacement string
+        input = pattern.ReplaceAllString(input, replacement)
+    }
+
+    return input
+}

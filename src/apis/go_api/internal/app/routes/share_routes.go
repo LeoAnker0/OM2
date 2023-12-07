@@ -4,7 +4,8 @@ import (
     "github.com/gin-gonic/gin"
     "fmt"
     "net/http"
-    //"go_api/internal/app/helpers"
+    "os"
+    "go_api/internal/app/helpers"
 
 )
 
@@ -22,7 +23,21 @@ func returnShareHTML(c *gin.Context) {
 
     fmt.Println("User has asked for the share of: ", shareID, " Their IP is: ", clientIP)
 
-    htmlString := fmt.Sprintf(`<h1>Hello, this is HTML content!<br>And the user has requested <pre>%s</pre></h1>`, shareID)
+    
+    b, err := os.ReadFile("templates/share-iframe-1.html") // just pass the file name
+    if err != nil {
+        fmt.Print(err)
+    }
+
+    iframeTemplate := string(b) // convert content to a 'string'
+
+    replacements := helpers.RegexReplaceMap{
+        "ShareReplaceID":   shareID,
+        "ShareReplaceIP":   clientIP,
+    }
+
+    htmlString := helpers.RegexReplace(iframeTemplate, replacements)
+
 
     // Set the Content-Type header to indicate that you're sending HTML
     c.Header("Content-Type", "text/html")
