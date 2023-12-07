@@ -1,4 +1,4 @@
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable } from './om2.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
@@ -23,11 +23,24 @@ export async function initProjectView(projectID) {
     Plus it leaves it open to making fancier 'waiting' screens, with those sort
     of fake loading bars on top of the different elements.
     */
-    const fakeDetails = {
-        ProjectName: "Loading...",
-        ProjectContributors: "This might take a while",
-        TimeCreated: 0,
-        PictureURL: "static/default_pfp",
+    let fakeDetails;
+    if (is_dark() == true) {
+        fakeDetails = {
+            ProjectName: "Loading...",
+            ProjectContributors: "This might take a while",
+            TimeCreated: 0,
+            PictureURL: "static/loading_img_text_dark",
+        }
+    } else {
+
+        fakeDetails = {
+            ProjectName: "Loading...",
+            ProjectContributors: "This might take a while",
+            TimeCreated: 0,
+            PictureURL: "static/loading_img_text_light",
+        }
+
+
     }
     loadContainer(fakeDetails);
 
@@ -48,21 +61,18 @@ export async function initProjectView(projectID) {
     */
 
 
-    setTimeout(async () => {
-        const currentPath = window.location.pathname;
-        const result = await getProjectDetails(projectID);
+    const result = await getProjectDetails(projectID);
 
-        if (result == "") {
-            console.log(result)
-        } else {
-            const details = JSON.parse(result);
-            details.ProjectID = projectID;
+    if (result == "") {
+        console.log(result)
+    } else {
+        const details = JSON.parse(result);
+        details.ProjectID = projectID;
 
-            Details = details;
-            loadVisible();
-            set_event_listeners_for_titles();
-        }
-    }, 1);
+        Details = details;
+        loadVisible();
+        set_event_listeners_for_titles();
+    }
 
 
     function loadVisible() {

@@ -12,8 +12,7 @@ import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import { formatFileSizeBytes } from './om2.js';
 
-
-let current_view = "user";
+let current_view = "general";
 const views = [{
     name: "general",
     markup: general_view,
@@ -98,7 +97,7 @@ function load_view(view) {
 }
 
 function views_general() {
-    console.log("general")
+    //console.log("general")
 }
 
 function views_user() {
