@@ -146,22 +146,30 @@ function updateTempVisible() {
 function set_event_listeners_for_titles() {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
+    let H1Copy = document.getElementById("PROJECTviewDisplayTitleH1").innerText;
+    let H3Copy = document.getElementById("PROJECTviewDisplayTitleH3").innerText;
 
     if (UserIsEditor === false) {
         titleH1.contentEditable = false;
         titleH3.contentEditable = false;
+        return;
     }
 
-
     titleH1.addEventListener('blur', function(event) {
-        const newTitleH1 = titleH1.innerText
-        update_mobile_header_project_title(newTitleH1);
-        updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
+        const newTitleH1 = titleH1.innerText;
+        if (newTitleH1 !== H1Copy) {
+            update_mobile_header_project_title(newTitleH1);
+            updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
+            H1Copy = newTitleH1;
+        }
     });
 
     titleH3.addEventListener('blur', function(event) {
-        const newTitleH3 = titleH3.innerText
-        updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
+        const newTitleH3 = titleH3.innerText;
+        if (newTitleH3 !== H3Copy) {
+            updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
+            H3Copy = newTitleH3;
+        }
     });
 }
 
@@ -390,146 +398,175 @@ function loadInTable() {
     let songsTableDraggedSongBackground;
     let draggedRow;
 
-    if (songsJsonString !== null) {
+    // If songsJsonString == null ie there is no table to build, stop here
+    if (songsJsonString == null) {
+        return
+    }
 
-        const songData = [];
+    const songData = [];
 
-        if (songsJsonString) {
-            for (const song of songsJsonString) {
-                songData.push({
-                    "img": Details.PictureURL,
-                    "songTitle": song.SongName,
-                    "artistName": Details.ProjectContributors,
-                    "projectName": formatFileSizeBytes(song.FolderSize),
-                    "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
-                    "songSequence": song.SongSequence,
-                    "version": song.Version,
-                    "url": song.URL
-                })
-            }
-        }
-
-        for (let i = 0; i < songData.length; i++) {
-            songData[i].ProjectID = i;
-            const song = songData[i];
-            const songRowItem = loadInProjectViewRowItems(song);
-
-            projectTable.insertAdjacentHTML('beforeend', songRowItem);
-
-            const div = projectTable.lastElementChild;
-            if (UserIsEditor === true) {
-                div.addEventListener("dragstart", handleDragStart);
-                div.addEventListener("dragover", handleDragOver);
-                div.addEventListener("drop", handleDrop);
-            }
-        }
-
-        // Function to handle drag start
-        function handleDragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.rowId);
-            const draggedRowId = e.dataTransfer.getData('text/plain');
-            draggedRow = e.srcElement;
-
-
-            // Changing the colours of the items based on drag state
-            const listNumber = getPositionInParentElement(e.srcElement);
-            const listNumberIsOdd = is_odd(listNumber)
-            if (listNumberIsOdd === true) {
-                songsTableDraggedSongBackground = "var(--background)";
-            } else {
-                songsTableDraggedSongBackground = "var(--PV-transparent-overlay)";
-            }
-        }
-
-        const debouncedHandleChangeHover = debounce(changeColourOnHover, 0);
-
-        function handleDragOver(e) {
-            // Prevent the default behavior to allow the drop
-            e.preventDefault();
-            e.dataTransfer.dropEffect = "move";
-            const hoveredOver = e.target.closest('.PROJECTview-projectTable-rowContainer');
-
-            if (hoveredOver !== draggedRow) {
-                const originalColor = getComputedStyle(hoveredOver).backgroundColor;
-                const originalColorHex = rgb2hex(originalColor)
-
-                // Start the color change process
-                debouncedHandleChangeHover(hoveredOver, originalColorHex, hexOrange);
-            }
-        }
-
-        // Function to handle drop
-        function handleDrop(e) {
-            // Prevent the default behavior
-            e.preventDefault();
-
-            // Changing the colours of the items based on drag state
-            const draggedRowBackground = draggedRow.style;
-            draggedRow.style.backgroundColor = "yellow !important";
-
-            // Get the data (row ID) from the drag-and-drop operation
-            const draggedRowId = e.dataTransfer.getData('text/plain');
-            const draggedElement = document.querySelector(`[data-row-id="${draggedRowId}"]`);
-            const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
-
-            if (targetRowContainer) {
-                const targetRowId = targetRowContainer.getAttribute('data-row-id');
-
-                //Move the items visually
-                targetRowContainer.before(draggedElement);
-                //Update the database with the new data
-                /*I figure it needn't be more complicated on the front end than
-                just sending over the one that's moving, and the one that should be moved, 
-                and then the database can do some magic with that data, because we are 
-                already making the data look good on the front end, so now its a simple case
-                of making these changes permaneant.
-
-                */
-                console.log(draggedRowId, targetRowId)
-            }
-
-            // This isn't working as intended for some reason, and i will have too look into it
-            for (const childElement of projectTable.children) {
-                console.log(childElement.style.backgroundColor)
-                childElement.style.backgroundColor = "";
-            }
-        }
-
-        // Attach a click event listener to the container
-        projectTable.addEventListener('click', function(event) {
-            const target = event.target;
-            event.stopPropagation();
-
-            // Check if the clicked element is a button within a row
-            if (target.tagName === 'BUTTON') {
-                const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
-
-                if (rowContainer) {
-                    const rowId = rowContainer.getAttribute('data-row-id');
-                    displayMenuForRow(event);
-                }
-            }
-        });
-
-        if (UserIsEditor === true) {
-            // Get all divs with contenteditable attribute within the container
-            const contentEditableDivs = projectTable.querySelectorAll('[contenteditable]');
-
-            // Define the blur event handler
-            const blurEventHandler = (event) => {
-                // Get the correct data and tell the database to update the title of that track
-                const rowContainer = event.target.closest('.PROJECTview-projectTable-rowContainer');
-                const songSequenceNumber = rowContainer.getAttribute('data-row-id');
-                const updateString = `${songSequenceNumber}-${event.target.textContent}`;
-                updateProjectDetails(Details.ProjectID, "project_song_title", updateString)
-            };
-
-            // Add blur event listener to each contenteditable div
-            contentEditableDivs.forEach((div) => {
-                div.addEventListener('blur', blurEventHandler);
-            });
+    if (songsJsonString) {
+        for (const song of songsJsonString) {
+            songData.push({
+                "img": Details.PictureURL,
+                "songTitle": song.SongName,
+                "artistName": Details.ProjectContributors,
+                "projectName": formatFileSizeBytes(song.FolderSize),
+                "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
+                "songSequence": song.SongSequence,
+                "version": song.Version,
+                "url": song.URL
+            })
         }
     }
+
+    for (let i = 0; i < songData.length; i++) {
+        songData[i].ProjectID = i;
+        const song = songData[i];
+        const songRowItem = loadInProjectViewRowItems(song);
+
+        projectTable.insertAdjacentHTML('beforeend', songRowItem);
+
+        const div = projectTable.lastElementChild;
+        if (UserIsEditor === true) {
+            div.addEventListener("dragstart", handleDragStart);
+            div.addEventListener("dragover", handleDragOver);
+            div.addEventListener("drop", handleDrop);
+        }
+    }
+
+    // Function to handle drag start
+    function handleDragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.rowId);
+        const draggedRowId = e.dataTransfer.getData('text/plain');
+        draggedRow = e.srcElement;
+
+
+        // Changing the colours of the items based on drag state
+        const listNumber = getPositionInParentElement(e.srcElement);
+        const listNumberIsOdd = is_odd(listNumber)
+        if (listNumberIsOdd === true) {
+            songsTableDraggedSongBackground = "var(--background)";
+        } else {
+            songsTableDraggedSongBackground = "var(--PV-transparent-overlay)";
+        }
+    }
+
+    const debouncedHandleChangeHover = debounce(changeColourOnHover, 0);
+
+    function handleDragOver(e) {
+        // Prevent the default behavior to allow the drop
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        const hoveredOver = e.target.closest('.PROJECTview-projectTable-rowContainer');
+
+        if (hoveredOver !== draggedRow) {
+            const originalColor = getComputedStyle(hoveredOver).backgroundColor;
+            const originalColorHex = rgb2hex(originalColor)
+
+            // Start the color change process
+            debouncedHandleChangeHover(hoveredOver, originalColorHex, hexOrange);
+        }
+    }
+
+    // Function to handle drop
+    function handleDrop(e) {
+        // Prevent the default behavior
+        e.preventDefault();
+
+        // Changing the colours of the items based on drag state
+        const draggedRowBackground = draggedRow.style;
+        draggedRow.style.backgroundColor = "yellow !important";
+
+        // Get the data (row ID) from the drag-and-drop operation
+        const draggedRowId = e.dataTransfer.getData('text/plain');
+        const draggedElement = document.querySelector(`[data-row-id="${draggedRowId}"]`);
+        const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
+
+        if (targetRowContainer) {
+            const targetRowId = targetRowContainer.getAttribute('data-row-id');
+
+            //Move the items visually
+            targetRowContainer.before(draggedElement);
+            //Update the database with the new data
+            /*I figure it needn't be more complicated on the front end than
+            just sending over the one that's moving, and the one that should be moved, 
+            and then the database can do some magic with that data, because we are 
+            already making the data look good on the front end, so now its a simple case
+            of making these changes permaneant.
+
+            */
+            console.log(draggedRowId, targetRowId)
+        }
+
+        // This isn't working as intended for some reason, and i will have too look into it
+        for (const childElement of projectTable.children) {
+            console.log(childElement.style.backgroundColor)
+            childElement.style.backgroundColor = "";
+        }
+    }
+
+    // Attach a click event listener to the container
+    projectTable.addEventListener('click', function(event) {
+        const target = event.target;
+        event.stopPropagation();
+
+        // Check if the clicked element is a button within a row
+        if (target.tagName === 'BUTTON') {
+            const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
+
+            if (rowContainer) {
+                const rowId = rowContainer.getAttribute('data-row-id');
+                displayMenuForRow(event);
+            }
+        }
+    });
+
+    if (UserIsEditor === false) {
+        return;
+    }
+
+    // Get all divs with contenteditable attribute within the container
+    const contentEditableDivs = projectTable.querySelectorAll('[contenteditable]');
+    const previousTitles = [];
+
+    // Define the blur event handler
+    const blurEventHandler = (event) => {
+        // Get the correct data and tell the database to update the title of that track
+        const rowContainer = event.target.closest('.PROJECTview-projectTable-rowContainer');
+        const dataRowID = rowContainer.getAttribute('data-row-id');
+        const newText = event.target.textContent
+
+        // Checking if an object was found and returning the currentText
+        const resultObject = previousTitles.find(obj => obj.dataRowIDField === dataRowID);
+        const oldText = resultObject ? resultObject.currentText : "Row ID not found";
+        if (oldText == newText) {
+            return;
+        }
+
+        // If the text does match update the currentText in the array to the new currentText
+        for (var i = previousTitles.length - 1; i >= 0; i--) {
+            const tempDataRowID = previousTitles[i].dataRowIDField;
+            if (tempDataRowID === dataRowID) {
+                previousTitles[i].currentText = newText;
+            }
+        }
+
+        const updateString = `${dataRowID}-${newText}`;
+        updateProjectDetails(Details.ProjectID, "project_song_title", updateString)
+    };
+
+    // Add blur event listener to each contenteditable div
+    contentEditableDivs.forEach((div) => {
+        div.addEventListener('blur', blurEventHandler);
+        previousTitles.push({
+            "dataRowIDField": div.parentElement.parentElement.getAttribute('data-row-id'),
+            "currentText": div.innerText,
+        });
+
+    });
+
+
 }
 
 function removeLastExtension(filename) {
