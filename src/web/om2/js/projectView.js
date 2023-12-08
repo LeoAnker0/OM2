@@ -125,7 +125,7 @@ export async function PROJECTVIEW_update() {
         loadInTable();
         /* update the image src of the top image. */
         const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
-        const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5/`;
+        const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
 
         imageTag.src = image;
     }
@@ -136,7 +136,7 @@ function updateTempVisible() {
     const title = document.getElementById("PROJECTviewDisplayTitleH1");
     const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
     const displayImage = document.getElementById("PROJECTviewDisplayImage_imgTag");
-    const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5/`;
+    const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
 
     title.innerText = Details.ProjectName;
     contributors.innerText = Details.ProjectContributors;
@@ -192,7 +192,7 @@ function loadContainer(details) {
         } else if (placeholder === 'MOGI_placeholder_itemID') {
             value = "temporaryIidentifier";
         } else if (placeholder === "PROJECTviewDisplayImage") {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5`;
             value = image
         }
 
@@ -583,7 +583,7 @@ function loadInProjectViewRowItems(songData) {
         let value = '';
 
         if (placeholder === 'PROJECTviewRow_img') {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/3/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/3`;
             value = image;
         } else if (placeholder === 'PROJECTviewRow_songTitle') {
             value = songData.songTitle;

@@ -249,7 +249,7 @@ function PLAYBACK_start_playback() {
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
     //set the source of the audio tag and start playback
-    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3`;
     PLAYBACK_audio_tag.load();
     /* don't start playback if it's paused */
     if (PLAYBACK_playing_state === "playing") {
@@ -269,7 +269,7 @@ function PLAYBACK_start_without_playback_and_update_progress(progress) {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
-    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3/`;
+    PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3`;
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.currentTime = progress;
     playStateChange("paused");
@@ -312,9 +312,9 @@ function PLAYBACK_update_top() {
     LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDbottomText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     resizeTitleText();
-    LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
-    LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3/`;
-    PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5/`;
+    LCDimage.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3`;
+    LCDimageMobile.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/3`;
+    PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5`;
     PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     updateQueue();
@@ -325,12 +325,12 @@ function PLAYBACK_update_external_metadata() {
 
     // the proper format for the images can be found at the bottom of https://googlechrome.github.io/samples/media-session/audio.html
     const formatted_img = [
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/1/`, sizes: '10x10', type: 'image/webp' },
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/2/`, sizes: '40x40', type: 'image/webp' },
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/3/`, sizes: '160x160', type: 'image/webp' },
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/4/`, sizes: '320x320', type: 'image/webp' },
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/5/`, sizes: '640x640', type: 'image/webp' },
-        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/6/`, sizes: '1080x1080', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/1`, sizes: '10x10', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/2`, sizes: '40x40', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/3`, sizes: '160x160', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/4`, sizes: '320x320', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/5`, sizes: '640x640', type: 'image/webp' },
+        { src: `${MAIN_CONST_EXPORT_mediaPath}/${track.img}/6`, sizes: '1080x1080', type: 'image/webp' },
     ];
 
     navigator.mediaSession.metadata = new MediaMetadata({

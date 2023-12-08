@@ -262,7 +262,7 @@ function handle_lcd_mobile_body(params) {
                 let value = '';
 
                 if (placeholder === 'queue_item_img') {
-                    const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3/`;
+                    const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3`;
                     value = image;
                 } else if (placeholder === 'queue_item_song_name') {
                     value = songTitle;

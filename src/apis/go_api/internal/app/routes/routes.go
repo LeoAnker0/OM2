@@ -8,6 +8,7 @@ func SetupRoutes(router *gin.Engine) {
     SetupProjectRoutes(router)
     SetupFileUploadRoutes(router)
     SetupShareRoutes(router)
-    StaticFileRoutes(router)
+    SetupStaticFileRoutes(router)
+    CatchAllForStaticWebFiles(router)
     // Add other route setup functions for different categories
 }

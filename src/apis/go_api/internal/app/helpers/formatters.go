@@ -63,3 +63,14 @@ func RegexReplace(input string, replacements RegexReplaceMap) string {
 
     return input
 }
+
+func ShortenString(input string, maxLength int) string {
+    if len(input) > maxLength {
+        // Calculate the available space for the characters and "..."
+        availableSpace := maxLength - 3
+        // Clip the string and add "..."
+        return input[:availableSpace] + "..."
+    }
+    // If the string is within the maxLength, return it as is
+    return input
+}

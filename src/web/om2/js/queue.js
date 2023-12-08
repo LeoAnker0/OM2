@@ -213,7 +213,7 @@ function hydrateItem(song) {
         let value = '';
 
         if (placeholder === 'QUEUE_item_image') {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3/`;
+            const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3`;
             value = image;
         } else if (placeholder === 'QUEUE_item_title') {
             value = songTitle;
