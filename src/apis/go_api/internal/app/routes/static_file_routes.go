@@ -19,6 +19,12 @@ func SetupStaticFileRoutes(router *gin.Engine) {
     {
         mediaPathRoutes.GET(":id/:fileQuality", handleMediaPath)
     }
+
+    coreWebPathRoutes := router.Group("/")
+    {
+        coreWebPathRoutes.GET(":requestedPath/:requestedFile", handleCoreWebFiles)
+        coreWebPathRoutes.GET("", handleCoreWebFiles)
+    }
 }
 
 // Media Path
@@ -151,6 +157,28 @@ func handleStaticPath(c *gin.Context) {
     }
 }
 
+// Handle site files
+func handleCoreWebFiles(c *gin.Context) {
+    requestedFile := c.Param("requestedFile")
+    requestedPath := c.Param("requestedPath")
+
+    if requestedFile == "" {
+        filePath := "./static_web/" + "index.html"
+
+        // Serve the file with the correct MIME type
+        c.File(filePath)
+        return
+    } else if requestedPath == "assets" {
+        filePath := "./static_web/assets/" + requestedFile
+
+        // Serve file
+        c.File(filePath)
+        return
+    } else {
+        return
+    }
+}
+
 // Catch all for serving static assets related to the service, html, css, js, svg, etc...
 func CatchAllForStaticWebFiles(r *gin.Engine) {
     // Define a wildcard route to serve files from ./static_web
@@ -158,11 +186,7 @@ func CatchAllForStaticWebFiles(r *gin.Engine) {
         // Capture the requested path
         requestedPath := c.Request.URL.Path
 
-        // Construct the file path for the local "static_web" directory
-        filePath := "./static_web" + requestedPath
-
-        // Serve the file with the correct MIME type
-        c.File(filePath)
+        fmt.Println("A path was requested that should not currently be served: ", requestedPath)
         return
     })
 }
