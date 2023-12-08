@@ -30,6 +30,11 @@ func prelogin(c *gin.Context) {
     clientIP := c.ClientIP()
     jwt_token, err := c.Cookie("access-token")
     if err != nil {
+        if err.Error() == "http: named cookie not present" {
+            c.JSON(401, gin.H{"Authenticated": false})
+            return
+        }
+
         fmt.Println("cookie error", err)
     }
 
