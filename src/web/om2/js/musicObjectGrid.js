@@ -152,7 +152,7 @@ function add_in_library_data_to_MOG(libraryData) {
             let value = '';
 
             if (placeholder === 'MOG_image') {
-                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/4`;
+                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/2`;
                 value = image
             } else if (placeholder === 'MOG_text1') {
                 value = textTop;

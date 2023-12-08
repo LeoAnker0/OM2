@@ -165,12 +165,10 @@ func update_project_details(c *gin.Context) {
     }
 
     // Get the item from the database
-    validColumnsToUpdate := []string{"description", "project_name", "project_contributors", "project_song_title"}
+    validColumnsToUpdate := []string{"description", "project_name", "project_contributors", "project_song_title", "SongsTableChangeSongSequenceOrder"}
     column_is_valid := helpers.Contains(validColumnsToUpdate, Column_To_Update)
     if !column_is_valid {
         fmt.Println("The column is not open to being updated")
-        response := map[string]interface{}{"authenticated": false}
-        fmt.Println(response)
         c.JSON(400, gin.H{"Authenticated": false})
         return
     }
@@ -185,6 +183,12 @@ func update_project_details(c *gin.Context) {
             c.JSON(400, gin.H{"updated": "error"})
             return
         }
+    }else if Column_To_Update == "SongsTableChangeSongSequenceOrder" {
+        draggedRowId, targetRowId, _ := strings.Cut(New_Data, "|")
+        fmt.Println("SongSequences", draggedRowId, targetRowId)
+
+        c.JSON(400, gin.H{"updated": "error"})
+        return
     } else {
 
         response := helpers.Update_project_detail_by_column(uuid, Column_To_Update, New_Data, ProjectID)

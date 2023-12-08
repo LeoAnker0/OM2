@@ -29,7 +29,8 @@ RUN cd && \
 #    GO111MODULE=on \
 #    CGO_ENABLED=0
 
-ENV STORAGE_MODE=system
+ENV STORAGE_MODE=system \
+	GIN_MODE=debug
 
 # Set the working directory inside the container
 WORKDIR /app
