@@ -499,6 +499,8 @@ function loadInTable() {
             console.log(draggedRowId, targetRowId)
             const newOrderInformation = `${draggedRowId}|${targetRowId}`;
             updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
+            PROJECTVIEW_update();
+
         }
 
         // This isn't working as intended for some reason, and i will have too look into it

@@ -185,7 +185,18 @@ func update_project_details(c *gin.Context) {
         }
     }else if Column_To_Update == "SongsTableChangeSongSequenceOrder" {
         draggedRowId, targetRowId, _ := strings.Cut(New_Data, "|")
-        fmt.Println("SongSequences", draggedRowId, targetRowId)
+        draggedRowIdSongSequence, _, _ := strings.Cut(draggedRowId, "-")
+        targetRowIdSongSequence, _, _ := strings.Cut(targetRowId, "-")
+        /*
+        draggedRowIdSongSequence, draggedRowIdVersion, _ := strings.Cut(draggedRowId, "-")
+        targetRowIdSongSequence, targetRowIdVersion, _ := strings.Cut(targetRowId, "-")
+        */
+
+        err := helpers.Update_the_order_of_songsSequnce_in_songs(ProjectID, draggedRowIdSongSequence, targetRowIdSongSequence)
+        if err != nil {
+            fmt.Println("Error in updating the SongsTableChangeSongSequenceOrder", err)
+        }
+        fmt.Println("SongSequences", draggedRowIdSongSequence, targetRowIdSongSequence)
 
         c.JSON(400, gin.H{"updated": "error"})
         return
