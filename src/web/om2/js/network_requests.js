@@ -69,7 +69,7 @@ export async function updateProjectDetails(project_id, column, newInfo) {
         const data = await response.json();
         const update = data["updated"]
         if (update === "success") {
-            return
+            return "yes";
         } else {
             console.log("there was an error, yes")
         }

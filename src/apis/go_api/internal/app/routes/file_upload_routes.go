@@ -300,9 +300,28 @@ func upload_audio_file(c *gin.Context) {
     // Create the file on the server
     newFile, err := os.Create(filename)
     if err != nil {
-        fmt.Println("error creating file:", err)
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
-        return
+        if os.IsNotExist(err) {
+            // Directory does not exist, create it
+            dir := filepath.Dir(filename)
+            if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+                fmt.Println("error creating directory:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create directory on server"})
+                return
+            }
+
+            // Retry file creation after creating the directory
+            newFile, err = os.Create(filename)
+            if err != nil {
+                fmt.Println("error creating file:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
+                return
+            }
+        } else {
+            // Handle other errors
+            fmt.Println("error creating file:", err)
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create file on server"})
+            return
+        }
     }
     defer newFile.Close()
 

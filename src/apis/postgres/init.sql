@@ -1,6 +1,6 @@
 CREATE TABLE public.files (
+    file_url text PRIMARY KEY,
     processed_state text,
-    file_url text,
     owner json[],
     file_type text,
     file_created_time bigint,
@@ -8,34 +8,33 @@ CREATE TABLE public.files (
 );
 
 CREATE TABLE public.projects (
+    project_id text PRIMARY KEY,
     time_created bigint,
     description text,
     picture_url text,
-    project_id text NOT NULL,
     project_name text,
     project_contributors text,
     owner json[]
 );
 
-
 CREATE TABLE public.songs (
-    "URL" text,
+    "URL" text PRIMARY KEY,
     "ProjectID" text,
     "SongName" text,
-    "Duration" smallint,
-    "SongSequence" smallint,
+    "Duration" int,
+    "SongSequence" int,
     "Favourited" boolean,
     "FolderSize" bigint,
-    "Version" smallint
+    "Version" int
 );
 
 CREATE TABLE public.users (
-    uuid text NOT NULL,
-    username text NOT NULL,
-    password text NOT NULL,
-    profile_picture text NOT NULL,
-    email text NOT NULL,
-    description text NOT NULL,
+    uuid text PRIMARY KEY,
+    username text,
+    password text,
+    profile_picture text,
+    email text,
+    description text,
     verified boolean,
     last_logged_in bigint,
     date_joined bigint,

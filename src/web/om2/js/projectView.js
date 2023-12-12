@@ -307,26 +307,23 @@ async function detectPlayAndShuffleButtons() {
         PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(Details);
     });
     menuButton.addEventListener("click", function() {
-        displayMenuForTop(event, Details)
+        displayMenuForTop(event)
     });
     mobileMenuButton.addEventListener("click", function() {
-        displayMenuForTop(event, Details)
+        displayMenuForTop(event)
     });
 }
 
 
-function displayMenuForTop(event, project_details) {
+function displayMenuForTop(event) {
     event.stopPropagation();
-    project_details = JSON.parse(project_details)
     const clickedItem = event.target;
-    const currentPath = window.location.pathname;
-    const parts = currentPath.split("/");
-    const project_id = parts[parts.length - 1];
+    const projectID = Details.ProjectID;
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
         optionalParams: {
-            PROJECT_ID: project_id,
+            PROJECT_ID: projectID,
             QUEUE_POSITION: "next"
         },
         function: 'PLAYBACK_add_songs_to_queue'
@@ -334,7 +331,7 @@ function displayMenuForTop(event, project_details) {
         displayText: 'Play later',
         optionalSVG: 'icons_playlist',
         optionalParams: {
-            PROJECT_ID: project_id,
+            PROJECT_ID: projectID,
             QUEUE_POSITION: "later"
 
         },
@@ -344,7 +341,7 @@ function displayMenuForTop(event, project_details) {
         optionalSVG: 'None',
         function: 'PROJECT_VIEW_delete_project',
         optionalParams: {
-            PROJECT_ID: project_id
+            PROJECT_ID: projectID
         },
         colour: "hsl(0, 100%, 55%)"
     }]
@@ -365,13 +362,14 @@ export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 }
 
 async function deleteProjectFromServer(project_id) {
-    project_id = project_id.PROJECT_ID
+    const ProjectID = Details.ProjectID;
     try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/${project_id}`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/${ProjectID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
         });
         const data = await response.json();
 
@@ -479,27 +477,27 @@ function loadInTable() {
         draggedRow.style.backgroundColor = "yellow !important";
 
         // Get the data (row ID) from the drag-and-drop operation
-        const draggedRowId = e.dataTransfer.getData('text/plain');
-        const draggedElement = document.querySelector(`[data-row-id="${draggedRowId}"]`);
+        const Mover = e.dataTransfer.getData('text/plain');
+        const draggedElement = document.querySelector(`[data-row-id="${Mover}"]`);
         const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
 
         if (targetRowContainer) {
-            const targetRowId = targetRowContainer.getAttribute('data-row-id');
+            const Destination = targetRowContainer.getAttribute('data-row-id');
 
             //Move the items visually
             targetRowContainer.before(draggedElement);
-            //Update the database with the new data
-            /*I figure it needn't be more complicated on the front end than
-            just sending over the one that's moving, and the one that should be moved, 
-            and then the database can do some magic with that data, because we are 
-            already making the data look good on the front end, so now its a simple case
-            of making these changes permaneant.
+            const newOrderInformation = `${Mover}|${Destination}`;
+            setTimeout(async () => {
+                const yes = await updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
 
-            */
-            console.log(draggedRowId, targetRowId)
-            const newOrderInformation = `${draggedRowId}|${targetRowId}`;
-            updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
-            PROJECTVIEW_update();
+                /* PROJECTVIEW_update() does a full network request after the update, and this is not particularly efficient, 
+                in the future I shall either find a better way of updating the information, or I'll find a more efficient
+                way of sending the data up the network. But for the moment, I can't be bothered implementing anything that 
+                would be better...
+                */
+                PROJECTVIEW_update();
+            }, 1);
+
 
         }
 
@@ -571,8 +569,6 @@ function loadInTable() {
         });
 
     });
-
-
 }
 
 function removeLastExtension(filename) {

@@ -233,14 +233,25 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
     * else...
     */
 
-    query := fmt.Sprintf(`UPDATE songs SET "SongSequence" = "SongSequence" + 1 WHERE "SongSequence" >= $1 AND "ProjectID" = $2`)
+    query := fmt.Sprintf(`
+        UPDATE songs
+        SET "SongSequence" = 
+            CASE 
+                WHEN "SongSequence" = $1 THEN $2
+                WHEN $1 < $2 AND "SongSequence" BETWEEN $1 + 1 AND $2 THEN "SongSequence" - 1
+                WHEN $1 > $2 AND "SongSequence" BETWEEN $2 AND $1 - 1 THEN "SongSequence" + 1
+                ELSE "SongSequence"
+            END
+        WHERE "ProjectID" = $3;
+        `)
 
-    _, err := db.Exec(query, Destination, ProjectID)
+    _, err := db.Exec(query, Mover, Destination, ProjectID)
     if err != nil {
         fmt.Println("error in Update_the_order_of_songsSequnce_in_songs", err)
         return err
     }
 
+    /*
     query = fmt.Sprintf(`UPDATE songs SET "SongSequence" = $1 WHERE "SongSequence" = $2 AND "ProjectID" = $3`)
 
     _, err = db.Exec(query, Mover, Destination, ProjectID)
@@ -249,6 +260,7 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
         return err
     }
 
+    */
 
     return nil
 }
@@ -546,6 +558,18 @@ func DELETE_files_row(url string) error {
     _, err := db.Exec(query, url)
     if err != nil {
         fmt.Println("error in DELETE_files_row ", err)
+        return err
+    }
+
+    return nil
+}
+
+func DELETE_songs_row(url string) error {
+    query := `DELETE FROM songs WHERE "URL" = $1`
+
+    _, err := db.Exec(query, url)
+    if err != nil {
+        fmt.Println("error in DELETE_songs_row ", err)
         return err
     }
 

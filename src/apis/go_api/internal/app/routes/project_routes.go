@@ -195,11 +195,9 @@ func update_project_details(c *gin.Context) {
         err := helpers.Update_the_order_of_songsSequnce_in_songs(ProjectID, draggedRowIdSongSequence, targetRowIdSongSequence)
         if err != nil {
             fmt.Println("Error in updating the SongsTableChangeSongSequenceOrder", err)
+            c.JSON(400, gin.H{"updated": "error"})
+            return
         }
-        fmt.Println("SongSequences", draggedRowIdSongSequence, targetRowIdSongSequence)
-
-        c.JSON(400, gin.H{"updated": "error"})
-        return
     } else {
 
         response := helpers.Update_project_detail_by_column(uuid, Column_To_Update, New_Data, ProjectID)
@@ -214,22 +212,32 @@ func update_project_details(c *gin.Context) {
     return
 }
 
-type Project struct {
-    ProjectJSON string `json:"ProjectJSON"`
-    URL         string `json:"PictureURL"`
-}
-
 type Song struct {
-    SongName     string `json:"song_name"`
-    URL          string `json:"url"`
-    Duration     json.Number    `json:"duration"`
-    SongSequence int    `json:"song_sequence"`
-    SongSize     int64
+    URL          string      `json:"URL"`
+    SongName     string      `json:"SongName"`
+    Duration     json.Number `json:"Duration"`
+    SongSequence int         `json:"SongSequence"`
+    Favourited   bool        `json:"Favourited"`
+    FolderSize   int64       `json:"FolderSize"`
+    Version      int         `json:"Version"`
 }
 
-type SongsJSON struct {
-    Songs []Song `json:"songs_json"`
+type Project struct {
+    ProjectJSON ProjectJSON `json:"ProjectJSON"`
+    URL         string      `json:"PictureURL"`
 }
+
+type ProjectJSON []Song
+
+func (pj *ProjectJSON) UnmarshalJSON(data []byte) error {
+    var songs []Song
+    if err := json.Unmarshal(data, &songs); err != nil {
+        return err
+    }
+    *pj = songs
+    return nil
+}
+
 
 func delete_project(c *gin.Context) {
     ProjectID := c.Param("projectID")
@@ -238,6 +246,8 @@ func delete_project(c *gin.Context) {
     if err != nil {
         fmt.Println("cookie error", err)
     }
+
+    fmt.Println("ProjecctID, ", ProjectID)
 
     // Authenticate the user and if they aren't valid return them false.
     valid, uuid := helpers.Authenticate(jwt_token, clientIP)
@@ -251,17 +261,14 @@ func delete_project(c *gin.Context) {
         fmt.Println(err)
     }
 
+    fmt.Println(project_json)
+
     // Properly parse project_json as json, and then get .ProjectJSON
     var project Project
     err = json.Unmarshal([]byte(project_json), &project)
     if err != nil {
         fmt.Println("Error parsing JSON:", err)
         return
-    }
-    var songsData SongsJSON
-    err = json.Unmarshal([]byte(project.ProjectJSON), &songsData)
-    if err != nil {
-        fmt.Println("Error:", err)
     }
 
     // Delete the photo, unless the photo path starts with static/
@@ -280,11 +287,17 @@ func delete_project(c *gin.Context) {
     } 
 
     // Loop through all songs and delete their files and files database entry
-    for _, song := range songsData.Songs {
+    for _, song := range project.ProjectJSON {
         FileToDelete := song.URL
         err = helpers.DELETE_files_row(FileToDelete)
         if err != nil {
             fmt.Println("there was an error deleting the file from the files table: ", err)
+        }
+
+        // Delete songs_row
+        err = helpers.DELETE_songs_row(FileToDelete)
+        if err != nil {
+            fmt.Println("there was an error deleting the file from the songs table: ", err)
         }
 
         err = helpers.DeleteFolder(FileToDelete)
