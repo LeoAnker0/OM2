@@ -3,6 +3,7 @@ import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBA
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
@@ -10,6 +11,7 @@ import { projectViewSongsArray } from './sharedArrays.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
+
 
 const uploadQueue = [];
 let isUploading = false;
@@ -720,6 +722,13 @@ async function uploadFileWithProgress(file, details) {
 
     xhr.onload = async function() {
         console.log("Upload fully complete")
+
+        const response = xhr.responseText; // Assuming the response is JSON
+
+        // Handle case where storage limit reached
+        if (response == "StorageLimit Reached") {
+            HandleCreateNotification("Storage limit reached", "error")
+        }
 
         /* add next file to the queue */
         isUploading = false;

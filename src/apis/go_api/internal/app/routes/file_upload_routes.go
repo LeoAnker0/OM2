@@ -11,6 +11,7 @@ import (
     "gopkg.in/gographics/imagick.v2/imagick"
     "time"
     "strings"
+    "strconv"
 
 )
 
@@ -45,6 +46,30 @@ func upload_image_file(c *gin.Context) {
     if authenticated != true {
         c.JSON(400, gin.H{"Authenticated": false})
         return
+    }
+
+    // Check if user is over their limits, if yes, return storage error
+    storageUsed, err := helpers.GetStorageUsedByUser(uuid)
+    if err != nil {
+        fmt.Println("Error in GetStorageUsedByUser ", err)
+    }
+
+    storageAllowance, err := helpers.Get_user_detail_by_column(uuid, "storage_allowance")
+    if err != nil {
+        fmt.Println("Error in Get_user_detail_by_column ", err)
+    }
+
+    storageAllowance_u64, err := strconv.ParseUint(storageAllowance, 10, 64)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    if storageUsed > uint(storageAllowance_u64) {
+        fmt.Println("the user is over their storage limit")
+        c.String(200, "StorageLimit Reached")
+        return
+    } else {
+        fmt.Println("storageUsed: ", storageUsed, "storageAllowance, ", storageAllowance)
     }
 
     if menuType == "update_project_image" {
@@ -209,7 +234,7 @@ func upload_image_file(c *gin.Context) {
         // Initiate the different database things
             // Get the size of the folder
         folderSize := helpers.GetFolderSize(dirPath)
-        
+
         currentTime := time.Now()
         unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
 
@@ -284,6 +309,31 @@ func upload_audio_file(c *gin.Context) {
     if valid != true {
         c.JSON(400, gin.H{"Authenticated": false})
         return
+    }
+
+    
+    // Check if user is over their limits, if yes, return storage error
+    storageUsed, err := helpers.GetStorageUsedByUser(uuid)
+    if err != nil {
+        fmt.Println("Error in GetStorageUsedByUser ", err)
+    }
+
+    storageAllowance, err := helpers.Get_user_detail_by_column(uuid, "storage_allowance")
+    if err != nil {
+        fmt.Println("Error in Get_user_detail_by_column ", err)
+    }
+
+    storageAllowance_u64, err := strconv.ParseUint(storageAllowance, 10, 64)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    if storageUsed > uint(storageAllowance_u64) {
+        fmt.Println("the user is over their storage limit")
+        c.String(200, "StorageLimit Reached")
+        return
+    } else {
+        fmt.Println("storageUsed: ", storageUsed, "storageAllowance, ", storageAllowance)
     }
 
     // Verify that the user should actually have access to the project

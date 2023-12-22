@@ -82,6 +82,23 @@ func WaitUntilDBReady() {
     <-dbReady
 }
 
+func GetStorageUsedByUser(id string) (uint, error) {
+    var totalFileSize uint
+    err := db.QueryRow(`
+
+        SELECT COALESCE(SUM(file_size), 0) 
+        FROM files 
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1
+
+                        `, id).Scan(&totalFileSize)
+    if err != nil {
+        fmt.Println("Error executing query:", err)
+        return 0, err
+    }
+
+    return totalFileSize, nil
+}
+
 
 // IsEmailUnique checks if an email is unique in the database
 func DoesEmailExist(email string) (bool, error) {
@@ -183,56 +200,6 @@ func Update_song_detail_by_column(SongSequence, column_to_update, new_data, Proj
 
 //func Update_the_order_of_songsSequnce_in_songs(ProjectID string, Mover, Destination int) (error) {
 func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination string) (error) {
-    /*
-    ("UPDATE your_table SET number = $1 WHERE number = $2", destination, source)
-    ("UPDATE your_table SET number = number + 1 WHERE number > $1", destination)
-    query := fmt.Sprintf(`UPDATE songs SET "SongSequence" = "SongSequence" + 1 WHERE "SongSequence" >= $1 AND "ProjectID" = $2`)
-    query = fmt.Sprintf(`UPDATE songs SET "SongSequence" = $1 WHERE "SongSequence" = $2 AND "ProjectID" = $3`)
-    */
-
-
-    /*
-
-    To get updates working in the proper way I have to either go and set the value of the one that 
-    I want being moved to 0, and then moving everything by one or something, but this doesn't even solve the problem
-    since I still need to be able to move something 1 --> 5, whereas at the moment a single > --> 0 is possible, but
-    not the other way around.
-
-    My queries at the moment are insufficient to say the least. I however am struggling with what the correct way
-    of doing them is.
-
-    The problem is as goes: there is a list of SongSequences:
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        ...
-
-    And first of all I want to move 6 --> 3 is, this would mean setting 6's value to 3, however 3 would have to be moved up
-    and then 4 would need to be moved up, and 5 would need to be moved up. The problem, is how do we set 6 to 3, without
-    then getting two 3's, not knowing how to distinguish between them and getting all sorts of nasty problems.
-    Well, I could go and get the URL's of all the items, these are unique in a way a SongSequence isn't.
-    It might also help with how in the future there will be able to be multiple items that have the same songSequence,
-    but that should be intentional, and not as here where it is unintendedly happening.
-
-    So if we were to get the URL's of all the songs inbetween the Mover and destination we would have ...
-
-    I think the cheat with using 0 would be better, since it means less data moving. 
-    so:
-    * we set Mover.SongSequence = 0, 
-    * figure out if will be moving upwards or downwards, 
-    * if moving upwards, ie mover is greater than Destination
-        * for all numbers between & including Destination --> Mover -1
-            * SongSequence + 1
-        Mover.SongSequence = Destination
-    * else...
-    */
-
     query := fmt.Sprintf(`
         UPDATE songs
         SET "SongSequence" = 
@@ -250,17 +217,6 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
         fmt.Println("error in Update_the_order_of_songsSequnce_in_songs", err)
         return err
     }
-
-    /*
-    query = fmt.Sprintf(`UPDATE songs SET "SongSequence" = $1 WHERE "SongSequence" = $2 AND "ProjectID" = $3`)
-
-    _, err = db.Exec(query, Mover, Destination, ProjectID)
-    if err != nil {
-        fmt.Println("error in Update_the_order_of_songsSequnce_in_songs", err)
-        return err
-    }
-
-    */
 
     return nil
 }

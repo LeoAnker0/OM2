@@ -1,6 +1,6 @@
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-
 import { MENU_when_image_has_been_uploaded, MENU_when_image_has_been_uploaded_pfp } from './menu.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 
 async function uploadFileWithProgress(file, project_id, menuType) {
     const xhr = new XMLHttpRequest();
@@ -23,12 +23,25 @@ async function uploadFileWithProgress(file, project_id, menuType) {
 
     //the upload is finished
     xhr.onload = function() {
-        //console.log("the file has been uplaoded")
-        if (menuType !== "update_user_pfp") {
-            MENU_when_image_has_been_uploaded();
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // Success
+            const response = xhr.responseText; // Assuming the response is JSON
+
+            // Handle case where storage limit reached
+            if (response == "StorageLimit Reached") {
+                HandleCreateNotification("Storage limit reached", "error")
+            }
+
+            if (menuType !== "update_user_pfp") {
+                MENU_when_image_has_been_uploaded();
+            } else {
+                MENU_when_image_has_been_uploaded_pfp();
+                location.reload();
+            }
+
         } else {
-            MENU_when_image_has_been_uploaded_pfp();
-            location.reload();
+            // Request failed
+            console.error("Error during upload. Status:", xhr.status, "Response:", xhr.responseText);
         }
     };
 

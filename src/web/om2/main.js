@@ -9,6 +9,7 @@ import { init_routing } from './js/routing.js';
 import { initSettings } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 import layout from './html/layout.html?raw';
+import './css/notificationStyling.css';
 import './css/lcd_mobile_body.css';
 import './css/musicObjectGrid.css';
 import './css/projectView.css';
