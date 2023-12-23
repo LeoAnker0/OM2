@@ -30,7 +30,8 @@ RUN cd && \
 #    CGO_ENABLED=0
 
 ENV STORAGE_MODE=system \
-	GIN_MODE=debug
+	GIN_MODE=debug \
+	COOKIE_ALIVE_TIME=1
 
 # Set the working directory inside the container
 WORKDIR /app

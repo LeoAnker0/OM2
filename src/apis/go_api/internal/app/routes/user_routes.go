@@ -8,6 +8,8 @@ import (
     "go_api/internal/app/helpers"
     "net/http"
     "time"
+    "strconv"
+    "os"
 )
 
 func SetupUserRoutes(router *gin.Engine) {
@@ -116,21 +118,41 @@ func login(c *gin.Context) {
         return
     }
 
-    expiration := time.Now().Add((24 * 1) * time.Hour)
+    cookieAliveTime := os.Getenv("COOKIE_ALIVE_TIME")
+    cookieAliveTime_int, err := strconv.Atoi(cookieAliveTime)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    cookieAliveTimeHours := 24 * cookieAliveTime_int
+    expiration := time.Now().Add(time.Hour * time.Duration(cookieAliveTimeHours))
+
+    operationMode := os.Getenv("GIN_MODE")
+
+    var cookie *http.Cookie // Declare the variable outside the if-else block
 
     // access-token set here
-    /* in future add a switch so that when in prod mode
-    the cookie has the correct security settings, but that
-    dev gives me the needed flexibility. */
-    cookie := &http.Cookie{
-            Name:       "access-token",
-            Value:      jwt,
-            Path:       "/",
-            Expires:    expiration,
-            //HttpOnly:   true, // Set the HttpOnly flag to true
+    if operationMode == "debug" {
+        cookie = &http.Cookie{
+            Name:    "access-token",
+            Value:   jwt,
+            Path:    "/",
+            Expires: expiration,
+            //HttpOnly:   true,
             //SameSite:   http.SameSiteNoneMode,
             //Secure:     true
         }
+    } else if operationMode == "production" {
+        cookie = &http.Cookie{
+            Name:     "access-token",
+            Value:    jwt,
+            Path:     "/",
+            Expires:  expiration,
+            HttpOnly: true,
+            //SameSite:   http.SameSiteNoneMode,
+            Secure:   true,
+        }
+    }
 
     http.SetCookie(c.Writer, cookie)
 

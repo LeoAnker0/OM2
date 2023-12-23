@@ -7,6 +7,7 @@ import (
     "github.com/dgrijalva/jwt-go"
     "os"
     "time"
+    "strconv"
 )
 
 // Claims represents the JWT claims structure.
@@ -129,6 +130,13 @@ func Generate_JWT_by_email(email, clientIP string) (string, error) {
     secretKey := os.Getenv("SECRET_JWT_KEY")
     jwtSecret := []byte(secretKey)
 
+    cookieAliveTime := os.Getenv("COOKIE_ALIVE_TIME")
+    cookieAliveTime_int, err := strconv.Atoi(cookieAliveTime)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    cookieAliveTimeHours := 24 * cookieAliveTime_int
 
     // Create a new token with the standard claims
     token := jwt.New(jwt.SigningMethodHS256)
@@ -137,7 +145,7 @@ func Generate_JWT_by_email(email, clientIP string) (string, error) {
     claims := jwt.MapClaims{
         "uuid": uuid,
         "ip":clientIP,
-        "exp":     time.Now().Add(time.Hour * 24).Unix(), // Token expiration time (e.g., 24 hours)
+        "exp":     time.Now().Add(time.Hour * time.Duration(cookieAliveTimeHours)).Unix(), // Token expiration time (e.g., 24 hours)
     }
 
     token.Claims = claims
