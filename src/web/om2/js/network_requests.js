@@ -113,7 +113,7 @@ export async function getLibraryData(library_items_to_request_at_a_time, no_libr
         const projects = responseData.projects;
 
         if (!Array.isArray(projects)) {
-            console.log("Projects is not an array:", projects);
+            //console.log("Projects is not an array:", projects);
             return [];
         }
 

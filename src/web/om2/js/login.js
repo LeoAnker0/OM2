@@ -1,8 +1,9 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 import settingsModal from '../html/settingsModal.html?raw';
 import { init_signup_form } from './signup.js';
-import { MENUdisplay } from './menu.js';
 import { svgImports } from './importAssets.js';
+import { MENUdisplay } from './menu.js';
 import { main } from '../main.js';
 
 let loginAttempted = false;
@@ -69,14 +70,13 @@ function loadLoginForm() {
 
             if (authenticated) {
                 signedIn = true;
-                loginSuccessAnimation();
+                HandleCreateNotification("Login Successful", "success")
                 main()
-                setTimeout(hideContainer, 2000);
+                hideContainer();
 
             } else {
                 signedIn = false;
-                loginErrorAnimation();
-                console.log("Login failed. Retry!");
+                HandleCreateNotification("Error Logging In", "error")
             }
 
             loginAttempted = false; // Reset the loginAttempted flag to allow retrying on subsequent attempts
@@ -170,25 +170,4 @@ function hideContainer() {
 
     } catch {}
     return
-}
-
-
-function loginSuccessAnimation() {
-    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-    element.classList.add('SETTINGSanimateGreen');
-    element.addEventListener('animationend', () => {
-        element.classList.remove('SETTINGSanimateGreen');
-    });
-    return;
-}
-
-function loginErrorAnimation() {
-    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-    element.classList.add('SETTINGSanimateError');
-    element.addEventListener('animationend', () => {
-        element.classList.remove('SETTINGSanimateError');
-    });
-    return;
 }
