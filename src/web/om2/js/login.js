@@ -98,58 +98,62 @@ async function login(email, password) {
             credentials: 'include',
             body: JSON.stringify({ email, password }),
         });
+
         const data = await response.json();
         if (data.Authenticated === true) {
-            const jwt = data.jwt
-            localStorage.setItem("JWT", jwt)
+            return true
+        } else {
+            return false
         }
-        return data.Authenticated;
     } catch (error) {
-        console.error(error);
+        const textError = error.toString();
+        if (textError == "SyntaxError: Unexpected end of JSON input") {
+            //The server is probably down, and so display an error message of that.
+            HandleCreateNotification("The server is down", "error");
+        } else {
+            console.error(error);
+        }
         return false;
     }
 }
 
 export async function prelogin() {
-    const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/prelogin`, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-    });
+    try {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/prelogin`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if ((!response.ok) && (response.status === 401) && (data.Authenticated == false)) {
-        //displayNotice("event", "please excuse the state of the codebase")
-        return false;
-    } else if (!response.ok) {
-        console.log("There was an unknown error:", response)
-        return false;
-    } else if (response.ok && (data.Authenticated == true)) {
-        // The desired outcome
-        return true;
-    } else if (response.ok) {
-        console.log("The response was ok, but the correct data wasn't sent.");
-        return false;
-    } else {
-        console.log("Catch all that shouldn't be needed.");
-        return false;
+        if ((!response.ok) && (response.status === 401) && (data.Authenticated == false)) {
+            return false;
+        } else if (!response.ok) {
+            console.log("There was an unknown error:", response)
+            return false;
+        } else if (response.ok && (data.Authenticated == true)) {
+            // The desired outcome
+            return true;
+        } else if (response.ok) {
+            console.log("The response was ok, but the correct data wasn't sent.");
+            return false;
+        } else {
+            console.log("Catch all that shouldn't be needed.");
+            return false;
+        }
+    } catch (error) {
+        const textError = error.toString();
+        if (textError == "SyntaxError: Unexpected end of JSON input") {
+            //The server is probably down
+            HandleCreateNotification("The server is down", "error");
+        }
     }
+
 }
 
-function displayNotice(event, project_id) {
-    const menu_type = "notice";
-    const params = [{
-        displayText: 'Your JWT has expired, please sign in.',
-        optionalSVG: 'None',
-        function: 'None'
-    }]
-
-    MENUdisplay(params, event, menu_type);
-    return;
-}
 
 function loadInContainer() {
     let IDofElement = "MAINcontentPages";

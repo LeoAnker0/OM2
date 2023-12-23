@@ -87,7 +87,6 @@ func login(c *gin.Context) {
         return
     }
     if !emailExists {
-        fmt.Println("Email doesn't exist")
         c.JSON(400, gin.H{"error": "Email doesn't exist"})
         return
     }
@@ -95,7 +94,6 @@ func login(c *gin.Context) {
     // Check if the email is a valid format
     isValid := helpers.IsValidEmail(email)
     if !isValid {
-        fmt.Println("Email is not valid")
         c.JSON(400, gin.H{"error": "Email is not valid"})
         return
     }
@@ -106,7 +104,6 @@ func login(c *gin.Context) {
         fmt.Println(err)
     }
     if !passwordMatches {
-        fmt.Println("the password didn't match")
         c.JSON(400, gin.H{"error": "login failed"})
         return
     }
@@ -183,7 +180,6 @@ func get_user_details(c *gin.Context) {
 
     // Get the item from the database
     validColumnsToRetrieve := []string{"last_state", "username", "profile_picture", "admin"}
-
     column_is_valid := helpers.Contains(validColumnsToRetrieve, Wanted_Column)
 
     if !column_is_valid {

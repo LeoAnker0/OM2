@@ -1,11 +1,50 @@
+const waitTime = 1500;
+let notificationsManaged = 0;
+let notificationQueue = [];
+let lastTime;
+
 export function HandleCreateNotification(notificationText, notificationType) {
-    createNotification(notificationText, notificationType);
+    const date = new Date();
+    const time = date.getTime();
+
+    notificationQueue.push({
+        notificationText,
+        notificationType,
+        time
+    })
+
+    manageNotifications();
+}
+
+function manageNotifications() {
+    const date = new Date();
+    const time = date.getTime();
+    const currentNotification = notificationQueue.at(notificationsManaged);
+
+    if (notificationQueue.length > 1) {
+        const lastNotification = notificationQueue.at((notificationsManaged - 1));
+
+        if ((time - lastTime) > waitTime) {
+            // When notifications !collide, create them;
+            createNotification(currentNotification.notificationText, currentNotification.notificationType);
+            lastTime = time;
+
+        } else {
+            // When notificaitons collide, wait for waitTime, using *recursion*
+            setTimeout(manageNotifications, waitTime);
+        }
+
+    } else {
+        createNotification(currentNotification.notificationText, currentNotification.notificationType);
+        lastTime = time;
+    }
 }
 
 
 function createNotification(notificationText, notificationType) {
     const notificationContainer = document.getElementById("noticationContainer");
     let backgroundColour;
+    notificationsManaged += 1;
 
     if (notificationType == "error") {
         backgroundColour = "var(--whoopsie)";

@@ -502,14 +502,6 @@ function loadInTable() {
 
 
         }
-
-        // This isn't working as intended for some reason, and i will have too look into it
-        /*
-        for (const childElement of projectTable.children) {
-            console.log(childElement.style.backgroundColor)
-            childElement.style.backgroundColor = "";
-        }
-        */
     }
 
     // Attach a click event listener to the container
