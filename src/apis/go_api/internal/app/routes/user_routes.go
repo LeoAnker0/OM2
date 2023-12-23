@@ -139,7 +139,7 @@ func login(c *gin.Context) {
             //SameSite:   http.SameSiteNoneMode,
             //Secure:     true
         }
-    } else if operationMode == "production" {
+    } else if operationMode == "release" {
         cookie = &http.Cookie{
             Name:     "access-token",
             Value:    jwt,
