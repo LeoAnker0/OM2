@@ -565,14 +565,6 @@ function loadInTable() {
     });
 }
 
-function removeLastExtension(filename) {
-    const parts = filename.split('.');
-    if (parts.length > 1) {
-        parts.pop(); // Remove the last element (extension)
-        return parts.join('.');
-    }
-    return filename;
-}
 
 function displayMenuForRow(event) {
     event.stopPropagation();
@@ -715,7 +707,7 @@ async function uploadFileWithProgress(file, details) {
     xhr.onload = async function() {
         console.log("Upload fully complete")
 
-        const response = xhr.responseText; // Assuming the response is JSON
+        const response = xhr.responseText;
 
         // Handle case where storage limit reached
         if (response == "StorageLimit Reached") {
@@ -735,7 +727,7 @@ async function uploadFileWithProgress(file, details) {
     };
 
     xhr.onerror = function() {
-        console.log("Upload failed")
+        HandleCreateNotification("Upload Failed", "error")
     };
 
     xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${Details.ProjectID}`, true);

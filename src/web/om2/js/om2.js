@@ -9,12 +9,20 @@ export function is_mobile() {
 }
 
 export function is_dark() {
-    const mediaQuery = window.matchMedia("prefers-color-scheme: dark");
-    if (mediaQuery.matches) {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         return true;
     } else {
         return false;
     }
+}
+
+export function removeLastExtension(filename) {
+    const parts = filename.split('.');
+    if (parts.length > 1) {
+        parts.pop(); // Remove the last element (file extension)
+        return parts.join('.');
+    }
+    return filename;
 }
 
 export function is_odd(num) {
