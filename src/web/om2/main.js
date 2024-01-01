@@ -58,13 +58,6 @@ export async function main() {
 
 // Make sure that all the code only ever runs once.
 if (!window.hasCodeRun) {
-    // Your code goes here
-    let replacedContent = layout;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-    document.getElementById('app').innerHTML = replacedContent;
     initSettings();
 
     // Set the flag to indicate that the code has run

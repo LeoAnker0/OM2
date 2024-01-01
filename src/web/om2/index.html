@@ -29,7 +29,28 @@
 </head>
 
 <body id="body" spellcheck="false">
-    <div id="app"></div>
+    <!-- audio tag -->
+    <audio id="audio" preload>
+        <source id="PLAYERsource" src=""></audio>
+    <!-- layout htmls -->
+    <div class="topHalf-container">
+        <div class="topHalf">
+            <div class="topHalf-left" id="topleftContentArea"></div>
+            <div class="topHalf-right" id="toprightContentArea">
+            </div>
+        </div>
+    </div>
+    <div class="notification-container" id="noticationContainer">
+    </div>
+    <main class="MATERIAL-meshBackground">
+        <div class="botHalf-left MATERIAL-blur-1">
+        </div>
+        <div class="contentContainer" id="MAINcontentContainer">
+            <div class="content" id="MAINcontentPages">
+            </div>
+        </div>
+        <div class="menuModalEnvironment menuModalBackground" id="MENUmodalEnvironment"></div>
+    </main>
     <script type="module" src="./main.js"></script>
 </body>
 

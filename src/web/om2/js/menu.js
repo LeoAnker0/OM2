@@ -334,7 +334,7 @@ function handle_lcd_mobile_body(params) {
 
 function handle_normal_context_menu(params, event) {
     previously_focused_element = document.activeElement;
-    const pointerType = event.pointerType;
+    //const pointerType = event.pointerType;
     let X = event.clientX;
     let Y = event.clientY;
     const main = document.querySelector("main");
@@ -355,7 +355,21 @@ function handle_normal_context_menu(params, event) {
     MENUmodalBody.style.left = x;
     MENUmodalBody.style.top = y;
 
-    if ((previously_focused_element) && (pointerType === "")) {
+    let interactType = "mouse";
+
+    // set interactType in a sane way. with compatability for webkit and chromium
+    if ((event.webkitForce == 1) || (event.webkitForce == 0)) {
+        if (event.webkitForce == 0) {
+            interactType = "keyboard";
+        }
+    } else {
+        if (event.pointerType !== "mouse") {
+            interactType = "keyboard";
+        }
+    }
+
+
+    if (interactType == "keyboard") {
         const rect = previously_focused_element.getBoundingClientRect();
         X = rect.left + window.scrollX;
         Y = rect.top + window.scrollY;
@@ -376,10 +390,16 @@ function handle_normal_context_menu(params, event) {
     const overflowStates = showElementDetails('MENUmodalBody')
     const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
 
-    if (pointerType === "") {
+
+    if (interactType === "keyboard") {
         first_button.focus();
-    } else if (pointerType === "mouse") {
+    } else if (interactType == "mouse") {
         first_button.focus();
+        /* Find some other solution than blur, which will hide the stylings for that first button
+        this is neccessary because webkit is a little annoying, and perhaps there is a better way of 
+        dealing with this.
+        */
+
         first_button.blur();
     }
 
@@ -635,14 +655,6 @@ import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 
 /* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
-    MENU_ACTION_playNext(params) {
-        console.log(params);
-        return;
-    },
-    MENU_ACTION_playLast() {
-        console.log("meny aacction play next");
-        return;
-    },
     PROJECT_VIEW_delete_project(params) {
         PROJECT_VIEW_receive_MENU_delete_request(params);
         return;
