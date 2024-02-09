@@ -5,16 +5,16 @@ import (
     "github.com/gin-gonic/gin"
     "os"
     "fmt"
-    //"strings"
-    //"go_api/internal/app/helpers"
 )
 
 func SetupStaticFileRoutes(router *gin.Engine) {
+    // For serving all static media (created by om2)
     staticPathRoutes := router.Group("/media/static/")
     {
         staticPathRoutes.GET(":id/:fileQuality", handleStaticPath)
     }
 
+    // For serving all user generated media
     mediaPathRoutes := router.Group("/media/")
     {
         mediaPathRoutes.GET(":id/:fileQuality", handleMediaPath)
@@ -25,6 +25,7 @@ func SetupStaticFileRoutes(router *gin.Engine) {
         c.File("./static_web/index.html")
     })
 
+    // For serving index.html (from /) and all web assets (css/js/svg...)
     coreWebPathRoutes := router.Group("/")
     {
         coreWebPathRoutes.GET(":requestedPath/:requestedFile", handleCoreWebFiles)
