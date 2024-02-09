@@ -281,6 +281,7 @@
     content: "";
     background-color: var(--background);
     position: absolute;
+    top: -1px;
     width: 100%;
     height: 100%;
     box-shadow:

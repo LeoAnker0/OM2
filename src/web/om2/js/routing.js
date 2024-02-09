@@ -71,8 +71,12 @@ function handleSettingsView() {
 const routeHandlers = {
     '/': handleMusicObjectsGrid,
     '/new-project/': createNewProjectID,
+    '/new-project': createNewProjectID,
+    '/new/': createNewProjectID,
+    '/new': createNewProjectID,
     '/projects/:projectID': handleProjectView,
     '/settings/': handleSettingsView,
+    '/settings': handleSettingsView,
 };
 
 function notFoundHandler() {
@@ -87,7 +91,6 @@ function notFoundHandler() {
     <h1 style="width:80%;margin-left:10%;">
         Sorry 404: <em>${currentpath}</em> doesn't exist, you will now be taken back to the main page.
     </h1>
-    <img style="margin-left:10%;border-radius:1rem;" src="${MAIN_CONST_EXPORT_mediaPath}/assets/hippo.webp">
     `
 
     function return_to_charted_paths() {

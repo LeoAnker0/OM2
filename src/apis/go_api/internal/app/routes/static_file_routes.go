@@ -20,11 +20,22 @@ func SetupStaticFileRoutes(router *gin.Engine) {
         mediaPathRoutes.GET(":id/:fileQuality", handleMediaPath)
     }
 
+    // Define a wildcard route to match any route starting with /projects/
+    router.GET("/projects/*any", func(c *gin.Context) {
+        c.File("./static_web/index.html")
+    })
+
     coreWebPathRoutes := router.Group("/")
     {
         coreWebPathRoutes.GET(":requestedPath/:requestedFile", handleCoreWebFiles)
         coreWebPathRoutes.GET("", handleCoreWebFiles)
     }
+
+    // Route for handling all other paths
+    router.NoRoute(func(c *gin.Context) {
+        c.File("./static_web/index.html")
+        return
+    })
 }
 
 // Media Path
@@ -187,6 +198,7 @@ func CatchAllForStaticWebFiles(r *gin.Engine) {
         requestedPath := c.Request.URL.Path
 
         fmt.Println("A path was requested that should not currently be served: ", requestedPath)
+        c.File("./static_web/index.html")
         return
     })
 }
