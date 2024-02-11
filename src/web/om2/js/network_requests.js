@@ -155,7 +155,7 @@ export async function createNewProjectID() {
 
 export async function get_users_table() {
     try {
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/get_users_table/`, {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/get_users_table`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

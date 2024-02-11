@@ -20,6 +20,8 @@ func main() {
 
     // Create a new Gin router
     r := gin.Default()
+    // Increase maximum file size to 2GB
+    r.MaxMultipartMemory = 2 << 30 // 2GB
 
     // Use CORS middleware
     config := cors.DefaultConfig()

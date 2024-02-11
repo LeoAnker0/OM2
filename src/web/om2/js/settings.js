@@ -3,16 +3,16 @@ import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.
 import admin_protected_view from '../html/settings_views_admin_protected.html?raw';
 import admin_default_view from '../html/settings_views_admin_default.html?raw';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
+import { getUserDetail, get_users_table } from './network_requests.js';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
 import settings_body from '../html/settings_body.html?raw';
-import { getUserDetail, get_users_table } from './network_requests.js';
 import { users_image } from './loadAccountImage.js';
+import { formatFileSizeBytes } from './om2.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
-import { formatFileSizeBytes } from './om2.js';
 
-let current_view = "general";
+let current_view = "admin";
 const views = [{
     name: "general",
     markup: general_view,
@@ -88,7 +88,6 @@ function load_view(view) {
             value = image;
         }
 
-
         replacedContent = replacedContent.replace(regex, value);
     }
     view_container.innerHTML = replacedContent;
@@ -106,9 +105,8 @@ function views_user() {
 
 async function views_admin() {
     /*auth*/
-    const admin = await getUserDetail("admin")
-    const allowed = admin[0].admin
-    if (allowed !== true) {
+    const allowed = await getUserDetail("admin")
+    if (allowed !== "true") {
         return
     }
 
@@ -138,21 +136,24 @@ async function views_admin() {
     view_container.innerHTML = replacedContent;
 
     const users_table = await get_users_table();
+    const parsed_table = JSON.parse(users_table);
     const usersTableEnvironment = document.getElementById("usersTableInforRowsContainer")
-
     usersTableEnvironment.innerHTML = "";
-    for (let i = 0; i < users_table.length; i++) {
-        const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used', 'profile_picture_url', 'checkbox_number', 'Admin'];
-        const username = users_table[i].username;
-        const uuid = users_table[i].uuid;
-        const verified = users_table[i].verified;
-        const email = users_table[i].email;
-        const admin = users_table[i].admin;
+
+    for (let i = 0; i < parsed_table.length; i++) {
+        const listOfThings = ['Username', 'Email', 'UUID', 'Verified', 'Space_Used', 'Storage_Allowance', 'profile_picture_url', 'checkbox_number', 'Admin'];
+        const username = parsed_table[i].username;
+        const uuid = parsed_table[i].uuid;
+        const verified = parsed_table[i].verified;
+        const email = parsed_table[i].email;
+        let storage_allowance = parsed_table[i].storage_allowance;
+        storage_allowance = formatFileSizeBytes(storage_allowance);
+        const admin = parsed_table[i].admin;
         const index_of_table = i;
-        let space_used = users_table[i].storage_used;
+        let space_used = parsed_table[i].storage_used;
         space_used = formatFileSizeBytes(space_used);
         let replacedContent = admin_p_users_table_row;
-        let profile_picture = users_table[i].profile_picture;
+        let profile_picture = parsed_table[i].profile_picture;
         profile_picture = `${MAIN_CONST_EXPORT_mediaPath}/${profile_picture}/1/`;
 
 
@@ -171,6 +172,8 @@ async function views_admin() {
                 value = verified;
             } else if (placeholder === 'Space_Used') {
                 value = space_used;
+            } else if (placeholder === 'Storage_Allowance') {
+                value = storage_allowance;
             } else if (placeholder === 'profile_picture_url') {
                 value = profile_picture;
             } else if (placeholder === 'checkbox_number') {

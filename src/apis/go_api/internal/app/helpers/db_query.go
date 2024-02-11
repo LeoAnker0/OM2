@@ -376,7 +376,7 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
                         'FolderSize', s."FolderSize",
                         'Version', s."Version"
                     )
-                    ORDER BY s."SongSequence" ASC -- Add this line to order by SongSequence
+                    ORDER BY s."SongSequence" ASC -- Order by SongSequence
                 )
                 FROM songs s
                 WHERE s."ProjectID" = p.project_id
@@ -392,6 +392,59 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
     }
 
     return combinedData, nil
+}
+
+func GetUsersTable() (string, error) {
+    // Get the users table and also calculate the users storage used
+    query := ` 
+    SELECT 
+        json_agg(
+            json_build_object(
+                'email', email,
+                'verified', verified,
+                'uuid', uuid,
+                'username', username,
+                'profile_picture', profile_picture,
+                'admin', admin,
+                'storage_allowance', storage_allowance,
+                'storage_used', COALESCE(storage_used, 0)
+            )
+        ) AS users_json
+    FROM (
+        SELECT 
+            users.email,
+            users.verified,
+            users.uuid,
+            users.username,
+            users.profile_picture,
+            users.admin,
+            users.storage_allowance,
+            user_storage.storage_used
+        FROM 
+            users
+        LEFT JOIN (
+            SELECT 
+                (SELECT unnest(owner)->>'owner') AS user_uuid,
+                COALESCE(SUM(file_size), 0) AS storage_used
+            FROM 
+                files
+            GROUP BY 
+                user_uuid
+        ) AS user_storage ON users.uuid = user_storage.user_uuid::text
+    ) AS subquery;
+    `
+
+    var usersJSON string
+    err := db.QueryRow(query).Scan(&usersJSON)
+    if err != nil {
+        return "", err
+    }
+
+    // Now you have the usersJSON string containing the JSON data.
+    // You can use it as needed.
+    fmt.Println(usersJSON)
+
+    return usersJSON, nil
 }
 
 func CheckIfProjectIdUnique(projectID string) (bool, error) {
