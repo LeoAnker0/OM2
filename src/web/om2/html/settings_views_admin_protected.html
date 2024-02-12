@@ -1,6 +1,293 @@
 <h1>Admin</h1>
-<p>You are an admin user</p>
 <br>
+<h2>Tables schema</h2>
+<div class="SETTINGSdatabaseSchema">
+    <details>
+        <summary>User Table</summary>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example Value</th>
+                <th>Modifiers</th>
+                <th>Comment</th>
+            </tr>
+            <tr>
+                <td>uuid</td>
+                <td>text</td>
+                <td><code>5859b930-db1f-1c06-8506-19efea24752f</code></td>
+                <td>PRIMARY KEY</td>
+                <td>A users true ID, should never be publically exposed</td>
+            </tr>
+            <tr>
+                <td>username</td>
+                <td>text</td>
+                <td>username?</td>
+                <td></td>
+                <td>A users display name, and since a user will log in with their email, there could be an infinite amount of Taylor Swifts...</td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td>text</td>
+                <td><code>$2a$10$...</code></td>
+                <td></td>
+                <td>Hashed and salted users password</td>
+            </tr>
+            <tr>
+                <td>profile_picture</td>
+                <td>text</td>
+                <td><code>sXFQzaXHHODDsYijvleRNYKxLUxPYpfVkluCdkPjTFXdonxbVtqjyIWRoKLWWutBPWLcNNqqzfiSmIUTWnNulhfKUMOQoqcU</code></td>
+                <td></td>
+                <td>The file ID for the users current profile picture</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>text</td>
+                <td><code>email@example.com</code></td>
+                <td></td>
+                <td>The users email address</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>text</td>
+                <td>greetings humans of the homo sapient race</td>
+                <td></td>
+                <td>The users text description, not currently changeable/accessible by the user</td>
+            </tr>
+            <tr>
+                <td>verified</td>
+                <td>boolean</td>
+                <td><code>true</code></td>
+                <td></td>
+                <td>Wether or not a user is meant to be on the service/paying</td>
+            </tr>
+            <tr>
+                <td>last_logged_in</td>
+                <td>bigint</td>
+                <td><code>0</code></td>
+                <td></td>
+                <td>Should be updated every time the user logs in/does an action</td>
+            </tr>
+            <tr>
+                <td>date_joined</td>
+                <td>bigint</td>
+                <td><code>1702226385860</code></td>
+                <td></td>
+                <td>The time that the user joined in unix millis</td>
+            </tr>
+            <tr>
+                <td>last_state</td>
+                <td>text</td>
+                <td><code>{"PLAYBACK_loop_state":"off","PLAYBACK_shuffle_state":"off","progress":0,"current_path":"/settings/","current_queue":[],"current_index":0}</code></td>
+                <td></td>
+                <td>A json of the users last state which is retrieved every time they open a page to enable sync</td>
+            </tr>
+            <tr>
+                <td>admin</td>
+                <td>boolean</td>
+                <td><code>true</code></td>
+                <td>DEFAULT false</td>
+                <td>Should only be true for the admin user/users</td>
+            </tr>
+            <tr>
+                <td>storage_allowance</td>
+                <td>bigint</td>
+                <td>473741824</td>
+                <td></td>
+                <td>A given users storage allowance in bytes</td>
+            </tr>
+        </table>
+    </details>
+    <br>
+    <details>
+        <summary>Songs Table</summary>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example Value</th>
+                <th>Modifiers</th>
+                <th>Comment</th>
+            </tr>
+            <tr>
+                <td>URL</td>
+                <td>text</td>
+                <td><code>tQtTKehfwEBfxmUwHPWCRcrhqJiDoAjbcpWExRwPopqnwfrlaXRMahnibgdPmOfoWnmcwmzrtChTvhuiNWLOzAjMhjhjvKMJ</code></td>
+                <td>PRIMARY KEY</td>
+                <td>The songs URL/ID in the files table</td>
+            </tr>
+            <tr>
+                <td>ProjectID</td>
+                <td>text</td>
+                <td><code>dbd</code></td>
+                <td></td>
+                <td>The project that the song belongs too</td>
+            </tr>
+            <tr>
+                <td>SongName</td>
+                <td>text</td>
+                <td>Soft Universe</td>
+                <td></td>
+                <td>The songs name</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>int</td>
+                <td><code>296</code></td>
+                <td></td>
+                <td>The duration of a song in seconds</td>
+            </tr>
+            <tr>
+                <td>SongSequence</td>
+                <td>int</td>
+                <td><code>5</code></td>
+                <td></td>
+                <td>The sequence of the song (in the project)</td>
+            </tr>
+            <tr>
+                <td>Favourited</td>
+                <td>boolean</td>
+                <td><code>false</code></td>
+                <td></td>
+                <td>Wether or not the song is favourited (not currently functional)</td>
+            </tr>
+            <tr>
+                <td>FolderSize</td>
+                <td>bigint</td>
+                <td><code>13806435</code></td>
+                <td></td>
+                <td>The cumulative size of all the different qualites of audio that are processed for this song</td>
+            </tr>
+            <tr>
+                <td>Version</td>
+                <td>int</td>
+                <td><code>1</code></td>
+                <td></td>
+                <td>The version of the song (not currently functional)</td>
+            </tr>
+        </table>
+    </details>
+    <br>
+    <details>
+        <summary>Projects Table</summary>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example Value</th>
+                <th>Modifiers</th>
+                <th>Comment</th>
+            </tr>
+            <tr>
+                <td>project_id</td>
+                <td>text</td>
+                <td>ab4</td>
+                <td>PRIMARY KEY</td>
+                <td>A projects ID</td>
+            </tr>
+            <tr>
+                <td>time_created</td>
+                <td>bigint</td>
+                <td><code>1702417770167</code></td>
+                <td></td>
+                <td>The time that the project was created in unix millis</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>text</td>
+                <td>Notes...</td>
+                <td></td>
+                <td>A description for the project</td>
+            </tr>
+            <tr>
+                <td>picture_url</td>
+                <td>text</td>
+                <td><code>CDyCMSzihsIvggZyyjKNSBlhThRSmhfTKPVFLFgPNiNadZvtHxhbPRplabkURoqBFooqetnFtbIJnCVmTbVjdxDUOSLiHoPq</code></td>
+                <td></td>
+                <td>The ID/URL of the image that is used for the project</td>
+            </tr>
+            <tr>
+                <td>project_name</td>
+                <td>text</td>
+                <td>Cool Project</td>
+                <td></td>
+                <td>The name of the project</td>
+            </tr>
+            <tr>
+                <td>project_contributors</td>
+                <td>text</td>
+                <td>Cool Person, Other...</td>
+                <td></td>
+                <td>A string of the project contributors</td>
+            </tr>
+            <tr>
+                <td>owner</td>
+                <td>json[]</td>
+                <td><code>{"{\"owner\":\"1849b930-da1f-4c06-8506-19ffea24752f\",\"permissions\":\"owner\"}"}</code></td>
+                <td></td>
+                <td>A json of what permissions a user has with the project</td>
+            </tr>
+        </table>
+    </details>
+    <br>
+    <details>
+        <summary>Files Table</summary>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example Value</th>
+                <th>Modifiers</th>
+                <th>Comment</th>
+            </tr>
+            <tr>
+                <td>file_url</td>
+                <td>text</td>
+                <td><code>mdHzETrbYJFLDjFSilFKBhurwxGXWZYGfyQskQnQhfJhMtHyQCsLUzDdwbGZXbJogwvBSDQhcjpIVqHezKOrepzhMjYmSEtK</code></td>
+                <td>PRIMARY KEY</td>
+                <td>The ID/URL of the file</td>
+            </tr>
+            <tr>
+                <td>processed_state</td>
+                <td>text</td>
+                <td>finished</td>
+                <td></td>
+                <td>The files processing state, currently not all that useful, however might become moreso in the future if video support is added</td>
+            </tr>
+            <tr>
+                <td>owner</td>
+                <td>json[]</td>
+                <td><code>{"{\"owner\":\"5859b930-da1f-4c06-8506-19ffea24752f\",\"permissions\":\"owner\"}"}</code></td>
+                <td></td>
+                <td>A json of the ownership status of the file</td>
+            </tr>
+            <tr>
+                <td>file_type</td>
+                <td>text</td>
+                <td>local/image</td>
+                <td></td>
+                <td>The file type(but not format/extension) and location of the file (could be cloud/audio for example)</td>
+            </tr>
+            <tr>
+                <td>file_created_time</td>
+                <td>bigint</td>
+                <td><code>1702417809517</code></td>
+                <td></td>
+                <td>The time that the file was created in unix millis</td>
+            </tr>
+            <tr>
+                <td>file_size</td>
+                <td>bigint</td>
+                <td><code>18650630</code></td>
+                <td></td>
+                <td>The size of the combined different qualities of the file</td>
+            </tr>
+        </table>
+    </details>
+</div>
+<br>
+<br>
+<h2>Users</h2>
 <p id="settings_admin_selected_items_visualition">Selected Items: 0</p>
 <div class="ADMINusersTableEnvironment" id="usersTableEnvironment">
     <div class="ADMINusersTableTopRow">

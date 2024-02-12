@@ -374,5 +374,77 @@
 }
 
 
+.SETTINGSdatabaseSchema details {
+    border: 1px solid var(--text-third);
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+}
+
+.SETTINGSdatabaseSchema summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+}
+
+.SETTINGSdatabaseSchema details[open] {
+    padding: 0.5em;
+}
+
+.SETTINGSdatabaseSchema details[open] summary {
+    border-bottom: 1px solid var(--text-third);
+    margin-bottom: 0.5em;
+}
+
+.SETTINGSdatabaseSchema .schema {
+    margin: 20px auto;
+    width: 100%;
+}
+
+.SETTINGSdatabaseSchema table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    /* This prevents the table from changing size */
+
+}
+
+.SETTINGSdatabaseSchema th,
+td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.SETTINGSdatabaseSchema td code {
+    font-size: 0.8rem;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+    width: 10rem;
+    /* Adjust as needed */
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 5rem;
+    /* Adjust as needed */
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 10rem;
+    /* Adjust as needed */
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 15rem;
+    /* Adjust as needed */
+}
+
+
+
 
 /**/

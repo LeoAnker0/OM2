@@ -395,7 +395,7 @@ func GetProjectDetailsFromDatabase(uuid, ProjectID string) (string, error){
 }
 
 func GetUsersTable() (string, error) {
-    // Get the users table and also calculate the users storage used
+    // Get the users table and calculate each users storage used
     query := ` 
     SELECT 
         json_agg(
@@ -434,15 +434,12 @@ func GetUsersTable() (string, error) {
     ) AS subquery;
     `
 
+    // Execute query, and get results as string
     var usersJSON string
     err := db.QueryRow(query).Scan(&usersJSON)
     if err != nil {
         return "", err
     }
-
-    // Now you have the usersJSON string containing the JSON data.
-    // You can use it as needed.
-    fmt.Println(usersJSON)
 
     return usersJSON, nil
 }

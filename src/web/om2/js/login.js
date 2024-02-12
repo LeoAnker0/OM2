@@ -1,6 +1,6 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { HandleCreateNotification } from './notificationDisplayManager.js';
-import settingsModal from '../html/settingsModal.html?raw';
+import settingsModal from '../html/login.html?raw';
 import { init_signup_form } from './signup.js';
 import { svgImports } from './importAssets.js';
 import { MENUdisplay } from './menu.js';

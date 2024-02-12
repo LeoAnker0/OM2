@@ -16,8 +16,6 @@ func SetupAdminRoutes(router *gin.Engine) {
 }
 
 func get_users_table(c *gin.Context) {
-    fmt.Println("get the users table")
-
     clientIP := c.ClientIP()
     jwt_token, err := c.Cookie("access-token")
     if err != nil {
