@@ -1,5 +1,7 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 import { handleRoute } from './routing.js';
+import { loadUsersTable } from './settings.js';
 
 export async function updateUserDetails(column, newInfo) {
     try {
@@ -168,6 +170,41 @@ export async function get_users_table() {
 
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+export async function updateUserDetailsAdmin(uuid, column, newInfo) {
+    try {
+        const new_data = {
+            "user_to_update_uuid": uuid,
+            "column_to_be_updated": column,
+            "new_data": newInfo
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/update_user_details`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(new_data)
+        });
+
+        const data = await response.json();
+        const update = data["updated"]
+        if (update === "success") {
+            loadUsersTable();
+            return
+        } else {
+            console.log("there was an error", data)
+            HandleCreateNotification(`Error Updating Column ${column}: ${data.Error}`, "error")
+            return
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        HandleCreateNotification(`Error Updating Column: ${error}`, "error")
+        return
     }
 }
 

@@ -1,14 +1,14 @@
 package routes
 
 import (
-    "github.com/gin-gonic/gin"
-    "fmt"
-    "io/ioutil"
-    "encoding/json"
     "go_api/internal/app/helpers"
+    "github.com/gin-gonic/gin"
+    "encoding/json"
+    "io/ioutil"
     "net/http"
-    "time"
     "strconv"
+    "time"
+    "fmt"
     "os"
 )
 
