@@ -7,16 +7,15 @@ import { HandleCreateNotification } from './notificationDisplayManager.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
-import { projectViewSongsArray } from './sharedArrays.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
-
 
 const uploadQueue = [];
 let isUploading = false;
 let UserIsEditor = true;
 let Details;
+let currentlyViewingProjects = false;
 
 export async function initProjectView(projectID) {
     /* This alteration will load in certain visible elements IE the frame
@@ -26,18 +25,19 @@ export async function initProjectView(projectID) {
     of fake loading bars on top of the different elements.
     */
     let fakeDetails;
+    currentlyViewingProjects = true;
     if (is_dark() == true) {
         fakeDetails = {
-            ProjectName: "Loading...",
-            ProjectContributors: "This might take a while",
+            ProjectName: "Hi!",
+            ProjectContributors: "Loading",
             TimeCreated: 0,
             PictureURL: "static/loading_img_text_dark",
         }
     } else {
 
         fakeDetails = {
-            ProjectName: "Loading...",
-            ProjectContributors: "This might take a while",
+            ProjectName: "Hi!",
+            ProjectContributors: "Loading",
             TimeCreated: 0,
             PictureURL: "static/loading_img_text_light",
         }
@@ -109,6 +109,7 @@ export async function initProjectView(projectID) {
 export function hideProjectView() {
     const MainContent = document.getElementById("MAINcontentPages");
     MainContent.innerHTML = "";
+    currentlyViewingProjects = false;
 }
 
 export async function PROJECTVIEW_update() {
@@ -316,7 +317,6 @@ async function detectPlayAndShuffleButtons() {
     });
 }
 
-
 function displayMenuForTop(event) {
     event.stopPropagation();
     const clickedItem = event.target;
@@ -499,8 +499,6 @@ function loadInTable() {
                 */
                 PROJECTVIEW_update();
             }, 1);
-
-
         }
     }
 
@@ -564,7 +562,6 @@ function loadInTable() {
 
     });
 }
-
 
 function displayMenuForRow(event) {
     event.stopPropagation();
@@ -669,31 +666,26 @@ function loadFileDropArea() {
             fileInput.multiple = true;
             fileInput.addEventListener("change", () => {
                 Files = fileInput.files;
-                console.log(Files)
             });
             fileInput.click();
         } else {
-            console.log("the submit files button was clicked ", Files);
             handleFiles(Files, Details);
         }
     });
 
     // Handle uploaded files
     function handleFiles(files, Details) {
-        for (const file of files) {
-            projectViewSongsArray.push(file);
-        }
         uploadFiles(files, Details);
     }
 }
 
-async function uploadFileWithProgress(file, details) {
+async function uploadFileWithProgress(file, projectID) {
     const formData = new FormData();
     const xhr = new XMLHttpRequest();
 
     isUploading = true;
     formData.append('file', file);
-    formData.append("project_id", details.project_id);
+    formData.append("project_id", projectID);
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
@@ -718,11 +710,13 @@ async function uploadFileWithProgress(file, details) {
         isUploading = false;
         if (uploadQueue.length > 0) {
             const current_file = uploadQueue.shift();
-            await uploadFileWithProgress(current_file.file, current_file.details);
+            await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
 
-        // Update the project tables
-        PROJECTVIEW_update();
+        // Update the project tables, but only if viewing that page
+        if ((Details.ProjectID == projectID) && (currentlyViewingProjects == true)) {
+            PROJECTVIEW_update();
+        }
 
     };
 
@@ -730,7 +724,8 @@ async function uploadFileWithProgress(file, details) {
         HandleCreateNotification("Upload Failed", "error")
     };
 
-    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${Details.ProjectID}`, true);
+
+    xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${projectID}`, true);
     xhr.send(formData);
 }
 
@@ -741,14 +736,14 @@ async function uploadFiles(files, details) {
     for (const file of files) {
         /* add item to queue */
         const new_file_item = {
-            file: file,
-            details: details
+            ProjectID: Details.ProjectID,
+            file: file
         };
         uploadQueue.push(new_file_item)
 
         if (!isUploading) {
             const current_file = uploadQueue.shift();
-            await uploadFileWithProgress(current_file.file, current_file.details);
+            await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
     }
 }

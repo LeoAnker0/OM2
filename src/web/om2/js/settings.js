@@ -13,7 +13,7 @@ import { formatFileSizeBytes } from './om2.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 
-let current_view = "admin";
+let current_view = "general";
 const views = [{
     name: "general",
     markup: general_view,
