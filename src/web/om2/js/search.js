@@ -40,7 +40,9 @@ export function setEventListenersForSearchbar() {
 
     /* detect when being focusued, rather than typed */
     searchBar.addEventListener('focus', () => {
-        outlineForSearchbar.style.outline = "1px solid var(--lgrey-4)";
+        outlineForSearchbar.style.outline = "1px solid var(--text-third)";
+        outlineForSearchbar.style.backgroundColor = "var(--grey)";
+
         ''
 
         /* if searchBar.value is greater than 0*/
@@ -51,7 +53,8 @@ export function setEventListenersForSearchbar() {
     });
 
     searchBar.addEventListener('blur', () => {
-        outlineForSearchbar.style.outline = "1px solid hsla(0, 0%, 100%, 0.23)";
+        outlineForSearchbar.style.outline = "";
+        outlineForSearchbar.style.backgroundColor = "";
 
         /* hide the clear icon (we changed over to using opacity so that it was always clickable) */
         clearIcon.style.opacity = "0%";

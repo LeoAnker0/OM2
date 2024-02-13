@@ -7,10 +7,6 @@
     --searchbar-container-after-leftoffset: 0.6rem;
     --searchbar-container-after-width: calc(100% - (2 * var(--searchbar-container-after-leftoffset)));
     --searchbar-container-after-topoffset: 15%;
-
-    --searchbar-container-after-outline-colour: var(--text-third);
-    --searchbar-search-colour-unfocused: var(--text-secondary);
-    --searchbar-search-colour-focused: var(--text-dark);
 }
 
 .topleft-searchbarContainer {
@@ -33,8 +29,8 @@
     left: var(--searchbar-container-after-leftoffset);
     border-radius: var(--searchbar-borderradius);
 
-    outline: 1px solid hsla(0, 0%, 100%, 0.23);
-    background-color: var(--text-third);
+    outline: 1px solid var(--grey);
+    background-color: var(--background);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,18 +54,18 @@
     height: 100%;
     font-style: italic;
 
-    color: var(--searchbar-search-colour-unfocused);
+    color: var(--text-secondary);
     background-color: transparent;
 }
 
 .topleft-searchbar-input::placeholder {
-    color: var(--searchbar-search-colour-unfocused);
+    color: var(--text-secondary);
 }
 
 .topleft-searchbar-input:focus {
     font-style: normal;
 
-    color: var(--searchbar-search-colour-focused);
+    color: var(--text);
 }
 
 .topleft-search-icon {
@@ -78,6 +74,7 @@
     top: 25%;
     aspect-ratio: 1/1;
     left: 3.5%;
+    filter: var(--make-svg-black);
 }
 
 .topleft-clearIcon {
@@ -90,5 +87,6 @@
     opacity: 0%;
 
     background-color: transparent;
-    filter: invert(100%);
+    filter: invert(1) var(--make-svg-black);
+
 }
