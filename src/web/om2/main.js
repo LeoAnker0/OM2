@@ -1,5 +1,6 @@
 import { setEventListenersForPlaybackcontrols, setEventListenersForVolume } from './js/playbackControls.js';
 import { loadMAINtopleft, loadMAINtopright } from './js/exportHTMLchunks.js';
+import { init_upload_indicator } from './js/file_upload_indicator.js';
 import { setEventListenersForSearchbar } from './js/search.js';
 import { initAccountImg } from './js/loadAccountImage.js';
 import { svgImports } from './js/importAssets.js';
@@ -10,6 +11,8 @@ import { initSettings } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 import layout from './html/layout.html?raw';
 import './css/notificationStyling.css';
+import './css/upload_queue_modal.css';
+import './css/upload_indicator.css';
 import './css/lcd_mobile_body.css';
 import './css/musicObjectGrid.css';
 import './css/projectView.css';
@@ -54,6 +57,7 @@ export async function main() {
     initAccountImg();
     initialiseQueue();
     init_routing();
+    init_upload_indicator()
 }
 
 // Make sure that all the code only ever runs once.

@@ -3,6 +3,7 @@ import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_son
 import { MAIN_CONST_EXPORT_mediaPath, MAIN_CONST_EXPORT_apiPath } from '../main.js';
 import update_project_imageModal from '../html/update_project_imageModal.html?raw';
 import lcd_mobile_queue_item from '../html/lcd_mobile_queue_item.html?raw';
+import uploadQueueModalHTML from '../html/upload_queue_body.html?raw';
 import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
 import { PROJECTVIEW_update } from './projectView.js';
 import menuItem from '../html/menuModalItem.html?raw';
@@ -31,6 +32,12 @@ export function MENUdisplay(params, event, menu_type) {
     else if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
         handle_lcd_mobile_body(params, event);
     }
+
+    //defined and type == upload_queue
+    else if ((menu_type !== undefined) && menu_type === "upload_queue") {
+        display_upload_queue_modal(params, event);
+    }
+
     //defined and type == notice
     else if ((menu_type !== undefined) && menu_type === "notice") {
         handle_notice(params, event);
@@ -549,6 +556,78 @@ export function MENU_when_image_has_been_uploaded_pfp() {
     spinner.style.visibility = "hidden";
     menuHide_foreign();
 }
+
+/* display_upload_queue_modal */
+function display_upload_queue_modal(params, event) {
+    previously_focused_element = document.activeElement;
+    let X = event.clientX;
+    let Y = event.clientY;
+    const main = document.querySelector("main");
+    const navBar = document.querySelector(".topHalf-container");
+    if (is_mobile()) {
+        main.style.zIndex = "40";
+        navBar.style.zIndex = "0";
+    }
+    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
+    MENUmodalEnvironment.innerHTML = uploadQueueModalHTML;
+    MENUmodalEnvironment.style.display = "block";
+
+    const uploadQueueModal = document.getElementById('uploadQueueModal');
+    let x = (X) + "px";
+    let y = (Y) + "px";
+
+    MENUmodalEnvironment.addEventListener('click', menuHide);
+    uploadQueueModal.style.left = x;
+    uploadQueueModal.style.top = y;
+
+    let interactType = "mouse";
+
+    // set interactType in a sane way. with compatability for webkit and chromium
+    if ((event.webkitForce == 1) || (event.webkitForce == 0)) {
+        if (event.webkitForce == 0) {
+            interactType = "keyboard";
+        }
+    } else {
+        if (event.pointerType !== "mouse") {
+            interactType = "keyboard";
+        }
+    }
+
+    if (interactType == "keyboard") {
+        const rect = previously_focused_element.getBoundingClientRect();
+        X = rect.left + window.scrollX;
+        Y = rect.top + window.scrollY;
+        let x = (X) + "px";
+        let y = (Y) + "px";
+        uploadQueueModal.style.left = x;
+        uploadQueueModal.style.top = y;
+    }
+
+    uploadQueueModal.innerHTML = params[0].markup;
+
+    const MENUmodalBodyWidth = uploadQueueModal.offsetWidth;
+    const MENUmodalBodyHeight = uploadQueueModal.offsetHeight;
+    const overflowStates = showElementDetails('uploadQueueModal')
+
+    document.addEventListener('keydown', handleEscapeKey);
+
+    if (overflowStates.xOverflow == true) {
+        x = (X - MENUmodalBodyWidth) + "px";
+        uploadQueueModal.style.left = x;
+    }
+    if (overflowStates.yOverflow == true) {
+        y = (Y - MENUmodalBodyHeight) + "px";
+        uploadQueueModal.style.top = y;
+    }
+
+    function handleEscapeKey(event) {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            document.removeEventListener('keydown', handleEscapeKey);
+            menuHide_foreign();
+        }
+    }
+}
+
 
 function showElementDetails(elementId) {
     const element = document.getElementById(elementId);

@@ -1,5 +1,6 @@
 import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
+import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails } from './network_requests.js';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
@@ -11,7 +12,8 @@ import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 
-const uploadQueue = [];
+
+export const uploadQueue = [];
 let isUploading = false;
 let UserIsEditor = true;
 let Details;
@@ -119,7 +121,7 @@ export async function PROJECTVIEW_update() {
     const result = await getProjectDetails(projectID);
 
     if (result == "") {
-        console.log(result)
+
     } else {
         const details = JSON.parse(result);
         details.ProjectID = projectID;
@@ -684,21 +686,21 @@ async function uploadFileWithProgress(file, projectID) {
     const xhr = new XMLHttpRequest();
 
     isUploading = true;
+    display_upload_indicator()
+
     formData.append('file', file);
     formData.append("project_id", projectID);
     xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
-            console.log(percentCompleted)
+            updateProgress_upload_indicator(percentCompleted)
             if (percentCompleted === 100) {
-                console.log("upload completed")
+                updateProgress_upload_indicator(percentCompleted)
             }
         }
     };
 
     xhr.onload = async function() {
-        console.log("Upload fully complete")
-
         const response = xhr.responseText;
 
         // Handle case where storage limit reached
@@ -708,22 +710,26 @@ async function uploadFileWithProgress(file, projectID) {
 
         /* add next file to the queue */
         isUploading = false;
+        /* hide uploading indicator */
+        hide_upload_indicator()
+        updateProgress_upload_indicator(0)
+
         if (uploadQueue.length > 0) {
             const current_file = uploadQueue.shift();
             await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
 
+
+
         // Update the project tables, but only if viewing that page
         if ((Details.ProjectID == projectID) && (currentlyViewingProjects == true)) {
             PROJECTVIEW_update();
         }
-
     };
 
     xhr.onerror = function() {
         HandleCreateNotification("Upload Failed", "error")
     };
-
 
     xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${projectID}`, true);
     xhr.send(formData);

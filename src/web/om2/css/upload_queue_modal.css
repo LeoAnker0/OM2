@@ -1,0 +1,21 @@
+/*upload_queue_modal.css*/
+
+.UPLOADQUEUEMODAL-container {
+    position: absolute;
+    width: 15rem;
+    min-height: 2rem;
+    border-radius: 8px;
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    border-right: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--background-transparent);
+}
+
+.UPLOADQUEUEMODAL-container div {
+    padding: 2px;
+    border-bottom: 1px solid var(--grey);
+}

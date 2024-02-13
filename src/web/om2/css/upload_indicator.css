@@ -1,0 +1,90 @@
+/* upload_indicator.css */
+
+.UPLOAD-INDICATOR-container {
+    position: absolute;
+    top: var(--height-of-top);
+    left: 0;
+    z-index: 30;
+    width: 0%;
+    height: 1px;
+    pointer-events: none;
+    user-select: none;
+    opacity: 00%;
+    overflow: hidden;
+}
+
+.UPLOAD-INDICATOR-container .container {
+    position: relative;
+    width: 100vw;
+    height: 100%;
+}
+
+
+.UPLOAD-INDICATOR-container .container .loader {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div {
+    background-color: var(--primary);
+    width: 15%;
+    height: 100%;
+    visibility: visible;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(1),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(2),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(3),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(4),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(5),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(6),
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(7) {
+    animation-name: box;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(2) {
+    animation-delay: 0.75s;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(3) {
+    animation-delay: 1.5s;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(4) {
+    animation-delay: 2.1s;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(5) {
+    animation-delay: 2.8s;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(6) {
+    animation-delay: 3.5s;
+}
+
+.UPLOAD-INDICATOR-container .container .loader div:nth-child(7) {
+    animation-delay: 4.2s;
+}
+
+@keyframes box {
+    0% {
+        background-color: var(--primary)
+    }
+
+    33% {
+        background-color: var(--secondary)
+    }
+
+    66% {
+        background-color: var(--accent)
+    }
+
+    100% {
+        background-color: var(--secondary)
+    }
+}

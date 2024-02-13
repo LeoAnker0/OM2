@@ -140,8 +140,6 @@ async function views_admin() {
     // Load users table from the server
     loadUsersTable()
 
-
-
     /* detect when a column is requested to be updated for the users that has been selected */
     const submitButton = document.getElementById("SETTINGS_ADMIN_UPDATE_COLUMN_submit_button");
     submitButton.addEventListener('click', function(event) {
