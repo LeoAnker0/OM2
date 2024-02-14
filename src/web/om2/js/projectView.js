@@ -8,6 +8,7 @@ import { HandleCreateNotification } from './notificationDisplayManager.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
+import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
@@ -568,15 +569,37 @@ function loadInTable() {
 function displayMenuForRow(event) {
     event.stopPropagation();
     const clickedItem = event.target;
+    const songID_version = clickedItem.parentElement.parentElement.getAttribute("data-row-id");
+    const songName_text = clickedItem.parentElement.parentElement.firstElementChild.lastElementChild.innerText;
 
     const params = [{
-        displayText: 'Not Selected',
-        optionalSVG: 'icons_yourUploadedSongs',
-        function: 'TEST'
+        displayText: 'Delete',
+        optionalSVG: 'None',
+        function: 'PROJECT_VIEW_delete_song',
+        optionalParams: {
+            songID: songID_version,
+            songName: songName_text
+        }
     }]
 
     MENUdisplay(params, event);
     return;
+}
+
+export async function PROJECTVIEW_handle_delete_song(params) {
+    /* ensure that the user actually wants to delete the song */
+    // get confirmation.
+    const confirmMessage = `Are you sure that you want to delete <em>${params.songName}</em>? This action is un reversable.`;
+    const action = await CONFIRM_action_modal(confirmMessage);
+
+    if (action === "cancel") {} else if (action === "delete") {
+        console.log("delete the song")
+        console.log(params)
+        menuHide_foreign();
+    } else {
+
+        console.error("a statement was returned that isn't valid");
+    }
 }
 
 function loadInProjectViewRowTitles() {

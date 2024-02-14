@@ -1,4 +1,5 @@
-/* loading in the menu modal, and that alone ------------ */
+/* menu.js */
+
 import { PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_songs_array, PLAYBACK_songs_array_index } from './playback.js';
 import { MAIN_CONST_EXPORT_mediaPath, MAIN_CONST_EXPORT_apiPath } from '../main.js';
 import update_project_imageModal from '../html/update_project_imageModal.html?raw';
@@ -28,100 +29,12 @@ export function MENUdisplay(params, event, menu_type) {
     } else if ((menu_type !== undefined) && menu_type === "update_user_pfp") {
         handle_update_project_image(params, event, "update_user_pfp");
     }
+
     //defined and type == lcd_mobile_body
     else if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
         handle_lcd_mobile_body(params, event);
-    }
-
-    //defined and type == notice
-    else if ((menu_type !== undefined) && menu_type === "notice") {
-        handle_notice(params, event);
     } else {
         console.log("invalid menu display inputs")
-    }
-}
-
-function handle_notice(params, event) {
-    let X = 20;
-    let Y = 80;
-    const main = document.querySelector("main");
-    const navBar = document.querySelector(".topHalf-container");
-    if (is_mobile()) {
-        main.style.zIndex = "40";
-        navBar.style.zIndex = "0";
-    }
-    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
-    MENUmodalEnvironment.innerHTML = menuModal;
-    MENUmodalEnvironment.style.display = "block";
-
-    const MENUmodalBody = document.getElementById('MENUmodalBody');
-    let x = (X) + "px";
-    let y = (Y) + "px";
-
-    MENUmodalEnvironment.addEventListener('click', menuHide);
-    MENUmodalBody.style.left = x;
-    MENUmodalBody.style.top = y;
-    MENUmodalBody.style.padding = "5px";
-
-    if ((previously_focused_element) && (pointerType === "")) {
-        const rect = previously_focused_element.getBoundingClientRect();
-        X = rect.left + window.scrollX;
-        Y = rect.top + window.scrollY;
-        let x = (X) + "px";
-        let y = (Y) + "px";
-        MENUmodalBody.style.left = x;
-        MENUmodalBody.style.top = y;
-    }
-
-    for (let i = 0; i < params.length; i++) {
-        addModalItem(params[i])
-    }
-
-    const children = MENUmodalBody.children;
-    const first_button = children[0];
-    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
-    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
-    const overflowStates = showElementDetails('MENUmodalBody')
-    const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
-
-    document.addEventListener('keydown', handleEscapeKey);
-
-    if (overflowStates.xOverflow == true) {
-        x = (X - MENUmodalBodyWidth) + "px";
-        MENUmodalBody.style.left = x;
-    }
-    if (overflowStates.yOverflow == true) {
-        y = (Y - MENUmodalBodyHeight) + "px";
-        MENUmodalBody.style.top = y;
-    }
-
-    for (let i = 0; i < menuItems.length; i++) {
-        const menuItem = menuItems[i];
-        menuItem.setAttribute('data-menu-item-id', i);
-        menuItem.addEventListener('click', function(event) {
-            event.stopPropagation();
-            const clickedElement = event.target;
-            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
-            const functionToCall = params[menuItemId].function;
-            const optionalParams = params[menuItemId].optionalParams;
-
-            if (functionToCall == "TEST") {
-                console.log("the button worked");
-            } else if (functionToCall != "None") {
-                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
-                return;
-            } else {
-                return;
-
-            }
-        });
-    }
-
-    function handleEscapeKey(event) {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            document.removeEventListener('keydown', handleEscapeKey);
-            menuHide_foreign();
-        }
     }
 }
 
@@ -651,7 +564,7 @@ export function menuHide_foreign() {
     return;
 }
 
-import { PROJECT_VIEW_receive_MENU_delete_request } from './projectView.js';
+import { PROJECT_VIEW_receive_MENU_delete_request, PROJECTVIEW_handle_delete_song } from './projectView.js';
 import { PLAYBACK_handle_add_songs_to_queue } from './playback.js';
 import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 
@@ -672,5 +585,9 @@ const MENU_ACTION_FUNCTIONS = {
     OPEN_SETTINGS_PAGE(params) {
         handleRoute("/settings/");
         return
+    },
+    PROJECT_VIEW_delete_song(params) {
+        PROJECTVIEW_handle_delete_song(params)
+        return;
     }
 };

@@ -1,0 +1,110 @@
+/* confirm-action-modal.css */
+
+.CONFIRMmodal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    z-index: 20;
+    overflow: hidden;
+    visibility: visible;
+    visibility: hidden;
+
+    backdrop-filter: saturate(0.25) blur(02px);
+    -webkit-backdrop-filter: saturate(0.25) blur(02px);
+}
+
+.CONFIRMmodal-modal {
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+
+    position: absolute;
+    height: 15rem;
+    aspect-ratio: 3/2;
+    border-radius: 8px;
+    overflow-x: hidden;
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    border-right: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--background-transparent-fog);
+
+    pointer-events: none;
+
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .CONFIRMmodal-modal {
+        width: 100%;
+        align-self: end;
+        background-color: var(--background);
+        border: none;
+        outline: 1px solid var(--text-secondary);
+        border-radius: 8px 8px 0px 0px;
+    }
+}
+
+.CONFIRMmodal-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.CONFIRMmodalForm {
+    position: relative;
+    height: calc(100% - 4rem);
+    width: calc(100% - 4rem);
+    padding: 2rem;
+}
+
+.CONFIRMmodalForm p {
+    position: relative;
+
+
+
+
+}
+
+.buttons {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    bottom: -4rem;
+}
+
+.CONFIRMmodalForm .buttons button {
+    all: unset;
+    min-width: 6rem;
+    padding: 0.5rem;
+    text-align: center;
+    background-color: var(--grey);
+    border-radius: 8px;
+    outline: 1px solid var(--text-third);
+    pointer-events: auto;
+
+
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .CONFIRMmodalForm .buttons button {
+        min-width: 9rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+    }
+}
+
+.CONFIRMmodalForm .buttons button:hover {
+    background-color: var(--secondary-weak) !important;
+
+}
+
+.CONFIRMmodalForm .buttons button:focus {
+    background-color: var(--primary) !important;
+}
+
+.CONFIRMmodalForm .buttons button:active {}

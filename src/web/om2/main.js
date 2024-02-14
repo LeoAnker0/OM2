@@ -10,6 +10,7 @@ import { init_routing } from './js/routing.js';
 import { initSettings } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 import layout from './html/layout.html?raw';
+import './css/confirm-action-modal.css';
 import './css/notificationStyling.css';
 import './css/upload_queue_modal.css';
 import './css/upload_indicator.css';

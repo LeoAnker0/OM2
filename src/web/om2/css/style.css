@@ -27,6 +27,7 @@
     --background: hsl(0, 0%, 92%);
     --background-transparent: hsla(0, 0%, 92%, 0.7);
     --background-transparent-subtle: hsla(0, 0%, 92%, 0.1);
+    --background-transparent-fog: hsla(0, 0%, 92%, 0.85);
 
 
     --primary: hsl(210, 100%, 78%);
