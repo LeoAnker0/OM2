@@ -705,21 +705,28 @@ async function uploadFileWithProgress(file, projectID) {
 
         // Handle case where storage limit reached
         if (response == "StorageLimit Reached") {
-            HandleCreateNotification("Storage limit reached", "error")
+            HandleCreateNotification("Storage limit reached", "error");
+            for (var i = uploadQueue.length - 1; i >= 0; i--) {
+                uploadQueue.shift()
+            }
+            isUploading = false;
+            hide_upload_indicator();
+            updateProgress_upload_indicator(0);
         }
 
         /* add next file to the queue */
+        uploadQueue.shift();
         isUploading = false;
-        /* hide uploading indicator */
-        hide_upload_indicator()
-        updateProgress_upload_indicator(0)
 
+        /* hide uploading indicator */
+        hide_upload_indicator();
+        updateProgress_upload_indicator(0);
+
+        /* if there are more files in the queue to be uploaded, recurse */
         if (uploadQueue.length > 0) {
-            const current_file = uploadQueue.shift();
+            const current_file = uploadQueue[0];
             await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
-
-
 
         // Update the project tables, but only if viewing that page
         if ((Details.ProjectID == projectID) && (currentlyViewingProjects == true)) {
@@ -733,6 +740,7 @@ async function uploadFileWithProgress(file, projectID) {
 
     xhr.open('POST', `${MAIN_CONST_EXPORT_apiPath}/files/upload_audio/${projectID}`, true);
     xhr.send(formData);
+
 }
 
 

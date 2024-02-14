@@ -37,6 +37,7 @@
     --orange: hsl(40, 100%, 45%);
 
     --accent: hsl(165, 90%, 20%);
+    --accent-soft: hsl(165, 25%, 65%);
     --success: hsl(165, 90%, 35%);
     --whoopsie: hsl(350, 80%, 60%);
     --background-overlay: hsla(0, 0%, 0%, 0.6);
@@ -74,6 +75,8 @@
         --orange: hsl(40, 100%, 65%);
 
         --accent: hsl(165, 40%, 80%);
+        --accent-soft: hsl(165, 10%, 20%);
+
     }
 }
 

@@ -9,13 +9,13 @@
     height: 1px;
     pointer-events: none;
     user-select: none;
-    opacity: 00%;
     overflow: hidden;
+    opacity: 00%;
 }
 
 .UPLOAD-INDICATOR-container .loader {
     position: relative;
-    background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent));
+    background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent-soft));
     background-size: 400% 400%;
     animation: gradient 3s ease infinite;
     height: 100%;

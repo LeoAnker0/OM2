@@ -125,9 +125,8 @@
     width: 65%;
     left: 25%;
     height: 0.05rem;
-    opacity: 0.2;
 
-    background-color: var(--text-third);
+    background-color: var(--transparent-overlay);
 }
 
 /* image container */

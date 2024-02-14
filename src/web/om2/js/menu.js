@@ -552,7 +552,7 @@ export function MENU_when_image_has_been_uploaded_pfp() {
     menuHide_foreign();
 }
 
-function showElementDetails(elementId) {
+export function showElementDetails(elementId) {
     const element = document.getElementById(elementId);
     const clientWidth = document.documentElement.clientWidth;
     const clientHeight = document.documentElement.clientHeight;

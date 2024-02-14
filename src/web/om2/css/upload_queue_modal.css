@@ -3,10 +3,12 @@
 .UPLOADQUEUEMODAL-container {
     position: absolute;
     width: 15rem;
-    min-height: 12rem;
     border-radius: 8px;
-    top: 2rem;
-    left: 2rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 80%;
+    z-index: 100;
+
 
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -15,13 +17,265 @@
     border-bottom: 1px solid var(--text-secondary);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     background-color: var(--background-transparent);
-
-    z-index: 100;
-
-    display: none;
+    visibility: hidden;
 }
 
-.UPLOADQUEUEMODAL-container div {
-    padding: 2px;
-    border-bottom: 1px solid var(--grey);
+.UPLOADQUEUEMODAL-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
+
+
+.UPLOADQUEUE-containerL2 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.UPLOADQUEUE-top {
+    position: relative;
+    height: var(--QUEUE-top-width);
+    width: 100%;
+
+    background-color: var(--transparent-overlay);
+}
+
+.UPLOADQUEUE-top-text {
+    position: relative;
+    width: 100%;
+    height: 2rem;
+    padding-left: 0.8rem;
+    padding-right: 1rem;
+    padding-top: 0.7rem;
+}
+
+.UPLOADQUEUE-top-text-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    color: var(--text);
+}
+
+.UPLOADQUEUE-top-text-clear {
+    position: absolute;
+    font-size: 1rem;
+    font-weight: 400;
+    right: 3rem;
+    top: 1rem;
+    cursor: pointer;
+
+    color: var(--text-third);
+}
+
+.UPLOADQUEUE-bottom {
+    position: relative;
+    width: 100%;
+    height: calc(100% - var(--QUEUE-top-width));
+    bottom: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.UPLOADQUEUE-bottom::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+/* upload queue items ----------------------------- */
+
+/* upload queue currently uploading item */
+.UPLOADQUEUE-bottom-currentlyUploadingItem {
+    --upload-queue-background: hsl(0, 0%, 98%);
+    position: relative;
+    width: calc(100% - 0.5rem);
+    height: 3.5rem;
+    margin: 0.5rem 0 1rem 0.5rem;
+    background-color: var(--upload-queue-background);
+    border-radius: 8px;
+    overflow: hidden;
+    outline: 1px solid var(--transparent-overlay);
+
+    display: grid;
+    grid-template-columns: 1fr 4rem;
+    grid-template-areas:
+        "fileName percentUploaded"
+        "estimatedSize percentUploaded"
+    ;
+}
+
+@media (prefers-color-scheme: dark) {
+    .UPLOADQUEUE-bottom-currentlyUploadingItem {
+        --upload-queue-background: hsl(0, 0%, 2%);
+
+    }
+}
+
+.UPLOADQUEUE-bottom-currentlyUploadingItem .fileName {
+    grid-area: fileName;
+    padding-left: 0.5rem;
+    padding-top: 0.3rem;
+    font-size: 1.1rem;
+    color: var(--text);
+    width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.UPLOADQUEUE-bottom-currentlyUploadingItem .estimatedSize {
+    grid-area: estimatedSize;
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    color: var(--text-secondary);
+    padding-bottom: 0.1rem;
+}
+
+.UPLOADQUEUE-bottom-currentlyUploadingItem .estimatedSize span {
+    grid-area: estimatedSize;
+    font-size: 0.8rem;
+    color: var(--text-third);
+}
+
+.UPLOADQUEUE-bottom-currentlyUploadingItem .percentUploaded {
+    grid-area: percentUploaded;
+    height: 100%;
+    aspect-ratio: 1/1;
+
+    display: grid;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.donut-size {
+    font-size: 2.5em;
+    box-sizing: border-box;
+}
+
+.pie-wrapper {
+    position: relative;
+    right: -0.5rem;
+    height: 1em;
+    aspect-ratio: 1/1;
+    margin: 0px auto;
+    box-sizing: border-box;
+}
+
+.pie-wrapper .pie {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    clip: rect(0, 1em, 1em, 0.5em);
+    box-sizing: border-box;
+}
+
+.pie-wrapper .half-circle {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    border: 0.1em solid var(--secondary);
+    border-radius: 50%;
+    clip: rect(0em, 0.5em, 1em, 0em);
+    box-sizing: border-box;
+}
+
+.pie-wrapper .right-side {
+    transform: rotate(0deg);
+    box-sizing: border-box;
+}
+
+.pie-wrapper .label {
+    position: absolute;
+    top: 0.52em;
+    right: 0.4em;
+    bottom: 0.4em;
+    left: 0.4em;
+    display: block;
+    background: none;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    font-size: 0.25em;
+    line-height: 2.6em;
+    text-align: center;
+    cursor: default;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.pie-wrapper .smaller {
+    padding-bottom: 20px;
+    color: var(--text-secondary);
+    font-size: 0.45em;
+    vertical-align: super;
+    box-sizing: border-box;
+}
+
+.pie-wrapper .shadow {
+    width: 100%;
+    height: 100%;
+    border: 0.1em solid var(--background);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+/* nextup upload queue items */
+.UPLOADQUEUE-bottom-items-next {
+    position: relative;
+    width: calc(100% - 0.5rem);
+    height: 1.5rem;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+
+    display: grid;
+    grid-template-columns: 1fr 5rem;
+    grid-template-areas:
+        "itemName itemSize"
+    ;
+}
+
+.UPLOADQUEUE-bottom-items-next::after {
+    content: "";
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    height: 1px;
+    bottom: 0;
+    background-color: var(--grey);
+}
+
+.UPLOADQUEUE-bottom-items-next:last-child::after {
+    visibility: hidden;
+}
+
+.UPLOADQUEUE-bottom-items-next .itemName {
+    grid-area: itemName;
+    height: 100%;
+    width: 99%;
+    line-height: 1.5rem;
+    margin-left: 0.3rem;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    color: var(--text-third);
+
+}
+
+.UPLOADQUEUE-bottom-items-next .itemSize {
+    grid-area: itemSize;
+    line-height: 1.5rem;
+    text-align: right;
+    margin-right: 0.3rem;
+
+}
+
+
+
+
+
+
+
+/**/
