@@ -33,11 +33,6 @@ export function MENUdisplay(params, event, menu_type) {
         handle_lcd_mobile_body(params, event);
     }
 
-    //defined and type == upload_queue
-    else if ((menu_type !== undefined) && menu_type === "upload_queue") {
-        display_upload_queue_modal(params, event);
-    }
-
     //defined and type == notice
     else if ((menu_type !== undefined) && menu_type === "notice") {
         handle_notice(params, event);
@@ -556,78 +551,6 @@ export function MENU_when_image_has_been_uploaded_pfp() {
     spinner.style.visibility = "hidden";
     menuHide_foreign();
 }
-
-/* display_upload_queue_modal */
-function display_upload_queue_modal(params, event) {
-    previously_focused_element = document.activeElement;
-    let X = event.clientX;
-    let Y = event.clientY;
-    const main = document.querySelector("main");
-    const navBar = document.querySelector(".topHalf-container");
-    if (is_mobile()) {
-        main.style.zIndex = "40";
-        navBar.style.zIndex = "0";
-    }
-    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
-    MENUmodalEnvironment.innerHTML = uploadQueueModalHTML;
-    MENUmodalEnvironment.style.display = "block";
-
-    const uploadQueueModal = document.getElementById('uploadQueueModal');
-    let x = (X) + "px";
-    let y = (Y) + "px";
-
-    MENUmodalEnvironment.addEventListener('click', menuHide);
-    uploadQueueModal.style.left = x;
-    uploadQueueModal.style.top = y;
-
-    let interactType = "mouse";
-
-    // set interactType in a sane way. with compatability for webkit and chromium
-    if ((event.webkitForce == 1) || (event.webkitForce == 0)) {
-        if (event.webkitForce == 0) {
-            interactType = "keyboard";
-        }
-    } else {
-        if (event.pointerType !== "mouse") {
-            interactType = "keyboard";
-        }
-    }
-
-    if (interactType == "keyboard") {
-        const rect = previously_focused_element.getBoundingClientRect();
-        X = rect.left + window.scrollX;
-        Y = rect.top + window.scrollY;
-        let x = (X) + "px";
-        let y = (Y) + "px";
-        uploadQueueModal.style.left = x;
-        uploadQueueModal.style.top = y;
-    }
-
-    uploadQueueModal.innerHTML = params[0].markup;
-
-    const MENUmodalBodyWidth = uploadQueueModal.offsetWidth;
-    const MENUmodalBodyHeight = uploadQueueModal.offsetHeight;
-    const overflowStates = showElementDetails('uploadQueueModal')
-
-    document.addEventListener('keydown', handleEscapeKey);
-
-    if (overflowStates.xOverflow == true) {
-        x = (X - MENUmodalBodyWidth) + "px";
-        uploadQueueModal.style.left = x;
-    }
-    if (overflowStates.yOverflow == true) {
-        y = (Y - MENUmodalBodyHeight) + "px";
-        uploadQueueModal.style.top = y;
-    }
-
-    function handleEscapeKey(event) {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            document.removeEventListener('keydown', handleEscapeKey);
-            menuHide_foreign();
-        }
-    }
-}
-
 
 function showElementDetails(elementId) {
     const element = document.getElementById(elementId);

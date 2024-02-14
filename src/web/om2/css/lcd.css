@@ -34,16 +34,16 @@
     overflow: hidden;
     display: flex;
 
-    background-color: var(--text-third);
+    background-color: hsl(0, 0%, 98%);
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
 
 @media (prefers-color-scheme: dark) {
     .LCDcontentContainer {
-        background-color: hsl(0, 0%, 25%);
+        background-color: hsl(0, 0%, 2%);
+
     }
 }
-
-
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .LCDcontentContainer {
@@ -102,7 +102,7 @@
     font-size: 0.8rem;
     font-weight: 600;
 
-    color: var(--text-dark);
+    color: var(--text-third);
 }
 
 
@@ -123,7 +123,7 @@
     transition: opacity 150ms ease-in-out;
     transition: opacity 30ms ease-in-out;
 
-    filter: var(--make-svg-white);
+    filter: var(--make-svg-black);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -159,7 +159,7 @@
     opacity: 0%;
     transition: opacity 30ms ease-in-out;
 
-    color: var(--text-dark-secondary);
+    color: var(--text-secondary);
 }
 
 .LCDbody:hover .LCDright-bottomTextTimeIndicatorsLeft::after {
@@ -181,7 +181,7 @@
     opacity: 0%;
     transition: opacity 30ms ease-in-out;
 
-    color: var(--text-dark-secondary);
+    color: var(--text-secondary);
 }
 
 .LCDbody:hover .LCDright-bottomTextTimeIndicatorsRight::after {
@@ -197,7 +197,7 @@
     font-size: 0.75rem;
     font-weight: 400;
 
-    color: var(--text-dark-secondary);
+    color: var(--text-secondary);
 }
 
 .LCDright-bottomText-text {
@@ -228,7 +228,6 @@
     height: 100%;
     cursor: grabbing;
 }
-
 
 .LCDright-bottom-seekBar input[type="range"]::-webkit-slider-thumb {
     position: relative;
@@ -270,12 +269,12 @@
     top: 0;
     border-radius: 8px;
 
-    background-color: var(--grey);
+    background-color: var(--text-secondary);
 }
 
 @media (prefers-color-scheme: dark) {
     .LCDright-bottom-seekBar-indicator::before {
-        background-color: hsl(0, 0%, 90%);
+        background-color: var(--text-third);
     }
 }
 
