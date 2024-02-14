@@ -715,8 +715,9 @@ async function uploadFileWithProgress(file, projectID) {
         }
 
         /* add next file to the queue */
-        uploadQueue.shift();
         isUploading = false;
+        uploadQueue.shift();
+
 
         /* hide uploading indicator */
         hide_upload_indicator();
@@ -727,6 +728,7 @@ async function uploadFileWithProgress(file, projectID) {
             const current_file = uploadQueue[0];
             await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
+
 
         // Update the project tables, but only if viewing that page
         if ((Details.ProjectID == projectID) && (currentlyViewingProjects == true)) {
@@ -756,7 +758,7 @@ async function uploadFiles(files, details) {
         uploadQueue.push(new_file_item)
 
         if (!isUploading) {
-            const current_file = uploadQueue.shift();
+            const current_file = uploadQueue[0];
             await uploadFileWithProgress(current_file.file, current_file.ProjectID);
         }
     }

@@ -193,17 +193,16 @@ export async function updateUserDetailsAdmin(uuid, column, newInfo) {
         const data = await response.json();
         const update = data["updated"]
         if (update === "success") {
+            HandleCreateNotification("Table Updated Successfully", "success");
             loadUsersTable();
             return
         } else {
-            console.log("there was an error", data)
             HandleCreateNotification(`Error Updating Column ${column}: ${data.Error}`, "error")
             return
         }
 
     } catch (error) {
-        console.error('Error:', error);
-        HandleCreateNotification(`Error Updating Column: ${error}`, "error")
+        HandleCreateNotification(`Error Updating Column ${column}: ${error}`, "error");
         return
     }
 }
