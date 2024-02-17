@@ -7,7 +7,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    z-index: 20;
+    z-index: 1000;
     overflow: hidden;
     visibility: visible;
     visibility: hidden;
@@ -71,15 +71,16 @@
 }
 
 .buttons {
-    position: relative;
+    position: absolute;
+    width: 80%;
     display: flex;
     justify-content: space-between;
-    bottom: -4rem;
+    bottom: 2rem;
 }
 
 .CONFIRMmodalForm .buttons button {
     all: unset;
-    min-width: 6rem;
+    min-width: calc(50% - 2rem);
     padding: 0.5rem;
     text-align: center;
     background-color: var(--grey);
@@ -92,7 +93,6 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .CONFIRMmodalForm .buttons button {
-        min-width: 9rem;
         height: 2.5rem;
         font-size: 1.5rem;
     }
@@ -108,3 +108,7 @@
 }
 
 .CONFIRMmodalForm .buttons button:active {}
+
+.CONFIRMmodalCancel {
+    background-color: var(--secondary);
+}

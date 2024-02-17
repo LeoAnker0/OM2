@@ -355,8 +355,15 @@ function displayMenuForTop(event) {
     return;
 }
 
-export function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
-    if (window.confirm("Are you sure you want to delete this project?")) {
+export async function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
+    /* ensure that the user actually wants to delete the song */
+    // get confirmation.
+    const confirmMessage = `Are you sure that you want to delete <em><b>${Details.ProjectName}</b></em>? This action is not reversable.`;
+    const action = await CONFIRM_action_modal(confirmMessage);
+
+    if (action === "cancel") {
+        menuHide_foreign();
+    } else if (action === "delete") {
         const newRoute = "/";
         deleteProjectFromServer(project_id);
         menuHide_foreign();
@@ -589,7 +596,7 @@ function displayMenuForRow(event) {
 export async function PROJECTVIEW_handle_delete_song(params) {
     /* ensure that the user actually wants to delete the song */
     // get confirmation.
-    const confirmMessage = `Are you sure that you want to delete <em>${params.songName}</em>? This action is un reversable.`;
+    const confirmMessage = `Are you sure that you want to delete <em><b>${params.songName}</b></em>? This action is not reversable.`;
     const action = await CONFIRM_action_modal(confirmMessage);
 
     if (action === "cancel") {} else if (action === "delete") {

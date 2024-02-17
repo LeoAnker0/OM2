@@ -1,4 +1,5 @@
 import { menuHide_foreign } from './menu.js';
+import { is_mobile } from './om2.js';
 
 export let previously_focused_element;
 
@@ -62,9 +63,10 @@ export function CONFIRM_action_modal(message) {
             }
         });
 
-        if (interactType === "keyboard") {
+        /* !is_mobile, since this styling now won't show up on mobile, where it is annoying and weird */
+        if ((interactType === "keyboard") && !is_mobile()) {
             cancelButton.focus();
-        } else if (interactType == "mouse") {
+        } else if ((interactType == "mouse") && !is_mobile()) {
             menuHide_foreign();
             cancelButton.focus();
             /* Find some other solution than blur, which will hide the stylings for that first button

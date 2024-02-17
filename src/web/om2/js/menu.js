@@ -306,9 +306,9 @@ function handle_normal_context_menu(params, event) {
     const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
 
 
-    if (interactType === "keyboard") {
+    if ((interactType === "keyboard") && !is_mobile()) {
         first_button.focus();
-    } else if (interactType == "mouse") {
+    } else if ((interactType == "mouse") && !is_mobile()) {
         first_button.focus();
         /* Find some other solution than blur, which will hide the stylings for that first button
         this is neccessary because webkit is a little annoying, and perhaps there is a better way of 
