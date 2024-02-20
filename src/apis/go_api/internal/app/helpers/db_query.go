@@ -240,22 +240,52 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
 */
 
 //func Delete_song_from_project_by_SongSequence working query
-func Delete_song_from_project_by_SongSequence(ProjectID, SongSequence string) (error) {
-    query := fmt.Sprintf(`
-        DELETE FROM songs WHERE "SongSequence" = $2 AND "ProjectID" = $1;
+func Delete_song_from_project_by_SongSequence(ProjectID, SongSequence string) (string, error) {
+    // The first query gets the fileURL of the song from the table
+    query := `SELECT "URL" FROM songs WHERE "ProjectID" = $1 AND "SongSequence" = $2`
 
+    // Prepare the SQL statement
+    stmt, err := db.Prepare(query)
+    if err != nil {
+        return "", err
+    }
+    defer stmt.Close()
+
+    // Execute the query and retrieve the songs file url
+    var SongURL string
+    err = stmt.QueryRow(ProjectID, SongSequence).Scan(&SongURL)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return "", nil // Email not found in the database
+        }
+        return "", err
+    }
+
+    // The second query deletes the item from the songs table
+    query = fmt.Sprintf(`
+        DELETE FROM songs WHERE "SongSequence" = $2 AND "ProjectID" = $1;
+        `)
+
+    _, err = db.Exec(query, ProjectID, SongSequence)
+    if err != nil {
+        fmt.Println("error in Update_the_order_of_songsSequnce_in_songs query 1", err)
+        return "", err
+    }
+
+    // The third query then rearranges that project, so that all the numbers are in order
+    query = fmt.Sprintf(`
         UPDATE songs
         SET "SongSequence" = "SongSequence" - 1
         WHERE "SongSequence" >= $2 AND "ProjectID" = $1;
         `)
 
-    _, err := db.Exec(query, ProjectID, SongSequence)
+    _, err = db.Exec(query, ProjectID, SongSequence)
     if err != nil {
-        fmt.Println("error in Update_the_order_of_songsSequnce_in_songs", err)
-        return err
+        fmt.Println("error in Update_the_order_of_songsSequnce_in_songs query 2", err)
+        return "", err
     }
 
-    return nil
+    return SongURL, nil
 }
 
 // PasswordHashMatchesEmail checks if the hashed password matches the email in the database

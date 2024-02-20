@@ -32,6 +32,30 @@ export async function updateUserDetails(column, newInfo) {
     }
 }
 
+export async function deleteSongFromProject(projectID, SongSequenceString) {
+    const SongSequenceInformationArray = SongSequenceString.split("-");
+    const SongSequence = SongSequenceInformationArray[0];
+    const SongVersion = SongSequenceInformationArray[1];
+    try {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_song/${projectID}?s=${SongSequence}&v=${SongVersion}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await response.json();
+        if (data.error) {
+            HandleCreateNotification("There was an error deleting the song", "error");
+        }
+        return
+
+    } catch (error) {
+        console.error('Error:', error);
+        return
+    }
+}
+
 export async function getUserDetail(wantedColumn) {
     try {
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/get_user_details/${wantedColumn}`, {
@@ -43,7 +67,7 @@ export async function getUserDetail(wantedColumn) {
         });
 
         const data = await response.json();
-        const info = data["response"]
+        const info = data["response"];
         return info
 
     } catch (error) {

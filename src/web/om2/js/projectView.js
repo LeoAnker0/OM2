@@ -2,7 +2,7 @@ import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBy
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { updateProjectDetails, getProjectDetails } from './network_requests.js';
+import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import { HandleCreateNotification } from './notificationDisplayManager.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
@@ -369,7 +369,7 @@ export async function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
         menuHide_foreign();
     } else if (action === "delete") {
         const newRoute = "/";
-        deleteProjectFromServer(project_id);
+        await deleteProjectFromServer(project_id);
         menuHide_foreign();
         handleRoute(newRoute);
     } else {
@@ -604,11 +604,10 @@ export async function PROJECTVIEW_handle_delete_song(params) {
     const action = await CONFIRM_action_modal(confirmMessage);
 
     if (action === "cancel") {} else if (action === "delete") {
-        console.log("delete the song")
-        console.log(params)
+        await deleteSongFromProject(Details.ProjectID, params.songID)
         menuHide_foreign();
+        PROJECTVIEW_update();
     } else {
-
         console.error("a statement was returned that isn't valid");
     }
 }

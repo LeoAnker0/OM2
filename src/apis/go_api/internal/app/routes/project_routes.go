@@ -18,6 +18,7 @@ func SetupProjectRoutes(router *gin.Engine) {
         projectRoutes.GET("/get_new_project_id", get_new_project_id)
         projectRoutes.POST("/update_details", update_project_details)
         projectRoutes.DELETE("/delete_project/:projectID", delete_project)
+        projectRoutes.DELETE("/delete_song/:projectID", delete_song)
     }
 }
 
@@ -42,8 +43,8 @@ func get_projects(c *gin.Context) {
         fmt.Println("cookie error", err)
     }
 
-    if No_Library_Items_Wanted > 40 {
-        No_Library_Items_Wanted = 40
+    if No_Library_Items_Wanted > 75 {
+        No_Library_Items_Wanted = 75
     }
 
     // Authenticate the user and if they aren't valid return them false.
@@ -61,6 +62,73 @@ func get_projects(c *gin.Context) {
     }
 
     c.JSON(200, gin.H{"projects": projects})
+    return
+}
+
+func delete_song(c *gin.Context) {
+    ProjectID := c.Param("projectID")
+    SongSequence := c.DefaultQuery("s", "0")
+    SongVersion := c.DefaultQuery("v", "0")
+
+    // If SongSequence or SongVersion is 0 return false since these are not valid values
+    if ((SongSequence == "0") || (SongVersion == "0")) {
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
+    }
+
+    clientIP := c.ClientIP()
+    jwt_token, err := c.Cookie("access-token")
+    if err != nil {
+        fmt.Println("cookie error", err)
+    }
+
+    // Authenticate the user and if they aren't valid return them false.
+    valid, uuid := helpers.Authenticate(jwt_token, clientIP)
+    if valid != true {
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
+    }
+
+    // Ensure that the user is atleast an editor for deleting a song
+    authorised, err := helpers.Authorise(ProjectID, uuid, "editor")
+    if err != nil {
+        fmt.Println("There was an error with authorising the user: ", err)
+    }
+    if authorised != true {
+        fmt.Println("The user is not authorised for this path.")
+        c.JSON(403, gin.H{"error": "unauthorised"})
+        return
+    } 
+
+
+    // Now that we have verified that all the inputs are valid, and that the user
+    // Is allowed to do these actions, it is now time to call the function that will
+    // Do this
+    SongURL, err := helpers.Delete_song_from_project_by_SongSequence(ProjectID, SongSequence)
+    if err != nil {
+        fmt.Println(err)
+        c.JSON(500, gin.H{"error": "whoopsies"})
+        return
+    }
+
+    // Delete the actual files
+    err = helpers.DELETE_files_row(SongURL)
+    if err != nil {
+        fmt.Println("there was an error deleting the file from the files table: ", err)
+        c.JSON(500, gin.H{"error": "whoopsies"})
+        return
+    }
+
+    err = helpers.DeleteFolder(SongURL)
+    if err != nil {
+        fmt.Println("there was an error deleting the file: ", err)
+        c.JSON(500, gin.H{"error": "whoopsies"})
+        return
+
+    }
+
+    // The deletion was successful, now return a success
+    c.JSON(200, gin.H{"success": "yes"})
     return
 }
 
@@ -247,8 +315,6 @@ func delete_project(c *gin.Context) {
         fmt.Println("cookie error", err)
     }
 
-    fmt.Println("ProjecctID, ", ProjectID)
-
     // Authenticate the user and if they aren't valid return them false.
     valid, uuid := helpers.Authenticate(jwt_token, clientIP)
     if valid != true {
@@ -256,12 +322,23 @@ func delete_project(c *gin.Context) {
         return
     }
 
+    // Need to authorise the user, that they actually have the permission to being doing anything
+    // with this project...
+    authorised, err := helpers.Authorise(ProjectID, uuid, "owner")
+    if err != nil {
+        fmt.Println("There was an error with authorising the user: ", err)
+    }
+    if authorised != true {
+        fmt.Println("The user is not authorised for this path.")
+        c.JSON(403, gin.H{"error": "unauthorised"})
+        return
+    } 
+
+    // Get data for processing of deletion
     project_json, err := helpers.GetProjectDetailsFromDatabase(uuid, ProjectID)
     if err != nil {
         fmt.Println(err)
     }
-
-    fmt.Println(project_json)
 
     // Properly parse project_json as json, and then get .ProjectJSON
     var project Project

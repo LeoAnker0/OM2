@@ -18,7 +18,6 @@ func EnsureAdminUserExists() {
     }
 
     if adminExists {
-        fmt.Println("Admin exists")
         /*
             does passwordMatch the one ^
                 update password
