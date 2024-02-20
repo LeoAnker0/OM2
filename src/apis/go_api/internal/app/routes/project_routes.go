@@ -101,9 +101,11 @@ func delete_song(c *gin.Context) {
     } 
 
 
-    // Now that we have verified that all the inputs are valid, and that the user
-    // Is allowed to do these actions, it is now time to call the function that will
-    // Do this
+    /*  
+        Now that we have verified that all the inputs are valid, and that the user
+        Is allowed to do these actions, it is now time to call the function that will
+        do this
+        */
     SongURL, err := helpers.Delete_song_from_project_by_SongSequence(ProjectID, SongSequence)
     if err != nil {
         fmt.Println(err)
