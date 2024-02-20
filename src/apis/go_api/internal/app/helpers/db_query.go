@@ -221,6 +221,42 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
     return nil
 }
 
+// Delete_song_from_project_by_SongSequence 
+/*
+    ProjectID, SongSequence
+
+    : $1 == SongSequence of the song being deleted
+
+    // Delete it from the table
+
+
+    // if SongSequence is >= then $1 then reduce by one
+    * >= $1 {
+        SongSequence -= 1
+    }
+
+    //query := "DELETE FROM files WHERE file_url = $1"
+
+*/
+
+//func Delete_song_from_project_by_SongSequence working query
+func Delete_song_from_project_by_SongSequence(ProjectID, SongSequence string) (error) {
+    query := fmt.Sprintf(`
+        DELETE FROM songs WHERE "SongSequence" = $2 AND "ProjectID" = $1;
+
+        UPDATE songs
+        SET "SongSequence" = "SongSequence" - 1
+        WHERE "SongSequence" >= $2 AND "ProjectID" = $1;
+        `)
+
+    _, err := db.Exec(query, ProjectID, SongSequence)
+    if err != nil {
+        fmt.Println("error in Update_the_order_of_songsSequnce_in_songs", err)
+        return err
+    }
+
+    return nil
+}
 
 // PasswordHashMatchesEmail checks if the hashed password matches the email in the database
 func PasswordHashMatchesEmail(password, email string) (bool, error) {

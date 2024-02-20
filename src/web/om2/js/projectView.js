@@ -116,11 +116,15 @@ export function hideProjectView() {
 }
 
 export async function PROJECTVIEW_update() {
+    // Ensure that project_view is currently being viewed when called to refresh.
+    if (!currentlyViewingProjects) {
+        return;
+    }
+
     const projectID = Details.ProjectID;
 
     // Update details
     const result = await getProjectDetails(projectID);
-
     if (result == "") {
 
     } else {
