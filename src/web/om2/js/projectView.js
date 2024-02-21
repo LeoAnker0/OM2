@@ -300,7 +300,7 @@ function closeMoreDescription(details) {
     updateProjectDetails(details.ProjectID, "description", newDescription)
     background.style.display = "none";
     updateDescription();
-    main.style.zIndex = "1";
+    main.style.zIndex = "";
 }
 
 /* project view top buttons */

@@ -231,12 +231,12 @@ func upload_image_file(c *gin.Context) {
 
         fileDataVar := helpers.FilesTableStruct {
             FolderSize:         folderSize,
-            ProcessedState:     "finished",
+            CacheState:         true,
             URL:                new_url,
             FileCreationTime:   unixMillis,
-            LastTimeAccessed:   0,
+            LastTimeAccessed:   10000000000000,
             UUID:               uuid,
-            FileType:           "local/image",
+            FileType:           "photo",
         }
 
         // Update the files database to now have this image
@@ -429,12 +429,12 @@ func upload_audio_file(c *gin.Context) {
 
         fileDataVar := helpers.FilesTableStruct {
             FolderSize:         folderSize,
-            ProcessedState:     "finished",
+            CacheState:         true,
             URL:                new_url,
             FileCreationTime:   unixMillis,
             LastTimeAccessed:   0,
             UUID:               uuid,
-            FileType:           "local/audio",
+            FileType:           "audio",
         }
 
         // Update the files database to now have this image
@@ -453,7 +453,7 @@ func upload_audio_file(c *gin.Context) {
             Duration:           duration,
             Favourited:         false,
             FolderSize:         folderSize,
-            SongSequence:       0,
+            SongSequence:       10000000000000,
             Version:            1,    
             ProjectID:          ProjectID,                                 
         }

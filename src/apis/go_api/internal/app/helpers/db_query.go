@@ -661,7 +661,7 @@ func DELETE_project_by_uuid_and_projectID(uuid, ProjectID string) error {
 
 type FilesTableStruct struct {
     FolderSize          int64
-    ProcessedState      string
+    CacheState          bool
     URL                 string
     FileCreationTime    int64
     LastTimeAccessed    int64
@@ -686,8 +686,8 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
     owners := pq.Array([]string{string(ownerJSON)})
 
     // Execute the INSERT statement
-    query := "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time, last_time_accessed) VALUES ($1, $2, $3, $4, $5, $6, $7)"
-    _, err = db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime, data.LastTimeAccessed)
+    query := "INSERT INTO files (cache_state, file_size, file_url, owner, file_type, file_created_time, last_time_accessed) VALUES ($1, $2, $3, $4, $5, $6, $7)"
+    _, err = db.Exec(query, data.CacheState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime, data.LastTimeAccessed)
     if err != nil {
         fmt.Println("error in INIT_photo_files_database", err)
         return err

@@ -1,6 +1,6 @@
 CREATE TABLE public.files (
     file_url text PRIMARY KEY,
-    processed_state text,
+    cache_state boolean,
     owner json[],
     file_type text,
     last_time_accessed bigint,
