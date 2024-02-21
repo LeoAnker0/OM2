@@ -458,6 +458,13 @@
                     <td>The file type(but not format/extension) and location of the file (could be cloud/audio for example)</td>
                 </tr>
                 <tr>
+                    <td>last_time_accessed</td>
+                    <td>bigint</td>
+                    <td><code>1702417839517</code></td>
+                    <td></td>
+                    <td>The time that the file was last accessed by anybody, is used for the purposes of cache pruning</td>
+                </tr>
+                <tr>
                     <td>file_created_time</td>
                     <td>bigint</td>
                     <td><code>1702417809517</code></td>

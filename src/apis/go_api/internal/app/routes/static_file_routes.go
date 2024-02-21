@@ -1,10 +1,11 @@
 package routes
 
 import (
-    "path/filepath"
+    "go_api/internal/app/helpers"
     "github.com/gin-gonic/gin"
-    "os"
+    "path/filepath"
     "fmt"
+    "os"
 )
 
 func SetupStaticFileRoutes(router *gin.Engine) {
@@ -44,11 +45,16 @@ func handleMediaPath(c *gin.Context) {
     id := c.Param("id")
     fileQuality := c.Param("fileQuality")
 
+    err := helpers.UPDATE_Access_Time_Of_File_in_files(id)
+    if err != nil {
+        fmt.Println("There was an error incrementing the access counter", err)
+    }
+
     // Construct the directory path for the "id"
     idDirPath := "/var/www/media/" + id
 
     // Check if the "id" directory exists
-    _, err := os.Stat(idDirPath)
+    _, err = os.Stat(idDirPath)
     if err != nil {
         // Handle the case when the "id" directory does not exist
         fmt.Println("the id doesn't exist, ", idDirPath)

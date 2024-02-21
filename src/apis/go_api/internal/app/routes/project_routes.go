@@ -1,13 +1,13 @@
 package routes
 
 import (
-    "github.com/gin-gonic/gin"
-    "fmt"
-    "strconv"
     "go_api/internal/app/helpers"
-    "io/ioutil"
+    "github.com/gin-gonic/gin"
     "encoding/json"
+    "io/ioutil"
     "strings"
+    "strconv"
+    "fmt"
 )
 
 func SetupProjectRoutes(router *gin.Engine) {

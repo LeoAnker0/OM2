@@ -1,17 +1,17 @@
 package routes
 
 import (
-    "fmt"
+    "gopkg.in/gographics/imagick.v2/imagick"
+    "go_api/internal/app/helpers"
+    "github.com/gin-gonic/gin"
+    "path/filepath"
     "net/http"
+    "strconv"
+    "strings"
+    "time"
+    "fmt"
     "io"
     "os"
-    "path/filepath"
-    "github.com/gin-gonic/gin"
-    "go_api/internal/app/helpers"
-    "gopkg.in/gographics/imagick.v2/imagick"
-    "time"
-    "strings"
-    "strconv"
 
 )
 
@@ -95,8 +95,6 @@ func upload_image_file(c *gin.Context) {
     // Create a unique filename
     temporary_file_uuid := helpers.GenerateUUID()
     filename := filepath.Join("/var/www/media/temp", temporary_file_uuid + "_" + header.Filename)
-
-    
     
 
     // Create the file on the server
@@ -134,13 +132,6 @@ func upload_image_file(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to copy file content"})
         return
     }
-
-    /* At this point we have the file like we did in the old python iteration
-    before we sent it to chipmunk, however we are not going to do chipmunk 
-    this time around, so instead i'm just going to do the file processing 
-    in this function as well, since this will be the route through which image 
-    files are uploaded to the server.
-    */
 
     // Generate the proper filename string that we used before
     new_url, err2 := helpers.Generate_Unique_URL_String()
@@ -243,6 +234,7 @@ func upload_image_file(c *gin.Context) {
             ProcessedState:     "finished",
             URL:                new_url,
             FileCreationTime:   unixMillis,
+            LastTimeAccessed:   0,
             UUID:               uuid,
             FileType:           "local/image",
         }
@@ -266,8 +258,6 @@ func upload_image_file(c *gin.Context) {
             }
 
         }
-
-        
 
     } else {
         fmt.Println("that storage mode isn't supported yet: ", StorageMode)
@@ -383,13 +373,6 @@ func upload_audio_file(c *gin.Context) {
         return
     }
 
-    /* At this point we have the file like we did in the old python iteration
-    before we sent it to chipmunk, however we are not going to do chipmunk 
-    this time around, so instead i'm just going to do the file processing 
-    in this function as well, since this will be the route through which image 
-    files are uploaded to the server.
-    */
-
     // Generate the proper filename string that we used before
     new_url, err2 := helpers.Generate_Unique_URL_String()
     if err2 != nil {
@@ -449,6 +432,7 @@ func upload_audio_file(c *gin.Context) {
             ProcessedState:     "finished",
             URL:                new_url,
             FileCreationTime:   unixMillis,
+            LastTimeAccessed:   0,
             UUID:               uuid,
             FileType:           "local/audio",
         }

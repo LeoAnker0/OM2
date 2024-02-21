@@ -1,16 +1,16 @@
 package helpers
 
 import (
-    "fmt"
-    "os"
-    "database/sql"
+    "golang.org/x/crypto/bcrypt"
     _ "github.com/lib/pq"
     "github.com/lib/pq"
-    "time"
-    "golang.org/x/crypto/bcrypt"
     "encoding/json"
+    "database/sql"
     _ "strings"
+    "time"
     "sync"
+    "fmt"
+    "os"
 )
 
 var db *sql.DB
@@ -664,6 +664,7 @@ type FilesTableStruct struct {
     ProcessedState      string
     URL                 string
     FileCreationTime    int64
+    LastTimeAccessed    int64
     UUID                string
     FileType            string
 }
@@ -685,8 +686,8 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
     owners := pq.Array([]string{string(ownerJSON)})
 
     // Execute the INSERT statement
-    query := "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time) VALUES ($1, $2, $3, $4, $5, $6)"
-    _, err = db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime)
+    query := "INSERT INTO files (processed_state, file_size, file_url, owner, file_type, file_created_time, last_time_accessed) VALUES ($1, $2, $3, $4, $5, $6, $7)"
+    _, err = db.Exec(query, data.ProcessedState, data.FolderSize, data.URL, owners, data.FileType, data.FileCreationTime, data.LastTimeAccessed)
     if err != nil {
         fmt.Println("error in INIT_photo_files_database", err)
         return err
@@ -695,6 +696,23 @@ func INIT_item_in_files_database(data FilesTableStruct) error {
     return nil
 }
 
+func UPDATE_Access_Time_Of_File_in_files(URL string) error {
+    query := `
+        UPDATE files 
+            SET last_time_accessed = $2
+        WHERE file_url = $1;
+`
+    currentTime := time.Now()
+    unixMillis := int(currentTime.UnixNano() / int64(time.Millisecond))
+
+    _, err := db.Exec(query, URL, unixMillis)
+    if err != nil {
+        fmt.Println("error in INIT_photo_files_database", err)
+        return err
+    }
+
+    return nil
+}
 
 type UsersTableStruct struct {
     Username            string

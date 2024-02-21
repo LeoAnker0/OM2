@@ -3,6 +3,7 @@ CREATE TABLE public.files (
     processed_state text,
     owner json[],
     file_type text,
+    last_time_accessed bigint,
     file_created_time bigint,
     file_size bigint
 );

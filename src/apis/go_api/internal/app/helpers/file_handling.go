@@ -1,14 +1,13 @@
 package helpers
 
 import (
-	"fmt"
+    ffmpeg "github.com/u2takey/ffmpeg-go"
     "path/filepath"
-    "os"
     "encoding/json"
     "strconv"
     "regexp"
-    ffmpeg "github.com/u2takey/ffmpeg-go"
-
+	"fmt"
+    "os"
 )
 
 func DeleteFolder(url string) error {
