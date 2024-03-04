@@ -536,6 +536,7 @@
     position: relative;
 
     color: var(--PV-text-secondary);
+    line-height: 1rem;
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {

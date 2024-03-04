@@ -31,16 +31,16 @@ export async function initProjectView(projectID) {
     currentlyViewingProjects = true;
     if (is_dark() == true) {
         fakeDetails = {
-            ProjectName: "Hi!",
-            ProjectContributors: "Loading",
+            ProjectName: "..",
+            ProjectContributors: "...",
             TimeCreated: 0,
             PictureURL: "static/loading_img_text_dark",
         }
     } else {
 
         fakeDetails = {
-            ProjectName: "Hi!",
-            ProjectContributors: "Loading",
+            ProjectName: "..",
+            ProjectContributors: "...",
             TimeCreated: 0,
             PictureURL: "static/loading_img_text_light",
         }
@@ -49,7 +49,7 @@ export async function initProjectView(projectID) {
     }
     loadContainer(fakeDetails);
 
-    sessionStorage.setItem('description', "Wonderful notes are loading...");
+    sessionStorage.setItem('description', ".");
     updateDescription_display();
 
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
@@ -146,11 +146,15 @@ function updateTempVisible() {
     const title = document.getElementById("PROJECTviewDisplayTitleH1");
     const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
     const displayImage = document.getElementById("PROJECTviewDisplayImage_imgTag");
+    const descriptionTitle = document.getElementById("PROJECTVIEW_DESCRIPTION_more_title");
+    const descriptionArtistTime = document.getElementById("PROJECTVIEW_DESCRIPTION_more_artist_year");
     const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
 
     title.innerText = Details.ProjectName;
     contributors.innerText = Details.ProjectContributors;
     displayImage.src = image;
+    descriptionTitle.innerText = Details.ProjectName;
+    descriptionArtistTime.innerText = `${Details.ProjectContributors} | ${formatTimeDaysToHuman(Details.TimeCreated)}`;
 }
 
 function set_event_listeners_for_titles() {
@@ -170,7 +174,9 @@ function set_event_listeners_for_titles() {
         if (newTitleH1 !== H1Copy) {
             update_mobile_header_project_title(newTitleH1);
             updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
-            H1Copy = newTitleH1;
+            Details.ProjectName = newTitleH1;
+            updateTempVisible();
+
         }
     });
 
@@ -178,7 +184,9 @@ function set_event_listeners_for_titles() {
         const newTitleH3 = titleH3.innerText;
         if (newTitleH3 !== H3Copy) {
             updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
-            H3Copy = newTitleH3;
+
+            Details.ProjectContributors = newTitleH3;
+            updateTempVisible();
         }
     });
 }

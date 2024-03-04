@@ -23,16 +23,16 @@
     --text: hsl(0, 0%, 10%);
     --text-secondary: hsl(0, 0%, 50%);
     --text-third: hsl(0, 0%, 20%);
-    --grey: hsl(0, 0%, 85%);
-    --background: hsl(0, 0%, 92%);
-    --background-transparent: hsla(0, 0%, 92%, 0.7);
+    --grey: hsl(0, 0%, 92%);
+    --background: hsl(0, 0%, 96%);
+    --background-transparent: hsla(0, 0%, 96%, 0.7);
     --background-transparent-subtle: hsla(0, 0%, 92%, 0.1);
     --background-transparent-fog: hsla(0, 0%, 92%, 0.85);
 
 
     --primary: hsl(210, 100%, 78%);
     --secondary: hsl(222, 100%, 65%);
-    --secondary-weak: hsl(222, 20%, 90%);
+    --secondary-weak: hsl(222, 20%, 92%);
     --secondary-dark: hsl(222, 80%, 70%);
     --secondary-weak-dark: hsl(222, 20%, 30%);
     --orange: hsl(40, 100%, 45%);
@@ -42,7 +42,7 @@
     --success: hsl(165, 90%, 35%);
     --whoopsie: hsl(350, 80%, 60%);
     --background-overlay: hsla(0, 0%, 0%, 0.6);
-    --transparent-overlay: hsl(0, 0%, 86%);
+    --transparent-overlay: hsl(0, 0%, 88%);
     --transparent-overlay-focus: hsl(0, 0%, 88%);
 
     /* inverted colours */
