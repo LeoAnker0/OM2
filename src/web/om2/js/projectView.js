@@ -16,7 +16,7 @@ import { handleRoute } from './routing.js';
 
 export const uploadQueue = [];
 let isUploading = false;
-let UserIsEditor = true;
+let UserIsEditor = false;
 let Details;
 let currentlyViewingProjects = false;
 
@@ -336,32 +336,57 @@ function displayMenuForTop(event) {
     event.stopPropagation();
     const clickedItem = event.target;
     const projectID = Details.ProjectID;
-    const params = [{
-        displayText: 'Play next',
-        optionalSVG: 'icons_playlist',
-        optionalParams: {
-            PROJECT_ID: projectID,
-            QUEUE_POSITION: "next"
-        },
-        function: 'PLAYBACK_add_songs_to_queue'
-    }, {
-        displayText: 'Play later',
-        optionalSVG: 'icons_playlist',
-        optionalParams: {
-            PROJECT_ID: projectID,
-            QUEUE_POSITION: "later"
+    let params;
 
-        },
-        function: 'PLAYBACK_add_songs_to_queue'
-    }, {
-        displayText: 'Delete',
-        optionalSVG: 'None',
-        function: 'PROJECT_VIEW_delete_project',
-        optionalParams: {
-            PROJECT_ID: projectID
-        },
-        colour: "var(--whoopsie)"
-    }]
+
+    if (UserIsEditor == true) {
+
+        params = [{
+            displayText: 'Play next',
+            optionalSVG: 'icons_playlist',
+            optionalParams: {
+                PROJECT_ID: projectID,
+                QUEUE_POSITION: "next"
+            },
+            function: 'PLAYBACK_add_songs_to_queue'
+        }, {
+            displayText: 'Play later',
+            optionalSVG: 'icons_playlist',
+            optionalParams: {
+                PROJECT_ID: projectID,
+                QUEUE_POSITION: "later"
+
+            },
+            function: 'PLAYBACK_add_songs_to_queue'
+        }, {
+            displayText: 'Delete',
+            optionalSVG: 'None',
+            function: 'PROJECT_VIEW_delete_project',
+            optionalParams: {
+                PROJECT_ID: projectID
+            },
+            colour: "var(--whoopsie)"
+        }]
+    } else {
+        params = [{
+            displayText: 'Play next',
+            optionalSVG: 'icons_playlist',
+            optionalParams: {
+                PROJECT_ID: projectID,
+                QUEUE_POSITION: "next"
+            },
+            function: 'PLAYBACK_add_songs_to_queue'
+        }, {
+            displayText: 'Play later',
+            optionalSVG: 'icons_playlist',
+            optionalParams: {
+                PROJECT_ID: projectID,
+                QUEUE_POSITION: "later"
+
+            },
+            function: 'PLAYBACK_add_songs_to_queue'
+        }]
+    }
 
     MENUdisplay(params, event);
     return;
@@ -590,36 +615,59 @@ function displayMenuForRow(event) {
     const clickedItem = event.target;
     const songID_version = clickedItem.parentElement.parentElement.getAttribute("data-row-id");
     const songName_text = clickedItem.parentElement.parentElement.firstElementChild.lastElementChild.innerText;
+    let params;
 
-    const params = [{
-            displayText: 'Play Next',
-            optionalSVG: 'icons_playlist',
-            function: "PROJECT_VIEW_add_song_to_queue",
-            optionalParams: {
-                songID: songID_version,
-                queuePosition: "next"
-            }
-        },
-        {
-            displayText: 'Play Later',
-            optionalSVG: 'icons_playlist',
-            function: "PROJECT_VIEW_add_song_to_queue",
-            optionalParams: {
-                songID: songID_version,
-                queuePosition: "later"
-            }
-        },
-        {
-            displayText: 'Delete',
-            optionalSVG: 'None',
-            function: 'PROJECT_VIEW_delete_song',
-            optionalParams: {
-                songID: songID_version,
-                songName: songName_text
+    if (UserIsEditor == true) {
+        params = [{
+                displayText: 'Play Next',
+                optionalSVG: 'icons_playlist',
+                function: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "next"
+                }
             },
-            colour: "var(--whoopsie)"
-        }
-    ]
+            {
+                displayText: 'Play Later',
+                optionalSVG: 'icons_playlist',
+                function: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "later"
+                }
+            },
+            {
+                displayText: 'Delete',
+                optionalSVG: 'None',
+                function: 'PROJECT_VIEW_delete_song',
+                optionalParams: {
+                    songID: songID_version,
+                    songName: songName_text
+                },
+                colour: "var(--whoopsie)"
+            }
+        ]
+    } else {
+        params = [{
+                displayText: 'Play Next',
+                optionalSVG: 'icons_playlist',
+                function: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "next"
+                }
+            },
+            {
+                displayText: 'Play Later',
+                optionalSVG: 'icons_playlist',
+                function: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "later"
+                }
+            }
+        ]
+    }
 
     MENUdisplay(params, event);
     return;

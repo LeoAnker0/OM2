@@ -10,7 +10,8 @@ export async function init_routing() {
     const lastState = JSON.parse(lastStateRecord);
     const hashedValuesMap = new Map();
     const intervalId = setInterval(update_user_sync, 10000);
-    let last_hashed_playback_states = "";
+    // setting last_hashed_playback_states to hashObject(lastState), means that if the user logs in and doesn't do anything, that state won't be sent to the server
+    let last_hashed_playback_states = hashObject(lastState);
 
     window.addEventListener('popstate', handleUrlChange);
     if (lastState != null) {
