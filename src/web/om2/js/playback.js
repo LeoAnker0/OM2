@@ -470,16 +470,20 @@ function PLAYBACK_goto_previous_song() {
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource")
     const length_of_queue = PLAYBACK_songs_array.length;
 
-    /*space to add the catching of if the go back request was greater than 3 seconds 
-    from the start, then go to the start of the song, rather than the previous one, 
-    but else go the previous song, if possible  */
+    // IF progress (time) is greater than 2, then go to the start of the song
+    const progress = PLAYBACK_audio_tag.currentTime;
+    if (progress > 2) {
+        PLAYBACK_audio_tag.currentTime = 0;
+        return;
+    } else
 
-    //if there are more songs in the backwards direction
-    if (PLAYBACK_songs_array_index > 0) {
-        PLAYBACK_audio_tag.pause();
-        PLAYBACK_songs_array_index -= 1
-        PLAYBACK_start_playback();
-    }
+        //if there are more songs in the backwards direction
+        if (PLAYBACK_songs_array_index > 0) {
+            PLAYBACK_audio_tag.pause();
+            PLAYBACK_songs_array_index -= 1
+            PLAYBACK_start_playback();
+            return;
+        }
 }
 
 navigator.mediaSession.setActionHandler('previoustrack', function() {
