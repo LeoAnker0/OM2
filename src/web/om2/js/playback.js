@@ -97,7 +97,11 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
 export async function PLAYBACK_handle_add_songs_to_queue(params) {
     const project_id = params.PROJECT_ID;
     const queue_position = params.QUEUE_POSITION;
-    const details = await getProjectDetails(project_id);
+
+    const result = await getProjectDetails(project_id);
+    const details = JSON.parse(result);
+    details.ProjectID = project_id;
+
     const new_array = PLAYBACK_prepare_project_details_array(details);
 
     if (queue_position === "later") {
