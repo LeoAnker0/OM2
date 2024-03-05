@@ -16,7 +16,7 @@ import { handleRoute } from './routing.js';
 
 export const uploadQueue = [];
 let isUploading = false;
-let UserIsEditor = false;
+let UserIsEditor = true;
 let Details;
 let currentlyViewingProjects = false;
 
