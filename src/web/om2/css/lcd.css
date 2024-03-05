@@ -10,6 +10,14 @@
     --LCD-seekbar-indicator-left: 0%;
 
     --LCD-seekbar-width: 0%;
+
+    --LCD-background: hsl(0, 0%, 99%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --LCD-background: hsl(0, 0%, 2%);
+    }
 }
 
 .LCDbody {
@@ -30,6 +38,44 @@
     }
 }
 
+.LCDPlaybackStoppedContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    border-radius: 5px;
+    background-color: var(--LCD-background);
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: 2rem 1fr 2rem;
+    grid-template-areas: "image title other";
+    visibility: visible;
+}
+
+.LCDPlaybackStoppedContainer .image {
+    grid-area: image;
+}
+
+.LCDPlaybackStoppedContainer .title {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    grid-area: title;
+    justify-content: center;
+}
+
+.LCDPlaybackStoppedContainer>.title>h1 {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+}
+
+.LCDPlaybackStoppedContainer .other {
+    grid-area: other;
+}
+
 .LCDcontentContainer {
     position: relative;
     height: 100%;
@@ -38,7 +84,7 @@
     overflow: hidden;
     display: flex;
 
-    background-color: hsl(0, 0%, 99%);
+    background-color: var(--LCD-background);
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
 

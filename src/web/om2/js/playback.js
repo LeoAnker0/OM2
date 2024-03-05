@@ -165,6 +165,12 @@ export function PLAYBACK_handle_PLAYER_playButton() {
 
 function PLAYBACK_playPause_song() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+
+    if (PLAYBACK_audio_source.src == "http://null.com/null") {
+        return;
+    }
+
     if (PLAYBACK_audio_tag.paused) {
         //play the audio
 
@@ -282,6 +288,10 @@ function PLAYBACK_start_playback() {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
 
+    // Hide the stopped container
+    const PLAYBACK_LCD_Stopped_Container = document.getElementById("LCDPlaybackStoppedContainer");
+    PLAYBACK_LCD_Stopped_Container.style.visibility = "hidden";
+
     //set the source of the audio tag and start playback
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3`;
     PLAYBACK_audio_tag.load();
@@ -302,6 +312,10 @@ function PLAYBACK_start_playback() {
 function PLAYBACK_start_without_playback_and_update_progress(progress) {
     const PLAYBACK_audio_tag = document.getElementById("audio");
     const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+
+    // Hide the stopped container
+    const PLAYBACK_LCD_Stopped_Container = document.getElementById("LCDPlaybackStoppedContainer");
+    PLAYBACK_LCD_Stopped_Container.style.visibility = "hidden";
 
     PLAYBACK_audio_source.src = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}/3`;
     PLAYBACK_audio_tag.load();
@@ -393,7 +407,17 @@ function updatePositionState() {
 }
 
 function PLAYBACK_stop_playback() {
-    console.log("PLAYBACK_stop_playback, clear top")
+    const PLAYBACK_LCD_Stopped_Container = document.getElementById("LCDPlaybackStoppedContainer");
+    const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
+
+    PLAYBACK_LCD_Stopped_Container.style.visibility = "visible";
+
+    playStateChange("paused");
+    PLAYBACK_songs_array = [];
+    PLAYBACK_songs_copy_array = [];
+    PLAYBACK_songs_array_index = 0;
+    PLAYBACK_audio_source.src = "http://null.com/null";
+
 }
 
 function PLAYBACK_on_song_end() {
@@ -438,6 +462,7 @@ function PLAYBACK_goto_next_song() {
 
 navigator.mediaSession.setActionHandler('nexttrack', function() {
     PLAYBACK_goto_next_song();
+
 });
 
 function PLAYBACK_goto_previous_song() {
