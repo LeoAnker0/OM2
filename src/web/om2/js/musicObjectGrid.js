@@ -12,7 +12,7 @@ import { formatTimeDaysDelta } from './om2.js';
 import { handleRoute } from './routing.js';
 import { MENUdisplay } from './menu.js';
 
-const library_items_to_request_at_a_time = 15;
+const library_items_to_request_at_a_time = 30;
 let no_library_datas_collected = 0;
 
 export async function initMusicObjectsGrid() {
@@ -177,9 +177,12 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
     if (clickedElement.classList.contains('MOG-item-controls-play')) {
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
-        const project_details = await getProjectDetails(objectID);
 
-        PLAYBACK_handle_input_project_details_array_with_start_playback(project_details);
+        const result = await getProjectDetails(objectID);
+        const details = JSON.parse(result);
+        details.ProjectID = objectID;
+
+        PLAYBACK_handle_input_project_details_array_with_start_playback(details);
     }
 
     // for the menu button
