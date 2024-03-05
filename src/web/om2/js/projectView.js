@@ -1,5 +1,5 @@
 import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
-import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle } from './playback.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
@@ -360,7 +360,7 @@ function displayMenuForTop(event) {
         optionalParams: {
             PROJECT_ID: projectID
         },
-        colour: "hsl(0, 100%, 55%)"
+        colour: "var(--whoopsie)"
     }]
 
     MENUdisplay(params, event);
@@ -592,23 +592,60 @@ function displayMenuForRow(event) {
     const songName_text = clickedItem.parentElement.parentElement.firstElementChild.lastElementChild.innerText;
 
     const params = [{
-        displayText: 'Delete',
-        optionalSVG: 'None',
-        function: 'PROJECT_VIEW_delete_song',
-        optionalParams: {
-            songID: songID_version,
-            songName: songName_text
+            displayText: 'Play Next',
+            optionalSVG: 'icons_playlist',
+            function: "PROJECT_VIEW_add_song_to_queue",
+            optionalParams: {
+                songID: songID_version,
+                queuePosition: "next"
+            }
+        },
+        {
+            displayText: 'Play Later',
+            optionalSVG: 'icons_playlist',
+            function: "PROJECT_VIEW_add_song_to_queue",
+            optionalParams: {
+                songID: songID_version,
+                queuePosition: "later"
+            }
+        },
+        {
+            displayText: 'Delete',
+            optionalSVG: 'None',
+            function: 'PROJECT_VIEW_delete_song',
+            optionalParams: {
+                songID: songID_version,
+                songName: songName_text
+            },
+            colour: "var(--whoopsie)"
         }
-    }]
+    ]
 
     MENUdisplay(params, event);
     return;
 }
 
+/* function that handles a menu for adding an individual song to a queue */
+export function PROJECTVIEW_handle_add_song_to_queue(params) {
+    // extract songSequence
+    const songIDarray = params.songID.split("-");
+    const SongSequence = songIDarray[0];
+    const queuePosition = params.queuePosition;
+
+    // Prepare the details for playback.js
+    let DetailsCopy = Details;
+    const individualSongInformation = DetailsCopy.ProjectJSON[SongSequence - 1];
+    DetailsCopy.ProjectJSON = [];
+    DetailsCopy.ProjectJSON[0] = individualSongInformation;
+
+    // Send the data to playback.js so that it can be added to the queue
+    PLAYBACK_handle_add_song_to_queue(DetailsCopy, queuePosition);
+}
+
 export async function PROJECTVIEW_handle_delete_song(params) {
     /* ensure that the user actually wants to delete the song */
     // get confirmation.
-    const confirmMessage = `Are you sure that you want to delete <em><b>${params.songName}</b></em>? This action is not reversable.`;
+    const confirmMessage = `Are you sure that you want to delete <em><strong>${params.songName}</strong></em>? This action is not reversable.`;
     const action = await CONFIRM_action_modal(confirmMessage);
 
     if (action === "cancel") {} else if (action === "delete") {

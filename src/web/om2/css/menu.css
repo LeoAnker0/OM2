@@ -38,6 +38,8 @@
     border-bottom: 1px solid var(--text-secondary);
     border-right: 1px solid var(--text-secondary);
     background-color: var(--transparent-overlay);
+
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
 }
 
 @media (prefers-color-scheme: dark) {

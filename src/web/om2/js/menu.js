@@ -340,7 +340,7 @@ function handle_normal_context_menu(params, event) {
             const optionalParams = params[menuItemId].optionalParams;
 
             if (functionToCall == "TEST") {
-                console.log("the button worked");
+                console.log("the button worked", optionalParams);
             } else if (functionToCall != "None") {
                 MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
                 return;
@@ -564,7 +564,7 @@ export function menuHide_foreign() {
     return;
 }
 
-import { PROJECT_VIEW_receive_MENU_delete_request, PROJECTVIEW_handle_delete_song } from './projectView.js';
+import { PROJECT_VIEW_receive_MENU_delete_request, PROJECTVIEW_handle_delete_song, PROJECTVIEW_handle_add_song_to_queue } from './projectView.js';
 import { PLAYBACK_handle_add_songs_to_queue } from './playback.js';
 import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 
@@ -588,6 +588,10 @@ const MENU_ACTION_FUNCTIONS = {
     },
     PROJECT_VIEW_delete_song(params) {
         PROJECTVIEW_handle_delete_song(params)
+        return;
+    },
+    PROJECT_VIEW_add_song_to_queue(params) {
+        PROJECTVIEW_handle_add_song_to_queue(params);
         return;
     }
 };

@@ -84,6 +84,7 @@
 .QUEUE-top-text-clear {
     position: absolute;
     font-size: 1rem;
+
     font-weight: 400;
     right: 3rem;
     top: 1rem;
@@ -189,7 +190,7 @@
     width: 55%;
     display: flex;
     flex-direction: column;
-    margin-top: 0.6rem;
+    margin-top: 0.9rem;
     margin-bottom: 0.6rem;
     pointer-events: none;
 }
@@ -198,6 +199,7 @@
     position: relative;
     height: 50%;
     font-size: 0.95rem;
+    line-height: 0.95rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -209,6 +211,7 @@
 .QUEUE-item-up-next-queue-text-song-artist {
     position: relative;
     font-size: 0.85rem;
+    line-height: 0.85rem;
     height: 50%;
     overflow: hidden;
     white-space: nowrap;
@@ -236,6 +239,7 @@
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     font-size: 0.85rem;
+    font-weight: 0.85rem;
     visibility: visible;
     pointer-events: none;
     z-index: 0;

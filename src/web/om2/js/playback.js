@@ -94,6 +94,7 @@ export function PLAYBACK_handle_input_sync_state(lastState) {
     }
 }
 
+/* when you want to add an entire project to the queue */
 export async function PLAYBACK_handle_add_songs_to_queue(params) {
     const project_id = params.PROJECT_ID;
     const queue_position = params.QUEUE_POSITION;
@@ -101,6 +102,35 @@ export async function PLAYBACK_handle_add_songs_to_queue(params) {
     const result = await getProjectDetails(project_id);
     const details = JSON.parse(result);
     details.ProjectID = project_id;
+
+    const new_array = PLAYBACK_prepare_project_details_array(details);
+
+    if (queue_position === "later") {
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(new_array);
+
+    } else if (queue_position === "next") {
+        let firstHalf = PLAYBACK_songs_array.slice(0, (PLAYBACK_songs_array_index + 1));
+        let secondHalf = PLAYBACK_songs_array.slice((PLAYBACK_songs_array_index + 1));
+
+        PLAYBACK_songs_array = firstHalf;
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
+        PLAYBACK_songs_array = PLAYBACK_songs_array.concat(secondHalf);
+
+        firstHalf = PLAYBACK_songs_copy_array.slice(0, (PLAYBACK_songs_array_index + 1));
+        secondHalf = PLAYBACK_songs_copy_array.slice((PLAYBACK_songs_array_index + 1));
+
+        PLAYBACK_songs_copy_array = firstHalf;
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(new_array);
+        PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(secondHalf);
+    }
+
+    updateQueue();
+}
+
+/* when you want to add an individual song to the queue, and you already have it's data ready */
+export async function PLAYBACK_handle_add_song_to_queue(details, queue_position) {
+
 
     const new_array = PLAYBACK_prepare_project_details_array(details);
 
