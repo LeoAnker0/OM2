@@ -1,0 +1,35 @@
+/* projectView_settingsBox.css */
+
+/* the root of the project view settings box */
+.PROJECTVIEW-SettingsBox-Environment {
+    position: relative;
+    height: 20rem;
+    width: 100%;
+    background: var(--grey);
+    border-radius: 2px 2px 0px 0px;
+    overflow: hidden;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .PROJECTVIEW-SettingsBox-Environment {
+        position: absolute;
+        width: 100vw;
+        left: 0rem;
+        border-radius: 0px 0px 0px 0px;
+    }
+}
+
+.PROJECTVIEW-SettingsBox-Container {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: calc(100% - 2rem);
+    padding: 1rem;
+
+}
+
+.PROJECTVIEW-SettingsBox-Container h3 {
+    all: unset;
+    font-size: 2rem;
+}

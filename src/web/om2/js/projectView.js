@@ -1,18 +1,18 @@
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
-import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
+import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
+import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import { HandleCreateNotification } from './notificationDisplayManager.js';
+import { UPDATE_ProjectViewSettingsBox } from './projectView_settingsBox.js';
 import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
 import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
-import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
-
 
 export const uploadQueue = [];
 let isUploading = false;
@@ -48,6 +48,7 @@ export async function initProjectView(projectID) {
 
     }
     loadContainer(fakeDetails);
+    UPDATE_ProjectViewSettingsBox("", "blank");
 
     sessionStorage.setItem('description', ".");
     updateDescription_display();
@@ -105,6 +106,8 @@ export async function initProjectView(projectID) {
             detect_when_image_is_interacted(Details.ProjectID, "PROJECTviewDisplayImage", "update_project_image");
             loadFileDropArea();
 
+            // Update the settings Box with the proper details
+            UPDATE_ProjectViewSettingsBox(Details, "full");
         }
     }
 }
@@ -115,19 +118,19 @@ export function hideProjectView() {
     currentlyViewingProjects = false;
 }
 
+/* UPDATE the project view page with a function */
 export async function PROJECTVIEW_update() {
     // Ensure that project_view is currently being viewed when called to refresh.
     if (!currentlyViewingProjects) {
         return;
     }
 
+    // If project is being viewed, get the current ProjectID
     const projectID = Details.ProjectID;
 
     // Update details
     const result = await getProjectDetails(projectID);
-    if (result == "") {
-
-    } else {
+    if (result == "") {} else {
         const details = JSON.parse(result);
         details.ProjectID = projectID;
         Details = details;
@@ -136,9 +139,16 @@ export async function PROJECTVIEW_update() {
         /* update the image src of the top image. */
         const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
         const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
-
         imageTag.src = image;
+
+        // Update the settingsBox with the proper details
+        if (UserIsEditor === true) {
+            UPDATE_ProjectViewSettingsBox(Details, "full");
+        } else {
+            UPDATE_ProjectViewSettingsBox(Details, "blank");
+        }
     }
+
     return;
 }
 
