@@ -1,5 +1,9 @@
 :root {
-    font-family: 'Source Sans 3', sans-serif;
+    --font-main: 'NeueMontreal', sans-serif;
+    --font-secondary: 'NeueMontreal', sans-serif;
+
+    font-family: var(--font-main);
+
     font-weight: 400;
     font-size: 16px;
 

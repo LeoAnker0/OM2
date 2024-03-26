@@ -10,8 +10,7 @@ import { init_routing } from './js/routing.js';
 import { initSettings } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 
-import layout from './html/layout.html?raw';
-
+import './fonts/neue-montreal/neue-montreal.css';
 import './css/projectView_settingsBox.css';
 import './css/confirm-action-modal.css';
 import './css/notificationStyling.css';

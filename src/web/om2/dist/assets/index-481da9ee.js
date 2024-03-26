@@ -239,7 +239,7 @@
     <div class="MOG-grid" id="MOGgridContainer"></div>
 </div>`,_o=`<button tabindex="0" id="MOGaddNewItem" class="MOGaddNewItem">
     <div class="MOG_add_text">
-        + add new project
+        * add new project
     </div>
     <div class="MOG_add_image">
         <img src="{icons_MOGitems_add}">
@@ -699,7 +699,7 @@
             </div>
         `;i.innerHTML=s,i.style.visibility="visible";const a=document.getElementById("CONFIRMmodalDeleteButton"),r=document.getElementById("CONFIRMmodalCancelButton");function c(){Fe(),t("delete")}function d(){$e.focus(),Fe(),t("cancel")}i.addEventListener("click",m=>{const p=m.target;p===a?c():(p===r||p===i)&&d()}),o==="keyboard"&&!D()?r.focus():o=="mouse"&&!D()&&(q(),r.focus(),r.blur())})}function Fe(){const e=document.getElementById("confirmModal");e.style.visibility="hidden"}const Fo=`<div class="PROJECTVIEW-SettingsBox-Container">
     <h3>Settings Box</h3>
-</div>`;function Oe(e,t){const n=document.getElementById("PROJECTVIEW_settingBox_environment");if(n.innerHTML="",n.style.visibility="",t==="blank"){n.innerHTML="",n.style.visibility="hidden";return}console.log("Lets update the UPDATE_ProjectViewSettingsBox ",e,t),n.innerHTML+=Fo}const Qo=`<div class="PROJECTview-projectTable" id="PROJECTview-projectTable" draggable="false" style="user-select: none; pointer-events: none;">
+</div>`;function Oe(e,t){const n=document.getElementById("PROJECTVIEW_settingBox_environment");if(n!==null){if(n.innerHTML="",n.style.visibility="",t==="blank"){n.innerHTML="",n.style.visibility="hidden";return}console.log("Lets update the UPDATE_ProjectViewSettingsBox ",e,t),n.innerHTML+=Fo}}const Qo=`<div class="PROJECTview-projectTable" id="PROJECTview-projectTable" draggable="false" style="user-select: none; pointer-events: none;">
     <div class="PROJECTview-projectTable-rowContainer">
         <div class="PROJECTview-projectTable-rowItem-1 PROJECTview-projectTable-rowItem-Title-1">Song</div>
         <div class="PROJECTview-projectTable-rowItem-2 PROJECTview-projectTable-rowItem-Title">Artist</div>
@@ -785,7 +785,8 @@
             </div>
         </div>
         <div class="PROJECTview-filesAreaContainer"></div>
-        <div class="PROJECTVIEW-SettingsBox-Environment" id="PROJECTVIEW_settingBox_environment"></div>
+        <!--
+        <div class="PROJECTVIEW-SettingsBox-Environment" id="PROJECTVIEW_settingBox_environment"></div>-->
     </div>
     <div class="PROJECTviewMOREdescriptionboxEnvironment" id="PROJECTviewMOREdescriptionboxEnvironment">
         <div class="PROJECTviewMOREdescriptionContainer">
