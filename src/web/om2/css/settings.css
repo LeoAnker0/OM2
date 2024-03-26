@@ -112,7 +112,7 @@
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .settings_views_container {
         width: 100%;
-
+        height: 15rem;
     }
 }
 
@@ -200,10 +200,10 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .settings_interaction_view {
-        height: calc(100%);
+        height: 100%;
         width: 100%;
-        top: -7rem;
-        position: absolute;
+        top: 0rem;
+        position: relative;
     }
 }
 
@@ -221,6 +221,7 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .settings_interaction_view::before {
+        display: none;
         height: 0;
         width: 0;
         border: 0;

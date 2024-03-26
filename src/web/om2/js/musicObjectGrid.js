@@ -110,7 +110,6 @@ function loadObjects(libraryData) {
 
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
-        console.log(objectID)
 
         displayMenu(event, objectID);
     }

@@ -32,6 +32,12 @@
     overflow-x: hidden;
 }
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOG-grid {
+        margin-top: 0rem;
+    }
+}
+
 .MOG-grid::-webkit-scrollbar {
     width: 0;
     height: 0;

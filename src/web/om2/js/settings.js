@@ -5,16 +5,17 @@ import admin_protected_view from '../html/settings_views_admin_protected.html?ra
 import admin_default_view from '../html/settings_views_admin_default.html?raw';
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import { HandleCreateNotification } from './notificationDisplayManager.js';
+import user_view_mobile from '../html/settings_views_user_mobile.html?raw';
 import general_view from '../html/settings_views_general.html?raw';
 import user_view from '../html/settings_views_user.html?raw';
 import settings_body from '../html/settings_body.html?raw';
+import { formatFileSizeBytes, is_mobile } from './om2.js';
 import { users_image } from './loadAccountImage.js';
-import { formatFileSizeBytes } from './om2.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 
 let current_view = "general";
-const views = [{
+let views = [{
     name: "general",
     markup: general_view,
     button_id: "settings_button_general",
@@ -30,6 +31,25 @@ const views = [{
     button_id: "settings_button_admin",
     function: views_admin
 }]
+
+if (is_mobile) {
+    views = [{
+        name: "general",
+        markup: general_view,
+        button_id: "settings_button_general",
+        function: views_general
+    }, {
+        name: "user",
+        markup: user_view_mobile,
+        button_id: "settings_button_user",
+        function: views_user
+    }, {
+        name: "admin",
+        markup: admin_default_view,
+        button_id: "settings_button_admin",
+        function: views_admin
+    }]
+}
 
 export function show_settings() {
     const contentContainer = document.getElementById("MAINcontentPages");
@@ -263,7 +283,7 @@ function detect_when_items_in_table_clicked() {
         const uuid = table_item.uuid
         user_table_select_ids.push(uuid);
     })
-    selectedItems_visualtion.innerHTML = `Selected Items: ${user_table_select_ids.length}`
+    selectedItems_visualtion.innerHTML = `Selected Users: ${user_table_select_ids.length}`
 }
 
 

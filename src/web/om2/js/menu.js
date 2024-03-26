@@ -494,14 +494,9 @@ function addModalItem(param) {
     const displayText = param.displayText
     const displayImage = param.optionalSVG
     const MENUmodalBody = document.getElementById('MENUmodalBody');
-    let colour;
+    let colour = "var(--text)";
     if ("colour" in param) {
         colour = param.colour;
-    } else {
-        colour = "var(--text)";
-        if (is_mobile()) {
-            colour = "var(--text)";
-        }
     }
 
     let regex = new RegExp(`\\{${"MENU_item_text"}\\}`, 'g');
