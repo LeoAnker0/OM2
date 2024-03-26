@@ -5,13 +5,15 @@ JS for creating the music objects, and then hydrating them with dynamic data
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
+import { loadMobileSettingsButton } from './musicObjectGrid-mobile-settings.js';
 import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 import { getLibraryData, getProjectDetails } from './network_requests.js';
 import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
+import { formatTimeDaysDelta, is_mobile } from './om2.js';
 import { svgImports } from './importAssets.js';
-import { formatTimeDaysDelta } from './om2.js';
 import { handleRoute } from './routing.js';
 import { MENUdisplay } from './menu.js';
+
 
 const library_items_to_request_at_a_time = 30;
 let no_library_datas_collected = 0;
@@ -24,7 +26,11 @@ export async function initMusicObjectsGrid() {
         const libraryData = await getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected); // Wait for getLibraryData to complete
         no_library_datas_collected += libraryData.length;
         loadObjects(libraryData);
-        return;
+
+        // if the page is being displayed as mobile, then modify it so that the mobile account menu is shown.
+        if (is_mobile()) {
+            loadMobileSettingsButton();
+        }
     } catch (error) {
         console.error('Error in initMusicObjectsGrid:', error);
     }

@@ -12,6 +12,7 @@ import { initialiseLCD } from './js/lcd.js';
 
 import './fonts/neue-montreal/neue-montreal.css';
 import './css/projectView_settingsBox.css';
+import './css/musicObjectGrid-mobile.css';
 import './css/confirm-action-modal.css';
 import './css/notificationStyling.css';
 import './css/upload_queue_modal.css';

@@ -252,8 +252,8 @@
 
 .MOGaddNewItem {
     all: unset;
+    float: left;
     height: 6rem;
-    width: calc(100% - 1px);
     width: calc(100% - (1rem + 2px));
     display: grid;
     align-content: center;
@@ -264,6 +264,12 @@
     position: sticky;
     top: 1px;
     z-index: 2;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOGaddNewItem {
+        width: calc(100% - (1px + 4rem));
+    }
 }
 
 .MOGaddNewItem::before {
@@ -280,6 +286,12 @@
         var(--background-transparent) 0px 16px 8px;
     z-index: -1;
     border-radius: 8px;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOGaddNewItem::before {
+        width: calc(100% + 3rem);
+    }
 }
 
 .MOGaddNewItem:hover {

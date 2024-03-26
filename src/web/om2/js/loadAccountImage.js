@@ -29,7 +29,7 @@ function handleQueueDisplayMenu(event) {
     const params = [{
         displayText: 'Help',
         optionalSVG: 'icons_helpIcon',
-        function: 'None'
+        function: 'TEST'
     }, {
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
@@ -37,7 +37,7 @@ function handleQueueDisplayMenu(event) {
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'SIGN_OUT_USER',
+        function: 'TEST',
     }];
 
     MENUdisplay(params, event);
