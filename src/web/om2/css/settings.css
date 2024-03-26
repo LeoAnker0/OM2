@@ -8,6 +8,15 @@
     overflow: hidden;
 }
 
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_container {
+        --top-offset: 0rem;
+    }
+}
+
+
+
 .settings_body_top_banner {
     position: absolute;
     width: 100%;
@@ -18,6 +27,16 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 1;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_body_top_banner {
+        top: 0.9rem;
+
+        background-color: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
 }
 
 .settings_body_top_banner button {
@@ -62,7 +81,19 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: var(--width-of-left-bar-fortop) 1fr;
+    grid-template-areas: "settings-nav-buttons settings-interaction-area";
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_content {
+        grid-template-areas:
+            "settings-nav-buttons"
+            "settings-interaction-area";
+        grid-template-columns: 1fr;
+
+    }
 }
 
 .settings_content::-webkit-scrollbar {
@@ -72,9 +103,17 @@
 
 /* the list of the different settings views  */
 .settings_views_container {
+    grid-area: settings-nav-buttons;
     position: relative;
     height: 100%;
     width: var(--width-of-left-bar-fortop);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_views_container {
+        width: 100%;
+
+    }
 }
 
 .settings_views_positioner {
@@ -87,6 +126,14 @@
     border-top: 1px solid var(--grey);
     border-right: 1px solid var(--grey);
 }
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_views_positioner {
+        top: 0rem;
+        border: none;
+    }
+}
+
 
 .settings_views_positioner h1 {
     width: 100%;
@@ -142,10 +189,22 @@
 
 /* the individual settings view */
 .settings_interaction_view {
+    grid-area: settings-interaction-area;
     height: calc(100% - 2rem);
     width: calc(100% - var(--width-of-left-bar-fortop));
     overflow-y: scroll;
     overflow-x: hidden;
+    pointer-events: auto;
+    user-select: auto;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_interaction_view {
+        height: calc(100%);
+        width: 100%;
+        top: -7rem;
+        position: absolute;
+    }
 }
 
 .settings_interaction_view::before {
@@ -158,6 +217,14 @@
 
     border-left: 1px solid var(--grey);
     border-bottom: 1px solid var(--grey);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_interaction_view::before {
+        height: 0;
+        width: 0;
+        border: 0;
+    }
 }
 
 .settings_interaction_view::-webkit-scrollbar {
@@ -177,6 +244,19 @@
     padding-top: 0rem;
 
     border: 1px solid var(--grey);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .settings_interaction_container {
+        top: 0rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 0rem;
+        border-radius: 0;
+        width: calc(100% - 2rem);
+        padding: 0;
+        border: 0;
+    }
 }
 
 .settings_interaction_container * a {
@@ -319,6 +399,37 @@
     border-radius: 8px;
 }
 
+.ADMINusersTableInforRowsContainer {
+    position: relative;
+    max-height: 25rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.ADMINusersTableInforRowsContainer::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .ADMINusersTableEnvironment {
+        overflow-x: scroll !important;
+    }
+
+    .ADMINusersTableTopRow {
+        width: 80rem;
+    }
+
+    .ADMINusersTableInfoRow {
+        width: 80rem;
+    }
+
+    .ADMINusersTableInforRowsContainer {
+        max-height: 15rem;
+        width: 80rem;
+    }
+}
+
 .ADMINusersTableInfoRow:nth-child(odd) {
     background-color: var(--transparent-overlay);
 }
@@ -361,18 +472,6 @@
     border-radius: 4px;
 }
 
-.ADMINusersTableInforRowsContainer {
-    position: relative;
-    max-height: 25rem;
-    overflow: hidden;
-    overflow-y: scroll;
-}
-
-.ADMINusersTableInforRowsContainer::-webkit-scrollbar {
-    height: 0;
-    width: 0;
-}
-
 
 /* admin tables schema */
 
@@ -411,8 +510,16 @@
     /*
     pointer-events: auto;
     */
+}
 
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .SETTINGSdatabaseSchema details[open] {
+        overflow: scroll !important;
+    }
 
+    .SETTINGSdatabaseSchema table {
+        width: 80rem;
+    }
 }
 
 .SETTINGSdatabaseSchema th,

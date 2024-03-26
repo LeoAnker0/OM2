@@ -572,17 +572,21 @@ import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 const MENU_ACTION_FUNCTIONS = {
     PROJECT_VIEW_delete_project(params) {
         PROJECT_VIEW_receive_MENU_delete_request(params);
+        menuHide_foreign();
         return;
     },
     PLAYBACK_add_songs_to_queue(params) {
         PLAYBACK_handle_add_songs_to_queue(params);
+        menuHide_foreign();
         return;
     },
     SIGN_OUT_USER(params) {
+        menuHide_foreign();
         HANDLE_SIGN_OUT_USER(params);
         return;
     },
     OPEN_SETTINGS_PAGE(params) {
+        menuHide_foreign();
         handleRoute("/settings/");
         return
     },
