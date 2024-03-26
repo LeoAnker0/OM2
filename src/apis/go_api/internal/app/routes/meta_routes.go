@@ -9,8 +9,7 @@ func SetupMetaRoutes(router *gin.Engine) {
     metaRoutes := router.Group("/apis/meta")
     {
         metaRoutes.GET("/are_signups_allowed", are_signups_allowed)
-        metaRoutes.GET("/signout", are_signups_allowed)
-        // ... other user routes
+        metaRoutes.GET("/signout", signout)
     }
 }
 

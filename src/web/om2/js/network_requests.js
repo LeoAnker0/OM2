@@ -242,7 +242,12 @@ export async function signout() {
         });
 
         const data = await response.json();
-        console.log(data)
+        if (data.message == "logged out") {
+            return
+        } else {
+            console.log(data)
+            return
+        }
 
     } catch (error) {
         console.error('Error:', error);

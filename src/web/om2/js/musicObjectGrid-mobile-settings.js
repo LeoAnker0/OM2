@@ -25,17 +25,13 @@ function detectMobileSettingsClick(event) {
 
 function handleQueueDisplayMenu(event) {
     const params = [{
-        displayText: 'Help',
-        optionalSVG: 'icons_helpIcon',
-        function: 'TEST'
-    }, {
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
         function: 'OPEN_SETTINGS_PAGE',
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'TEST',
+        function: 'SIGN_OUT_USER',
     }];
 
     MENUdisplay(params, event);

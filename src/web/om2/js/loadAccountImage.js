@@ -27,17 +27,13 @@ function handleClick(event) {
 
 function handleQueueDisplayMenu(event) {
     const params = [{
-        displayText: 'Help',
-        optionalSVG: 'icons_helpIcon',
-        function: 'TEST'
-    }, {
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
         function: 'OPEN_SETTINGS_PAGE',
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'TEST',
+        function: 'SIGN_OUT_USER',
     }];
 
     MENUdisplay(params, event);
@@ -45,7 +41,7 @@ function handleQueueDisplayMenu(event) {
 }
 
 export async function HANDLE_SIGN_OUT_USER() {
-    // Tell server to delete all cookies
+    // Tell server to delete the access-token cookie
     await signout();
-    //location.reload();
+    location.reload();
 }
