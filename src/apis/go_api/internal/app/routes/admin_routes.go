@@ -16,6 +16,7 @@ func SetupAdminRoutes(router *gin.Engine) {
     {
         metaRoutes.GET("/get_users_table", get_users_table)
         metaRoutes.POST("/update_user_details", admin_update_user_details)
+        metaRoutes.POST("/delete_user", admin_delete_user)
     }
 }
 
@@ -139,5 +140,44 @@ func admin_update_user_details(c *gin.Context) {
 
     c.JSON(200, gin.H{"updated": "success"})
     return
+}
+
+func admin_delete_user(c *gin.Context) {
+    clientIP := c.ClientIP()
+    jwt_token, err := c.Cookie("access-token")
+    if err != nil {
+        fmt.Println("cookie error", err)
+    }
+
+    // Authenticate the user and if they aren't valid return them false.
+    authenticated, uuid := helpers.Authenticate(jwt_token, clientIP)
+    if authenticated != true {
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
+    }
+
+    // Ensure that the user is an admin (authorisation)
+    adminStatus, err := helpers.Get_user_detail_by_column(uuid, "admin")
+    if err != nil {
+        fmt.Println("Error in Get_user_detail_by_column ", err)
+    }
+    if adminStatus != "true" {
+        c.JSON(403, gin.H{"Authorised": false})
+        return
+    }
+
+
+    // Read the request body
+    body, err := ioutil.ReadAll(c.Request.Body)
+    if err != nil {
+        c.JSON(400, gin.H{"error": "Failed to read request body"})
+        return
+    }
+
+    // Convert the request body to a string
+    requestBody := string(body)
+    fmt.Println(requestBody)
+
+    fmt.Println("delete the user", c)
 }
 

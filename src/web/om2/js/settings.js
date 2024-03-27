@@ -1,4 +1,5 @@
-import { getUserDetail, get_users_table, updateUserDetailsAdmin } from './network_requests.js';
+import { getUserDetail, get_users_table, updateUserDetailsAdmin, deleteUserFromService } from './network_requests.js';
+import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
 import admin_p_users_table_row from '../html/settings_views_admin_p_users_table_row.html?raw';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import admin_protected_view from '../html/settings_views_admin_protected.html?raw';
@@ -21,6 +22,7 @@ let views;
 async function setViews() {
     const adminAllowed = await getUserDetail("admin");
     if ((adminAllowed == "true") && !is_mobile()) { /* admin is allowed */
+        current_view = "admin";
         views = [{
             name: "general",
             markup: general_view,
@@ -50,6 +52,7 @@ async function setViews() {
             function: views_user
         }]
     } else if (is_mobile() && (adminAllowed == "true")) { /* mobile and admin is allowed */
+        current_view = "admin";
         views = [{
             name: "general",
             markup: general_view,
@@ -208,17 +211,39 @@ async function views_admin() {
         }
     });
 
+    /* delete user by uuid function */
+    const deleteSubmitButton = document.getElementById("SETTINGS_ADMIN_DELETE_USER_submit_button")
+    deleteSubmitButton.addEventListener('click', async function(event) {
+        const userID = document.getElementById("SETTINGS_ADMIN_DELETE_USER_user_to_delete").value;
 
+        /* if the input is empty, return an error to the user*/
+        if (userID == "") {
+            HandleCreateNotification("Error Deleting User: user UUID is empty", "error");
+            return;
+        }
 
-    function delete_user() {
-        console.log("what i said");
+        let usersUsername;
 
-        /* implement a delete token, and tie it in with the other deleting business, 
-        and add our own confirmation menu so that it's not the browser one and so 
-        that people get the same experience everywhere, and so that the browser doesn't 
-        trigger any anti spam measures. */
-    }
+        /* check if the uuid is in the table */
+        for (let i = 0; i < parsed_table.length; i++) {
+            const uuid = parsed_table[i].uuid;
+            if (uuid == userID) {
+                usersUsername = parsed_table[i].username;
+            } else {
+                HandleCreateNotification("Error Deleting User: this uuid is not associated with a user", "error");
+                return;
+            }
+        }
 
+        /* since the input is valid, lets double check if the admin wants to delete this user */
+        const confirmMessage = `Are you sure that you want to delete this user <b><i>${usersUsername}</i></b>?`;
+        const action = await CONFIRM_action_modal(confirmMessage);
+
+        if (action === "cancel") {} else if (action === "delete") {
+            /* since they have confirmed that they want to delete the user, lets do that */
+            deleteUserFromService(userID);
+        } else {}
+    })
 }
 
 

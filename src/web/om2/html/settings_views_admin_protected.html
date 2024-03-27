@@ -314,28 +314,33 @@
     </div>
 </div>
 <br>
-<div>
-    <h3>Update column for selected users:</h3>
-    <div class="SETTINGSmodalFormAreaContainer">
-        <label for="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" class="SETTINGSmodalFormAreaText">Column To Update</label><br>
-        <input type="text" name="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" id="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" class="SETTINGSmodalFormInput" required>
-        <br><br>
-        <label for="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" class="SETTINGSmodalFormAreaText">New Data</label><br>
-        <input type="text" name="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" id="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" class="SETTINGSmodalFormInput" required>
-        <br><br>
-        <button id="SETTINGS_ADMIN_UPDATE_COLUMN_submit_button" class="SETTINGSmodalSubmit">Update</button>
+<br>
+<br>
+<details>
+    <summary><b style="font-size: 1.2rem;">Update column for selected users:</b></summary>
+    <p>First select the users from the table above, then choose a column to update, and the new data to be put there instead.</p>
+    <div>
+        <div class="SETTINGSmodalFormAreaContainer">
+            <label for="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" class="SETTINGSmodalFormAreaText">Column To Update</label><br>
+            <input type="text" name="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" id="SETTINGS_ADMIN_UDPATE_COLUMN_column_to_updated" class="SETTINGSmodalFormInput" required>
+            <br><br>
+            <label for="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" class="SETTINGSmodalFormAreaText">New Data</label><br>
+            <input type="text" name="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" id="SETTINGS_ADMIN_UDPATE_COLUMN_new_data" class="SETTINGSmodalFormInput" required>
+            <br><br>
+            <button id="SETTINGS_ADMIN_UPDATE_COLUMN_submit_button" class="SETTINGSmodalSubmit">Update</button>
+        </div>
     </div>
-</div>
+</details>
 <br><br>
 <details>
-    <summary><b>DELETE USER BY ID</b></summary>
-    <p>Warning, once you delete a user, they are gone, and all their data goes with them, and if there are any shared projects where they are an owner, that project will be deleted, and all the files with it, only do so if you want to completely delete this user and <b>FULLY UNDERSTAND THE CONSEQUENCES</b>.</p>
-    <form class="SETTINGSmodalFormAreaContainer" id="SETTINGSdeleteForm">
+    <summary><b style="font-size: 1.2rem;">DELETE USER BY ID</b></summary>
+    <p>Warning, once you delete a user, they are gone, and all their data goes with them, and if there are any shared projects where they are an owner, that project will be deleted, and all the files with it, only do so if you want to completely delete this user and <b>FULLY UNDERSTAND THE CONSEQUENCES</b></p>
+    <div class="SETTINGSmodalFormAreaContainer" id="SETTINGSdeleteForm">
         <label for="user_to_delete" class="SETTINGSmodalFormAreaText">DELETE: User ID</label><br>
-        <input type="text" name="user_to_delete" id="user_to_delete" class="SETTINGSmodalFormInput" required>
+        <input type="text" name="user_to_delete" id="SETTINGS_ADMIN_DELETE_USER_user_to_delete" class="SETTINGSmodalFormInput" required>
         <br><br>
-        <input class="SETTINGSmodalSubmit" type="submit" name="Submit" value="Submit">
-    </form>
+        <button id="SETTINGS_ADMIN_DELETE_USER_submit_button" class="SETTINGSmodalSubmit">DELETE USER</button>
+    </div>
 </details>
 <!-- keep six of these at the bottom so that all content can be seen -->
 <br><br>

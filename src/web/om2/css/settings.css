@@ -191,7 +191,8 @@
 .settings_interaction_view {
     grid-area: settings-interaction-area;
     height: calc(100% - 2rem);
-    width: calc(100% - var(--width-of-left-bar-fortop));
+    width: 100%;
+    justify-self: center;
     overflow-y: scroll;
     overflow-x: hidden;
     pointer-events: auto;
@@ -365,7 +366,7 @@
 }
 
 :root {
-    --admin-users-table-grid: 0.2fr 0.8fr 1.3fr 1.3fr 0.4fr 0.4fr 0.5fr 0.5fr;
+    --admin-users-table-grid: 1.2rem 0.8fr 1fr 2fr 4rem 4rem 0.5fr 0.5fr;
 }
 
 .ADMINusersTableTopRow {
@@ -449,6 +450,12 @@
 
 .ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(7) {
     text-align: right;
+}
+
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(4),
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(3),
+.ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(2) {
+    user-select: text;
 }
 
 .ADMINusersTableInfoRow .settings_admin_views_users_table_view:nth-child(7),

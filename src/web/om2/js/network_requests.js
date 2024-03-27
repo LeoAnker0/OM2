@@ -32,6 +32,26 @@ export async function updateUserDetails(column, newInfo) {
     }
 }
 
+export async function deleteUserFromService(uuid) {
+    try {
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/delete_user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(`{"uuid": ${uuid}}`)
+        });
+
+        const data = await response.json();
+        console.log(data)
+
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 export async function deleteSongFromProject(projectID, SongSequenceString) {
     const SongSequenceInformationArray = SongSequenceString.split("-");
     const SongSequence = SongSequenceInformationArray[0];
