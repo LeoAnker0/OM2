@@ -221,24 +221,6 @@ func Update_the_order_of_songsSequnce_in_songs(ProjectID, Mover, Destination str
     return nil
 }
 
-// Delete_song_from_project_by_SongSequence 
-/*
-    ProjectID, SongSequence
-
-    : $1 == SongSequence of the song being deleted
-
-    // Delete it from the table
-
-
-    // if SongSequence is >= then $1 then reduce by one
-    * >= $1 {
-        SongSequence -= 1
-    }
-
-    //query := "DELETE FROM files WHERE file_url = $1"
-
-*/
-
 //func Delete_song_from_project_by_SongSequence working query
 func Delete_song_from_project_by_SongSequence(ProjectID, SongSequence string) (string, error) {
     // The first query gets the fileURL of the song from the table

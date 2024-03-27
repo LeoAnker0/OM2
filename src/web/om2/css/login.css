@@ -15,13 +15,19 @@
     width: 30rem;
     border-radius: 8px;
     overflow: hidden;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-
-    background-color: var(--background-transparent);
+    background-color: var(--background);
 }
 
-.SETTINGSsignupContainer {}
+.SETTINGSsignupContainer {
+    background-color: var(--background);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .SETTINGSsignupContainer {
+        position: absolute;
+        bottom: 0rem !imporant;
+    }
+}
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .SETTINGSmodalContainer {
@@ -66,7 +72,7 @@
 }
 
 .SETTINGSmodalSignupFormAreaContainer input {
-    height: 2rem;
+    height: 3rem;
 }
 
 .SETTINGSmodalFormAreaContainer button {
@@ -85,7 +91,7 @@
 }
 
 .SETTINGSmodalSignupFormAreaContainer button {
-    height: 2rem;
+    height: 3rem;
 }
 
 .SETTINGSmodalFormAreaContainer input[type="file"] {
@@ -119,29 +125,44 @@
     background-color: var(--background);
 }
 
-.SETTINGSmodalSubmit {
+.SETTINGSmodalFormAreaContainer .SETTINGSmodalSubmit {
     padding-right: 0.35rem !important;
     width: 7rem !important;
+}
+
+.SETTINGSmodalFormAreaContainer .SETTINGSmodalSubmit:hover {
+    background-color: var(--secondary-weak);
 }
 
 .SETTINGSmodalSubmit:focus {
     background-color: var(--primary) !important;
 }
 
-.SETTINGSmodalSignup {
+.SETTINGSmodalFormAreaContainer .SETTINGSmodalSignup {
     all: unset;
     font-size: 1rem;
-    position: relative;
-    left: calc(100% - 15.5rem);
+    position: absolute;
     margin-left: 0.5rem;
     border-radius: 0.5rem;
     padding: 1rem;
     margin-bottom: 0.5rem;
-    display: none;
+    right: 0;
+    text-align: right;
 
-    outline: 1px solid var(--text-secondary);
-    background-color: var(--grey);
+    outline: 1px solid transparent;
+    background-color: transparent;
     color: var(--text);
+
+    display: none;
+}
+
+.SETTINGSmodalFormAreaContainer .SETTINGSmodalSignup:hover {
+    background-color: var(--secondary-weak);
+    cursor: pointer;
+}
+
+.SETTINGSmodalFormAreaContainer .SETTINGSmodalSignup:focus {
+    background-color: var(--background);
 }
 
 .SETTINGSmodalFormAreaText {
@@ -150,143 +171,4 @@
     top: -0.3rem;
 
     color: var(--text);
-}
-
-/* random image */
-.SETTINGSrandomImage {
-    position: absolute;
-    top: 4rem;
-    right: 2rem;
-    width: 10rem;
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    border-radius: 8px;
-    display: none;
-}
-
-.SETTINGSrandomImage img {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
-/* status indicator */
-.SETTINGSmodalStatusIndicatorContainer {
-    position: absolute;
-    width: 30rem;
-    height: 22rem;
-    border-radius: 8px;
-    overflow: hidden;
-    z-index: -1;
-    display: grid;
-    place-items: center
-}
-
-.SETTINGSmodalStatusIndicatorOuterCircle {
-    --objectSize: 0rem;
-    --objectOutline: 0rem;
-    position: absolute;
-    height: var(--objectSize);
-    width: var(--objectSize);
-    border-radius: 50%;
-
-    outline: var(--objectOutline) solid var(--primary);
-}
-
-
-.SETTINGSanimateError {
-    animation-name: SettingsError;
-    animation-duration: 2s;
-}
-
-@keyframes SettingsError {
-    0% {
-        height: 0rem;
-        width: 0rem;
-        outline: 0rem solid var(--whoopsie);
-    }
-
-    35% {
-        outline: 10rem solid var(--whoopsie);
-    }
-
-    100% {
-        height: 35rem;
-        width: 35rem;
-        outline: 30rem solid var(--whoopsie);
-    }
-}
-
-.SETTINGSanimateGreen {
-    animation-name: SettingsGreen;
-    animation-duration: 2s;
-}
-
-@keyframes SettingsGreen {
-    0% {
-        height: 0rem;
-        width: 0rem;
-        outline: 0rem solid var(--primary);
-    }
-
-    35% {
-        outline: 10rem solid var(--primary);
-    }
-
-    100% {
-        height: 35rem;
-        width: 35rem;
-        outline: 30rem solid var(--primary);
-    }
-}
-
-.spinner-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-
-    background-color: var(--background-overlay);
-}
-
-.spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50px;
-    height: 50px;
-    border: 3px solid transparent;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-
-    border-top: 3px solid var(--text-dark-secondary);
-}
-
-@keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    10% {
-        transform: translate(-50%, -50%) rotate(0deg);
-
-    }
-
-    20% {
-        transform: translate(-50%, -50%) rotate(30deg);
-
-    }
-
-    30% {
-        transform: translate(-50%, -50%) rotate(30deg);
-
-    }
-
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
 }

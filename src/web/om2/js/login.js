@@ -6,21 +6,30 @@ import { svgImports } from './importAssets.js';
 import { MENUdisplay } from './menu.js';
 import { main } from '../main.js';
 
-let loginAttempted = false;
-let loginFormLoaded = false;
-let containerHid = false;
-let signedIn = false;
+export let loginAttempted = false;
+export let loginFormLoaded = false;
+export let containerHid = false;
+export let signedIn = false;
 
-export async function initSettings() {
-    const jwt = await prelogin();
-    if (!jwt) {
+export async function initLogin() {
+    const got_valid_cookie = await prelogin();
+    if (!got_valid_cookie) {
         if (!loginFormLoaded) {
             loadLoginForm(); // Load the login form and attach the event listener only once
             loginFormLoaded = true;
         }
     } else {
         main();
+        signedIn = true;
     }
+}
+
+export async function initLoginForeign() {
+    loginFormLoaded = false;
+    loginAttempted = false;
+    containerHid = false;
+    loadLoginForm(); // Load the login form and attach the event listener only once
+    loginFormLoaded = true;
 }
 
 function loadLoginForm() {
@@ -35,14 +44,11 @@ function loadLoginForm() {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-            s
         })
-        .then(data => {
-            signups_allowed = data.signups_allowed;
-            if (signups_allowed === "true") {
+        .then(signups_allowed => {
+            if (signups_allowed == "true") {
                 SETTINGSmodalSignupButton.style.display = "inline-block";
                 SETTINGSmodalSignupButton.addEventListener("click", () => {
-                    console.log("signup button was pressed")
                     hideContainer();
                     init_signup_form();
                     return

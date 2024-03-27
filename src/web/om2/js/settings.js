@@ -271,7 +271,7 @@ export async function loadUsersTable() {
         space_used = formatFileSizeBytes(space_used);
         let replacedContent = admin_p_users_table_row;
         let profile_picture = parsed_table[i].profile_picture;
-        profile_picture = `${MAIN_CONST_EXPORT_mediaPath}/${profile_picture}/1/`;
+        profile_picture = `${MAIN_CONST_EXPORT_mediaPath}/${profile_picture}/3`;
 
 
         for (let i = 0; i < listOfThings.length; i++) {

@@ -1,122 +1,60 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 import form from '../html/signupForm.html?raw';
+import { handleRoute } from './routing.js';
+import { initLogin } from './login.js';
+
 
 export function init_signup_form() {
-    setTimeout(() => {
-        let IDofElement = "MAINcontentPages";
-        let replacedContent = form;
+    let IDofElement = "MAINcontentPages";
+    let replacedContent = form;
 
-        document.getElementById(IDofElement).innerHTML += replacedContent;
-        const signupForm = document.getElementById("SETTINGSsignupForm");
-        signupForm.addEventListener("submit", signup);
+    document.getElementById(IDofElement).innerHTML = replacedContent;
+    const signupForm = document.getElementById("SETTINGSsignupForm");
+    signupForm.addEventListener("submit", signup);
 
-    }, 1);
+    const returnToLoginButton = document.getElementById("SIGNUPMODAL_return_to_login_button");
+    returnToLoginButton.addEventListener("click", function() {
+        handleRoute("/");
+    })
+
 }
 
 async function signup(event) {
-    console.log("the signup event was caught")
     event.preventDefault();
-    startSpinner();
     const form = document.getElementById("SETTINGSsignupForm");
     const formData = {};
 
     try {
+        /* add the signup details to the formData*/
         for (const element of form.elements) {
-            if (element.type === "email") {
+            if (formData[element.name] == "Submit") {} else {
                 formData[element.name] = element.value;
             }
         }
 
-        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/signup/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+            `${MAIN_CONST_EXPORT_apiPath}/users/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            }
+        );
 
         if (!response.ok) {
-            const errorData = await response.json();
-            const errorMessage = "There was an error with the email, check that the details are correct.";
-            stopSpinner();
-            loginErrorAnimation()
-            alert(errorMessage);
+            const errorData = response;
+            HandleCreateNotification(`There was an error, ${errorData}`, "error")
 
         } else {
-            const responseData = await response.json();
-            formData["token"] = responseData.token;
-            for (const element of form.elements) {
-                if (element.type === "file") {
-                    const file = element.files[0];
-                    if (file) {
-                        // Convert the image to Base64
-                        const base64Image = await convertImageToBase64(file);
-                        formData[element.name] = base64Image;
-                    }
-                } else {
-                    formData[element.name] = element.value;
-                }
+            const responseData = response;
+            HandleCreateNotification(`Sign up Successful, Log in now`, "success");
 
-            }
-            const secondResponse = await fetch(
-                `${MAIN_CONST_EXPORT_apiPath}/signup/complete/`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                }
-            );
-
-            if (!secondResponse.ok) {
-                const errorData = await secondResponse.json();
-                const errorMessage = "There was an error, try again";
-                alert(errorMessage);
-            } else {
-                const responseData = await secondResponse.json();
-                stopSpinner();
-                loginSuccessAnimation()
-
-                setTimeout(function() {
-                    console.log("signup very successful move to normal pages and stuff")
-                    window.location.href = '/';
-                }, 2000);
-            }
+            handleRoute("/");
         }
+
     } catch (error) {
-        stopSpinner();
-        loginErrorAnimation()
-        const errorMessage = "There was an error, try again";
-        alert(errorMessage);
+        HandleCreateNotification("There was an error, try again", "error")
     }
-}
-
-function startSpinner() {
-    const spinner = document.getElementById("spinner");
-    spinner.style.display = "block";
-}
-
-function stopSpinner() {
-    const spinner = document.getElementById("spinner");
-    spinner.style.display = "none";
-}
-
-function loginSuccessAnimation() {
-    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-    element.classList.add('SETTINGSanimateGreen');
-    element.addEventListener('animationend', () => {
-        element.classList.remove('SETTINGSanimateGreen');
-    });
-    return;
-}
-
-function loginErrorAnimation() {
-    const element = document.querySelector(".SETTINGSmodalStatusIndicatorOuterCircle");
-    element.classList.remove('SETTINGSanimateError', 'SETTINGSanimateGreen');
-    element.classList.add('SETTINGSanimateError');
-    element.addEventListener('animationend', () => {
-        element.classList.remove('SETTINGSanimateError');
-    });
-    return;
 }

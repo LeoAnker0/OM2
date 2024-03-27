@@ -168,29 +168,6 @@ function displayUploadMenu(event) {
             hideUploadMenu();
         }
     }
-
-
-    /*
-    upload Queue item
-
-    <div class="UPLOADQUEUE-bottom-items-next">
-        <div class="itemName">{songName}</div>
-        <div class="itemSize">{fileSize}</div>
-    </div>
-
-    */
-
-
-
-    /*
-    let uploadQueueContentsString = "";
-    for (var i = uploadQueue.length - 1; i >= 0; i--) {
-        const fileName = uploadQueue[i].file.name;
-        uploadQueueContentsString += `<div>${fileName}</div>`
-    }
-    */
-
-
 }
 
 function hideUploadMenu() {

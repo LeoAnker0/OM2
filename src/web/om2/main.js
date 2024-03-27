@@ -7,7 +7,7 @@ import { svgImports } from './js/importAssets.js';
 import { PLAYBACK_init } from './js/playback.js';
 import { initialiseQueue } from './js/queue.js';
 import { init_routing } from './js/routing.js';
-import { initSettings } from './js/login.js';
+import { initLogin } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 
 import './fonts/neue-montreal/neue-montreal.css';
@@ -66,7 +66,7 @@ export async function main() {
 
 // Make sure that all the code only ever runs once.
 if (!window.hasCodeRun) {
-    initSettings();
+    initLogin();
 
     // Set the flag to indicate that the code has run
     window.hasCodeRun = true;

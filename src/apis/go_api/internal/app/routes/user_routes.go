@@ -19,12 +19,96 @@ func SetupUserRoutes(router *gin.Engine) {
         userRoutes.POST("/login", login)
         userRoutes.GET("/get_user_details/:Wanted_Column", get_user_details)
         userRoutes.POST("/update_user_details", update_user_details)
+        userRoutes.POST("/signup", signup_user)
         // ... other user routes
     }
 }
 
 type MyJSON struct {
     JWT string `json:"jwt"`
+}
+
+type Signup struct {
+    Email    string `json:"email"`
+    Password string `json:"password"`
+    Username string `json:"username"`
+}
+
+func signup_user(c *gin.Context) {
+    // Read the request body
+    body, err := ioutil.ReadAll(c.Request.Body)
+    if err != nil {
+        c.JSON(400, gin.H{"error": "Failed to read request body"})
+        return
+    }
+
+    // Convert the request body to a string
+    requestBody := string(body)
+    var signup_details Signup
+    err = json.Unmarshal([]byte(requestBody), &signup_details)
+    if err != nil {
+        // Handle the error, e.g., invalid JSON
+        fmt.Println("there was a problem with unmarshaling the JSON", err)
+        return
+    }
+
+    email := signup_details.Email
+    password := signup_details.Password
+    username := signup_details.Username
+
+    emailExists, err := helpers.DoesEmailExist(email)
+    if err != nil {
+        c.JSON(500, gin.H{"error": "Error checking email uniqueness"})
+        return
+    }
+    if emailExists {
+        c.JSON(400, gin.H{"error": "Email t exist"})
+        return
+    }
+    // Check if the email is a valid format
+    isValid := helpers.IsValidEmail(email)
+    if !isValid {
+        c.JSON(400, gin.H{"error": "Email is not valid"})
+        return
+    } // the email is now valid and unique
+
+    /* Insert user into the database */
+
+
+    hashedPassword, err := helpers.HashPassword(password)
+    if err != nil {
+        fmt.Println("There was an error with hashing the password: ", err)
+    }
+
+    // Get time
+    currentTime := time.Now()
+    unixMillis := currentTime.UnixNano() / int64(time.Millisecond)
+
+    //Generate UUID
+    uuid, err := helpers.Generate_Unique_UUID_String()
+    if err != nil {
+        fmt.Println("Error Generate_Unique_UUID_String: ",err)
+    }
+
+    userData := helpers.UsersTableStruct {
+        Username:           username,
+        Password:           hashedPassword,
+        Email:              email,
+        Description:        "...",
+        JoinDate:           unixMillis,
+        ProfileURL:         "static/default_pfp",
+        LastState:          "{}",
+        UUID:               uuid,
+        LastLoggedIn:       0,
+        Admin:              false,
+        Verified:           false,
+        StorageAllowance:   1073741824/*1gb*/,
+    }
+
+    err = helpers.INIT_user_in_database(userData)
+    if err != nil {
+        fmt.Println("there was an error with putting the user into the database: ", err)
+    }
 }
 
 func prelogin(c *gin.Context) {
