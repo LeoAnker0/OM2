@@ -15,43 +15,75 @@ import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 
 let current_view = "general";
-let views = [{
-    name: "general",
-    markup: general_view,
-    button_id: "settings_button_general",
-    function: views_general
-}, {
-    name: "user",
-    markup: user_view,
-    button_id: "settings_button_user",
-    function: views_user
-}, {
-    name: "admin",
-    markup: admin_default_view,
-    button_id: "settings_button_admin",
-    function: views_admin
-}]
+let views;
 
-if (is_mobile) {
-    views = [{
-        name: "general",
-        markup: general_view,
-        button_id: "settings_button_general",
-        function: views_general
-    }, {
-        name: "user",
-        markup: user_view_mobile,
-        button_id: "settings_button_user",
-        function: views_user
-    }, {
-        name: "admin",
-        markup: admin_default_view,
-        button_id: "settings_button_admin",
-        function: views_admin
-    }]
+/* set options by auth level auth */
+async function setViews() {
+    const adminAllowed = await getUserDetail("admin");
+    if ((adminAllowed == "true") && !is_mobile()) { /* admin is allowed */
+        views = [{
+            name: "general",
+            markup: general_view,
+            button_id: "settings_button_general",
+            function: views_general
+        }, {
+            name: "user",
+            markup: user_view,
+            button_id: "settings_button_user",
+            function: views_user
+        }, {
+            name: "admin",
+            markup: admin_default_view,
+            button_id: "settings_button_admin",
+            function: views_admin
+        }];
+    } else if ((adminAllowed == "false") && !is_mobile()) { /* admin is not allowed */
+        views = [{
+            name: "general",
+            markup: general_view,
+            button_id: "settings_button_general",
+            function: views_general
+        }, {
+            name: "user",
+            markup: user_view,
+            button_id: "settings_button_user",
+            function: views_user
+        }]
+    } else if (is_mobile() && (adminAllowed == "true")) { /* mobile and admin is allowed */
+        views = [{
+            name: "general",
+            markup: general_view,
+            button_id: "settings_button_general",
+            function: views_general
+        }, {
+            name: "user",
+            markup: user_view_mobile,
+            button_id: "settings_button_user",
+            function: views_user
+        }, {
+            name: "admin",
+            markup: admin_default_view,
+            button_id: "settings_button_admin",
+            function: views_admin
+        }]
+    } else { /* mobile and admin is not allowed */
+        views = [{
+            name: "general",
+            markup: general_view,
+            button_id: "settings_button_general",
+            function: views_general
+        }, {
+            name: "user",
+            markup: user_view_mobile,
+            button_id: "settings_button_user",
+            function: views_user
+        }]
+    }
 }
 
-export function show_settings() {
+
+export async function show_settings() {
+    await setViews();
     const contentContainer = document.getElementById("MAINcontentPages");
     let replacedContent = settings_body;
     for (const [placeholder, value] of Object.entries(svgImports)) {
