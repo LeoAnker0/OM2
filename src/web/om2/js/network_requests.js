@@ -34,13 +34,17 @@ export async function updateUserDetails(column, newInfo) {
 
 export async function deleteUserFromService(uuid) {
     try {
+        const new_data = {
+            "uuid": uuid,
+        };
+
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/admin/delete_user`, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify(`{"uuid": ${uuid}}`)
+            body: JSON.stringify(new_data)
         });
 
         const data = await response.json();

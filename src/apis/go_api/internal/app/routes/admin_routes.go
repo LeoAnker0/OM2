@@ -16,7 +16,7 @@ func SetupAdminRoutes(router *gin.Engine) {
     {
         metaRoutes.GET("/get_users_table", get_users_table)
         metaRoutes.POST("/update_user_details", admin_update_user_details)
-        metaRoutes.POST("/delete_user", admin_delete_user)
+        metaRoutes.DELETE("/delete_user", admin_delete_user)
     }
 }
 
@@ -142,6 +142,11 @@ func admin_update_user_details(c *gin.Context) {
     return
 }
 
+type UUIDstruct struct {
+    UUID string `json:"uuid"`
+}
+
+
 func admin_delete_user(c *gin.Context) {
     clientIP := c.ClientIP()
     jwt_token, err := c.Cookie("access-token")
@@ -176,8 +181,15 @@ func admin_delete_user(c *gin.Context) {
 
     // Convert the request body to a string
     requestBody := string(body)
-    fmt.Println(requestBody)
 
-    fmt.Println("delete the user", c)
+    var uuid_to_delete UUIDstruct
+    err = json.Unmarshal([]byte(requestBody), &uuid_to_delete)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+
+    fmt.Println(uuid_to_delete)
+
 }
 
