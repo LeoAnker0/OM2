@@ -817,7 +817,10 @@ function loadFileDropArea() {
     }
 }
 
-async function uploadFileWithProgress(file, projectID) {
+async function uploadFileWithProgress() {
+    const current_file = uploadQueue[0];
+    let file = current_file.file;
+    let projectID = current_file.ProjectID;
     const formData = new FormData();
     const xhr = new XMLHttpRequest();
 
@@ -830,6 +833,7 @@ async function uploadFileWithProgress(file, projectID) {
         if (event.lengthComputable) {
             const percentCompleted = (event.loaded / event.total) * 100;
             updateProgress_upload_indicator(percentCompleted)
+
             if (percentCompleted === 100) {
                 updateProgress_upload_indicator(percentCompleted)
             }
@@ -861,8 +865,7 @@ async function uploadFileWithProgress(file, projectID) {
 
         /* if there are more files in the queue to be uploaded, recurse */
         if (uploadQueue.length > 0) {
-            const current_file = uploadQueue[0];
-            await uploadFileWithProgress(current_file.file, current_file.ProjectID);
+            await uploadFileWithProgress();
         }
 
 
@@ -894,8 +897,7 @@ async function uploadFiles(files, details) {
         uploadQueue.push(new_file_item)
 
         if (!isUploading) {
-            const current_file = uploadQueue[0];
-            await uploadFileWithProgress(current_file.file, current_file.ProjectID);
+            await uploadFileWithProgress();
         }
     }
 }

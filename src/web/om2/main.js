@@ -20,6 +20,7 @@ import './css/upload_indicator.css';
 import './css/lcd_mobile_body.css';
 import './css/musicObjectGrid.css';
 import './css/projectView.css';
+import './css/animations.css';
 import './css/materials.css';
 import './css/settings.css';
 import './css/topright.css';

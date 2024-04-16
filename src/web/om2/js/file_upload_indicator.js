@@ -19,7 +19,7 @@ const uploadQueueHTML = `
     <div class="UPLOADQUEUE-bottom" id="UPLOADQUEUEbottomContainer">
         <div class="UPLOADQUEUE-bottom-currentlyUploadingItem">
             <div class="fileName" id="UPLOADQUEUEBOTTOM_songName">Song.mp3</div>
-            <div class="estimatedSize">Estimated Size - <span id="UPLOADQUEUEBOTTOM_fileSize">200mb</span></div>
+            <div class="estimatedSize" id="UPLOADQUEUEBOTTOM_bottom_text">Estimated Size - <span id="UPLOADQUEUEBOTTOM_fileSize">200mb</span></div>
             <div class="percentUploaded">
                 <div id="specificChart" class="donut-size">
                     <div class="pie-wrapper">
@@ -100,6 +100,13 @@ export function updateProgress_upload_indicator(progressProcent) {
         }
 
         UPLOADQUEUE_bottom_container.innerHTML += remainingItems;
+    }
+
+    /* for when the upload is complete but the files are still being processed */
+    if (progressProcent == 100) {
+        const queueBottomText = document.getElementById("UPLOADQUEUEBOTTOM_bottom_text");
+        queueBottomText.innerHTML = `Processing<span id="UPLOADQUEUEBOTTOM_fileSize"><span class="ANIMATIONS-EllipsisLoader"></span></span>`;
+
     }
 
 }
