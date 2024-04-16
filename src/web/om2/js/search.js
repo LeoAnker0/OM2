@@ -1,14 +1,20 @@
 /* JS for the search bar --------------------------------------------------------------------- */
 
 import { handleRoute } from './routing.js';
+import { debounce2 } from './om2.js';
 
 export function setEventListenersForSearchbar() {
     const clearIcon = document.getElementById("topleftClearIcon");
     const searchBar = document.getElementById("searchBar");
+    const ProcessSearchStringDebounced = debounce2(ProcessSearchString, 150);
 
 
     /* detects if the searchbar has been typed in */
     searchBar.addEventListener("keyup", () => {
+        /* set the debounce, so that the search string will only be sent to the server 
+        when no new characters have been entered in a while*/
+        ProcessSearchStringDebounced(event, searchBar)
+
         if (searchBar.value && clearIcon.style.visibility != "visible") {
             clearIcon.style.opacity = "100%";
         } else if (!searchBar.value) {
@@ -20,8 +26,7 @@ export function setEventListenersForSearchbar() {
     clearIcon.addEventListener("click", () => {
         searchBar.value = "";
         clearIcon.style.opacity = "0%";
-
-        //console.log("clear icon clicked")
+        ClearTheSearchResults();
     })
 
     /* detects when the enter key is pressed, and logs the search query */
@@ -60,17 +65,17 @@ export function setEventListenersForSearchbar() {
         clearIcon.style.opacity = "0%";
 
     });
-
-
-    /* and also for the home button why not... 
-    const homeButton = document.getElementById("TOPLEFT_homeButton")
-    homeButton.addEventListener("click", () => {
-        handleRoute("/")
-
-    })
-    */
-
-
-
-
 };
+
+function ProcessSearchString(event, searchQuery) {
+    if (searchQuery.value == "") {
+        ClearTheSearchResults();
+        return
+    }
+
+    console.log(searchQuery.value);
+}
+
+function ClearTheSearchResults() {
+    console.log("Clear the search results");
+}

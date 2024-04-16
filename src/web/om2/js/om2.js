@@ -145,6 +145,23 @@ export function debounce(func, delay) {
     };
 }
 
+// Debounce stuff...
+export function debounce2(func, delay) {
+    let timeoutId;
+
+    return function(...args) {
+        const context = this;
+
+        // Clear the previous timeout
+        clearTimeout(timeoutId);
+
+        // Set a new timeout
+        timeoutId = setTimeout(() => {
+            func.apply(context, args);
+        }, delay);
+    };
+}
+
 let hoverTimeout;
 const elementColorMap = new Map();
 
