@@ -173,6 +173,41 @@ func Get_user_detail_by_column(uuid, column string) (string, error) {
     return detail, nil
 }
 
+func GETAllUserDetails(uuid string) (UsersTableStruct, error) {
+    query := `
+        SELECT username, profile_picture, email, description, verified, date_joined, admin, storage_allowance
+        FROM users
+        WHERE uuid = $1
+    `
+
+    rows, err := db.Query(query, uuid)
+    if err != nil {
+        return UsersTableStruct{}, err
+    }
+    defer rows.Close()
+
+    var user UsersTableStruct
+    for rows.Next() {
+        if err := rows.Scan(&user.Username, &user.ProfileURL, &user.Email, &user.Description, &user.Verified, &user.JoinDate, &user.Admin, &user.StorageAllowance); err != nil {
+            return UsersTableStruct{}, err
+        }
+    }
+    if err := rows.Err(); err != nil {
+        return UsersTableStruct{}, err
+    }
+
+    // Get storage used by the user
+    storageUsed, err := GetStorageUsedByUser(uuid)
+    if err != nil {
+        return UsersTableStruct{}, err
+    }
+
+    user.StorageUsed = storageUsed
+
+    return user, nil
+
+}
+
 func Update_user_detail_by_column(uuid, column_to_update, new_data string) (error) {
     query := fmt.Sprintf("UPDATE users SET %s = $1 WHERE uuid = $2", column_to_update)
 
@@ -372,6 +407,35 @@ func GetUsersProjects(uuid string, No_Library_Items_Wanted, No_Library_Items_Col
     `
 
     rows, err := db.Query(query, uuid, No_Library_Items_Wanted, offset)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var projects []Project
+    for rows.Next() {
+        var project Project
+        if err := rows.Scan(&project.TimeCreated, &project.PictureURL, &project.ProjectID, &project.ProjectName, &project.ProjectContributors); err != nil {
+            return nil, err
+        }
+        projects = append(projects, project)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return projects, nil
+}
+
+func GetAllUsersProjects(uuid string) ([]Project, error) {
+    query := `
+        SELECT time_created, picture_url, project_id, project_name, project_contributors
+        FROM projects
+        WHERE (SELECT unnest(owner)->>'owner')::uuid = $1
+        ORDER BY time_created DESC
+    `
+
+    rows, err := db.Query(query, uuid)
     if err != nil {
         return nil, err
     }
@@ -630,6 +694,18 @@ func DELETE_songs_row(url string) error {
     return nil
 }
 
+func DELETE_users_row(uuid string) error {
+    query := `DELETE FROM users WHERE uuid = $1`
+
+    _, err := db.Exec(query, uuid)
+    if err != nil {
+        fmt.Println("error in DELETE_users_row ", err)
+        return err
+    }
+
+    return nil
+}
+
 func DELETE_project_by_uuid_and_projectID(uuid, ProjectID string) error {
     query := "DELETE FROM projects WHERE (SELECT unnest(owner)->>'owner')::uuid = $1 AND project_id = $2"
     _, err := db.Exec(query, uuid, ProjectID)
@@ -709,6 +785,7 @@ type UsersTableStruct struct {
     Admin               bool
     Verified            bool
     StorageAllowance    int64
+    StorageUsed         uint
 }
 
 func INIT_user_in_database(data UsersTableStruct) error {

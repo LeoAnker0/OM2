@@ -222,17 +222,20 @@ async function views_admin() {
             return;
         }
 
-        let usersUsername;
+        let usersUsername = null;
 
         /* check if the uuid is in the table */
         for (let i = 0; i < parsed_table.length; i++) {
             const uuid = parsed_table[i].uuid;
             if (uuid == userID) {
                 usersUsername = parsed_table[i].username;
-            } else {
-                HandleCreateNotification("Error Deleting User: this uuid is not associated with a user", "error");
-                return;
             }
+        }
+
+        /* if the uuid is not in the table, then instead of doing a network request to check, then just give an error */
+        if (usersUsername === null) {
+            HandleCreateNotification("Error Deleting User: this uuid is not associated with a user", "error");
+            return;
         }
 
         /* since the input is valid, lets double check if the admin wants to delete this user */
@@ -241,7 +244,17 @@ async function views_admin() {
 
         if (action === "cancel") {} else if (action === "delete") {
             /* since they have confirmed that they want to delete the user, lets do that */
-            deleteUserFromService(userID);
+            const responseMessage = await deleteUserFromService(userID);
+            if (responseMessage.success == "success") {
+                HandleCreateNotification("Successfully deleted the user", "success");
+            } else {
+                HandleCreateNotification("Failed to delete the user", "error");
+            }
+
+            // Now lets reload the users table
+            loadUsersTable();
+
+
         } else {}
     })
 }

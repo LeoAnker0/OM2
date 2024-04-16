@@ -8,6 +8,7 @@ import (
     "encoding/json"
     "io/ioutil"
     "strconv"
+    "strings"
     "fmt"
 )
 
@@ -152,6 +153,8 @@ func admin_delete_user(c *gin.Context) {
     jwt_token, err := c.Cookie("access-token")
     if err != nil {
         fmt.Println("cookie error", err)
+        c.JSON(400, gin.H{"Authenticated": false})
+        return
     }
 
     // Authenticate the user and if they aren't valid return them false.
@@ -182,14 +185,116 @@ func admin_delete_user(c *gin.Context) {
     // Convert the request body to a string
     requestBody := string(body)
 
-    var uuid_to_delete UUIDstruct
-    err = json.Unmarshal([]byte(requestBody), &uuid_to_delete)
+    var Response UUIDstruct
+    err = json.Unmarshal([]byte(requestBody), &Response)
     if err != nil {
         fmt.Println("Error:", err)
         return
     }
 
-    fmt.Println(uuid_to_delete)
+    UUIDtoDelete := Response.UUID
 
+    // Get list of projects
+    Projects, err := helpers.GetAllUsersProjects(UUIDtoDelete)
+    if err != nil {
+        fmt.Println("Error:", err)
+        c.JSON(400, gin.H{"error": "Failed to read request body"})
+        return 
+    }
+
+    // Loop through projects
+    for i := 0; i < len(Projects); i++ {
+        // Delete projects
+
+        // Get data for processing of deletion
+        project_json, err := helpers.GetProjectDetailsFromDatabase(UUIDtoDelete, Projects[i].ProjectID)
+        if err != nil {
+            fmt.Println(err)
+        }
+
+        // Properly parse project_json as json, and then get .ProjectJSON
+        var project Project
+        err = json.Unmarshal([]byte(project_json), &project)
+        if err != nil {
+            fmt.Println("Error parsing JSON:", err)
+            return
+        }
+
+        // Delete the photo, unless the photo path starts with static/
+        PhotoURL := project.URL
+        prefix := "static/"
+        if !strings.HasPrefix(PhotoURL, prefix) {
+            err = helpers.DELETE_files_row(PhotoURL)
+            if err != nil {
+                fmt.Println("there was an error deleting the file from the files table: ", err)
+            }
+
+            err = helpers.DeleteFolder(PhotoURL)
+            if err != nil {
+                fmt.Println("there was an error deleting the file: ", err)
+            }
+        } 
+
+        // Loop through all songs and delete their files and files database entry
+        for _, song := range project.ProjectJSON {
+            FileToDelete := song.URL
+            err = helpers.DELETE_files_row(FileToDelete)
+            if err != nil {
+                fmt.Println("there was an error deleting the file from the files table: ", err)
+            }
+
+            // Delete songs_row
+            err = helpers.DELETE_songs_row(FileToDelete)
+            if err != nil {
+                fmt.Println("there was an error deleting the file from the songs table: ", err)
+            }
+
+            err = helpers.DeleteFolder(FileToDelete)
+            if err != nil {
+                fmt.Println("there was an error deleting the file: ", err)
+            }
+        }
+
+        // Delete the projects table row for the project
+        err = helpers.DELETE_project_by_uuid_and_projectID(UUIDtoDelete, Projects[i].ProjectID)
+        if err != nil {
+            fmt.Println("there was an error deleting the project from the database: ", err)
+        }
+    }
+
+
+    // Delete user row, and pfp
+    UserDetails, err := helpers.GETAllUserDetails(UUIDtoDelete)
+    if err != nil {
+        fmt.Println("There was an error getting the users details", err)
+        c.JSON(400, gin.H{"error": "Failed to get users details"})
+        return 
+    }
+
+    // delete the pfp
+    PhotoURL := UserDetails.ProfileURL
+    prefix := "static/"
+    if !strings.HasPrefix(PhotoURL, prefix) {
+        err = helpers.DELETE_files_row(PhotoURL)
+        if err != nil {
+            fmt.Println("there was an error deleting the file from the files table: ", err)
+        }
+
+        err = helpers.DeleteFolder(PhotoURL)
+        if err != nil {
+            fmt.Println("there was an error deleting the file: ", err)
+        }
+    } 
+
+    // Delete that row
+    err = helpers.DELETE_users_row(UUIDtoDelete)
+    if err != nil {
+        fmt.Println("There was an error deleting the users row", err)
+        c.JSON(400, gin.H{"error": "Failed to delete users row"})
+        return 
+    }
+
+    c.JSON(200, gin.H{"success": "success"})
+    return 
 }
 

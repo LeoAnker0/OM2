@@ -7,12 +7,13 @@ import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.
 import { detect_when_image_is_interacted } from './image_upload_listeners.js';
 import { HandleCreateNotification } from './notificationDisplayManager.js';
 import { UPDATE_ProjectViewSettingsBox } from './projectView_settingsBox.js';
-import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
-import projectViewRowItem from '../html/projectViewRowItem.html?raw';
-import projectContainer from '../html/projectViewContainer.html?raw';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
+
+import projectViewRowTitles from '../html/projectViewRowTitles.html?raw';
+import projectViewRowItem from '../html/projectViewRowItem.html?raw';
+import projectContainer from '../html/projectViewContainer.html?raw';
 
 export const uploadQueue = [];
 let isUploading = false;
