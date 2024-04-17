@@ -26,6 +26,7 @@ import './css/settings.css';
 import './css/topright.css';
 import './css/topleft.css';
 import './css/layout.css';
+import './css/search.css';
 import './css/queue.css';
 import './css/login.css';
 import './css/style.css';

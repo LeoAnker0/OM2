@@ -67,6 +67,16 @@ export function setEventListenersForSearchbar() {
     });
 };
 
+function displayResults(responseHTMLstring) {
+    ClearTheSearchResults();
+
+
+    const searchResponsesEnvironment = document.getElementById("SEARCH_responseEnvironment");
+    searchResponsesEnvironment.style.display = "block";
+
+    searchResponsesEnvironment.innerHTML = responseHTMLstring;
+}
+
 function ProcessSearchString(event, searchQuery) {
     if (searchQuery.value == "") {
         ClearTheSearchResults();
@@ -74,8 +84,20 @@ function ProcessSearchString(event, searchQuery) {
     }
 
     console.log(searchQuery.value);
+    const resultsString = `
+        <div class="SEARCH-ResponsesProjectResponse">
+            <div class="SEARCH-ResponsesProjectResponse-ImageContainer"><img src="/media/static/default_pp/3"></div>
+            <div class="SEARCH-ResponsesProjectResponse-TitleContainer">Looks Good Chief</div>
+            <div class="SEARCH-ResponsesProjectResponse-ContributorsContainer">Lolo</div>
+        </div>
+    `;
+    displayResults(resultsString);
 }
 
+
+
 function ClearTheSearchResults() {
-    console.log("Clear the search results");
+    const searchResponsesEnvironment = document.getElementById("SEARCH_responseEnvironment");
+    searchResponsesEnvironment.style.display = "none";
+    searchResponsesEnvironment.innerHTML = "";
 }

@@ -1,0 +1,193 @@
+/* search.css */
+
+:root {
+    --searchbar-container-height: 100%;
+    --searchbar-container-width: 100%;
+
+    --searchbar-borderradius: 8px;
+    --searchbar-container-after-height: 38%;
+    --searchbar-container-after-leftoffset: 0.6rem;
+    --searchbar-container-after-width: calc(100% - (2 * var(--searchbar-container-after-leftoffset)));
+    --searchbar-container-after-topoffset: 15%;
+}
+
+.topleft-searchbarContainer {
+    position: relative;
+    height: var(--searchbar-container-height);
+    width: var(--searchbar-container-width);
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    :root {
+        --searchbar-container-width: 0rem;
+    }
+}
+
+.topleft-searchbarContainerL2 {
+    position: absolute;
+    height: var(--searchbar-container-after-height);
+    width: var(--searchbar-container-after-width);
+    bottom: 0.75rem;
+    left: var(--searchbar-container-after-leftoffset);
+    border-radius: var(--searchbar-borderradius);
+
+    outline: 1px solid var(--grey);
+    background-color: var(--background);
+}
+
+@media (prefers-color-scheme: dark) {
+    .topleft-searchbarContainerL2 {
+        background-color: hsl(0, 0%, 25%);
+    }
+}
+
+.topleft-searchbar-hideLabels {
+    position: absolute;
+    opacity: 0%;
+    user-select: none;
+}
+
+.topleft-searchbar-input {
+    border: none;
+    outline: none;
+    position: relative;
+    width: 72.5%;
+    left: 12.5%;
+    height: 100%;
+    font-style: italic;
+
+    color: var(--text-secondary);
+    background-color: transparent;
+}
+
+.topleft-searchbar-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.topleft-searchbar-input:focus {
+    font-style: normal;
+
+    color: var(--text);
+}
+
+.topleft-search-icon {
+    position: absolute;
+    height: 50%;
+    top: 25%;
+    aspect-ratio: 1/1;
+    left: 3.5%;
+    filter: var(--make-svg-black);
+}
+
+.topleft-clearIcon {
+    position: absolute;
+    height: 50%;
+    top: 25%;
+    aspect-ratio: 1/1;
+    right: 3.5%;
+    outline: 0.2rem solid transparent;
+    opacity: 0%;
+
+    background-color: transparent;
+    filter: invert(1) var(--make-svg-black);
+
+}
+
+/* Search Responses Environment Container */
+
+.SEARCH-ResponsesEnvironment {
+    position: absolute;
+    width: calc(var(--width-of-left-bar-fortop) - (2 * var(--searchbar-container-after-leftoffset)));
+    top: 03.5rem;
+    left: var(--searchbar-container-after-leftoffset);
+    z-index: 100;
+    border-radius: 8px;
+    overflow: hidden;
+
+    border-right: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+}
+
+/* project type search response 
+	
+	In other words, the search response item that is for a project/"album", 
+	these should be at the top of the search results
+ */
+
+.SEARCH-ResponsesProjectResponse {
+    position: relative;
+    width: calc(100% - 1rem);
+    left: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    height: 4rem;
+    background-color: hsl(0, 0%, 98%);
+    outline: 1px solid var(--grey);
+
+    display: grid;
+    grid-template-areas:
+        "imageContainer titleContainer"
+        "imageContainer contributorsContainer"
+    ;
+    grid-template-columns: 4rem 1fr;
+
+    .SEARCH-ResponsesProjectResponse-ImageContainer {
+        grid-area: imageContainer;
+        position: relative;
+        height: calc(100% - 1rem);
+        top: 0.5rem;
+        left: 0.5rem;
+        border-radius: 8px;
+        aspect-ratio: 1/1;
+        overflow: hidden;
+    }
+
+    .SEARCH-ResponsesProjectResponse-ImageContainer img {
+        height: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+    }
+
+    .SEARCH-ResponsesProjectResponse-TitleContainer {
+        grid-area: titleContainer;
+        line-height: 3rem;
+        height: 2rem;
+        font-weight: bolder;
+    }
+
+    .SEARCH-ResponsesProjectResponse-ContributorsContainer {
+        grid-area: contributorsContainer;
+        position: relative;
+        line-height: 2rem;
+        bottom: 0.2rem;
+        color: var(--text-third);
+    }
+
+    /* The markup that is associated with this css
+
+		<div class="SEARCH-ResponsesProjectResponse">
+            <div class="SEARCH-ResponsesProjectResponse-ImageContainer"><img src="/media/{mediaURL}/3"></div>
+            <div class="SEARCH-ResponsesProjectResponse-TitleContainer">{albumTitle}</div>
+            <div class="SEARCH-ResponsesProjectResponse-ContributorsContainer">{albumContributors}</div>
+        </div>
+
+     */
+}
+
+
+
+
+
+
+
+
+
+
+
+/**/
