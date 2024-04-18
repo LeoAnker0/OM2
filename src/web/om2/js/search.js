@@ -83,13 +83,14 @@ function ProcessSearchString(event, searchQuery) {
         return
     }
 
+    /* since something is being displayed, now, we have also have to capture the tabs, so that when tab is hit, it will
+        go to the lcd controls, rather than going to the items in the search response, which is what the users are expecting
+        so instead we should capture it and move it, and this is something that will be easier to implement, when we have 
+        search responses working.*/
+
     console.log(searchQuery.value);
     const resultsString = `
-        <div class="SEARCH-ResponsesProjectResponse">
-            <div class="SEARCH-ResponsesProjectResponse-ImageContainer"><img src="/media/static/default_pp/3"></div>
-            <div class="SEARCH-ResponsesProjectResponse-TitleContainer">Looks Good Chief</div>
-            <div class="SEARCH-ResponsesProjectResponse-ContributorsContainer">Lolo</div>
-        </div>
+
     `;
     displayResults(resultsString);
 }

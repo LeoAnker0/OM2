@@ -28,6 +28,7 @@
     --text-secondary: hsl(0, 0%, 50%);
     --text-third: hsl(0, 0%, 20%);
     --grey: hsl(0, 0%, 92%);
+    --lgrey: hsl(0, 0%, 88%);
     --background: hsl(0, 0%, 96%);
     --background-transparent: hsla(0, 0%, 96%, 0.7);
     --background-transparent-subtle: hsla(0, 0%, 96%, 0.1);
