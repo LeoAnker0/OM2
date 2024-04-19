@@ -173,6 +173,88 @@ func Get_user_detail_by_column(uuid, column string) (string, error) {
     return detail, nil
 }
 
+type SearchResult struct {
+    Type               string
+    Name               string
+    URL                string
+    ProjectID          string
+    ProjectName        string
+    ProjectImage       string
+    ProjectContributors string
+}
+
+func USERSprojectSearch(searchQuery, uuid string) ([]SearchResult, error) {
+    var results []SearchResult
+
+    songQuery := `
+        SELECT 'song' as "Type", s."SongName" as "Name", s."URL" as "URL", 
+               p."project_id" as "ProjectID", p."project_name" as "ProjectName", 
+               p."picture_url" as "ProjectImage", p."project_contributors" as "ProjectContributors"
+        FROM songs s
+        JOIN projects p ON s."ProjectID" = p."project_id"
+        WHERE s."SongName" ILIKE $1 AND EXISTS (
+            SELECT 1 FROM projects
+            WHERE projects.project_id = s."ProjectID"
+            AND (
+                (SELECT unnest(p.owner)->>'owner')::uuid = $2
+            )
+        )
+        LIMIT 8
+    `
+
+    // Search in 'songs' table
+    rows, err := db.Query(songQuery, "%"+searchQuery+"%", uuid)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    // Iterate over song results
+    for rows.Next() {
+        var songResult SearchResult
+        if err := rows.Scan(&songResult.Type, &songResult.Name, &songResult.URL,
+                            &songResult.ProjectID, &songResult.ProjectName,
+                            &songResult.ProjectImage, &songResult.ProjectContributors); err != nil {
+            return nil, err
+        }
+        results = append(results, songResult)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    // Search in 'projects' table
+    rows, err = db.Query(`
+        SELECT "project_id" as "ID", "project_name" as "Name", "picture_url" as "Image",
+               "project_contributors" as "Contributors", 'project' as "Type" 
+        FROM projects 
+        WHERE project_name ILIKE $1 AND (SELECT unnest(owner)->>'owner')::uuid = $2
+        LIMIT 8
+
+    `, "%"+searchQuery+"%", uuid)
+
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    // Iterate over project results
+    for rows.Next() {
+        var projectResult SearchResult
+        if err := rows.Scan(&projectResult.ProjectID, &projectResult.Name,
+                            &projectResult.ProjectImage, &projectResult.ProjectContributors,
+                            &projectResult.Type); err != nil {
+            return nil, err
+        }
+        results = append(results, projectResult)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return results, nil
+}
+
 func GETAllUserDetails(uuid string) (UsersTableStruct, error) {
     query := `
         SELECT username, profile_picture, email, description, verified, date_joined, admin, storage_allowance

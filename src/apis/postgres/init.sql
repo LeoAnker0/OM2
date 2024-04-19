@@ -26,8 +26,7 @@ CREATE TABLE public.songs (
     "SongSequence" int,
     "Favourited" boolean,
     "FolderSize" bigint,
-    "Version" int
-);
+    "Version" int);
 
 CREATE TABLE public.users (
     uuid text PRIMARY KEY,

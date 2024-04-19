@@ -53,7 +53,7 @@ export async function init_routing() {
 }
 
 function handleMusicObjectsGrid() {
-    if (signedIn == false) {
+        if (signedIn == false) {
         hide_settings();
         initLoginForeign();
     } else {
@@ -63,10 +63,17 @@ function handleMusicObjectsGrid() {
     }
 }
 
-function handleProjectView(projectID) {
+function handleProjectView(projectID, songURL) {
     hideMusicObjectsGrid();
     hide_settings();
-    initProjectView(projectID);
+
+    if (songURL !== null) {
+        initProjectView(projectID, songURL);
+    } else {
+        initProjectView(projectID);
+
+    }
+
 }
 
 function handleSettingsView() {
@@ -82,6 +89,7 @@ const routeHandlers = {
     '/new/': createNewProjectID,
     '/new': createNewProjectID,
     '/projects/:projectID': handleProjectView,
+    '/projects/:projectID/:songURL': handleProjectView,
     '/settings/': handleSettingsView,
     '/settings': handleSettingsView,
 };

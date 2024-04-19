@@ -1,5 +1,5 @@
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark } from './om2.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically } from './om2.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
 import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
@@ -21,7 +21,7 @@ let UserIsEditor = true;
 let Details;
 let currentlyViewingProjects = false;
 
-export async function initProjectView(projectID) {
+export async function initProjectView(projectID, songURL) {
     /* This alteration will load in certain visible elements IE the frame
     before the network request has been completed, this means that the whole 
     will seem responsive, even if there's an issue getting the data.
@@ -110,6 +110,17 @@ export async function initProjectView(projectID) {
             // Update the settings Box with the proper details
             UPDATE_ProjectViewSettingsBox(Details, "full");
         }
+
+        if (songURL !== null) {
+            for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
+                const URL = Details.ProjectJSON[i].URL;
+                if (URL == songURL) {
+                    const dataRowID = `${Details.ProjectJSON[i].SongSequence}-${Details.ProjectJSON[i].Version}`
+                    // Now that we have the dataRowID, we can focus the song
+                    focusSong(dataRowID);
+                }
+            }
+        }
     }
 }
 
@@ -151,6 +162,34 @@ export async function PROJECTVIEW_update() {
     }
 
     return;
+}
+
+function focusSong(dataRowID) {
+    const rgb2hex = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
+    const debouncedHandleChangeHover = debounce(changeColourByOrder, 0);
+    const hexOrange = getHexColorFromCssVariable('--orange');
+
+    const ProjectTable = document.getElementById("PROJECTview-projectTable");
+    for (var i = ProjectTable.children.length - 1; i >= 0; i--) {
+        const songItemsID = ProjectTable.children[i].dataset.rowId;
+        if ((songItemsID !== null) && (songItemsID == dataRowID)) {
+            // We now have the correct item, now we need to scroll to it, and do the colour
+            const hoveredOver = ProjectTable.children[i].closest('.PROJECTview-projectTable-rowContainer');
+
+            const originalColor = getComputedStyle(hoveredOver).backgroundColor;
+            const originalColorHex = rgb2hex(originalColor)
+
+            // Start the color change process
+            debouncedHandleChangeHover(hoveredOver, originalColorHex, hexOrange, "hardNewToOld", 3500);
+
+            // Check if the element is visible vertically
+            const isVisible = isElementVisibleVertically(hoveredOver);
+            if (!isVisible) {
+                // Scroll to the element if it's not visible vertically
+                hoveredOver.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            }
+        }
+    }
 }
 
 function updateTempVisible() {

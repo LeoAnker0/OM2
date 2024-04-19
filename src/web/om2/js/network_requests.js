@@ -32,6 +32,29 @@ export async function updateUserDetails(column, newInfo) {
     }
 }
 
+export async function userSearchQuery(searchQuery) {
+    try {
+        const new_data = {
+            "searchQuery": searchQuery,
+        };
+
+        const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/users/search`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(new_data)
+        });
+
+        const data = await response.json();
+        return data
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 export async function deleteUserFromService(uuid) {
     try {
         const new_data = {

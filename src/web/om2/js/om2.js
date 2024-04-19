@@ -162,6 +162,19 @@ export function debounce2(func, delay) {
     };
 }
 
+export function generateUniqueID() {
+    // Generate a random portion
+    const randomPart = Math.random().toString(36).substr(2, 6); // 6 characters long
+
+    // Get current timestamp
+    const timestamp = Date.now().toString(36);
+
+    // Concatenate random portion and timestamp
+    const uniqueID = randomPart + timestamp;
+
+    return uniqueID;
+}
+
 let hoverTimeout;
 const elementColorMap = new Map();
 
@@ -242,6 +255,102 @@ export function changeColourOnHover(element, originalColor, newColour) {
 
     // Start the color update
     elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
+}
+
+export function changeColourByOrder(element, originalColor, newColour, effect, time) {
+    const effectTime = time || 2500; // Default time value if not provided
+
+    // Add the element to the color map if not present
+    if (!elementColorMap.has(element)) {
+        elementColorMap.set(element, {
+            originalColor: originalColor,
+            isChanging: false,
+            animationFrameId: null, // Track animation frame ID
+        });
+    }
+
+    function updateColor() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - start;
+
+        // Check if the element is still in the map
+        if (!elementColorMap.has(element)) {
+            return;
+        }
+
+        // Calculate the progress based on the elapsed time and specified time
+        const progress = Math.min(elapsed / (effect === 'hardNewToOld' ? (effectTime * 4 / 5) : 500), 1);
+
+        // Check if the element is still in the map
+        if (!elementColorMap.has(element)) {
+            return;
+        }
+
+        // Calculate the new color based on the effect
+        let newColor;
+        if (effect === 'hardNewToOld' && progress < 1) {
+            // Apply the new color
+            newColor = newColour;
+        } else {
+            // Transition back to the original color
+            newColor = calculateColor(
+                elementColorMap.get(element).originalColor,
+                Math.min(progress, 1), // Ensure progress doesn't exceed 1
+                newColour
+            );
+        }
+
+        // Apply the new color to the element
+        element.style.backgroundColor = newColor;
+
+        if (progress < 1 || elementColorMap.get(element).isChanging) {
+            // Continue updating the color until the transition is complete
+            elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
+        } else {
+            // Reset the color to the original after the transition is complete
+            element.style.backgroundColor = "";
+
+            // Remove the element from the color map
+            elementColorMap.delete(element);
+        }
+    }
+
+    // Clear previous timeout
+    clearTimeout(hoverTimeout);
+
+    // Set a timeout to stop the color change after a certain duration
+    hoverTimeout = setTimeout(() => {
+        // Check if the element is still in the map and is not changing
+        if (elementColorMap.has(element) && !elementColorMap.get(element).isChanging) {
+            // Reset the color to the original after the transition is complete
+            element.style.backgroundColor = "";
+
+            // Cancel the animation frame
+            cancelAnimationFrame(elementColorMap.get(element).animationFrameId);
+
+            // Remove the element from the color map
+            elementColorMap.delete(element);
+        }
+    }, effectTime);
+
+    // Set the flag to indicate that color change is active
+    elementColorMap.get(element).isChanging = true;
+
+    // Capture the start time for elapsed time calculation
+    const start = Date.now();
+
+    // Start the color update
+    elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
+}
+
+export function isElementVisibleVertically(element) {
+    const elementRect = element.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    return (
+        elementRect.top >= 0 &&
+        elementRect.bottom <= viewportHeight
+    );
 }
 
 function cancelAnimationFrameForFunction(func) {

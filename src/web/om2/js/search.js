@@ -1,7 +1,8 @@
 /* JS for the search bar --------------------------------------------------------------------- */
 
 import { handleRoute } from './routing.js';
-import { debounce2 } from './om2.js';
+import { debounce2, generateUniqueID } from './om2.js';
+import { userSearchQuery } from './network_requests.js';
 
 export function setEventListenersForSearchbar() {
     const clearIcon = document.getElementById("topleftClearIcon");
@@ -70,14 +71,41 @@ export function setEventListenersForSearchbar() {
 function displayResults(responseHTMLstring) {
     ClearTheSearchResults();
 
-
     const searchResponsesEnvironment = document.getElementById("SEARCH_responseEnvironment");
     searchResponsesEnvironment.style.display = "block";
 
-    searchResponsesEnvironment.innerHTML = responseHTMLstring;
+    searchResponsesEnvironment.innerHTML = responseHTMLstring.response;
+
+    for (var i = searchResponsesEnvironment.children.length - 1; i >= 0; i--) {
+        const dataset = searchResponsesEnvironment.children[i].dataset;
+        if ((dataset.om2SearchObjectProjectid != null) && (dataset.om2SearchObjectSongurl != null)) {
+            const projectID = dataset.om2SearchObjectProjectid
+            const songURL = dataset.om2SearchObjectSongurl;
+            const uniqueID = generateUniqueID()
+
+            // assign a unique id to this element 
+            searchResponsesEnvironment.children[i].id = uniqueID;
+            document.getElementById(uniqueID).addEventListener("click", () => {
+                handleRoute(`/projects/${projectID}/${songURL}`);
+                ClearTheSearchResults();
+            })
+        } else if (dataset.om2SearchObjectProjectid != null) {
+            const projectID = dataset.om2SearchObjectProjectid
+            const uniqueID = generateUniqueID();
+
+            // assign a unique id to this element 
+            searchResponsesEnvironment.children[i].id = uniqueID;
+
+            document.getElementById(uniqueID).addEventListener("click", () => {
+                handleRoute(`/projects/${projectID}`);
+                ClearTheSearchResults();
+            })
+        }
+    }
+
 }
 
-function ProcessSearchString(event, searchQuery) {
+async function ProcessSearchString(event, searchQuery) {
     if (searchQuery.value == "") {
         ClearTheSearchResults();
         return
@@ -88,10 +116,7 @@ function ProcessSearchString(event, searchQuery) {
         so instead we should capture it and move it, and this is something that will be easier to implement, when we have 
         search responses working.*/
 
-    console.log(searchQuery.value);
-    const resultsString = `
-
-    `;
+    const resultsString = await userSearchQuery(searchQuery.value)
     displayResults(resultsString);
 }
 
