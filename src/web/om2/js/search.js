@@ -11,7 +11,7 @@ export function setEventListenersForSearchbar() {
 
 
     /* detects if the searchbar has been typed in */
-    searchBar.addEventListener("keyup", () => {
+    searchBar.addEventListener("keyup", (event) => {
         /* set the debounce, so that the search string will only be sent to the server 
         when no new characters have been entered in a while*/
         ProcessSearchStringDebounced(event, searchBar)
@@ -20,6 +20,37 @@ export function setEventListenersForSearchbar() {
             clearIcon.style.opacity = "100%";
         } else if (!searchBar.value) {
             clearIcon.style.opacity = "0%";
+        }
+    });
+
+    /* allows for the moving of focus when there are search results */
+    searchBar.addEventListener('keydown', function(event) {
+        // ensuring that there are search results visible
+        if ((event.key === "Tab") && (searchIsVisible == true)) {
+            event.preventDefault(); // Prevent default Tab behavior
+
+            // blur.focus() for the searchbar
+            searchBar.blur();
+
+            // Focus the first search child
+            const firstSearchChild = document.getElementById("SEARCH_responseEnvironment").children[0];
+            firstSearchChild.focus();
+
+            // To ensure logical tab order, when the last search child is focused and then tabbed, move focus to the next *logical* item
+            const lastSearchChild = document.getElementById("SEARCH_responseEnvironment").lastChild;
+            lastSearchChild.addEventListener('keydown', function(event) {
+                // ensuring that there are search results visible
+                if ((event.key === "Tab") && (searchIsVisible == true)) {
+                    event.preventDefault(); // Prevent default Tab behavior
+
+                    lastSearchChild.blur();
+
+                    // for the last item in the search results, when tab is hit on it, move the focus to the first lcd item
+                    const itemToBeFocusedAfterSearchList = document.getElementById("PLAYERshuffleButton");
+                    itemToBeFocusedAfterSearchList.focus();
+
+                }
+            });
         }
     });
 
@@ -70,6 +101,7 @@ export function setEventListenersForSearchbar() {
 
 function displayResults(responseHTMLstring) {
     ClearTheSearchResults();
+    searchIsVisible = true;
 
     const searchResponsesEnvironment = document.getElementById("SEARCH_responseEnvironment");
     searchResponsesEnvironment.style.display = "block";
@@ -121,9 +153,11 @@ async function ProcessSearchString(event, searchQuery) {
 }
 
 
+let searchIsVisible = false;
 
 function ClearTheSearchResults() {
     const searchResponsesEnvironment = document.getElementById("SEARCH_responseEnvironment");
     searchResponsesEnvironment.style.display = "none";
     searchResponsesEnvironment.innerHTML = "";
+    searchIsVisible = false;
 }

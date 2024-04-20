@@ -111,7 +111,7 @@ export async function initProjectView(projectID, songURL) {
             UPDATE_ProjectViewSettingsBox(Details, "full");
         }
 
-        if (songURL !== null) {
+        if ((songURL !== undefined) && (songURL !== null)) {
             for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
                 const URL = Details.ProjectJSON[i].URL;
                 if (URL == songURL) {
@@ -119,6 +119,12 @@ export async function initProjectView(projectID, songURL) {
                     // Now that we have the dataRowID, we can focus the song
                     focusSong(dataRowID);
                 }
+            }
+
+            /* move the blur bar to the correct y */
+            const header = document.getElementById("PROJECTviewMobileStickyHeader");
+            if (!is_mobile()) {
+                header.style.marginTop = `${32}px`;
             }
         }
     }
@@ -945,6 +951,7 @@ async function uploadFiles(files, details) {
 function update_mobile_header_project_title(project_name) {
     const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
     headerTitleText.innerText = project_name;
+
 }
 
 /* the top bar of the mobile project view */

@@ -4,11 +4,36 @@ import (
     "go_api/internal/app/helpers"
     "github.com/gin-gonic/gin"
     "path/filepath"
+    "time"
     "fmt"
     "os"
 )
 
+// Middleware function to check TTL
+func TTLMiddleware(ttl time.Duration) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        startTime := time.Now()
+
+        // Process the request
+        c.Next()
+
+        // Check if the elapsed time exceeds TTL
+        elapsed := time.Since(startTime)
+        if elapsed > ttl {
+            // If TTL exceeded, return a 404 response
+            fmt.Println("Request took too long. TTL exceeded.")
+            c.AbortWithStatusJSON(404, gin.H{"error": "Request took too long"})
+        }
+    }
+}
+
 func SetupStaticFileRoutes(router *gin.Engine) {
+    // Define TTL duration of 30 days in seconds
+    ttlDuration := 30 * 24 * time.Hour
+
+    // Apply TTLMiddleware to all routes
+    router.Use(TTLMiddleware(ttlDuration))
+
     // For serving all static media (created by om2)
     staticPathRoutes := router.Group("/media/static/")
     {
