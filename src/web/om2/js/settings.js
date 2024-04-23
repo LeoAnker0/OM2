@@ -157,6 +157,8 @@ function views_general() {
 
 function views_user() {
     detect_when_image_is_interacted("user-id", "settings_views_user_pfp_img", "update_user_pfp");
+
+    /* show the essential details */
 }
 
 let user_table_select_ids = [];
