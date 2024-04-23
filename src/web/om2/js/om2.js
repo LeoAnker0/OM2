@@ -226,6 +226,7 @@ export function changeColourOnHover(element, originalColor, newColour) {
             // Remove the element from the color map
             elementColorMap.delete(element);
         }
+
     }
 
     // Clear previous timeout
@@ -311,6 +312,12 @@ export function changeColourByOrder(element, originalColor, newColour, effect, t
             element.style.backgroundColor = "";
 
             // Remove the element from the color map
+            elementColorMap.delete(element);
+        }
+
+        /* when the animation is finished, set the style colour of the element to null, and remove from the map */
+        if (progress == 1) {
+            element.style.backgroundColor = "";
             elementColorMap.delete(element);
         }
     }

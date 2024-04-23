@@ -532,8 +532,8 @@ export function menuHide(event) {
     if (event.target === background) {
         background.style.display = 'none';
         if (mediaQuery.matches) {
-            main.style.zIndex = "1";
-            navBar.style.zIndex = "10";
+            main.style.zIndex = "";
+            navBar.style.zIndex = "";
         }
         return;
     }

@@ -18,7 +18,7 @@
 }
 
 .PROJECTviewContainerEnvironment {
-    position: fixed;
+    position: static;
     z-index: 2;
     top: 0;
     width: 100%;
