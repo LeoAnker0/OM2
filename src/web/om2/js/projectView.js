@@ -1,5 +1,5 @@
-import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
 import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically } from './om2.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
 import { CONFIRM_action_modal, previously_focused_element } from './get-confirmation-modal.js';
@@ -45,9 +45,8 @@ export async function initProjectView(projectID, songURL) {
             TimeCreated: 0,
             PictureURL: "static/loading_img_text_light",
         }
-
-
     }
+
     loadContainer(fakeDetails);
     UPDATE_ProjectViewSettingsBox("", "blank");
 
@@ -71,15 +70,18 @@ export async function initProjectView(projectID, songURL) {
     const result = await getProjectDetails(projectID);
 
     if (result == "") {
-        console.log(result)
-    } else {
-        const details = JSON.parse(result);
-        details.ProjectID = projectID;
-
-        Details = details;
-        loadVisible();
-        set_event_listeners_for_titles();
+        console.error("Unable to load project details");
+        return
     }
+
+    // Parse the details
+    const details = JSON.parse(result);
+    details.ProjectID = projectID;
+
+    Details = details;
+    loadVisible();
+    set_event_listeners_for_titles();
+
 
 
     function loadVisible() {
@@ -143,24 +145,76 @@ export async function PROJECTVIEW_update() {
 
     // Update details
     const result = await getProjectDetails(projectID);
-    if (result == "") {} else {
-        const details = JSON.parse(result);
-        details.ProjectID = projectID;
-        Details = details;
 
-        loadInTable();
-        /* update the image src of the top image. */
+    // if there were no results
+    if (result == "") {
+        return
+    }
+
+    // Clone the former details so that we can properly compare and contrast between the two
+    const formerDetails = structuredClone(Details);
+
+    // parse the result
+    const details = JSON.parse(result);
+    details.ProjectID = projectID;
+    Details = details;
+
+    // difference in Description
+    if (formerDetails.Description !== Details.Description) {
+        console.log("there has been a change in the Description");
+    }
+
+    // difference in PictureURL
+    if (formerDetails.PictureURL !== Details.PictureURL) {
+        console.log("there has been a change in the PictureURL");
+
+        // Temporary version of updating the image, time to create some more standard ways of doing this.
         const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
         const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
         imageTag.src = image;
+    }
 
-        // Update the settingsBox with the proper details
-        if (UserIsEditor === true) {
-            UPDATE_ProjectViewSettingsBox(Details, "full");
+    // difference in ProjectContributors
+    if (formerDetails.ProjectContributors !== Details.ProjectContributors) {
+        console.log("there has been a change in the ProjectContributors");
+    }
+
+    // difference in ProjectName
+    if (formerDetails.ProjectName !== Details.ProjectName) {
+        console.log("there has been a change in the ProjectName");
+    }
+
+    // difference in ProjectJSON
+    if (formerDetails.ProjectJSON !== Details.ProjectJSON) {
+
+        // Check if the length is the same
+        if (formerDetails.ProjectJSON.length !== Details.ProjectJSON.length) {
+            // the length isn't the same, so therefore just loadIn a new table
+            loadInTable();
         } else {
-            UPDATE_ProjectViewSettingsBox(Details, "blank");
+            // the length is the same, so therefore check if individual details are correct
+            let differenceCounter = 0;
+            for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
+
+                // Difference for URL
+                if (Details.ProjectJSON[i].URL !== formerDetails.ProjectJSON[i].URL) {
+                    differenceCounter += 1
+                }
+            }
+
+            if (differenceCounter > 0) {
+                loadInTable();
+            }
         }
     }
+
+    // Update the settingsBox with the proper details
+    if (UserIsEditor === true) {
+        UPDATE_ProjectViewSettingsBox(Details, "full");
+    } else {
+        UPDATE_ProjectViewSettingsBox(Details, "blank");
+    }
+
 
     return;
 }
@@ -572,31 +626,56 @@ function loadInTable() {
         // Prevent the default behavior
         e.preventDefault();
 
-        // Changing the colours of the items based on drag state
-        const draggedRowBackground = draggedRow.style;
-        draggedRow.style.backgroundColor = "yellow !important";
-
         // Get the data (row ID) from the drag-and-drop operation
         const Mover = e.dataTransfer.getData('text/plain');
         const draggedElement = document.querySelector(`[data-row-id="${Mover}"]`);
         const targetRowContainer = e.target.closest('.PROJECTview-projectTable-rowContainer');
 
         if (targetRowContainer) {
+            const DetailsCopy = structuredClone(Details);
+            /* send the new details to the database */
             const Destination = targetRowContainer.getAttribute('data-row-id');
 
             //Move the items visually
             targetRowContainer.before(draggedElement);
             const newOrderInformation = `${Mover}|${Destination}`;
             setTimeout(async () => {
-                const yes = await updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
+                await updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
 
-                /* PROJECTVIEW_update() does a full network request after the update, and this is not particularly efficient, 
-                in the future I shall either find a better way of updating the information, or I'll find a more efficient
-                way of sending the data up the network. But for the moment, I can't be bothered implementing anything that 
-                would be better...
+                /* PROJECTVIEW_update has now been made to only change items which are different between the data retrieved, 
+                and what is currently presented
                 */
                 PROJECTVIEW_update();
+
             }, 1);
+
+            /* Update the html datasets of the songRowID to be inorder, as well as updating Details to have the correct
+                information.
+            */
+
+
+            let newProjectJSON = [];
+
+            // Loop through all the items in the projectTable to update their information and add the correct info to newProjectJSON
+            for (var i = 0; i < projectTable.children.length; i++) {
+                if (i == 0) {
+                    continue
+                }
+
+                const item = projectTable.children[i];
+                const itemsOriginalRowID = item.dataset.rowId;
+                const itemsOriginalRowIDArray = itemsOriginalRowID.split("-");
+                const itemsOriginalSongSequence = itemsOriginalRowIDArray[0];
+
+                let itemsNewDetailsRow = DetailsCopy.ProjectJSON[itemsOriginalSongSequence - 1];
+                itemsNewDetailsRow.SongSequence = i;
+                newProjectJSON.push(itemsNewDetailsRow)
+                item.style.backgroundColor = "";
+                item.dataset.rowId = `${i}-1`;
+            }
+
+            // Now that newProjectJSON has all the correct information, it is time to insert it into Details
+            Details.ProjectJSON = newProjectJSON;
         }
     }
 
@@ -732,7 +811,7 @@ export function PROJECTVIEW_handle_add_song_to_queue(params) {
     const queuePosition = params.queuePosition;
 
     // Prepare the details for playback.js
-    let DetailsCopy = Details;
+    let DetailsCopy = structuredClone(Details);
     const individualSongInformation = DetailsCopy.ProjectJSON[SongSequence - 1];
     DetailsCopy.ProjectJSON = [];
     DetailsCopy.ProjectJSON[0] = individualSongInformation;

@@ -218,12 +218,10 @@ export function changeColourOnHover(element, originalColor, newColour) {
         if (progress < 1 || elementColorMap.get(element).isChanging) {
             // Continue updating the color until the transition is complete
             elementColorMap.get(element).animationFrameId = requestAnimationFrame(updateColor);
-        } else {
-            // Reset the color to the original after the transition is complete
-            console.log("hide this thang");
-            element.style.backgroundColor = "";
+        }
 
-            // Remove the element from the color map
+        if (progress == 1) {
+            element.style.backgroundColor = "";
             elementColorMap.delete(element);
         }
 
@@ -237,7 +235,6 @@ export function changeColourOnHover(element, originalColor, newColour) {
         // Check if the element is still in the map and is not changing
         if (elementColorMap.has(element) && !elementColorMap.get(element).isChanging) {
             // Reset the color to the original after the transition is complete
-            console.log("hide this thang");
             element.style.backgroundColor = "";
 
             // Cancel the animation frame
