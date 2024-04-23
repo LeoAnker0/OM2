@@ -1,4 +1,4 @@
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically } from './om2.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically, replaceSVGplaceholdersForAddressFromString, REGEXreplaceInString } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
@@ -58,15 +58,6 @@ export async function initProjectView(projectID, songURL) {
         handleRoute("/")
     })
 
-    /*
-    setTimeout(async () => {
-    }, 1);
-
-    setTimeout(() => {
-    }, 1);
-    */
-
-
     const result = await getProjectDetails(projectID);
 
     if (result == "") {
@@ -91,6 +82,7 @@ export async function initProjectView(projectID, songURL) {
             fileDropArea.remove();
 
         }
+
         //Load real details, instead of temp
         updateTempVisible();
 
@@ -185,6 +177,11 @@ export async function PROJECTVIEW_update() {
     }
 
     // difference in ProjectJSON
+    /*
+        In the future add features that would allow for the seamless addition of a new song, 
+        or the removal of a song, without rebuilding it entirely.
+    */
+
     if (formerDetails.ProjectJSON !== Details.ProjectJSON) {
 
         // Check if the length is the same
@@ -297,39 +294,22 @@ function set_event_listeners_for_titles() {
 }
 
 function loadContainer(details) {
-    let IDofElement = "MAINcontentPages";
-    let replacedContent = projectContainer;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
+    let projectContainerMarkup = replaceSVGplaceholdersForAddressFromString(projectContainer);
+
+
+    const toReplaceStruct = {
+        itemsToReplace: [
+            ["PROJECTviewMOREtitle", `${details.ProjectName}`],
+            ["PROJECTviewMOREartist", `${details.ProjectContributors}`],
+            ["PROJECTviewMOREyear", `${formatTimeDaysToHuman(details.TimeCreated)}`],
+            ["MOG_checkedDate", `checkedIndicator`],
+            ["MOGI_placeholder_itemID", `temporaryIidentifier`],
+            ["PROJECTviewDisplayImage", `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5`],
+        ]
     }
 
-    const listOfThings = ['PROJECTviewMOREtitle', 'PROJECTviewMOREartist', 'PROJECTviewMOREyear', 'PROJECTviewDisplayImage'];
-
-    for (let i = 0; i < listOfThings.length; i++) {
-        const placeholder = listOfThings[i].toString();
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        let value = '';
-
-        if (placeholder === 'PROJECTviewMOREtitle') {
-            value = details.ProjectName
-        } else if (placeholder === 'PROJECTviewMOREartist') {
-            value = details.ProjectContributors;
-        } else if (placeholder === 'PROJECTviewMOREyear') {
-            const formatted_time = formatTimeDaysToHuman(details.TimeCreated);
-            value = formatted_time;
-        } else if (placeholder === 'MOG_checkedDate') {
-            value = "checkedIndicator";
-        } else if (placeholder === 'MOGI_placeholder_itemID') {
-            value = "temporaryIidentifier";
-        } else if (placeholder === "PROJECTviewDisplayImage") {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5`;
-            value = image
-        }
-
-        replacedContent = replacedContent.replace(regex, value);
-    }
-    document.getElementById(IDofElement).innerHTML = replacedContent;
+    projectContainerMarkup = REGEXreplaceInString(projectContainerMarkup, toReplaceStruct);
+    document.getElementById("MAINcontentPages").innerHTML = projectContainerMarkup;
     return;
 }
 
@@ -443,7 +423,6 @@ function displayMenuForTop(event) {
     const projectID = Details.ProjectID;
     let params;
 
-
     if (UserIsEditor == true) {
 
         params = [{
@@ -503,16 +482,14 @@ export async function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     const confirmMessage = `Are you sure that you want to delete <em><b>${Details.ProjectName}</b></em>? This action is not reversable.`;
     const action = await CONFIRM_action_modal(confirmMessage);
 
-    if (action === "cancel") {
-        menuHide_foreign();
-    } else if (action === "delete") {
-        const newRoute = "/";
+    if (action === "delete") {
         await deleteProjectFromServer(project_id);
         menuHide_foreign();
-        handleRoute(newRoute);
-    } else {
-        menuHide_foreign();
+        handleRoute("/");
+        return
     }
+
+    menuHide_foreign();
 }
 
 async function deleteProjectFromServer(project_id) {
@@ -541,10 +518,11 @@ function loadInTable() {
     }
 
     const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
-    loadInProjectViewRowTitles();
+    document.getElementById("PROJECTview_projectAreaContainer").innerHTML += replaceSVGplaceholdersForAddressFromString(projectViewRowTitles);
+
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
-    const songsJsonString = Details.ProjectJSON;
+    let songsJsonString = structuredClone(Details.ProjectJSON);
     const hexOrange = getHexColorFromCssVariable('--orange');
     const rgb2hex = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
     let songsTableDraggedSongBackground;
@@ -555,35 +533,31 @@ function loadInTable() {
         return
     }
 
-    const songData = [];
+    // Load in the markup for the songRowItems inside the table
+    for (let i = 0; i < songsJsonString.length; i++) {
+        let songRowItem = replaceSVGplaceholdersForAddressFromString(projectViewRowItem);
+        const song = songsJsonString[i];
 
-    if (songsJsonString) {
-        for (const song of songsJsonString) {
-            songData.push({
-                "img": Details.PictureURL,
-                "songTitle": song.SongName,
-                "artistName": Details.ProjectContributors,
-                "projectName": formatFileSizeBytes(song.FolderSize),
-                "songDuration": `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`,
-                "songSequence": song.SongSequence,
-                "version": song.Version,
-                "url": song.URL
-            })
+        const toReplaceStruct = {
+            itemsToReplace: [
+                ["PROJECTviewRow_img", `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/3`],
+                ["PROJECTviewRow_songTitle", `${song.SongName}`],
+                ["PROJECTviewRow_artistName", `${Details.ProjectContributors}`],
+                ["PROJECTviewRow_projectName", `${formatFileSizeBytes(song.FolderSize)}`],
+                ["PROJECTviewRow_songDuration", `${Math.floor(song.Duration / 60)}:${(song.Duration % 60).toString().padStart(2, '0')}`],
+                ["PROJECTviewRow_projectID", `${song.SongSequence}-${song.Version}`],
+                ["PROJECTviewRow_contentEditable", `${UserIsEditor}`],
+            ]
         }
-    }
 
-    for (let i = 0; i < songData.length; i++) {
-        songData[i].ProjectID = i;
-        const song = songData[i];
-        const songRowItem = loadInProjectViewRowItems(song);
-
+        songRowItem = REGEXreplaceInString(songRowItem, toReplaceStruct)
         projectTable.insertAdjacentHTML('beforeend', songRowItem);
 
-        const div = projectTable.lastElementChild;
         if (UserIsEditor === true) {
-            div.addEventListener("dragstart", handleDragStart);
-            div.addEventListener("dragover", handleDragOver);
-            div.addEventListener("drop", handleDrop);
+            const songItem = projectTable.lastElementChild;
+            songItem.addEventListener("dragstart", handleDragStart);
+            songItem.addEventListener("dragover", handleDragOver);
+            songItem.addEventListener("drop", handleDrop);
         }
     }
 
@@ -641,18 +615,12 @@ function loadInTable() {
             const newOrderInformation = `${Mover}|${Destination}`;
             setTimeout(async () => {
                 await updateProjectDetails(Details.ProjectID, "SongsTableChangeSongSequenceOrder", newOrderInformation);
-
-                /* PROJECTVIEW_update has now been made to only change items which are different between the data retrieved, 
-                and what is currently presented
-                */
                 PROJECTVIEW_update();
-
             }, 1);
 
             /* Update the html datasets of the songRowID to be inorder, as well as updating Details to have the correct
                 information.
             */
-
 
             let newProjectJSON = [];
 
@@ -679,7 +647,7 @@ function loadInTable() {
         }
     }
 
-    // Attach a click event listener to the container
+    // Attach a click event listener to the containers buttons
     projectTable.addEventListener('click', function(event) {
         const target = event.target;
         event.stopPropagation();
@@ -695,6 +663,7 @@ function loadInTable() {
         }
     });
 
+    // For all the features that are only relevant to editors
     if (UserIsEditor === false) {
         return;
     }
@@ -835,53 +804,22 @@ export async function PROJECTVIEW_handle_delete_song(params) {
     }
 }
 
-function loadInProjectViewRowTitles() {
-    let IDofElement = "PROJECTview_projectAreaContainer";
-    let replacedContent = projectViewRowTitles;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-    document.getElementById(IDofElement).innerHTML += replacedContent;
-
-    return;
-}
-
 function loadInProjectViewRowItems(songData) {
-    let IDofElement = "PROJECTview-projectTable";
-    let replacedContent = projectViewRowItem;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
+    let replacedContent = replaceSVGplaceholdersForAddressFromString(projectViewRowItem);
+
+    const toReplaceStruct = {
+        itemsToReplace: [
+            ["PROJECTviewRow_img", `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/3`],
+            ["PROJECTviewRow_songTitle", `${songData.songTitle}`],
+            ["PROJECTviewRow_artistName", `${songData.artistName}`],
+            ["PROJECTviewRow_projectName", `${songData.projectName}`],
+            ["PROJECTviewRow_songDuration", `${songData.songDuration}`],
+            ["PROJECTviewRow_projectID", `${songData.songSequence}-${songData.version}`],
+            ["PROJECTviewRow_contentEditable", `${UserIsEditor}`],
+        ]
     }
 
-    const listOfThings = ['PROJECTviewRow_img', 'PROJECTviewRow_songTitle', 'PROJECTviewRow_artistName', 'PROJECTviewRow_projectName', 'PROJECTviewRow_songDuration', 'PROJECTviewRow_projectID', 'PROJECTviewRow_contentEditable'];
-
-    for (let i = 0; i < listOfThings.length; i++) {
-        const placeholder = listOfThings[i].toString();
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        let value = '';
-
-        if (placeholder === 'PROJECTviewRow_img') {
-            const image = `${MAIN_CONST_EXPORT_mediaPath}/${songData.img}/3`;
-            value = image;
-        } else if (placeholder === 'PROJECTviewRow_songTitle') {
-            value = songData.songTitle;
-        } else if (placeholder === 'PROJECTviewRow_artistName') {
-            value = songData.artistName;
-        } else if (placeholder === 'PROJECTviewRow_projectName') {
-            value = songData.projectName;
-        } else if (placeholder === 'PROJECTviewRow_songDuration') {
-            value = songData.songDuration;
-        } else if (placeholder === 'PROJECTviewRow_projectID') {
-            value = `${songData.songSequence}-${songData.version}`;
-        } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === true)) {
-            value = true;
-        } else if ((placeholder === 'PROJECTviewRow_contentEditable') && (UserIsEditor === false)) {
-            value = false;
-        }
-        replacedContent = replacedContent.replace(regex, value);
-    }
+    replacedContent = REGEXreplaceInString(replacedContent, toReplaceStruct)
     return replacedContent;
 
 }

@@ -16,6 +16,42 @@ export function is_dark() {
     }
 }
 
+import { svgImports } from './importAssets.js';
+export function replaceSVGplaceholdersForAddressFromString(string) {
+    for (const [placeholder, value] of Object.entries(svgImports)) {
+        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+        string = string.replace(regex, value);
+    }
+    return string;
+}
+
+/*
+    To use, string is the string that is being amended, and then the struct should look like this, 
+    where the array inside the itemsToReplace array should have the form of:
+        first item is the pattern
+        second item is the content that it is being replaced with. 
+
+    const toReplaceStruct = {
+        itemsToReplace: [
+            ["Project", "detials"],
+            ["Project", "detial2s"],
+        ]
+    }
+*/
+export function REGEXreplaceInString(string, toReplaceStruct) {
+    const itemsToReplace = toReplaceStruct.itemsToReplace
+
+    for (var i = itemsToReplace.length - 1; i >= 0; i--) {
+        const pattern = itemsToReplace[i][0].toString();
+        const replacement = itemsToReplace[i][1];
+        const regex = new RegExp(`\\{${pattern}\\}`, 'g');
+
+        string = string.replace(regex, replacement);
+    }
+
+    return string
+}
+
 export function removeLastExtension(filename) {
     const parts = filename.split('.');
     if (parts.length > 1) {
