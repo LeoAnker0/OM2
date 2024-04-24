@@ -37,7 +37,7 @@ export async function initProjectView(projectID, songURL) {
                 PictureURL: "static/loading_img_text_dark",
                 ProjectContributors: "...",
                 ProjectID: projectID,
-                ProjectJSON: {},
+                ProjectJSON: [],
                 ProjectName: "..",
                 TimeCreated: 0,
             }
@@ -47,12 +47,13 @@ export async function initProjectView(projectID, songURL) {
                 PictureURL: "static/loading_img_text_light",
                 ProjectContributors: "...",
                 ProjectID: projectID,
-                ProjectJSON: {},
+                ProjectJSON: [],
                 ProjectName: "..",
                 TimeCreated: 0,
             }
         }
     }
+
 
     // Loading in the container minimum services required to start viewing
     loadContainer(Details);
@@ -168,24 +169,28 @@ export async function PROJECTVIEW_update() {
     */
 
     if (formerDetails.ProjectJSON !== Details.ProjectJSON) {
-
-        // Check if the length is the same
-        if (formerDetails.ProjectJSON.length !== Details.ProjectJSON.length) {
-            // the length isn't the same, so therefore just loadIn a new table
+        if ((formerDetails.ProjectJSON == null) || (Details.ProjectJSON == null)) {
             loadInTable();
         } else {
-            // the length is the same, so therefore check if individual details are correct
-            let differenceCounter = 0;
-            for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
 
-                // Difference for URL
-                if (Details.ProjectJSON[i].URL !== formerDetails.ProjectJSON[i].URL) {
-                    differenceCounter += 1
-                }
-            }
-
-            if (differenceCounter > 0) {
+            // Check if the length is the same
+            if (formerDetails.ProjectJSON.length !== Details.ProjectJSON.length) {
+                // the length isn't the same, so therefore just loadIn a new table
                 loadInTable();
+            } else {
+                // the length is the same, so therefore check if individual details are correct
+                let differenceCounter = 0;
+                for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
+
+                    // Difference for URL
+                    if (Details.ProjectJSON[i].URL !== formerDetails.ProjectJSON[i].URL) {
+                        differenceCounter += 1
+                    }
+                }
+
+                if (differenceCounter > 0) {
+                    loadInTable();
+                }
             }
         }
     }
@@ -503,9 +508,9 @@ export async function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
     menuHide_foreign();
 }
 
-async function deleteProjectFromServer(project_id) {
-    localStorage.removeItem(`project-${projectID}`);
+async function deleteProjectFromServer() {
     const ProjectID = Details.ProjectID;
+    localStorage.removeItem(`project-${ProjectID}`);
     try {
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/${ProjectID}`, {
             method: 'DELETE',

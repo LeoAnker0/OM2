@@ -44,8 +44,8 @@ func GenerateUUID() string {
 }
 
 func generateURL() string {
-	urlLength := 96
-	urlCharacters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	urlLength := 30
+	urlCharacters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 	// Seed the random number generator
 	rand.Seed(time.Now().UnixNano())

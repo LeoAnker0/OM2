@@ -2,29 +2,31 @@
 JS for creating the music objects, and then hydrating them with dynamic data
 */
 
+import { formatTimeDaysDelta, is_mobile, replaceSVGplaceholdersForAddressFromString, REGEXreplaceInString } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
 import { loadMobileSettingsButton } from './musicObjectGrid-mobile-settings.js';
-import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
 import { getLibraryData, getProjectDetails } from './network_requests.js';
-import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
-import { formatTimeDaysDelta, is_mobile } from './om2.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import { MENUdisplay } from './menu.js';
 
+import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
+import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
+import musicObjectsGridItem from '../html/musicObjectsGridItem.html?raw';
 
 const library_items_to_request_at_a_time = 30;
 let no_library_datas_collected = 0;
 
 export async function initMusicObjectsGrid() {
     try {
-        const contentEnvironment = document.getElementById("MAINcontentPages");
-        loadInContainer();
+        // Load in main markup for the MOG
+        document.getElementById("MAINcontentPages").innerHTML += replaceSVGplaceholdersForAddressFromString(musicObjetsGridContainer);
 
+        // Load the library data
         const libraryData = await getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected); // Wait for getLibraryData to complete
         no_library_datas_collected += libraryData.length;
+
         loadObjects(libraryData);
 
         // if the page is being displayed as mobile, then modify it so that the mobile account menu is shown.
@@ -47,27 +49,9 @@ export function hideMusicObjectsGrid() {
     mainContent.innerHTML = "";
 }
 
-function loadInContainer() {
-    let IDofElement = "MAINcontentPages";
-    let replacedContent = musicObjetsGridContainer;
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-
-    document.getElementById(IDofElement).innerHTML += replacedContent;
-    return;
-}
-
 function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
-    parentContainer.innerHTML = "";
-    let replacedContent = musicObjectsGridAdd
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-    parentContainer.innerHTML += replacedContent
+    parentContainer.innerHTML = replaceSVGplaceholdersForAddressFromString(musicObjectsGridAdd)
 
     add_in_library_data_to_MOG(libraryData);
 
@@ -107,7 +91,6 @@ function loadObjects(libraryData) {
 
         // Add your long press action here
         const clickedElement = event.target;
-
         const buttonID = clickedElement.id.split('-')[1];
         const objectID = libraryData[buttonID].project_id;
 
@@ -138,41 +121,27 @@ function add_in_library_data_to_MOG(libraryData) {
     /* from the users libraries ----- */
     const loadEvents = libraryData.length;
     for (var i = 0; i <= loadEvents - 1; i++) {
-        const listOfThings = ['MOG_image', 'MOG_text1', 'MOG_text2', 'MOG_checkedDate', 'MOGI_placeholder_itemID'];
         const temporaryIidentifier = i;
         const imgAddress = libraryData[i].img;
         const textTop = libraryData[i].top;
         const textBottom = libraryData[i].bottom;
         const lastCheckedInMillis = libraryData[i].days;
         const checkedIndicator = formatTimeDaysDelta(lastCheckedInMillis);
-        let replacedContent = musicObjectsGridItem
+        let musicObjectsGridItemHTML = replaceSVGplaceholdersForAddressFromString(musicObjectsGridItem);
 
-        for (const [placeholder, value] of Object.entries(svgImports)) {
-            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-            replacedContent = replacedContent.replace(regex, value);
+        const toReplaceStruct = {
+            itemsToReplace: [
+                ["MOG_image", `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/3`],
+                ["MOG_text1", `${textTop}`],
+                ["MOG_text2", `${textBottom}`],
+                ["MOG_checkedDate", `${checkedIndicator}`],
+                ["MOGI_placeholder_itemID", `${temporaryIidentifier}`],
+            ]
         }
 
-        for (let i = 0; i < listOfThings.length; i++) {
-            const placeholder = listOfThings[i].toString();
-            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-            let value = '';
+        musicObjectsGridItemHTML = REGEXreplaceInString(musicObjectsGridItemHTML, toReplaceStruct)
+        parentContainer.innerHTML += musicObjectsGridItemHTML;
 
-            if (placeholder === 'MOG_image') {
-                const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgAddress}/3`;
-                value = image
-            } else if (placeholder === 'MOG_text1') {
-                value = textTop;
-            } else if (placeholder === 'MOG_text2') {
-                value = textBottom;
-            } else if (placeholder === 'MOG_checkedDate') {
-                value = checkedIndicator;
-            } else if (placeholder === 'MOGI_placeholder_itemID') {
-                value = temporaryIidentifier;
-            }
-
-            replacedContent = replacedContent.replace(regex, value);
-        }
-        parentContainer.innerHTML += replacedContent;
     }
 }
 
@@ -211,7 +180,7 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
     }
 
     if (clickedElement.id === 'MOGaddNewItem') {
-        addNewLibraryItem();
+        handleRoute("/new-project/");
     }
 };
 
@@ -239,8 +208,4 @@ function displayMenu(event, project_id) {
 
     MENUdisplay(params, event);
     return;
-}
-
-function addNewLibraryItem() {
-    handleRoute("/new-project/")
 }

@@ -53,7 +53,7 @@ export async function init_routing() {
 }
 
 function handleMusicObjectsGrid() {
-        if (signedIn == false) {
+    if (signedIn == false) {
         hide_settings();
         initLoginForeign();
     } else {
