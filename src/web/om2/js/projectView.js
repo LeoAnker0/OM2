@@ -23,38 +23,43 @@ let UserIsEditor = true;
 let Details;
 
 export async function initProjectView(projectID, songURL) {
-    /* This alteration will load in certain visible elements IE the frame
-    before the network request has been completed, this means that the whole 
-    will seem responsive, even if there's an issue getting the data.
-    Plus it leaves it open to making fancier 'waiting' screens, with those sort
-    of fake loading bars on top of the different elements.
-    */
-    let fakeDetails;
     currentlyViewingProjects = true;
-    if (is_dark() == true) {
-        fakeDetails = {
-            ProjectName: "..",
-            ProjectContributors: "...",
-            TimeCreated: 0,
-            PictureURL: "static/loading_img_text_dark",
-        }
-    } else {
 
-        fakeDetails = {
-            ProjectName: "..",
-            ProjectContributors: "...",
-            TimeCreated: 0,
-            PictureURL: "static/loading_img_text_light",
+    // Attempt to load a locally stored version of this project
+    const cachedProject = localStorage.getItem(`project-${projectID}`);
+    if (cachedProject !== null) {
+        Details = JSON.parse(cachedProject);
+    } else {
+        // Loading locally stored version failed, so use stand in values, whilst network request is being done
+        if (is_dark() == true) {
+            Details = {
+                Description: "...",
+                PictureURL: "static/loading_img_text_dark",
+                ProjectContributors: "...",
+                ProjectID: projectID,
+                ProjectJSON: {},
+                ProjectName: "..",
+                TimeCreated: 0,
+            }
+        } else {
+            Details = {
+                Description: "...",
+                PictureURL: "static/loading_img_text_light",
+                ProjectContributors: "...",
+                ProjectID: projectID,
+                ProjectJSON: {},
+                ProjectName: "..",
+                TimeCreated: 0,
+            }
         }
     }
 
-    // Loading in the container and the settings box
-    loadContainer(fakeDetails);
+    // Loading in the container minimum services required to start viewing
+    loadContainer(Details);
     UPDATE_ProjectViewSettingsBox("", "blank");
-
-    // Weird things with the description
-    sessionStorage.setItem('description', ".");
+    sessionStorage.setItem('description', Details.Description);
     updateDescription_display();
+    loadInTable();
 
     // Set the listener for the home button, so that it can navigate back to the MOG / /
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
@@ -62,37 +67,19 @@ export async function initProjectView(projectID, songURL) {
         handleRoute("/")
     })
 
-    // Get the project information from the database
-    const result = await getProjectDetails(projectID);
-    if (result == "") {
-        console.error("Unable to load project details");
-        return
-    }
-
-    // Parse the details
-    const details = JSON.parse(result);
-    details.ProjectID = projectID;
-    Details = details;
-
+    // Retrieve data from the database and determine if it is different from the cached verison
+    // And if so update the page
+    await PROJECTVIEW_update()
 
     if (UserIsEditor === false) {
         // Delete the file drop area
         const fileDropArea = document.getElementById("PROJECTview_upload_area_files_upload_box");
         fileDropArea.remove();
-
     }
 
-    // All these weird description things again 
-    updateTempVisible();
-    sessionStorage.setItem('description', Details.Description);
-
-    // Alot of functions for similar things, investigate
-    updateDescription_display();
+    // Set event listeners and update a few details
     update_mobile_header_project_title(Details.ProjectName)
     setEventListenersForProjectView()
-
-    // Render the table
-    loadInTable();
 
     // Enable features that are only really relevant when the user is an editor
     if (UserIsEditor === true) {
@@ -101,7 +88,7 @@ export async function initProjectView(projectID, songURL) {
         UPDATE_ProjectViewSettingsBox(Details, "full");
     }
 
-    /* when a specific song is specified in the url, focus it */
+    // when a specific song is specified in the url, focus it 
     if ((songURL !== undefined) && (songURL !== null)) {
         for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
             const URL = Details.ProjectJSON[i].URL;
@@ -112,7 +99,6 @@ export async function initProjectView(projectID, songURL) {
             }
         }
     }
-
 }
 
 export function hideProjectView() {
@@ -130,13 +116,9 @@ export async function PROJECTVIEW_update() {
 
     // If project is being viewed, get the current ProjectID
     const projectID = Details.ProjectID;
-
-    // Update details
     const result = await getProjectDetails(projectID);
-
-    // if there were no results
     if (result == "") {
-        return
+        return // if there were no results
     }
 
     // Clone the former details so that we can properly compare and contrast between the two
@@ -147,16 +129,21 @@ export async function PROJECTVIEW_update() {
     details.ProjectID = projectID;
     Details = details;
 
+    localStorage.setItem(`project-${projectID}`, `${JSON.stringify(Details)}`);
+
     // difference in Description
     if (formerDetails.Description !== Details.Description) {
-        console.log("there has been a change in the Description");
+        const descriptionTitle = document.getElementById("PROJECTVIEW_DESCRIPTION_more_title");
+        const descriptionArtistTime = document.getElementById("PROJECTVIEW_DESCRIPTION_more_artist_year");
+
+        descriptionTitle.innerText = Details.ProjectName;
+        descriptionArtistTime.innerText = `${Details.ProjectContributors} | ${formatTimeDaysToHuman(Details.TimeCreated)}`;
+        sessionStorage.setItem('description', Details.Description);
+        updateDescription_display();
     }
 
     // difference in PictureURL
     if (formerDetails.PictureURL !== Details.PictureURL) {
-        console.log("there has been a change in the PictureURL");
-
-        // Temporary version of updating the image, time to create some more standard ways of doing this.
         const imageTag = document.getElementById("PROJECTviewDisplayImage_imgTag");
         const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
         imageTag.src = image;
@@ -164,12 +151,14 @@ export async function PROJECTVIEW_update() {
 
     // difference in ProjectContributors
     if (formerDetails.ProjectContributors !== Details.ProjectContributors) {
-        console.log("there has been a change in the ProjectContributors");
+        const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
+        contributors.innerText = Details.ProjectContributors;
     }
 
     // difference in ProjectName
     if (formerDetails.ProjectName !== Details.ProjectName) {
-        console.log("there has been a change in the ProjectName");
+        const title = document.getElementById("PROJECTviewDisplayTitleH1");
+        title.innerText = Details.ProjectName;
     }
 
     // difference in ProjectJSON
@@ -240,29 +229,7 @@ function focusSong(dataRowID) {
     }
 }
 
-/*
-
-event listener functions and other things that I want to conglomerate
-
-*/
-
-function updateTempVisible() {
-    const title = document.getElementById("PROJECTviewDisplayTitleH1");
-    const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
-    const displayImage = document.getElementById("PROJECTviewDisplayImage_imgTag");
-    const descriptionTitle = document.getElementById("PROJECTVIEW_DESCRIPTION_more_title");
-    const descriptionArtistTime = document.getElementById("PROJECTVIEW_DESCRIPTION_more_artist_year");
-    const image = `${MAIN_CONST_EXPORT_mediaPath}/${Details.PictureURL}/5`;
-
-    title.innerText = Details.ProjectName;
-    contributors.innerText = Details.ProjectContributors;
-    displayImage.src = image;
-    descriptionTitle.innerText = Details.ProjectName;
-    descriptionArtistTime.innerText = `${Details.ProjectContributors} | ${formatTimeDaysToHuman(Details.TimeCreated)}`;
-}
-
-/*
-    A collection of event listeners that are all here, instead of being in a million different functions
+/*  A collection of event listeners that areall here, instead of being in a milliondifferent functions
 
     */
 
@@ -368,8 +335,6 @@ function setEventListenersForProjectView() {
             update_mobile_header_project_title(newTitleH1);
             updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
             Details.ProjectName = newTitleH1;
-            updateTempVisible();
-
         }
     });
 
@@ -380,7 +345,6 @@ function setEventListenersForProjectView() {
             updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
 
             Details.ProjectContributors = newTitleH3;
-            updateTempVisible();
         }
     });
 
@@ -540,6 +504,7 @@ export async function PROJECT_VIEW_receive_MENU_delete_request(project_id) {
 }
 
 async function deleteProjectFromServer(project_id) {
+    localStorage.removeItem(`project-${projectID}`);
     const ProjectID = Details.ProjectID;
     try {
         const response = await fetch(`${MAIN_CONST_EXPORT_apiPath}/projects/delete_project/${ProjectID}`, {

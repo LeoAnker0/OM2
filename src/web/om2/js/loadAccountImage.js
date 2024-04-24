@@ -43,5 +43,6 @@ function handleQueueDisplayMenu(event) {
 export async function HANDLE_SIGN_OUT_USER() {
     // Tell server to delete the access-token cookie
     await signout();
+    localStorage.clear();
     location.reload();
 }
