@@ -23,11 +23,23 @@ export async function initMusicObjectsGrid() {
         // Load in main markup for the MOG
         document.getElementById("MAINcontentPages").innerHTML += replaceSVGplaceholdersForAddressFromString(musicObjetsGridContainer);
 
-        // Load the library data
-        const libraryData = await getLibraryData(library_items_to_request_at_a_time, no_library_datas_collected); // Wait for getLibraryData to complete
-        no_library_datas_collected += libraryData.length;
+        // if local copy of MOG exists, load using that
+        if (localStorage.getItem("MOGitems") != null) {
+            const cachedLibraryData = JSON.parse(localStorage.getItem("MOGitems"));
+            no_library_datas_collected += cachedLibraryData.length;
 
-        loadObjects(libraryData);
+            loadObjects(cachedLibraryData);
+        }
+
+        // Load the library data from the server to verify
+        const libraryData = await getLibraryData(library_items_to_request_at_a_time, 0); // Wait for getLibraryData to complete
+
+        // if the data doesn't equal that which is known locally, update it with the correct data.
+        if (JSON.stringify(libraryData) != localStorage.getItem("MOGitems")) {
+            no_library_datas_collected += libraryData.length;
+            loadObjects(libraryData);
+            localStorage.setItem("MOGitems", JSON.stringify(libraryData));
+        }
 
         // if the page is being displayed as mobile, then modify it so that the mobile account menu is shown.
         if (is_mobile()) {
@@ -120,6 +132,8 @@ function add_in_library_data_to_MOG(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
     /* from the users libraries ----- */
     const loadEvents = libraryData.length;
+    const musicObjectsGridItemHTML = replaceSVGplaceholdersForAddressFromString(musicObjectsGridItem);
+
     for (var i = 0; i <= loadEvents - 1; i++) {
         const temporaryIidentifier = i;
         const imgAddress = libraryData[i].img;
@@ -127,7 +141,6 @@ function add_in_library_data_to_MOG(libraryData) {
         const textBottom = libraryData[i].bottom;
         const lastCheckedInMillis = libraryData[i].days;
         const checkedIndicator = formatTimeDaysDelta(lastCheckedInMillis);
-        let musicObjectsGridItemHTML = replaceSVGplaceholdersForAddressFromString(musicObjectsGridItem);
 
         const toReplaceStruct = {
             itemsToReplace: [
@@ -139,9 +152,7 @@ function add_in_library_data_to_MOG(libraryData) {
             ]
         }
 
-        musicObjectsGridItemHTML = REGEXreplaceInString(musicObjectsGridItemHTML, toReplaceStruct)
-        parentContainer.innerHTML += musicObjectsGridItemHTML;
-
+        parentContainer.innerHTML += REGEXreplaceInString(musicObjectsGridItemHTML, toReplaceStruct);
     }
 }
 
