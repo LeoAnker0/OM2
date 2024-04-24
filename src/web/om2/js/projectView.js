@@ -16,10 +16,11 @@ import projectViewRowItem from '../html/projectViewRowItem.html?raw';
 import projectContainer from '../html/projectViewContainer.html?raw';
 
 export const uploadQueue = [];
+
+let currentlyViewingProjects = false;
 let isUploading = false;
 let UserIsEditor = true;
 let Details;
-let currentlyViewingProjects = false;
 
 export async function initProjectView(projectID, songURL) {
     /* This alteration will load in certain visible elements IE the frame
@@ -47,19 +48,22 @@ export async function initProjectView(projectID, songURL) {
         }
     }
 
+    // Loading in the container and the settings box
     loadContainer(fakeDetails);
     UPDATE_ProjectViewSettingsBox("", "blank");
 
+    // Weird things with the description
     sessionStorage.setItem('description', ".");
     updateDescription_display();
 
+    // Set the listener for the home button, so that it can navigate back to the MOG / /
     const homeButton = document.getElementById("PROJECTviewMobileStickyHeaderBackButton")
     homeButton.addEventListener("click", () => {
         handleRoute("/")
     })
 
+    // Get the project information from the database
     const result = await getProjectDetails(projectID);
-
     if (result == "") {
         console.error("Unable to load project details");
         return
@@ -68,55 +72,47 @@ export async function initProjectView(projectID, songURL) {
     // Parse the details
     const details = JSON.parse(result);
     details.ProjectID = projectID;
-
     Details = details;
-    loadVisible();
-    set_event_listeners_for_titles();
 
 
+    if (UserIsEditor === false) {
+        // Delete the file drop area
+        const fileDropArea = document.getElementById("PROJECTview_upload_area_files_upload_box");
+        fileDropArea.remove();
 
-    function loadVisible() {
-        if (UserIsEditor === false) {
-            // Delete the file drop area
-            const fileDropArea = document.getElementById("PROJECTview_upload_area_files_upload_box");
-            fileDropArea.remove();
+    }
 
-        }
+    // All these weird description things again 
+    updateTempVisible();
+    sessionStorage.setItem('description', Details.Description);
 
-        //Load real details, instead of temp
-        updateTempVisible();
+    // Alot of functions for similar things, investigate
+    updateDescription_display();
+    update_mobile_header_project_title(Details.ProjectName)
+    setEventListenersForProjectView()
 
-        sessionStorage.setItem('description', Details.Description);
-        updateDescription_display();
-        descriptionButtonInteractions();
-        handleDescriptionMoreText();
-        detectOffClicks();
+    // Render the table
+    loadInTable();
 
-        detectPlayAndShuffleButtons();
-        loadInTable();
-        detect_when_image_is_no_longer_visible();
-        update_mobile_header_project_title(Details.ProjectName)
+    // Enable features that are only really relevant when the user is an editor
+    if (UserIsEditor === true) {
+        detect_when_image_is_interacted(Details.ProjectID, "PROJECTviewDisplayImage", "update_project_image");
+        loadFileDropArea();
+        UPDATE_ProjectViewSettingsBox(Details, "full");
+    }
 
-        if (UserIsEditor === true) {
-            detect_when_image_is_interacted(Details.ProjectID, "PROJECTviewDisplayImage", "update_project_image");
-            loadFileDropArea();
-
-            // Update the settings Box with the proper details
-            UPDATE_ProjectViewSettingsBox(Details, "full");
-        }
-
-        /* when a specific song is specified in the url, focus it */
-        if ((songURL !== undefined) && (songURL !== null)) {
-            for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
-                const URL = Details.ProjectJSON[i].URL;
-                if (URL == songURL) {
-                    const dataRowID = `${Details.ProjectJSON[i].SongSequence}-${Details.ProjectJSON[i].Version}`
-                    // Now that we have the dataRowID, we can focus the song
-                    focusSong(dataRowID);
-                }
+    /* when a specific song is specified in the url, focus it */
+    if ((songURL !== undefined) && (songURL !== null)) {
+        for (var i = Details.ProjectJSON.length - 1; i >= 0; i--) {
+            const URL = Details.ProjectJSON[i].URL;
+            if (URL == songURL) {
+                const dataRowID = `${Details.ProjectJSON[i].SongSequence}-${Details.ProjectJSON[i].Version}`
+                // Now that we have the dataRowID, we can focus the song
+                focusSong(dataRowID);
             }
         }
     }
+
 }
 
 export function hideProjectView() {
@@ -244,6 +240,12 @@ function focusSong(dataRowID) {
     }
 }
 
+/*
+
+event listener functions and other things that I want to conglomerate
+
+*/
+
 function updateTempVisible() {
     const title = document.getElementById("PROJECTviewDisplayTitleH1");
     const contributors = document.getElementById("PROJECTviewDisplayTitleH3");
@@ -259,90 +261,52 @@ function updateTempVisible() {
     descriptionArtistTime.innerText = `${Details.ProjectContributors} | ${formatTimeDaysToHuman(Details.TimeCreated)}`;
 }
 
-function set_event_listeners_for_titles() {
+/*
+    A collection of event listeners that are all here, instead of being in a million different functions
+
+    */
+
+function setEventListenersForProjectView() {
     const titleH1 = document.getElementById('PROJECTviewDisplayTitleH1');
     const titleH3 = document.getElementById("PROJECTviewDisplayTitleH3");
     let H1Copy = document.getElementById("PROJECTviewDisplayTitleH1").innerText;
     let H3Copy = document.getElementById("PROJECTviewDisplayTitleH3").innerText;
-
-    if (UserIsEditor === false) {
-        titleH1.contentEditable = false;
-        titleH3.contentEditable = false;
-        return;
-    }
-
-    titleH1.addEventListener('blur', function(event) {
-        const newTitleH1 = titleH1.innerText;
-        if (newTitleH1 !== H1Copy) {
-            update_mobile_header_project_title(newTitleH1);
-            updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
-            Details.ProjectName = newTitleH1;
-            updateTempVisible();
-
-        }
-    });
-
-    titleH3.addEventListener('blur', function(event) {
-        const newTitleH3 = titleH3.innerText;
-        if (newTitleH3 !== H3Copy) {
-            updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
-
-            Details.ProjectContributors = newTitleH3;
-            updateTempVisible();
-        }
-    });
-}
-
-function loadContainer(details) {
-    let projectContainerMarkup = replaceSVGplaceholdersForAddressFromString(projectContainer);
-
-
-    const toReplaceStruct = {
-        itemsToReplace: [
-            ["PROJECTviewMOREtitle", `${details.ProjectName}`],
-            ["PROJECTviewMOREartist", `${details.ProjectContributors}`],
-            ["PROJECTviewMOREyear", `${formatTimeDaysToHuman(details.TimeCreated)}`],
-            ["MOG_checkedDate", `checkedIndicator`],
-            ["MOGI_placeholder_itemID", `temporaryIidentifier`],
-            ["PROJECTviewDisplayImage", `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5`],
-        ]
-    }
-
-    projectContainerMarkup = REGEXreplaceInString(projectContainerMarkup, toReplaceStruct);
-    document.getElementById("MAINcontentPages").innerHTML = projectContainerMarkup;
-    return;
-}
-
-function updateDescription_display() {
-    let description = sessionStorage.getItem('description');
-    const descriptionContainer = document.getElementById("PROJECTviewDescriptionP");
-    descriptionContainer.innerText = description;
-}
-
-/* more description button */
-function descriptionButtonInteractions() {
     const moreButton = document.getElementById('PROJECTviewDescriptionMoreButton');
     const descriptionBox = document.getElementById("PROJECTviewDisplayDescription");
     const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
     const main = document.querySelector("main");
+    const xButton = document.getElementById("PROJECTviewMOREcloseButton");
+    const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
+    const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
+    const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
+    const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
+    const targetElement = document.querySelector('.PROJECTviewDisplayImage');
+    const header = document.getElementById("PROJECTviewMobileStickyHeader");
+    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
+    const editorContainer = document.getElementById("PROJECTviewMOREdescriptionC");
+    const editor = document.getElementById("PROJECTviewMOREdescriptionP");
 
-    function displayMenu() {
-        background.style.display = "grid";
+    // IntersectionObserver
+    const observer = new IntersectionObserver(callback, { threshold: 0.1 });
 
-        // check if mobile
-        if (is_mobile()) {
-            main.style.zIndex = "40";
-        }
-    };
+    // Session storage item?
+    const description = sessionStorage.getItem('description');
 
+    // set the text of the description
+    editor.innerText = description;
+
+
+    // Add listner to the description more button
     moreButton.addEventListener('click', function() {
         displayMenu();
     });
 
+    // Add dbl click listener to the description
     descriptionBox.addEventListener('dblclick', function() {
         displayMenu();
     })
 
+    // Add ?double click? listener to the description
     let lastTapTime = 0;
     descriptionBox.addEventListener('touchend', function(event) {
         const currentTime = new Date().getTime();
@@ -354,68 +318,151 @@ function descriptionButtonInteractions() {
         }
         lastTapTime = currentTime;
     });
-}
 
-function updateDescription() {
-    const description = sessionStorage.getItem('description');
-    const descriptionp = document.getElementById("PROJECTviewDescriptionP");
-    descriptionp.innerText = description;
-}
-
-function handleDescriptionMoreText() {
-    const description = sessionStorage.getItem('description');
-    const editorContainer = document.getElementById("PROJECTviewMOREdescriptionC");
-    const editor = document.getElementById("PROJECTviewMOREdescriptionP");
-    editor.innerText = description;
-}
-
-function detectOffClicks() {
-    const xButton = document.getElementById("PROJECTviewMOREcloseButton");
-    const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
+    // Add listener to the button that closes the description
     xButton.addEventListener('click', function() {
         closeMoreDescription(Details);
     });
 
+    // add listener to closing the description
     background.addEventListener('click', function(event) {
         if (event.target === background) {
             closeMoreDescription(Details)
         }
     });
-}
 
-function closeMoreDescription(details) {
-    const editor = document.getElementById("PROJECTviewMOREdescriptionP");
-    const newDescription = editor.value;
-    const background = document.getElementById("PROJECTviewMOREdescriptionboxEnvironment");
-    const main = document.querySelector("main");
-
-    sessionStorage.setItem('description', newDescription);
-    updateProjectDetails(details.ProjectID, "description", newDescription)
-    background.style.display = "none";
-    updateDescription();
-    main.style.zIndex = "";
-}
-
-/* project view top buttons */
-async function detectPlayAndShuffleButtons() {
-    const playButton = document.getElementById("PROJECTviewDescriptionTopPlayButton");
-    const shuffleButton = document.getElementById("PROJECTviewDescriptionTopShuffleButton");
-    const menuButton = document.getElementById("PROJECTviewDisplayMenuButton");
-    const mobileMenuButton = document.getElementById("PROJECTviewMobileStickyHeaderMenuButton");
-
+    // add listener to the 'play' button in the project view
     playButton.addEventListener("click", function() {
         PLAYBACK_handle_input_project_details_array_with_start_playback(Details);
     });
+
+    // add listener to the 'shuffle' button in the project view
     shuffleButton.addEventListener("click", function() {
         PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(Details);
     });
+
+    // add listener to the menu button in the project view
     menuButton.addEventListener("click", function() {
         displayMenuForTop(event)
     });
+
+    // add listener to the menu button in the project view, which is only visible when mobile
     mobileMenuButton.addEventListener("click", function() {
         displayMenuForTop(event)
     });
+
+    // Initiate the observer that changes the project view bar as appropriate to scrolling level
+    observer.observe(targetElement);
+
+    // If user is not editor, they shouldn't be able to edit things in the project
+    if (UserIsEditor === false) {
+        titleH1.contentEditable = false;
+        titleH3.contentEditable = false;
+        return;
+    }
+
+    // Listener for the title input
+    titleH1.addEventListener('blur', function(event) {
+        const newTitleH1 = titleH1.innerText;
+        if (newTitleH1 !== H1Copy) {
+            update_mobile_header_project_title(newTitleH1);
+            updateProjectDetails(Details.ProjectID, "project_name", newTitleH1)
+            Details.ProjectName = newTitleH1;
+            updateTempVisible();
+
+        }
+    });
+
+    // Listener for the artist/contributors input
+    titleH3.addEventListener('blur', function(event) {
+        const newTitleH3 = titleH3.innerText;
+        if (newTitleH3 !== H3Copy) {
+            updateProjectDetails(Details.ProjectID, "project_contributors", newTitleH3)
+
+            Details.ProjectContributors = newTitleH3;
+            updateTempVisible();
+        }
+    });
+
+    function displayMenu() {
+        background.style.display = "grid";
+
+        // check if mobile
+        if (is_mobile()) {
+            main.style.zIndex = "40";
+        }
+    };
+
+    function callback(entries, observer) {
+        entries.forEach(entry => {
+            /* when mobile and above image */
+            if ((entry.isIntersecting) && (is_mobile())) {
+                header.style.backdropFilter = "none";
+                header.style.backgroundColor = "transparent";
+                headerTitleText.style.visibility = "hidden";
+            }
+            /* when desktop and above image */
+            else if ((entry.isIntersecting) && (!is_mobile())) {
+                header.style.backdropFilter = "";
+                header.style.backgroundColor = "";
+                headerTitleText.style.visibility = "";
+            }
+
+            /* when desktop and below image */
+            else if ((!entry.isIntersecting) && (!is_mobile())) {
+                header.style.backdropFilter = "";
+                header.style.backgroundColor = "";
+                headerTitleText.style.visibility = "";
+            }
+
+            /* when mobile and below image */
+            else if ((!entry.isIntersecting) && (is_mobile())) {
+                header.style.backdropFilter = "blur(15px)";
+                header.style.backgroundColor = "var(--background-transparent)";
+                headerTitleText.style.visibility = "visible";
+            }
+        });
+    }
+
+    function closeMoreDescription(details) {
+        const newDescription = editor.value;
+        sessionStorage.setItem('description', newDescription);
+        updateProjectDetails(details.ProjectID, "description", newDescription)
+        background.style.display = "none";
+        editor.innerText = newDescription;
+        main.style.zIndex = "";
+    }
 }
+
+function loadContainer(details) {
+    const toReplaceStruct = {
+        itemsToReplace: [
+            ["PROJECTviewMOREtitle", `${details.ProjectName}`],
+            ["PROJECTviewMOREartist", `${details.ProjectContributors}`],
+            ["PROJECTviewMOREyear", `${formatTimeDaysToHuman(details.TimeCreated)}`],
+            ["MOG_checkedDate", `checkedIndicator`],
+            ["MOGI_placeholder_itemID", `temporaryIidentifier`],
+            ["PROJECTviewDisplayImage", `${MAIN_CONST_EXPORT_mediaPath}/${details.PictureURL}/5`],
+        ]
+    }
+
+    document.getElementById("MAINcontentPages").innerHTML = REGEXreplaceInString(replaceSVGplaceholdersForAddressFromString(projectContainer), toReplaceStruct);
+    return;
+}
+
+function updateDescription_display() {
+    let description = sessionStorage.getItem('description');
+    const descriptionContainer = document.getElementById("PROJECTviewDescriptionP");
+    descriptionContainer.innerText = description;
+}
+
+
+function update_mobile_header_project_title(project_name) {
+    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
+    headerTitleText.innerText = project_name;
+
+}
+
 
 function displayMenuForTop(event) {
     event.stopPropagation();
@@ -517,9 +564,7 @@ function loadInTable() {
         projectTableBeforeLoad.remove();
     }
 
-    const tableEnvironment = document.getElementById("PROJECTview_projectAreaContainer");
     document.getElementById("PROJECTview_projectAreaContainer").innerHTML += replaceSVGplaceholdersForAddressFromString(projectViewRowTitles);
-
 
     const projectTable = document.getElementById('PROJECTview-projectTable');
     let songsJsonString = structuredClone(Details.ProjectJSON);
@@ -795,13 +840,11 @@ export async function PROJECTVIEW_handle_delete_song(params) {
     const confirmMessage = `Are you sure that you want to delete <em><strong>${params.songName}</strong></em>? This action is not reversable.`;
     const action = await CONFIRM_action_modal(confirmMessage);
 
-    if (action === "cancel") {} else if (action === "delete") {
+    if (action === "delete") {
         await deleteSongFromProject(Details.ProjectID, params.songID)
-        menuHide_foreign();
         PROJECTVIEW_update();
-    } else {
-        console.error("a statement was returned that isn't valid");
     }
+    menuHide_foreign();
 }
 
 function loadInProjectViewRowItems(songData) {
@@ -957,53 +1000,6 @@ async function uploadFiles(files, details) {
         if (!isUploading) {
             await uploadFileWithProgress();
         }
-    }
-}
-
-function update_mobile_header_project_title(project_name) {
-    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
-    headerTitleText.innerText = project_name;
-
-}
-
-/* the top bar of the mobile project view */
-function detect_when_image_is_no_longer_visible() {
-    const observer = new IntersectionObserver(callback, { threshold: 0.1 });
-    const targetElement = document.querySelector('.PROJECTviewDisplayImage');
-    const header = document.getElementById("PROJECTviewMobileStickyHeader");
-    const headerTitleText = document.getElementById("PROJECTviewMobileStickyHeaderProjectNameContainer");
-
-    observer.observe(targetElement);
-
-    function callback(entries, observer) {
-        entries.forEach(entry => {
-            /* when mobile and above image */
-            if ((entry.isIntersecting) && (is_mobile())) {
-                header.style.backdropFilter = "none";
-
-                header.style.backgroundColor = "transparent";
-                headerTitleText.style.visibility = "hidden";
-            }
-            /* when desktop and above image */
-            else if ((entry.isIntersecting) && (!is_mobile())) {
-                header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
-                headerTitleText.style.visibility = "hidden";
-            }
-
-            /* when desktop and below image */
-            else if ((!entry.isIntersecting) && (!is_mobile())) {
-                header.style.backdropFilter = "var(--PROJECTviewDesktopHeaderFilter)";
-                headerTitleText.style.visibility = "hidden";
-            }
-
-            /* when mobile and below image */
-            else if ((!entry.isIntersecting) && (is_mobile())) {
-                header.style.backdropFilter = "blur(15px)";
-
-                header.style.backgroundColor = "var(--background-transparent)";
-                headerTitleText.style.visibility = "visible";
-            }
-        });
     }
 }
 /**/
