@@ -1,4 +1,11 @@
 # Orange Music 2 - Music Streaming for Music Makers
+
+##### Note, OM2 is currently under development, and there are a few large changes that are currently being implemented in a different branch, for example the changing of core backend language and many other things. This is all happening on the database-updates branch. This however means that this README and all the code visible in the main branch does not reflect the actual state of the project. 
+
+However, a preview of what the project actually looks like is available [here](https://testom2.la0.uk)
+
+---
+
 Orange music is a music streaming platform designed specifically for musicians and creators. Orange Music is a music streaming platform tailored to the needs of musicians and creators, providing a dedicated platform for uploading and listening to your projects. 
 
 ![Mobile Views](/docs/images/om2_mobile_views_18:9:23.png)
