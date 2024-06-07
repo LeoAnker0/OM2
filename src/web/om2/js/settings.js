@@ -208,6 +208,7 @@ async function views_admin() {
         } else {
             for (var i = user_table_select_ids.length - 1; i >= 0; i--) {
                 const uuid = user_table_select_ids[i];
+                console.log(uuid);
                 updateUserDetailsAdmin(uuid, columnToUpdate.value, newData.value)
             }
         }

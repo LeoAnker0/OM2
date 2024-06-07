@@ -102,8 +102,6 @@ func admin_update_user_details(c *gin.Context) {
         fmt.Println("New_Data has unexpected type:", v)
     }
 
-    fmt.Println(UserToUpdate, ColumnToUpdate, NewData)
-
     // Authenticate the user and if they aren't valid return them false.
     valid, uuid := helpers.Authenticate(jwt_token, clientIP)
     if valid != true {
@@ -132,7 +130,7 @@ func admin_update_user_details(c *gin.Context) {
         return
     }
 
-    response := helpers.Update_user_detail_by_column(uuid, ColumnToUpdate, NewData)
+    response := helpers.Update_user_detail_by_column(UserToUpdate, ColumnToUpdate, NewData)
     if response != nil {
         fmt.Println("error in Update_user_detail_by_column", response)
         c.JSON(500, gin.H{"Error": "Error updating column:"})
