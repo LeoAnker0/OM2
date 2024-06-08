@@ -56,14 +56,13 @@
         </div>
         <div class="menuModalEnvironment menuModalBackground" id="MENUmodalEnvironment"></div>
     </main>
+    <div class="MUSICENJOYMODE-enviroment" id="musicEnjoyEnvironment"></div>
     <script type="module" src="./main.js"></script>
 </body>
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-            console.log('Service Worker registered with scope:', registration.scope);
-        }).catch(function(error) {
+        .then(function(registration) {}).catch(function(error) {
             console.log('Service Worker registration failed:', error);
         });
 }

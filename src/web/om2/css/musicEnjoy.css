@@ -1,0 +1,99 @@
+/* musicEnjoy.css */
+
+.MUSICENJOYMODE-enviroment {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10000000000000;
+}
+
+.MUSICENJOYMODE-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 4rem 1fr;
+    grid-template-areas:
+        "topMenu"
+        "content";
+
+
+    background-color: var(--background);
+
+    .topMenuBar {
+        grid-area: topMenu;
+        position: relative;
+
+        button {
+            all: unset;
+            position: relative;
+            border: none;
+            border-radius: 50%;
+            inset: 10%;
+            left: 1rem;
+            aspect-ratio: 1/1;
+            height: 80%;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            transition: background-color 0.05s ease;
+
+            color: var(--PV-text);
+        }
+
+        @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+            button {
+                all: unset;
+                position: relative;
+                border: none;
+                border-radius: 50%;
+                inset: 0.1rem;
+                aspect-ratio: 1/1;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                transition: background-color 0.05s ease;
+
+                color: var(--PV-text);
+            }
+        }
+
+        button img {
+            pointer-events: none;
+
+            filter: var(--make-svg-black);
+        }
+
+        button:hover {
+            background-color: var(--secondary-weak);
+            cursor: pointer;
+        }
+
+        button:focus {
+            outline: 1px solid var(--PV-focus-colour);
+            background-color: var(--secondary-weak);
+        }
+
+        button:active {
+            background-color: var(--PV-focus-colour);
+            outline: 1px solid var(--PV-focus-colour);
+        }
+
+        button div {
+            position: relative;
+            margin-left: 0.2rem;
+        }
+
+
+    }
+
+    .contentArea {
+        grid-area: content;
+        position: relative;
+        background-color: hsla(150, 50%, 30%, 0.1);
+    }
+}

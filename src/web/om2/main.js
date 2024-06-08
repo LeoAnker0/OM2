@@ -9,6 +9,7 @@ import { initialiseQueue } from './js/queue.js';
 import { init_routing } from './js/routing.js';
 import { initLogin } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
+import { init_musicEnjoy } from './js/musicEnjoy.js';
 
 import './fonts/neue-montreal/neue-montreal.css';
 import './css/projectView_settingsBox.css';
@@ -20,6 +21,7 @@ import './css/upload_indicator.css';
 import './css/lcd_mobile_body.css';
 import './css/musicObjectGrid.css';
 import './css/projectView.css';
+import './css/musicEnjoy.css';
 import './css/animations.css';
 import './css/materials.css';
 import './css/settings.css';
@@ -63,7 +65,8 @@ export async function main() {
     initAccountImg();
     initialiseQueue();
     init_routing();
-    init_upload_indicator()
+    init_upload_indicator();
+    init_musicEnjoy();
 }
 
 // Make sure that all the code only ever runs once.
