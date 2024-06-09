@@ -20,8 +20,13 @@
         "topMenu"
         "content";
 
-
-    background-color: var(--background);
+    .background {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: var(--grey);
+        overflow: hidden;
+    }
 
     .topMenuBar {
         grid-area: topMenu;
@@ -94,6 +99,60 @@
     .contentArea {
         grid-area: content;
         position: relative;
-        background-color: hsla(150, 50%, 30%, 0.1);
+
+        display: grid;
+        grid-template-columns: 4rem 1fr 1fr 4rem;
+        grid-template-areas:
+            ". image controls .";
+
+
+        .image {
+            grid-area: image;
+            display: grid;
+
+            .image-container {
+                position: relative;
+                aspect-ratio: 1/1;
+                height: 30rem;
+                align-self: center;
+                justify-self: center;
+                overflow: hidden;
+                border-radius: 1rem;
+
+                --factor: 4px;
+
+                img {
+                    position: absolute;
+                    height: calc(100% - (4 * var(--factor)));
+                    top: calc(2 * var(--factor));
+                    left: calc(2 * var(--factor));
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
+                    border-radius: 1rem;
+                }
+
+                img.a {
+                    filter: blur(var(--factor));
+                }
+            }
+        }
+
+        .controls {
+            grid-area: controls;
+
+            .squares-container {
+                position: relative;
+                width: 100%;
+                height: 4rem;
+                display: flex;
+
+                div {
+                    position: relative;
+                    height: 100%;
+                    width: 20%;
+                }
+            }
+        }
+
     }
 }
