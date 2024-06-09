@@ -6,6 +6,8 @@ import update_project_imageModal from '../html/update_project_imageModal.html?ra
 import lcd_mobile_queue_item from '../html/lcd_mobile_queue_item.html?raw';
 import uploadQueueModalHTML from '../html/upload_queue_body.html?raw';
 import lcd_mobile_body from '../html/lcd_mobile_body.html?raw';
+import { getKeyColoursFromImage } from './getImageColours.js';
+import { attachVisualiserToRoot } from './visualiser.js';
 import { PROJECTVIEW_update } from './projectView.js';
 import menuItem from '../html/menuModalItem.html?raw';
 import { upload_image_files } from './file_upload.js';
@@ -13,6 +15,8 @@ import menuModal from '../html/menuModal.html?raw';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import { is_mobile } from './om2.js';
+
+
 
 let previously_focused_element;
 let queue_displayed = false;
@@ -149,6 +153,15 @@ function handle_lcd_mobile_body(params) {
         image.src = PLAYBACK_current_img;
         title.innerText = PLAYBACK_current_song_title;
         artist.innerText = PLAYBACK_current_song_artist;
+
+        updateDisplayVisualiser();
+    }
+
+    async function updateDisplayVisualiser() {
+        const colours = await getKeyColoursFromImage(PLAYBACK_current_img);
+        const root = document.getElementById("LCD_mobile_body_background");
+
+        attachVisualiserToRoot(root, colours);
     }
 
     function is_audio_paused() {
@@ -158,6 +171,7 @@ function handle_lcd_mobile_body(params) {
             playIcon.src = svgImports["icons_derpy"];
         }
     }
+
 
     function load_mobile_queue() {
         const mobile_queue_container = document.getElementById("LCD_mobile_queue_content_container");

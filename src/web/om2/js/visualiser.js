@@ -1,5 +1,6 @@
 // visualiser.js
 
+import { HandleCreateNotification } from './notificationDisplayManager.js';
 import { generateUniqueID } from './om2.js';
 
 export function attachVisualiserToRoot(root, colours) {
@@ -17,6 +18,7 @@ export function attachVisualiserToRoot(root, colours) {
 
     if (!gl) {
         console.error('WebGL not supported');
+        HandleCreateNotification("WebGL not supported", "error")
         return;
     }
 
