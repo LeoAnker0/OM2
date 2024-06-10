@@ -4,6 +4,8 @@ import { PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_current_img,
 import { replaceSVGplaceholdersForAddressFromString } from './om2.js';
 import { getKeyColoursFromImage } from './getImageColours.js';
 import { attachVisualiserToRoot } from './visualiser.js';
+import { is_mobile } from './om2.js';
+
 
 import MusicEnjoyMainHTML from '../html/musicEnjoy_main.html?raw';
 
@@ -25,7 +27,12 @@ export function init_musicEnjoy() {
     setTimeout(function() {
         openMusicEnjoy();
     }, 150);
-    */
+     */
+
+    if (is_mobile()) {
+        const LCDbody = document.getElementById("LCDbody");
+        LCDbody.addEventListener("click", openMusicEnjoy);
+    }
 }
 
 async function doBackgroundThings() {
@@ -51,9 +58,15 @@ async function openMusicEnjoy() {
     const musicEnjoyEnvironment = document.getElementById("musicEnjoyEnvironment");
     const musicEnjoyCoverImage1 = document.getElementById("MUSICENJOYMODEcoverImage1");
     const musicEnjoyCoverImage2 = document.getElementById("MUSICENJOYMODEcoverImage2");
+    const musicEnjoyTitle1 = document.getElementById("MUSICENJOYMODEsongTitle1");
+    const musicEnjoyTitle2 = document.getElementById("MUSICENJOYMODEsongTitle2");
+    const musicEnjoyArtist = document.getElementById("MUSICENJOYMODEsongArtist");
     musicEnjoyEnvironment.style.display = "block";
     musicEnjoyCoverImage1.src = PLAYBACK_current_img;
     musicEnjoyCoverImage2.src = PLAYBACK_current_img;
+    musicEnjoyTitle1.innerText = PLAYBACK_current_song_title;
+    musicEnjoyTitle2.innerText = PLAYBACK_current_song_title;
+    musicEnjoyArtist.innerText = PLAYBACK_current_song_artist
 
 
     doBackgroundThings();

@@ -16,18 +16,17 @@ export function initialiseLCD() {
     setEventListenersForPlaybackSeek();
 
     //when mobile, then add event listener to LCDbody
+    /*
     if (is_mobile()) {
         const LCDbody = document.getElementById("LCDbody");
         LCDbody.addEventListener("click", open_mobile_lcd_body);
-    }
+    }*/
 
 }
 
 function open_mobile_lcd_body(event) {
     event.stopPropagation();
-    const params = {
-        param: "cheese",
-    }
+    const params = {}
 
     MENUdisplay(params, event, "lcd_mobile_body");
 }
