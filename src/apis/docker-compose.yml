@@ -1,4 +1,3 @@
-version: '0.1'
 services:
   # For Exposing apis and file hosting to the internet
   #cloudflared:

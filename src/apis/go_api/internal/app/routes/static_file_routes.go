@@ -229,6 +229,13 @@ func CatchAllForStaticWebFiles(r *gin.Engine) {
         // Capture the requested path
         requestedPath := c.Request.URL.Path
 
+        // hard code for items that must be served from a root/ path
+        if requestedPath == "/mask.png" {
+            c.File("./static_web/mask.png")
+            return
+        }
+
+        // if there really was no file that should be served, serve index.html
         fmt.Println("A path was requested that should not currently be served: ", requestedPath)
         c.File("./static_web/index.html")
         return
