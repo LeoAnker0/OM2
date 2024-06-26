@@ -93,11 +93,14 @@ export function updateProgress_upload_indicator(progressProcent) {
         }
 
         let remainingItems = "";
-        for (var i = uploadQueue.length - 1; i >= 1; i--) {
+        for (var i = 0; i < uploadQueue.length; i++) {
             const fileName = uploadQueue[i].file.name;
-            const fileSize = formatFileSizeBytes((uploadQueue[i].file.size) * 1.75);
+            const fileSize = formatFileSizeBytes((uploadQueue[i].file.size) * 2);
             remainingItems += `<div class="UPLOADQUEUE-bottom-items-next"><div class="itemName">${fileName}</div><div class="itemSize">${fileSize}</div></div>`;
         }
+
+
+
 
         UPLOADQUEUE_bottom_container.innerHTML += remainingItems;
     }

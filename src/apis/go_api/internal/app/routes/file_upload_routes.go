@@ -68,8 +68,6 @@ func upload_image_file(c *gin.Context) {
         fmt.Println("the user is over their storage limit")
         c.String(200, "StorageLimit Reached")
         return
-    } else {
-        fmt.Println("storageUsed: ", storageUsed, "storageAllowance, ", storageAllowance)
     }
 
     if menuType == "update_project_image" {
@@ -322,8 +320,6 @@ func upload_audio_file(c *gin.Context) {
         fmt.Println("the user is over their storage limit")
         c.String(200, "StorageLimit Reached")
         return
-    } else {
-        fmt.Println("storageUsed: ", storageUsed, "storageAllowance, ", storageAllowance)
     }
 
     // Verify that the user should actually have access to the project

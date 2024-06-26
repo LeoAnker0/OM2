@@ -34,11 +34,26 @@ void main() {
 }
 `;
 
+    /*
+        Dithering function found from https://blog.frost.kiwi/GLSL-noise-and-radial-gradient/
+
+        Originally sourced from Jorge Jimenez's
+            http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
+
+    */
+
+
     const fragmentShaderSource = `
 precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec3 u_colors[5];
+
+/* Gradient noise function */
+float gradientNoise(in vec2 uv)
+{
+    return fract(52.9829189 * fract(dot(uv, vec2(0.06711056, 0.00583715))));
+}
 
 float rand(vec2 co){
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -76,6 +91,10 @@ void main() {
     color = mix(color, u_colors[2], abs(cos(t)));
     color = mix(color, u_colors[3], abs(sin(t * 0.5)));
     color = mix(color, u_colors[4], blobs);
+
+    // Adding noise dithering
+    float noiseValue = gradientNoise(gl_FragCoord.xy);
+    color += (1.0 / 255.0) * noiseValue - (0.5 / 255.0);
 
     gl_FragColor = vec4(color, 1.0);
 }
