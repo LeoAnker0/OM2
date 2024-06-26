@@ -1,11 +1,10 @@
 // musicEnjoy.js
 
 import { PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist } from './playback.js';
+import { attachVisualiserToRoot, detachVisualiserFromRoot } from './visualiser.js';
 import { replaceSVGplaceholdersForAddressFromString } from './om2.js';
 import { getKeyColoursFromImage } from './getImageColours.js';
-import { attachVisualiserToRoot } from './visualiser.js';
 import { is_mobile } from './om2.js';
-
 
 import MusicEnjoyMainHTML from '../html/musicEnjoy_main.html?raw';
 
@@ -24,10 +23,10 @@ export function init_musicEnjoy() {
 
     // Temporary code that enables me to open musicEnjoy without having to press the button every single time
     /*
-     */
     setTimeout(function() {
         openMusicEnjoy();
     }, 150);
+     */
 
     if (is_mobile()) {
         const LCDbody = document.getElementById("LCDbody");
@@ -48,8 +47,8 @@ async function doBackgroundThings() {
     */
 
     // Set background
-    const background = document.getElementById("MUSICENJOYMODEbackground");
-    attachVisualiserToRoot(background, colours)
+    const root = document.getElementById("MUSICENJOYMODEbackground");
+    attachVisualiserToRoot(root, colours)
 }
 
 
@@ -76,4 +75,5 @@ async function openMusicEnjoy() {
 function closeMusicEnjoy() {
     const musicEnjoyEnvironment = document.getElementById("musicEnjoyEnvironment");
     musicEnjoyEnvironment.style.display = "none";
+    detachVisualiserFromRoot()
 }

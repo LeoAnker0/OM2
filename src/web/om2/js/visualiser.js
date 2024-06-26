@@ -3,6 +3,9 @@
 import { HandleCreateNotification } from './notificationDisplayManager.js';
 import { generateUniqueID } from './om2.js';
 
+let gl, program, vertexShader, fragmentShader, positionBuffer, requestID;
+const resources = { program, vertexShader, fragmentShader, positionBuffer };
+
 export function attachVisualiserToRoot(root, colours) {
 
     root.innerHTML = "";
@@ -14,7 +17,7 @@ export function attachVisualiserToRoot(root, colours) {
     root.appendChild(canvasItem);
 
     const canvas = document.getElementById(canvasID);
-    const gl = canvas.getContext("webgl");
+    gl = canvas.getContext("webgl");
 
     if (!gl) {
         console.error('WebGL not supported');
@@ -41,7 +44,6 @@ void main() {
             http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
 
     */
-
 
     const fragmentShaderSource = `
 precision mediump float;
@@ -112,10 +114,10 @@ void main() {
         return shader;
     }
 
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+    vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-    const program = gl.createProgram();
+    program = gl.createProgram();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
@@ -123,7 +125,7 @@ void main() {
         console.error('Error linking program:', gl.getProgramInfoLog(program));
     }
 
-    const positionBuffer = gl.createBuffer();
+    positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
     const positions = [
@@ -148,8 +150,6 @@ void main() {
         colorLocations.push(gl.getUniformLocation(program, `u_colors[${i}]`));
     }
 
-    requestAnimationFrame(render);
-
     function render(time) {
         time *= 0.001;
 
@@ -171,8 +171,10 @@ void main() {
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        requestAnimationFrame(render);
+        requestID = requestAnimationFrame(render);
     }
+
+    requestID = requestAnimationFrame(render);
 
     function resizeCanvasToDisplaySize() {
         const displayWidth = window.innerWidth;
@@ -183,6 +185,12 @@ void main() {
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         }
     }
+
+    // Save resources for cleanup
+    resources.program = program;
+    resources.vertexShader = vertexShader;
+    resources.fragmentShader = fragmentShader;
+    resources.positionBuffer = positionBuffer;
 }
 
 function hexToRgb(hex) {
@@ -195,4 +203,36 @@ function hexToRgb(hex) {
     const g = (bigint >> 8) & 255;
     const b = bigint & 255;
     return [r / 255, g / 255, b / 255];
+}
+
+function cleanupWebGL(gl, resources) {
+    if (!gl) return;
+
+    // Detach shaders from program
+    if (resources.program && resources.vertexShader && resources.fragmentShader) {
+        gl.detachShader(resources.program, resources.vertexShader);
+        gl.detachShader(resources.program, resources.fragmentShader);
+    }
+
+    // Delete shaders
+    if (resources.vertexShader) gl.deleteShader(resources.vertexShader);
+    if (resources.fragmentShader) gl.deleteShader(resources.fragmentShader);
+
+    // Delete program
+    if (resources.program) gl.deleteProgram(resources.program);
+
+    // Delete buffers
+    if (resources.positionBuffer) gl.deleteBuffer(resources.positionBuffer);
+
+    // Lose context
+    const loseContext = gl.getExtension('WEBGL_lose_context');
+    if (loseContext) loseContext.loseContext();
+}
+
+export function detachVisualiserFromRoot() {
+    if (requestID) {
+        cancelAnimationFrame(requestID);
+        requestID = null;
+    }
+    cleanupWebGL(gl, resources);
 }

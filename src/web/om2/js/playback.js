@@ -1,9 +1,9 @@
-import { updateQueue } from './queue.js';
 import { shuffleStateChange, loopStateChange, playStateChange } from './playbackControls.js';
-import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
-import { getProjectDetails } from './network_requests.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
+import { resizeTitleText, updateTimeIndicatorsGlobal } from './lcd.js';
 import { shuffleArray, formatTimeSeconds } from './om2.js';
+import { getProjectDetails } from './network_requests.js';
+import { updateQueue } from './queue.js';
 
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_copy_array = [];
@@ -389,6 +389,8 @@ function PLAYBACK_update_external_metadata() {
     });
 
     updatePositionState();
+
+    document.title = `${track.song_name} by ${track.project_contributors} playing on Orange Music`;
 }
 
 function updatePositionState() {
@@ -417,6 +419,7 @@ function PLAYBACK_stop_playback() {
     PLAYBACK_songs_copy_array = [];
     PLAYBACK_songs_array_index = 0;
     PLAYBACK_audio_source.src = "http://null.com/null";
+    document.title = "Orange Music"
 
 }
 
