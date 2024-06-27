@@ -92,10 +92,10 @@ export function init_musicEnjoy() {
 
     // Temporary code that enables me to open musicEnjoy without having to press the button every single time
     /*
-     */
     setTimeout(function() {
         openMusicEnjoy();
     }, 150);
+     */
 
 }
 
