@@ -193,10 +193,7 @@ function handleInputChange(e) {
     PLAYBACK_handle_input_change_song_progress(progress);
 
     return
-
 }
-
-
 
 /* changing the values of the time indicators -------- */
 export function updateTimeIndicatorsGlobal(left, right) {
@@ -205,33 +202,3 @@ export function updateTimeIndicatorsGlobal(left, right) {
     root.style.setProperty('--LCD-afterContent-bottom-left', left);
     root.style.setProperty('--LCD-afterContent-bottom-right', right);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**/

@@ -11,44 +11,17 @@ export function setEventListenersForPlaybackcontrols() {
     const playIcon = document.getElementById("PLAYERplayIcon");
     const loopIcon = document.getElementById("PLAYERloopIcon");
 
-    shuffleButton.addEventListener('click', shuffleClicked);
-    backButton.addEventListener('click', backClicked);
-    playButton.addEventListener('click', playClicked);
-    nextButton.addEventListener('click', nextClicked);
-    loopButton.addEventListener('click', loopClicked);
-    return
-}
-
-/* function monkeys, that do something, and that in the future will just call other functions... ( from an import ) */
-function shuffleClicked() {
-    PLAYBACK_handle_shuffle_queue();
-    return
-}
-
-function backClicked() {
-    PLAYBACK_handle_PLAYER_backButton();
-    return
-}
-
-function playClicked() {
-    PLAYBACK_handle_PLAYER_playButton();
-    return
-}
-
-function nextClicked() {
-    PLAYBACK_handle_PLAYER_nextButton();
-    return
-}
-
-function loopClicked() {
-    PLAYBACK_handle_PLAYER_loopButton();
+    shuffleButton.addEventListener('click', PLAYBACK_handle_shuffle_queue);
+    backButton.addEventListener('click', PLAYBACK_handle_PLAYER_backButton);
+    playButton.addEventListener('click', PLAYBACK_handle_PLAYER_playButton);
+    nextButton.addEventListener('click', PLAYBACK_handle_PLAYER_nextButton);
+    loopButton.addEventListener('click', PLAYBACK_handle_PLAYER_loopButton);
     return
 }
 
 /* adds the filters and changes the icons of the playback controls */
 export function shuffleStateChange(state) {
     /* takes in two possible values: on or off */
-    const shuffleButton = document.getElementById("PLAYERshuffleButton");
     const shuffleIcon = document.getElementById("PLAYERshuffleIcon");
 
     if (state === "on") {
@@ -65,7 +38,6 @@ export function shuffleStateChange(state) {
 
 export function loopStateChange(state) {
     /* takes in three possible values: off, on, song */
-    const loopButton = document.getElementById("PLAYERloopButton");
     const loopIcon = document.getElementById("PLAYERloopIcon");
 
     if (state === "off") {
@@ -80,7 +52,6 @@ export function loopStateChange(state) {
         return
     }
     if (state === "song") {
-        //console.log("song state");
         loopIcon.style.filter = "var(--make-svg-secondary)";
         loopIcon.src = svgImports["icons_loop_song"];
         return

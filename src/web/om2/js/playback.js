@@ -5,18 +5,24 @@ import { shuffleArray, formatTimeSeconds } from './om2.js';
 import { getProjectDetails } from './network_requests.js';
 import { updateQueue } from './queue.js';
 
+import PlaybackEventsEmitter from './eventsManager.js';
+
+
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_copy_array = [];
 export let PLAYBACK_songs_array_index = 0;
 export let PLAYBACK_current_img = "";
 export let PLAYBACK_current_song_title = "";
 export let PLAYBACK_current_song_artist = "";
+export let PLAYBACK_playing_state = "paused";
+export let PLAYBACK_loop_state = "off";
+export let PLAYBACK_shuffle_state = "off";
 
 const PLAYBACK_audio_tag = document.getElementById("audio");
 const PLAYBACK_audio_source = document.getElementById("PLAYERsource");
-let PLAYBACK_loop_state = "off";
-let PLAYBACK_shuffle_state = "off";
-let PLAYBACK_playing_state = "paused";
+const playbackEventsEmitter = new PlaybackEventsEmitter;
+
+export { playbackEventsEmitter };
 
 /* this functions is responsible for taking in an array of song data, as it is recieved from the database, and
 then formatting into what playback.js can understand. In this particular case this function clears the playback array
@@ -175,7 +181,9 @@ function PLAYBACK_playPause_song() {
         //play the audio
 
         playStateChange("playing")
+
         PLAYBACK_playing_state = "playing";
+        playbackEventsEmitter.emit("playbackStateChange", PLAYBACK_playing_state);
         PLAYBACK_audio_tag.play()
             .then(_ => PLAYBACK_update_external_metadata())
             .catch(error => console.log(error));
@@ -184,7 +192,7 @@ function PLAYBACK_playPause_song() {
     } else {
         //pause the audio
         PLAYBACK_playing_state = "paused";
-
+        playbackEventsEmitter.emit("playbackStateChange", PLAYBACK_playing_state);
         playStateChange("paused")
         PLAYBACK_audio_tag.pause();
         navigator.mediaSession.playbackState = 'paused';
@@ -240,6 +248,7 @@ export function PLAYBACK_GET_progress() {
 export function PLAYBACK_handle_shuffle_queue() {
     if (PLAYBACK_shuffle_state === "off") {
         PLAYBACK_shuffle_state = "on";
+        playbackEventsEmitter.emit("shuffleStateChange", PLAYBACK_shuffle_state);
         shuffleStateChange(PLAYBACK_shuffle_state);
 
         const items_after_currently_playing = PLAYBACK_songs_array_index + 1;
@@ -254,6 +263,8 @@ export function PLAYBACK_handle_shuffle_queue() {
         updateQueue();
     } else {
         PLAYBACK_shuffle_state = "off";
+        playbackEventsEmitter.emit("shuffleStateChange", PLAYBACK_shuffle_state);
+
         shuffleStateChange(PLAYBACK_shuffle_state);
         const copy = [...PLAYBACK_songs_copy_array];
 
@@ -301,7 +312,10 @@ function PLAYBACK_start_playback() {
             .then(_ => PLAYBACK_update_external_metadata())
             .catch(error => console.log(error));
         playStateChange("playing");
+        playbackEventsEmitter.emit("playbackStateChange", "playing");
+
     } else {
+        playbackEventsEmitter.emit("playbackStateChange", "paused");
         playStateChange("paused");
     }
 
@@ -321,6 +335,7 @@ function PLAYBACK_start_without_playback_and_update_progress(progress) {
     PLAYBACK_audio_tag.load();
     PLAYBACK_audio_tag.currentTime = progress;
     playStateChange("paused");
+    playbackEventsEmitter.emit("playbackStateChange", "paused");
     PLAYBACK_update_top();
     PLAYBACK_time_updates();
 }
@@ -346,6 +361,16 @@ function PLAYBACK_time_updates() {
         root.style.setProperty('--LCD-seekbar-indicator-left', progressPercentFormatted);
         scrubInput.value = progressPercent;
         updatePositionState();
+
+        const timeData = {
+            timeProgressed: timeLeftFormatted,
+            timeRemaining: timeRightFormatted,
+            progressPercent,
+            progressPercentFormatted,
+        }
+
+        playbackEventsEmitter.emit("progressStateChange", timeData);
+
     });
 }
 
@@ -366,6 +391,11 @@ function PLAYBACK_update_top() {
     PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
     updateQueue();
+
+    playbackEventsEmitter.emit("newTrackStateChange", PLAYBACK_songs_array[PLAYBACK_songs_array_index]);
+
+
+    document.title = `${PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name} by ${PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors} playing on Orange Music`;
 }
 
 function PLAYBACK_update_external_metadata() {
@@ -390,7 +420,6 @@ function PLAYBACK_update_external_metadata() {
 
     updatePositionState();
 
-    document.title = `${track.song_name} by ${track.project_contributors} playing on Orange Music`;
 }
 
 function updatePositionState() {
@@ -499,16 +528,22 @@ function PLAYBACK_change_loop_state() {
     if (PLAYBACK_loop_state == "off") {
         PLAYBACK_loop_state = "on";
         loopStateChange(PLAYBACK_loop_state);
+        playbackEventsEmitter.emit("loopStateChange", PLAYBACK_loop_state);
+
     }
     // loop state song
     else if (PLAYBACK_loop_state == "on") {
         PLAYBACK_loop_state = "song"
         loopStateChange(PLAYBACK_loop_state);
+        playbackEventsEmitter.emit("loopStateChange", PLAYBACK_loop_state);
+
     }
     // loop state off
     else {
         PLAYBACK_loop_state = "off"
         loopStateChange(PLAYBACK_loop_state);
+        playbackEventsEmitter.emit("loopStateChange", PLAYBACK_loop_state);
+
     }
 }
 
