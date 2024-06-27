@@ -5,9 +5,9 @@ import { generateUniqueID } from './om2.js';
 
 let gl, program, vertexShader, fragmentShader, positionBuffer, requestID;
 const resources = { program, vertexShader, fragmentShader, positionBuffer };
+let colours = [];
 
-export function attachVisualiserToRoot(root, colours) {
-
+export function attachVisualiserToRoot(root, initialColours) {
     root.innerHTML = "";
 
     // add canvas to root
@@ -21,7 +21,7 @@ export function attachVisualiserToRoot(root, colours) {
 
     if (!gl) {
         console.error('WebGL not supported');
-        HandleCreateNotification("WebGL not supported", "error")
+        HandleCreateNotification("WebGL not supported", "error");
         return;
     }
 
@@ -37,21 +37,12 @@ void main() {
 }
 `;
 
-    /*
-        Dithering function found from https://blog.frost.kiwi/GLSL-noise-and-radial-gradient/
-
-        Originally sourced from Jorge Jimenez's
-            http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
-
-    */
-
     const fragmentShaderSource = `
 precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec3 u_colors[5];
 
-/* Gradient noise function */
 float gradientNoise(in vec2 uv)
 {
     return fract(52.9829189 * fract(dot(uv, vec2(0.06711056, 0.00583715))));
@@ -94,7 +85,6 @@ void main() {
     color = mix(color, u_colors[3], abs(sin(t * 0.5)));
     color = mix(color, u_colors[4], blobs);
 
-    // Adding noise dithering
     float noiseValue = gradientNoise(gl_FragCoord.xy);
     color += (1.0 / 255.0) * noiseValue - (0.5 / 255.0);
 
@@ -150,6 +140,8 @@ void main() {
         colorLocations.push(gl.getUniformLocation(program, `u_colors[${i}]`));
     }
 
+    colours = initialColours.map(hexToRgb);
+
     function render(time) {
         time *= 0.001;
 
@@ -165,8 +157,7 @@ void main() {
         gl.uniform1f(timeLocation, time);
 
         for (let i = 0; i < 5; i++) {
-            const color = hexToRgb(colours[i]);
-            gl.uniform3fv(colorLocations[i], color);
+            gl.uniform3fv(colorLocations[i], colours[i]);
         }
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -186,7 +177,6 @@ void main() {
         }
     }
 
-    // Save resources for cleanup
     resources.program = program;
     resources.vertexShader = vertexShader;
     resources.fragmentShader = fragmentShader;
@@ -208,23 +198,18 @@ function hexToRgb(hex) {
 function cleanupWebGL(gl, resources) {
     if (!gl) return;
 
-    // Detach shaders from program
     if (resources.program && resources.vertexShader && resources.fragmentShader) {
         gl.detachShader(resources.program, resources.vertexShader);
         gl.detachShader(resources.program, resources.fragmentShader);
     }
 
-    // Delete shaders
     if (resources.vertexShader) gl.deleteShader(resources.vertexShader);
     if (resources.fragmentShader) gl.deleteShader(resources.fragmentShader);
 
-    // Delete program
     if (resources.program) gl.deleteProgram(resources.program);
 
-    // Delete buffers
     if (resources.positionBuffer) gl.deleteBuffer(resources.positionBuffer);
 
-    // Lose context
     const loseContext = gl.getExtension('WEBGL_lose_context');
     if (loseContext) loseContext.loseContext();
 }
@@ -235,4 +220,8 @@ export function detachVisualiserFromRoot() {
         requestID = null;
     }
     cleanupWebGL(gl, resources);
+}
+
+export function updateVisualiserColors(root, newColours) {
+    colours = newColours.map(hexToRgb);
 }

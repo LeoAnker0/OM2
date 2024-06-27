@@ -1,7 +1,7 @@
 // musicEnjoy.js
 
 import { PLAYBACK_songs_array, PLAYBACK_songs_array_index, PLAYBACK_playing_state, PLAYBACK_current_img, PLAYBACK_current_song_title, PLAYBACK_current_song_artist, PLAYBACK_handle_PLAYER_playButton, PLAYBACK_handle_PLAYER_nextButton, PLAYBACK_handle_PLAYER_backButton, PLAYBACK_handle_PLAYER_loopButton, PLAYBACK_handle_shuffle_queue, PLAYBACK_loop_state, PLAYBACK_shuffle_state } from './playback.js';
-import { attachVisualiserToRoot, detachVisualiserFromRoot } from './visualiser.js';
+import { attachVisualiserToRoot, detachVisualiserFromRoot, updateVisualiserColors } from './visualiser.js';
 import { replaceSVGplaceholdersForAddressFromString } from './om2.js';
 import { getKeyColoursFromImage } from './getImageColours.js';
 import { svgImports } from './importAssets.js';
@@ -11,6 +11,7 @@ import MusicEnjoyMainHTML from '../html/musicEnjoy_main.html?raw';
 import { playbackEventsEmitter } from './playback.js';
 
 let musicEnjoyVisible = false;
+let colours, root;
 
 export function init_musicEnjoy() {
     // Load in the html that creates musicEnjoy
@@ -98,14 +99,6 @@ export function init_musicEnjoy() {
 
 }
 
-async function doBackgroundThings() {
-    const colours = await getKeyColoursFromImage(PLAYBACK_current_img);
-
-    // Set background
-    const root = document.getElementById("MUSICENJOYMODEbackground");
-    attachVisualiserToRoot(root, colours)
-}
-
 function updateMusicEnjoyPlaybackDetails() {
     const musicEnjoyCoverImage1 = document.getElementById("MUSICENJOYMODEcoverImage1");
     const musicEnjoyCoverImage2 = document.getElementById("MUSICENJOYMODEcoverImage2");
@@ -119,10 +112,10 @@ function updateMusicEnjoyPlaybackDetails() {
     musicEnjoyTitle2.innerText = PLAYBACK_current_song_title;
     musicEnjoyArtist.innerText = PLAYBACK_current_song_artist
 
-    detachVisualiserFromRoot();
-    doBackgroundThings();
     updateStateOfMusicEnjoyLoopButton();
     updateStateOfMusicEnjoyShuffleButton();
+
+    updateColoursOnCanvas();
 }
 
 function updateStateOfMusicEnjoyPlayButton() {
@@ -148,12 +141,12 @@ function updateStateOfMusicEnjoyLoopButton() {
         return
     }
     if (PLAYBACK_loop_state === "on") {
-        loopIcon.style.filter = "var(--make-svg-secondary)";
+        loopIcon.style.filter = "var(--make-svg-grey-3)";
         loopIcon.src = svgImports["icons_loop"];
         return
     }
     if (PLAYBACK_loop_state === "song") {
-        loopIcon.style.filter = "var(--make-svg-secondary)";
+        loopIcon.style.filter = "var(--make-svg-grey-3)";
         loopIcon.src = svgImports["icons_loop_song"];
         return
     }
@@ -163,7 +156,7 @@ function updateStateOfMusicEnjoyShuffleButton() {
     const shuffleIcon = document.getElementById("MUSICENJOYMODEplaybackControlsButton_shuffle_icon");
 
     if (PLAYBACK_shuffle_state === "on") {
-        shuffleIcon.style.filter = "var(--make-svg-secondary)";
+        shuffleIcon.style.filter = "var(--make-svg-grey-3)";
         return
     }
     if (PLAYBACK_shuffle_state === "off") {
@@ -181,7 +174,22 @@ async function openMusicEnjoy() {
 
     updateMusicEnjoyPlaybackDetails();
     updateStateOfMusicEnjoyPlayButton();
+
+    await updateColoursFromImage();
+    root = document.getElementById("MUSICENJOYMODEbackground");
+    attachVisualiserToRoot(root, colours)
 }
+
+async function updateColoursFromImage() {
+    colours = await getKeyColoursFromImage(PLAYBACK_current_img);
+}
+
+async function updateColoursOnCanvas() {
+    await updateColoursFromImage();
+    updateVisualiserColors(root, colours);
+}
+
+
 
 function closeMusicEnjoy() {
     const musicEnjoyEnvironment = document.getElementById("musicEnjoyEnvironment");
