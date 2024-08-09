@@ -15,7 +15,7 @@
     --content-inset: 0.4rem;
     --content-inset-colour: var(--outline-and-back);
     --top-outline-colour: var(--accent-soft);
-    --top-outline-colour: var(--lgrey);
+    --top-outline-colour: var(--lgrey-r);
 
     --playercontrols-outline-colour: var(--lgrey-0);
 }

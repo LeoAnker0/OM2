@@ -60,12 +60,20 @@
     transition: height 0.1s ease-in-out;
     display: grid;
     grid-template-areas:
-        "MOG-image MOG-play MOG-text MOG-date MOG-menu"
+        "MOG-image MOG-text MOG-date MOG-menu"
     ;
-    grid-template-columns: 4rem 2.5rem calc(100% - 12rem) 2.5rem 3rem;
+    grid-template-columns: 4rem 1fr 2.5rem 3rem;
 
     border-radius: 8px;
 }
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOG-itemContainer {
+        grid-template-columns: 5rem 1fr 2.5rem 3rem;
+
+    }
+}
+
 
 .MOG-itemContainer:hover {
     cursor: pointer;
@@ -98,6 +106,14 @@
     background-color: var(--grey);
 }
 
+.MOG-itemContainer:hover .MOG-itemImageContainer div {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 15px 30px -6px inset, rgba(0, 0, 0, 0.3) 0px 9px 18px -9px inset;
+
+    div {
+        opacity: 100%;
+    }
+}
+
 .MOG-itemImageContainer {
     grid-area: MOG-image;
     position: relative;
@@ -107,17 +123,68 @@
     aspect-ratio: 1/1;
     border-radius: 6px;
     overflow: hidden;
-    pointer-events: none;
+    pointer-events: auto;
+
+    div {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+        display: grid;
+        align-items: center;
+        box-shadow: ;
+        transition-duration: 0.1s;
+        transition-property: box-shadow;
+        pointer-events: none;
+
+        div {
+            height: 100%;
+            aspect-ratio: 1/1;
+            display: grid;
+            place-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0%;
+            /*transition-duration: 0.1s;
+            transition-property: opacity;*/
+
+            img {
+                position: relative;
+                height: 1rem;
+                aspect-ratio: 1/1;
+                pointer-events: none;
+
+                filter: var(--make-svg-grey);
+            }
+        }
+
+    }
+
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        top: 0;
+        left: 0;
+        position: relative;
+        pointer-events: none;
+    }
 }
 
-.MOG-itemImageContainer img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    top: 0;
-    left: 0;
-    position: relative;
-    pointer-events: none;
+/*
+    when mobile disable these things
+
+    MOG-itemImageContainer
+*/
+
+@media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
+    .MOG-itemImageContainer {
+        pointer-events: none;
+
+        div {
+            display: none;
+        }
+    }
 }
 
 .MOG-itemTextContainer {
@@ -161,42 +228,6 @@
     display: grid;
     align-items: center;
     text-align: right;
-}
-
-.MOG-item-controls-play {
-    grid-area: MOG-play;
-    height: 100%;
-    width: 100%;
-    display: grid;
-    align-items: center;
-}
-
-.MOG-item-controls-play div {
-    height: 2rem;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.MOG-itemContainer:hover .MOG-item-controls-play {
-    opacity: 100%;
-}
-
-.MOG-item-controls-play:hover div {
-    background-color: var(--MOG-hover-background);
-}
-
-.MOG-item-controls-play img {
-    position: relative;
-    height: 1rem;
-    width: 1rem;
-    left: 0.1rem;
-    pointer-events: none;
-
-    filter: var(--make-svg-black);
 }
 
 .MOG-item-controls-menu {
