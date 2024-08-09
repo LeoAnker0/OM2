@@ -1,5 +1,8 @@
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+import { PLAYBACK_songs_array } from './playback.js';
+import { handleRoute } from './routing.js';
 import { is_mobile } from './om2.js';
-import { MENUdisplay } from './menu.js';
+
 
 
 export function initialiseLCD() {
@@ -14,14 +17,6 @@ export function initialiseLCD() {
     });
 
     setEventListenersForPlaybackSeek();
-
-    //when mobile, then add event listener to LCDbody
-    /*
-    if (is_mobile()) {
-        const LCDbody = document.getElementById("LCDbody");
-        LCDbody.addEventListener("click", open_mobile_lcd_body);
-    }*/
-
 }
 
 function open_mobile_lcd_body(event) {
@@ -137,27 +132,44 @@ export function resizeTitleText() {
 
 
 
-function handleQueueDisplayMenu(event) {
+async function handleQueueDisplayMenu(event) {
     event.stopPropagation();
     const clickedItem = event.target;
-    //const songId = clickedItem.getAttribute('data-song-set');
-    const songId = "cheese";
+    const songId = clickedItem.dataset.songId;
 
     const params = [{
-        displayText: 'Menu 1',
-        optionalSVG: 'icons_helpIcon',
-        function: 'None',
+        displayText: 'Go to song',
+        optionalSVG: 'None',
+        function: 'True',
+        condition: "goto",
         optionalParams: {
-            queueID: songId
+            songId: songId
         }
 
-    }, {
-        displayText: 'Bentulou',
-        optionalSVG: 'icons_settings',
-        function: 'None',
     }]
 
-    MENUdisplay(params, event);
+    const result = await MENUdisplay(params, event, "return_promise");
+
+    // when condition = goto
+    if (result.condition == "goto") {
+        const songId = result.optionalParams.songId;
+        let projectID;
+
+        for (var i = PLAYBACK_songs_array.length - 1; i >= 0; i--) {
+            const url = PLAYBACK_songs_array[i].url;
+            if (url == songId) {
+                projectID = PLAYBACK_songs_array[i].project_id;
+                break
+            }
+
+        }
+
+        if (projectID != null) {
+            handleRoute(`/projects/${projectID}/${songId}`);
+        }
+    }
+    menuHide_foreign();
+
     return;
 }
 

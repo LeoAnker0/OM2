@@ -21,10 +21,10 @@ import { is_mobile } from './om2.js';
 let previously_focused_element;
 let queue_displayed = false;
 
-export function MENUdisplay(params, event, menu_type) {
+export async function MENUdisplay(params, event, menu_type) {
     //undefined    
     if (menu_type === undefined) {
-        handle_normal_context_menu(params, event);
+        handle_normal_context_menu(params, event, false);
     }
 
     //defined and type == update_project_image
@@ -34,343 +34,127 @@ export function MENUdisplay(params, event, menu_type) {
         handle_update_project_image(params, event, "update_user_pfp");
     }
 
-    //defined and type == lcd_mobile_body
-    else if ((menu_type !== undefined) && menu_type === "lcd_mobile_body") {
-        handle_lcd_mobile_body(params, event);
-    } else {
-        console.log("invalid menu display inputs")
+    // defined and type == return_promise
+    else if ((menu_type !== undefined) && menu_type === "return_promise") {
+        const result = await handle_normal_context_menu(params, event, true)
+        return result;
     }
+
+
 }
 
-function handle_lcd_mobile_body(params) {
-    const main = document.querySelector("main");
-    const navBar = document.querySelector(".topHalf-container");
-    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
-    let replacedContent = lcd_mobile_body;
-    const PLAYBACK_audio_tag = document.getElementById("audio");
-    const classesToTarget = [
-        'LCD_mobile_body_container_l2', 'LCD_mobile_body_img',
-        'LCD_mobile_body_title_area_container', 'LCD_mobile_body_song_title',
-        'LCD_mobile_body_artist_title', 'LCD_mobile_body_progress_bar',
-        'LCD_mobile_body_menu', 'LCD_mobile_body_queue_container', 'LCD_mobile_body_secondary_seek_indicator'
-    ];
-    let touchStartY = 0;
-    let touchEndY = 0;
+async function handle_normal_context_menu(params, event, returnPromise) {
+    return new Promise((resolve, reject) => {
+        previously_focused_element = document.activeElement;
+        let X = event.clientX;
+        let Y = event.clientY;
+        const main = document.querySelector("main");
+        const navBar = document.querySelector(".topHalf-container");
 
-    if (is_mobile()) {
-        main.style.zIndex = "40";
-        navBar.style.zIndex = "0";
-    }
-    for (const [placeholder, value] of Object.entries(svgImports)) {
-        const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-        replacedContent = replacedContent.replace(regex, value);
-    }
-    MENUmodalEnvironment.style.display = "block";
-    MENUmodalEnvironment.innerHTML = replacedContent;
-
-    const title = document.getElementById("LCD_mobile_body_song_title");
-    const artist = document.getElementById("LCD_mobile_body_artist_title");
-    const image = document.getElementById("LCD_mobile_body_img");
-    const endOfAudio = PLAYBACK_audio_tag.duration;
-    const currentTime = PLAYBACK_audio_tag.currentTime;
-    const progressPercent = (currentTime / endOfAudio) * 100;
-    const playbackSeek = document.getElementById("LCDMB_seek_input");
-    const playbackSeekIndicator = document.getElementById("LCDMB_seek_indicator");
-    const menuButton = document.getElementById("LCDMB_menu_button");
-    const backButton = document.getElementById("LCDMB_back");
-    const playButton = document.getElementById("LCDMB_play");
-    const playIcon = document.getElementById("LCDMB_play_icon");
-    const nextButton = document.getElementById("LCDMB_next");
-    const queueButton = document.getElementById("LCDMB_queue_button");
-
-    PLAYBACK_audio_tag.addEventListener('ended', () => {
-        update_display();
-        if (queue_displayed === true) {
-            load_mobile_queue();
+        if (is_mobile()) {
+            main.style.zIndex = "40";
+            navBar.style.zIndex = "0";
         }
-    });
 
-    update_display();
-    is_audio_paused();
-    playbackSeekIndicator.style.width = `${progressPercent}%`;
-    PLAYBACK_audio_tag.addEventListener("timeupdate", () => {
-        const endOfAudio = PLAYBACK_audio_tag.duration;
-        const currentTime = PLAYBACK_audio_tag.currentTime;
-        const progressPercent = (currentTime / endOfAudio) * 100;
-        playbackSeekIndicator.style.width = `${progressPercent}%`;
-    });
+        const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
+        MENUmodalEnvironment.innerHTML = menuModal;
+        MENUmodalEnvironment.style.display = "block";
 
-    playbackSeek.addEventListener("input", function() {
-        const endOfAudio = PLAYBACK_audio_tag.duration;
-        const value = playbackSeek.value;
-        PLAYBACK_audio_tag.currentTime = ((endOfAudio) * (value / 100));
-    });
+        const MENUmodalBody = document.getElementById('MENUmodalBody');
+        let x = X + "px";
+        let y = Y + "px";
 
-    backButton.addEventListener('click', () => {
-        PLAYBACK_handle_PLAYER_backButton()
-        update_display();
-        if (queue_displayed === true) {
-            load_mobile_queue();
-        }
-    })
+        MENUmodalEnvironment.addEventListener('click', menuHide);
+        MENUmodalBody.style.left = x;
+        MENUmodalBody.style.top = y;
 
-    playButton.addEventListener('click', () => {
-        PLAYBACK_handle_PLAYER_playButton();
-        update_display();
-        is_audio_paused();
-    })
+        let interactType = "mouse";
 
-    nextButton.addEventListener('click', () => {
-        PLAYBACK_handle_PLAYER_nextButton();
-        update_display();
-        if (queue_displayed === true) {
-            load_mobile_queue();
-        }
-    })
-
-
-    queueButton.addEventListener('click', () => {
-        if (queue_displayed === false) {
-            display_mobile_queue();
-            queue_displayed = true
+        if ((event.webkitForce == 1) || (event.webkitForce == 0)) {
+            if (event.webkitForce == 0) {
+                interactType = "keyboard";
+            }
         } else {
-            hide_mobile_queue();
-            queue_displayed = false;
+            if (event.pointerType !== "mouse") {
+                interactType = "keyboard";
+            }
         }
 
-    })
-    if (queue_displayed === true) {
-        display_mobile_queue();
-    } else {
-        hide_mobile_queue();
-    }
-
-    MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
-    MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
-    MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
-
-    function update_display() {
-        image.src = PLAYBACK_current_img;
-        title.innerText = PLAYBACK_current_song_title;
-        artist.innerText = PLAYBACK_current_song_artist;
-
-        updateDisplayVisualiser();
-    }
-
-    async function updateDisplayVisualiser() {
-        const colours = await getKeyColoursFromImage(PLAYBACK_current_img);
-        const root = document.getElementById("LCD_mobile_body_background");
-
-        attachVisualiserToRoot(root, colours);
-    }
-
-    function is_audio_paused() {
-        if (PLAYBACK_audio_tag.paused) {
-            playIcon.src = svgImports["icons_playButtonV2"];
-        } else {
-            playIcon.src = svgImports["icons_derpy"];
+        if (interactType === "keyboard") {
+            const rect = previously_focused_element.getBoundingClientRect();
+            X = rect.left + window.scrollX;
+            Y = rect.top + window.scrollY;
+            x = X + "px";
+            y = Y + "px";
+            MENUmodalBody.style.left = x;
+            MENUmodalBody.style.top = y;
         }
-    }
 
+        for (let i = 0; i < params.length; i++) {
+            addModalItem(params[i]);
+        }
 
-    function load_mobile_queue() {
-        const mobile_queue_container = document.getElementById("LCD_mobile_queue_content_container");
-        mobile_queue_container.innerHTML = "";
+        const children = MENUmodalBody.children;
+        const first_button = children[0];
+        const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
+        const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
+        const overflowStates = showElementDetails('MENUmodalBody');
+        const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
 
-        for (let i = (PLAYBACK_songs_array_index + 1); i < PLAYBACK_songs_array.length; i++) {
-            const song = PLAYBACK_songs_array[i];
-            const listOfThings = ['queue_item_img', 'queue_item_song_name', 'queue_item_song_artist', 'icons_menuOptionsButton', 'QUEUE_item_timeIndicator'];
-            const imgSrc = song.img;
-            const songTitle = song.song_name;
-            const songArtist = song.project_contributors;
-            let replacedContent = lcd_mobile_queue_item;
+        if (interactType === "keyboard" && !is_mobile()) {
+            first_button.focus();
+        } else if (interactType == "mouse" && !is_mobile()) {
+            first_button.focus();
+            first_button.blur();
+        }
 
-            for (let i = 0; i < listOfThings.length; i++) {
-                const placeholder = listOfThings[i].toString();
-                const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
-                let value = '';
+        document.addEventListener('keydown', handleEscapeKey);
 
-                if (placeholder === 'queue_item_img') {
-                    const image = `${MAIN_CONST_EXPORT_mediaPath}/${imgSrc}/3`;
-                    value = image;
-                } else if (placeholder === 'queue_item_song_name') {
-                    value = songTitle;
-                } else if (placeholder === 'queue_item_song_artist') {
-                    value = songArtist;
+        if (overflowStates.xOverflow === true) {
+            x = (X - MENUmodalBodyWidth) + "px";
+            MENUmodalBody.style.left = x;
+        }
+        if (overflowStates.yOverflow === true) {
+            y = (Y - MENUmodalBodyHeight) + "px";
+            MENUmodalBody.style.top = y;
+        }
+
+        for (let i = 0; i < menuItems.length; i++) {
+            const menuItem = menuItems[i];
+            menuItem.setAttribute('data-menu-item-id', i);
+
+            menuItem.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const clickedElement = event.target;
+                const menuItemId = clickedElement.getAttribute('data-menu-item-id');
+                const functionToCall = params[menuItemId].function;
+                const optionalParams = params[menuItemId].optionalParams;
+
+                if (functionToCall == "TEST") {
+                    console.log("the button worked", optionalParams);
+                } else if (functionToCall != "None") {
+                    if (returnPromise === true) {
+                        const condition = params[menuItemId].condition;
+                        const returnStruct = { condition, optionalParams };
+                        resolve(returnStruct); // Resolve the promise with the return value
+                        return;
+                    }
+
+                    MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
+                    return;
+                } else {
+                    return;
                 }
-
-                replacedContent = replacedContent.replace(regex, value);
-            }
-            mobile_queue_container.innerHTML += replacedContent;
-        }
-    }
-
-    function display_mobile_queue() {
-        function addQueueVisibleClassToElements(classes) {
-            classes.forEach(className => {
-                const elementsWithClass = document.querySelectorAll('.' + className);
-                elementsWithClass.forEach(element => {
-                    element.classList.add('queue_visible');
-                });
-            });
-        }
-        addQueueVisibleClassToElements(classesToTarget);
-        MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
-        MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
-        MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
-        load_mobile_queue();
-    }
-
-    function hide_mobile_queue() {
-        function removeQueueVisibleClassToElements(classes) {
-            classes.forEach(className => {
-                const elementsWithClass = document.querySelectorAll('.' + className);
-                elementsWithClass.forEach(element => {
-                    element.classList.remove('queue_visible');
-                });
             });
         }
 
-        removeQueueVisibleClassToElements(classesToTarget);
-        MENUmodalEnvironment.addEventListener('touchstart', handleTouchStart, false);
-        MENUmodalEnvironment.addEventListener('touchmove', handleTouchMove, false);
-        MENUmodalEnvironment.addEventListener('touchend', handleTouchEnd, false);
-    }
-
-    function handleTouchStart(event) {
-        if (queue_displayed === false) {
-            touchStartY = event.touches[0].clientY;
-        }
-    }
-
-    function handleTouchMove(event) {
-        event.preventDefault();
-    }
-
-    function handleTouchEnd(event) {
-        touchEndY = event.changedTouches[0].clientY;
-        const deltaY = touchEndY - touchStartY;
-        const swipeThreshold = 70; // Adjust this value as needed
-
-        if (deltaY > swipeThreshold) {
-            menuHide_foreign();
-            MENUmodalEnvironment.removeEventListener('touchstart', handleTouchStart);
-            MENUmodalEnvironment.removeEventListener('touchmove', handleTouchMove);
-            MENUmodalEnvironment.removeEventListener('touchend', handleTouchEnd);
-        }
-    }
-}
-
-function handle_normal_context_menu(params, event) {
-    previously_focused_element = document.activeElement;
-    //const pointerType = event.pointerType;
-    let X = event.clientX;
-    let Y = event.clientY;
-    const main = document.querySelector("main");
-    const navBar = document.querySelector(".topHalf-container");
-    if (is_mobile()) {
-        main.style.zIndex = "40";
-        navBar.style.zIndex = "0";
-    }
-    const MENUmodalEnvironment = document.getElementById('MENUmodalEnvironment');
-    MENUmodalEnvironment.innerHTML = menuModal;
-    MENUmodalEnvironment.style.display = "block";
-
-    const MENUmodalBody = document.getElementById('MENUmodalBody');
-    let x = (X) + "px";
-    let y = (Y) + "px";
-
-    MENUmodalEnvironment.addEventListener('click', menuHide);
-    MENUmodalBody.style.left = x;
-    MENUmodalBody.style.top = y;
-
-    let interactType = "mouse";
-
-    // set interactType in a sane way. with compatability for webkit and chromium
-    if ((event.webkitForce == 1) || (event.webkitForce == 0)) {
-        if (event.webkitForce == 0) {
-            interactType = "keyboard";
-        }
-    } else {
-        if (event.pointerType !== "mouse") {
-            interactType = "keyboard";
-        }
-    }
-
-
-    if (interactType == "keyboard") {
-        const rect = previously_focused_element.getBoundingClientRect();
-        X = rect.left + window.scrollX;
-        Y = rect.top + window.scrollY;
-        let x = (X) + "px";
-        let y = (Y) + "px";
-        MENUmodalBody.style.left = x;
-        MENUmodalBody.style.top = y;
-    }
-
-    for (let i = 0; i < params.length; i++) {
-        addModalItem(params[i])
-    }
-
-    const children = MENUmodalBody.children;
-    const first_button = children[0];
-    const MENUmodalBodyWidth = MENUmodalBody.offsetWidth;
-    const MENUmodalBodyHeight = MENUmodalBody.offsetHeight;
-    const overflowStates = showElementDetails('MENUmodalBody')
-    const menuItems = MENUmodalBody.getElementsByClassName('MENUmodalItemContainer');
-
-
-    if ((interactType === "keyboard") && !is_mobile()) {
-        first_button.focus();
-    } else if ((interactType == "mouse") && !is_mobile()) {
-        first_button.focus();
-        /* Find some other solution than blur, which will hide the stylings for that first button
-        this is neccessary because webkit is a little annoying, and perhaps there is a better way of 
-        dealing with this.
-        */
-
-        first_button.blur();
-    }
-
-    document.addEventListener('keydown', handleEscapeKey);
-
-    if (overflowStates.xOverflow == true) {
-        x = (X - MENUmodalBodyWidth) + "px";
-        MENUmodalBody.style.left = x;
-    }
-    if (overflowStates.yOverflow == true) {
-        y = (Y - MENUmodalBodyHeight) + "px";
-        MENUmodalBody.style.top = y;
-    }
-
-    for (let i = 0; i < menuItems.length; i++) {
-        const menuItem = menuItems[i];
-        menuItem.setAttribute('data-menu-item-id', i);
-        menuItem.addEventListener('click', function(event) {
-            event.stopPropagation();
-            const clickedElement = event.target;
-            const menuItemId = clickedElement.getAttribute('data-menu-item-id');
-            const functionToCall = params[menuItemId].function;
-            const optionalParams = params[menuItemId].optionalParams;
-
-            if (functionToCall == "TEST") {
-                console.log("the button worked", optionalParams);
-            } else if (functionToCall != "None") {
-                MENU_ACTION_FUNCTIONS[functionToCall](optionalParams);
-                return;
-            } else {
-                return;
-
+        function handleEscapeKey(event) {
+            if (event.key === 'Escape' || event.keyCode === 27) {
+                document.removeEventListener('keydown', handleEscapeKey);
+                menuHide_foreign();
             }
-        });
-    }
-
-    function handleEscapeKey(event) {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            document.removeEventListener('keydown', handleEscapeKey);
-            menuHide_foreign();
         }
-    }
+    });
 }
 
 function handle_update_project_image(params, event, menu_type) {

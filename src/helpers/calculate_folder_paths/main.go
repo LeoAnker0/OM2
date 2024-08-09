@@ -7,8 +7,8 @@ import (
 
 func main() {
     // Define the two folder paths
-    folder1 := "/Users/Leo/Documents/programming/web/orange-music-2/src/web/om2"
-    folder2 := "/Users/Leo/Documents/programming/web/orange-music-2/src/apis/go_api/static_web/"
+    folder1 := "/Users/Leo_1/Documents/programming/web/adaptive-static-html-rendering/src/frontend/admin-server-web-interface"
+    folder2 := "/Users/Leo_1/Documents/programming/web/adaptive-static-html-rendering/src/backend/global-resources/admin-server/core-web"
 
     // Calculate the relative path
     relativePath, err := filepath.Rel(folder1, folder2)

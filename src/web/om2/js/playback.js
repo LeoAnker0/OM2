@@ -37,6 +37,8 @@ export function PLAYBACK_handle_input_project_details_array_with_start_playback(
         PLAYBACK_playing_state = "playing";
         PLAYBACK_start_playback()
     }
+
+
 }
 export function PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle(project_details) {
     PLAYBACK_songs_array = [];
@@ -56,6 +58,7 @@ function PLAYBACK_prepare_project_details_array(project_details) {
     const project_contributors = project_details.ProjectContributors;
     const project_name = project_details.ProjectName;
     const picture_url = project_details.PictureURL;
+    const projectID = project_details.ProjectID;
     let projectJSON = project_details.ProjectJSON;
 
     try {
@@ -70,7 +73,8 @@ function PLAYBACK_prepare_project_details_array(project_details) {
                 "url": url,
                 "duration": duration,
                 "project_name": project_name,
-                "project_contributors": project_contributors
+                "project_contributors": project_contributors,
+                "project_id": projectID
             })
         }
     } catch (e) {
@@ -380,6 +384,7 @@ function PLAYBACK_update_top() {
     const LCDbottomText = document.getElementById("LCDbottomText");
     const LCDimage = document.getElementById("LCDimage");
     const LCDimageMobile = document.getElementById("LCDimageMobile");
+    const LCDmenuButton = document.getElementById("LCDmenuButton");
 
     LCDtitleText.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     LCDtitleTextMobile.innerHTML = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
@@ -390,6 +395,8 @@ function PLAYBACK_update_top() {
     PLAYBACK_current_img = `${MAIN_CONST_EXPORT_mediaPath}/${PLAYBACK_songs_array[PLAYBACK_songs_array_index].img}/5`;
     PLAYBACK_current_song_title = PLAYBACK_songs_array[PLAYBACK_songs_array_index].song_name;
     PLAYBACK_current_song_artist = PLAYBACK_songs_array[PLAYBACK_songs_array_index].project_contributors;
+
+    LCDmenuButton.dataset.songId = `${PLAYBACK_songs_array[PLAYBACK_songs_array_index].url}`
     updateQueue();
 
     playbackEventsEmitter.emit("newTrackStateChange", PLAYBACK_songs_array[PLAYBACK_songs_array_index]);
