@@ -113,6 +113,13 @@
     display: none;
 }
 
+@media (prefers-color-scheme: dark) {
+    .SEARCH-ResponsesEnvironment {
+        border-right: 1px solid var(--grey);
+        border-bottom: 1px solid var(--grey);
+    }
+}
+
 /* remove the separator from the first child */
 .SEARCH-ResponsesEnvironment button:first-child::before {
     visibility: hidden;
@@ -199,7 +206,7 @@
     position: absolute;
     width: 100%;
     height: 1px;
-    background-color: var(--lgrey);
+    background-color: var(--lgrey-r);
     top: 0;
     left: 0;
 }

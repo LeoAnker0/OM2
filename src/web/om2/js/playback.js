@@ -61,6 +61,10 @@ function PLAYBACK_prepare_project_details_array(project_details) {
     const projectID = project_details.ProjectID;
     let projectJSON = project_details.ProjectJSON;
 
+    if (project_details.ProjectJSON === null) {
+        return array;
+    }
+
     try {
         for (const song of projectJSON) {
             const song_name = song.SongName;
@@ -115,6 +119,10 @@ export async function PLAYBACK_handle_add_songs_to_queue(params) {
 
     const new_array = PLAYBACK_prepare_project_details_array(details);
 
+    if (new_array.length < 1) {
+        return
+    }
+
     if (queue_position === "later") {
         PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);
         PLAYBACK_songs_copy_array = PLAYBACK_songs_copy_array.concat(new_array);
@@ -143,6 +151,10 @@ export async function PLAYBACK_handle_add_song_to_queue(details, queue_position)
 
 
     const new_array = PLAYBACK_prepare_project_details_array(details);
+
+    if (new_array.length < 1) {
+        return
+    }
 
     if (queue_position === "later") {
         PLAYBACK_songs_array = PLAYBACK_songs_array.concat(new_array);

@@ -11,7 +11,11 @@ import { initLogin } from './js/login.js';
 import { initialiseLCD } from './js/lcd.js';
 import { init_musicEnjoy } from './js/musicEnjoy.js';
 
+// fonts
 import './fonts/neue-montreal/neue-montreal.css';
+//import './fonts/NeueBit/NeueBit.css';
+
+//regular styling
 import './css/projectView_settingsBox.css';
 import './css/musicObjectGrid-mobile.css';
 import './css/confirm-action-modal.css';

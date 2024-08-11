@@ -2,9 +2,12 @@
     --font-main: 'NeueMontreal', sans-serif;
     --font-secondary: 'NeueMontreal', sans-serif;
     font-synthesis: none;
+
+    /*
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    */
 
     font-family: var(--font-main);
 
@@ -71,6 +74,8 @@
         --background: hsl(0, 00%, 10%);
         --background-transparent: hsla(0, 0%, 10%, 0.7);
         --background-transparent-subtle: hsla(0, 0%, 10%, 0.1);
+        --background-transparent-fog: hsla(0, 0%, 10%, 0.85);
+
         --make-svg-black: invert(1) invert(99%) sepia(86%) saturate(57%) hue-rotate(235deg) brightness(110%) contrast(96%);
         --make-svg-white: invert(1) invert(2%) sepia(12%) saturate(135%) hue-rotate(314deg) brightness(108%) contrast(83%);
         --text: hsl(0, 0%, 95%);
@@ -83,7 +88,7 @@
         --primary: hsl(210, 100%, 78%);
         --secondary: hsl(222, 80%, 70%);
         --secondary-weak: hsl(222, 20%, 30%);
-        --orange: hsl(40, 100%, 65%);
+        --orange: hsl(40, 100%, 40%);
 
         --accent: hsl(165, 40%, 80%);
         --accent-soft: hsl(165, 10%, 20%);
