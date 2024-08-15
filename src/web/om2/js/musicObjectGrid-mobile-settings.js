@@ -1,7 +1,10 @@
 // musicObjectGrid-mobile-settings.js
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
-import { users_image } from './loadAccountImage.js';
-import { MENUdisplay } from './menu.js';
+import { users_image, HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+import { handleRoute } from './routing.js';
+
+
 
 
 export function loadMobileSettingsButton() {
@@ -23,17 +26,25 @@ function detectMobileSettingsClick(event) {
     handleQueueDisplayMenu(event);
 }
 
-function handleQueueDisplayMenu(event) {
+async function handleQueueDisplayMenu(event) {
     const params = [{
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
-        function: 'OPEN_SETTINGS_PAGE',
+        condition: "settings",
+        function: 'True',
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'SIGN_OUT_USER',
+        condition: "signOut",
+        function: 'True',
     }];
 
-    MENUdisplay(params, event);
+    const result = await MENUdisplay(params, event, "return_promise");
+    if (result.condition == "settings") {
+        handleRoute("/settings/");
+    } else if (result.condition == "signOut") {
+        HANDLE_SIGN_OUT_USER();
+    }
+    menuHide_foreign();
     return;
 }

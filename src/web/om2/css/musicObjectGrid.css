@@ -68,9 +68,22 @@
 }
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
-    .MOG-itemContainer {
-        grid-template-columns: 5rem 1fr 2.5rem 3rem;
 
+    /* music object grid items ---- */
+    .MOG-itemContainer {
+        grid-template-areas:
+            "MOG-image MOG-text MOG-date ."
+        ;
+        grid-template-columns: 5rem 1fr 2.5rem 1rem;
+
+    }
+
+    .MOG-item-controls-menu {
+        display: none !important;
+    }
+
+    .MOG-itemCheckedDate {
+        pointer-events: none !important;
     }
 }
 

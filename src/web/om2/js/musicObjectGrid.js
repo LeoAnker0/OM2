@@ -3,13 +3,14 @@ JS for creating the music objects, and then hydrating them with dynamic data
 */
 
 import { formatTimeDaysDelta, is_mobile, replaceSVGplaceholdersForAddressFromString, REGEXreplaceInString } from './om2.js';
-import { PLAYBACK_handle_input_project_details_array_with_start_playback } from './playback.js';
+import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_add_songs_to_queue } from './playback.js';
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { loadMobileSettingsButton } from './musicObjectGrid-mobile-settings.js';
 import { getLibraryData, getProjectDetails } from './network_requests.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
 import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
-import { MENUdisplay } from './menu.js';
+
 
 import musicObjetsGridContainer from '../html/musicObjectsGridContainer.html?raw';
 import musicObjectsGridAdd from '../html/musicObjectsGridItemAdd.html?raw';
@@ -65,9 +66,10 @@ function loadObjects(libraryData) {
     const parentContainer = document.getElementById("MOGgridContainer");
     parentContainer.innerHTML = replaceSVGplaceholdersForAddressFromString(musicObjectsGridAdd)
 
+    // load html
     add_in_library_data_to_MOG(libraryData);
+    const MOGcontainer = document.getElementById("MOGgridContainer");
 
-    const MOGcontainer = document.getElementById("MOGcontainer");
     /* detecting when the items in the grid are clicked, and then doing something about it */
     MOGcontainer.addEventListener('click', function(event) {
         addEventListeners_to_music_object_grid(event, libraryData)
@@ -75,15 +77,18 @@ function loadObjects(libraryData) {
 
     let touchStartTimestamp;
     let pressTimer;
+    let isScrolling = false;
 
     // Add touchstart event listener to record the touch start timestamp
     MOGcontainer.addEventListener('touchstart', function(e) {
         touchStartTimestamp = e.timeStamp;
-
+        isScrolling = false;
         // Start the timer for long press
         pressTimer = setTimeout(function() {
             // Long press detected
-            handleLongPress(e, libraryData);
+            if (!isScrolling) {
+                handleLongPress(e, libraryData);
+            }
         }, 500); // Adjust the time (in milliseconds) for a long press as needed
     });
 
@@ -92,9 +97,15 @@ function loadObjects(libraryData) {
         // Calculate the duration of the touch event
         const touchEndTimestamp = e.timeStamp;
         const touchDuration = touchEndTimestamp - touchStartTimestamp;
-
         // Clear the long press timer
         clearTimeout(pressTimer);
+    });
+
+    // Add scroll event listener to detect when the grid is being scrolled
+    MOGcontainer.addEventListener('scroll', function() {
+        isScrolling = true;
+        clearTimeout(pressTimer);
+        touchStartTimestamp = null;
     });
 
     // Function to handle long press
@@ -195,28 +206,38 @@ async function addEventListeners_to_music_object_grid(event, libraryData) {
     }
 };
 
-function displayMenu(event, project_id) {
+
+async function displayMenu(event, project_id) {
     event.stopPropagation();
 
     const params = [{
         displayText: 'Play next',
         optionalSVG: 'icons_playlist',
+        condition: 'playNext',
         optionalParams: {
             PROJECT_ID: project_id,
             QUEUE_POSITION: "next"
         },
-        function: 'PLAYBACK_add_songs_to_queue'
+        function: 'True'
     }, {
         displayText: 'Play later',
         optionalSVG: 'icons_playlist',
+        condition: 'playLater',
         optionalParams: {
             PROJECT_ID: project_id,
             QUEUE_POSITION: "later"
 
         },
-        function: 'PLAYBACK_add_songs_to_queue'
+        function: 'True'
     }]
 
-    MENUdisplay(params, event);
+    const result = await MENUdisplay(params, event, "return_promise");
+
+    // for adding the project to queue
+    if (result.condition == "playNext" || "playLater") {
+        PLAYBACK_handle_add_songs_to_queue(result.optionalParams)
+    }
+
+    menuHide_foreign();
     return;
 }

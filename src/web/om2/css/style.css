@@ -54,7 +54,7 @@
     --accent-soft: hsl(165, 25%, 65%);
     --success: hsl(165, 90%, 35%);
     --whoopsie: hsl(350, 80%, 60%);
-    --background-overlay: hsla(0, 0%, 0%, 0.6);
+    --background-overlay: hsla(0, 0%, 0%, 0.5);
     --transparent-overlay: hsl(0, 0%, 88%);
     --transparent-overlay-focus: hsl(0, 0%, 88%);
 

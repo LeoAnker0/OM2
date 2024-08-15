@@ -12,17 +12,17 @@
 
 @media screen and (orientation: portrait) and (max-width: 768px) and (pointer: coarse) {
     .menuModalBackground {
-        backdrop-filter: brightness(0.8) saturate(0.0);
         background-color: var(--background-overlay);
     }
 
     /* Check if backdrop-filter is supported */
+    /*
     @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
         .menuModalBackground {
             backdrop-filter: brightness(0.8) saturate(0.0);
             background-color: transparent;
         }
-    }
+    }*/
 }
 
 .MENUmodalBody {

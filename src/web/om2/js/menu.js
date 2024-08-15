@@ -359,7 +359,6 @@ export function menuHide_foreign() {
 
 import { PROJECT_VIEW_receive_MENU_delete_request, PROJECTVIEW_handle_delete_song, PROJECTVIEW_handle_add_song_to_queue } from './projectView.js';
 import { PLAYBACK_handle_add_songs_to_queue } from './playback.js';
-import { HANDLE_SIGN_OUT_USER } from './loadAccountImage.js';
 
 /* MENU functions */
 const MENU_ACTION_FUNCTIONS = {
@@ -372,16 +371,6 @@ const MENU_ACTION_FUNCTIONS = {
         PLAYBACK_handle_add_songs_to_queue(params);
         menuHide_foreign();
         return;
-    },
-    SIGN_OUT_USER(params) {
-        menuHide_foreign();
-        HANDLE_SIGN_OUT_USER(params);
-        return;
-    },
-    OPEN_SETTINGS_PAGE(params) {
-        menuHide_foreign();
-        handleRoute("/settings/");
-        return
     },
     PROJECT_VIEW_delete_song(params) {
         PROJECTVIEW_handle_delete_song(params)

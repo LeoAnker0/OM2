@@ -1,6 +1,8 @@
 import { MAIN_CONST_EXPORT_apiPath, MAIN_CONST_EXPORT_mediaPath } from '../main.js/';
 import { getUserDetail, signout } from './network_requests.js';
-import { MENUdisplay } from './menu.js';
+import { MENUdisplay, menuHide_foreign } from './menu.js';
+import { handleRoute } from './routing.js';
+
 
 export let users_image;
 
@@ -25,18 +27,27 @@ function handleClick(event) {
     return;
 }
 
-function handleQueueDisplayMenu(event) {
+async function handleQueueDisplayMenu(event) {
     const params = [{
         displayText: 'Settings',
         optionalSVG: 'icons_settings',
-        function: 'OPEN_SETTINGS_PAGE',
+        condition: "settings",
+        function: 'True',
     }, {
         displayText: 'Sign Out',
         optionalSVG: 'None',
-        function: 'SIGN_OUT_USER',
+        condition: "signOut",
+        function: 'True',
     }];
 
-    MENUdisplay(params, event);
+    const result = await MENUdisplay(params, event, "return_promise");
+
+    if (result.condition == "settings") {
+        handleRoute("/settings/");
+    } else if (result.condition == "signOut") {
+        HANDLE_SIGN_OUT_USER();
+    }
+    menuHide_foreign();
     return;
 }
 
