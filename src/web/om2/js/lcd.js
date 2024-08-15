@@ -1,8 +1,11 @@
+import { PLAYBACK_handle_input_change_song_progress, PLAYBACK_songs_array } from './playback.js';
 import { MENUdisplay, menuHide_foreign } from './menu.js';
-import { PLAYBACK_songs_array } from './playback.js';
+import { svgImports } from './importAssets.js';
 import { handleRoute } from './routing.js';
 import { is_mobile } from './om2.js';
 
+
+import LCDbody from '../html/LCDbody.html?raw';
 
 
 export function initialiseLCD() {
@@ -17,22 +20,38 @@ export function initialiseLCD() {
     });
 
     setEventListenersForPlaybackSeek();
+
+    // set long press event listener for the lcd for movile
+    const lcdBody = document.getElementById("LCDbody")
+    let touchStartTimestamp;
+    let pressTimer;
+
+
+    lcdBody.addEventListener('touchstart', function(e) {
+        touchStartTimestamp = e.timeStamp;
+        pressTimer = setTimeout(function() {
+            handleLongPress(e);
+        }, 500);
+    });
+
+    lcdBody.addEventListener('touchend', function(e) {
+        const touchEndTimestamp = e.timeStamp;
+        const touchDuration = touchEndTimestamp - touchStartTimestamp;
+        clearTimeout(pressTimer);
+    });
+
+
+    // Function to handle long press
+    function handleLongPress(event) {
+        navigator.vibrate(1000);
+
+        const songID = event.target.children[1].children[1].children[0].children[0].children[2].dataset.songId;
+
+        handleQueueDisplayMenu(event, songID)
+
+
+    }
 }
-
-function open_mobile_lcd_body(event) {
-    event.stopPropagation();
-    const params = {}
-
-    MENUdisplay(params, event, "lcd_mobile_body");
-}
-
-
-
-
-
-
-import LCDbody from '../html/LCDbody.html?raw';
-import { svgImports } from './importAssets.js';
 
 function loadLCDbody() {
     let IDofElement = "LCDbody";
@@ -132,10 +151,15 @@ export function resizeTitleText() {
 
 
 
-async function handleQueueDisplayMenu(event) {
+async function handleQueueDisplayMenu(event, InsertSongID) {
     event.stopPropagation();
+
     const clickedItem = event.target;
-    const songId = clickedItem.dataset.songId;
+    let songId = clickedItem.dataset.songId;
+
+    if (InsertSongID != null) {
+        songId = InsertSongID;
+    }
 
     const params = [{
         displayText: 'Go to song',
@@ -185,7 +209,6 @@ function setEventListenersForPlaybackSeek() {
     return
 }
 
-import { PLAYBACK_handle_input_change_song_progress } from './playback.js';
 
 function handleInputChange(e) {
     function between(x, min, max) {

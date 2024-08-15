@@ -399,6 +399,7 @@
         height: 100%;
         left: 0;
         position: absolute;
+        pointer-events: none;
         top: 0;
     }
 
@@ -409,6 +410,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 5px;
+        pointer-events: auto;
     }
 
     .LCDleftImage img {
@@ -424,12 +426,15 @@
         top: 0;
         left: 3.7rem;
         height: 3.2rem;
-        width: calc(100% - 3.6rem);
-        display: flex;
+        line-height: 3.2rem;
+        width: calc(100% - 11.5rem);
+        display: block;
         align-items: center;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        pointer-events: none;
+
 
         color: var(--text);
     }
