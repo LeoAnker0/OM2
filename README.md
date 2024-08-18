@@ -2,7 +2,7 @@
 
 ##### Note, OM2 is currently under development, and there are a few large changes that are currently being implemented in a different branch, for example the changing of core backend language and many other things. This is all happening on the database-updates branch. This however means that this README and all the code visible in the main branch does not reflect the actual state of the project. 
 
-However, a preview of what the project actually looks like is available [here](https://testom2.la0.uk)
+However, a preview of what the project actually looks like is available [here](https://music.la0.uk)
 
 ---
 
