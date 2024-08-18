@@ -24,6 +24,7 @@ import './css/upload_queue_modal.css';
 import './css/upload_indicator.css';
 import './css/lcd_mobile_body.css';
 import './css/musicObjectGrid.css';
+import './css/topleft-logo.css';
 import './css/projectView.css';
 import './css/musicEnjoy.css';
 import './css/animations.css';

@@ -1,0 +1,15 @@
+/* topleft-logo.css */
+
+.logo-container {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+
+    img {
+        position: relative;
+        top: 5.5%;
+        left: 5%;
+        height: 30%;
+    }
+}

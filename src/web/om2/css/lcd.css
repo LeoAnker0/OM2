@@ -60,11 +60,17 @@
 }
 
 .LCDPlaybackStoppedContainer .title {
+    position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
     grid-area: title;
     justify-content: center;
+
+    img {
+        position: relative;
+        height: 18%;
+    }
 }
 
 .LCDPlaybackStoppedContainer>.title>h1 {
