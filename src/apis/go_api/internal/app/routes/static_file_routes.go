@@ -4,6 +4,7 @@ import (
     "go_api/internal/app/helpers"
     "github.com/gin-gonic/gin"
     "path/filepath"
+    "net/http"
     "time"
     "fmt"
     "os"
@@ -52,17 +53,22 @@ func SetupStaticFileRoutes(router *gin.Engine) {
     })
 
     // For serving index.html (from /) and all web assets (css/js/svg...)
+    /*
     coreWebPathRoutes := router.Group("/")
     {
         coreWebPathRoutes.GET(":requestedPath/:requestedFile", handleCoreWebFiles)
         coreWebPathRoutes.GET("", handleCoreWebFiles)
     }
+    */
 
+    /*
     // Route for handling all other paths
     router.NoRoute(func(c *gin.Context) {
         c.File("./static_web/index.html")
         return
-    })
+    })*/
+
+    router.NoRoute(handleCoreWebFiles)
 }
 
 // Media Path
@@ -202,42 +208,39 @@ func handleStaticPath(c *gin.Context) {
 
 // Handle site files
 func handleCoreWebFiles(c *gin.Context) {
-    requestedFile := c.Param("requestedFile")
-    requestedPath := c.Param("requestedPath")
+    path := c.Request.URL.Path
 
-    if requestedFile == "" {
-        filePath := "./static_web/" + "index.html"
-
-        // Serve the file with the correct MIME type
-        c.File(filePath)
-        return
-    } else if requestedPath == "assets" {
-        filePath := "./static_web/assets/" + requestedFile
-
-        // Serve file
-        c.File(filePath)
-        return
-    } else {
-        return
+    // If the path is "/", serve index.html
+    if path == "/" {
+        path = "/index.html"
     }
-}
 
-// Catch all for serving static assets related to the service, html, css, js, svg, etc...
-func CatchAllForStaticWebFiles(r *gin.Engine) {
-    // Define a wildcard route to serve files from ./static_web
-    r.NoRoute(func(c *gin.Context) {
-        // Capture the requested path
-        requestedPath := c.Request.URL.Path
+    // Construct the full file path
+    filePath := "./global-resources/go_api/web-content" + path
 
-        // hard code for items that must be served from a root/ path
-        if requestedPath == "/mask.png" {
-            c.File("./static_web/mask.png")
+    // Check if the file exists
+    if fileInfo, err := os.Stat(filePath); os.IsNotExist(err) {
+        // File does not exist
+        // Check if the path lacks an extension
+        if filepath.Ext(path) == "" {
+            // check if the path is actually a page, and should therefore be processed as such?
+            
+            // Serve 404.html if the path doesn't have an extension
+            filePath = "./global-resources/go_api/web-content/index.html"
+
+        } else {
+            // Otherwise, return a 404 error
+            c.String(http.StatusNotFound, "File not found")
             return
         }
+    } else if fileInfo.IsDir() {
+        // check if the path is actually a page, and should therefore be processed as such?
+        
+        // If the path points to a directory, serve index.html within that directory
+        filePath ="./global-resources/go_api/web-content/index.html"
 
-        // if there really was no file that should be served, serve index.html
-        fmt.Println("A path was requested that should not currently be served: ", requestedPath)
-        c.File("./static_web/index.html")
-        return
-    })
+    }
+
+    // Serve the file
+    c.File(filePath)
 }

@@ -28,6 +28,7 @@ services:
       - .env
     volumes:
       - om2data:/var/www/media
+      - ./global-resources:/app/global-resources
     ports:
       - "6001:6000"
     networks:
@@ -56,3 +57,5 @@ volumes:
   pgdata:
   pgadmin_data:
   om2data:
+  global-resources:
+    driver: local

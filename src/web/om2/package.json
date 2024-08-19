@@ -1,24 +1,27 @@
 {
-  "name": "orange-music-2",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build-and-move": "rm -rf ../../apis/go_api/static_web/* && vite build && cp -r dist/* ../../apis/go_api/static_web",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@rollup/pluginutils": "^5.0.2",
-    "raw-loader": "^4.0.2",
-    "vite": "^4.3.2",
-    "vite-plugin-html": "^3.2.0"
-  },
-  "dependencies": {
-    "@uppy/core": "^3.4.0",
-    "@uppy/dashboard": "^3.5.1",
-    "@uppy/tus": "^3.1.3",
-    "@uppy/xhr-upload": "^3.3.2"
-  }
+    "name": "orange-music-2",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts":
+    {
+        "dev": "vite",
+        "build": "vite build",
+        "build-and-move": "rm -rf ../../apis/global-resources/go_api/web-content/* && vite build && cp -r dist/* ../../apis/global-resources/go_api/web-content",
+        "preview": "vite preview"
+    },
+    "devDependencies":
+    {
+        "@rollup/pluginutils": "^5.0.2",
+        "raw-loader": "^4.0.2",
+        "vite": "^4.3.2",
+        "vite-plugin-html": "^3.2.0"
+    },
+    "dependencies":
+    {
+        "@uppy/core": "^3.4.0",
+        "@uppy/dashboard": "^3.5.1",
+        "@uppy/tus": "^3.1.3",
+        "@uppy/xhr-upload": "^3.3.2"
+    }
 }
