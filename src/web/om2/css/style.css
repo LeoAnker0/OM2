@@ -78,8 +78,7 @@
 
         --make-svg-black: invert(1) invert(99%) sepia(86%) saturate(57%) hue-rotate(235deg) brightness(110%) contrast(96%);
         --make-svg-white: invert(1) invert(2%) sepia(12%) saturate(135%) hue-rotate(314deg) brightness(108%) contrast(83%);
-        --text: hsl(0, 0%, 95%);
-        --text-third: hsl(0, 0%, 90%);
+        --text: r --text-third: hsl(0, 0%, 90%);
         --text-secondary: hsl(210, 10%, 90%);
         --grey: hsl(0, 0%, 25%);
         --transparent-overlay: hsl(0, 0%, 15%);
