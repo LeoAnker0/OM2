@@ -1,7 +1,10 @@
 <div class="PROJECTview-projectTable-rowContainer" data-row-id="{PROJECTviewRow_projectID}" draggable="{PROJECTviewRow_contentEditable}" style="user-select: auto; pointer-events: auto;">
     <div class="PROJECTview-projectTable-rowItem-1" style="user-select: none; pointer-events: none;">
-        <img src="{PROJECTviewRow_img}" style="user-select: none; pointer-events: none;">
-        <div contenteditable="{PROJECTviewRow_contentEditable}" data-is-title="true" draggable="false" style="user-select: auto; pointer-events: auto;">{PROJECTviewRow_songTitle}</div>
+        <div class="img-button-interacter">
+            <img src="{PROJECTviewRow_img}" style="user-select: none; pointer-events: none;">
+            <button data-button-type="playback"><img src="{icons_play}"></button>
+        </div>
+        <div contenteditable="{PROJECTviewRow_contentEditable}" class="songTitle" data-is-title="true" draggable="false" style="user-select: auto; pointer-events: auto;">{PROJECTviewRow_songTitle}</div>
     </div>
     <div class="PROJECTview-projectTable-rowItem-2" style="user-select: none; pointer-events: none;">
         <div style="user-select: none; pointer-events: none;">{PROJECTviewRow_artistName}</div>
@@ -11,7 +14,7 @@
     </div>
     <div class="PROJECTview-projectTable-rowItem-4">
         <div>{PROJECTviewRow_songDuration}</div>
-        <button tabindex="0">
+        <button tabindex="0" data-button-type="menu">
             <div>
                 <img src="{icons_menuOptionsButton}" height="14" width="14">
             </div>

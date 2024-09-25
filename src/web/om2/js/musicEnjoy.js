@@ -103,13 +103,11 @@ function updateMusicEnjoyPlaybackDetails() {
     const musicEnjoyCoverImage1 = document.getElementById("MUSICENJOYMODEcoverImage1");
     const musicEnjoyCoverImage2 = document.getElementById("MUSICENJOYMODEcoverImage2");
     const musicEnjoyTitle1 = document.getElementById("MUSICENJOYMODEsongTitle1");
-    const musicEnjoyTitle2 = document.getElementById("MUSICENJOYMODEsongTitle2");
     const musicEnjoyArtist = document.getElementById("MUSICENJOYMODEsongArtist");
 
     musicEnjoyCoverImage1.src = PLAYBACK_current_img;
     musicEnjoyCoverImage2.src = PLAYBACK_current_img;
     musicEnjoyTitle1.innerText = PLAYBACK_current_song_title;
-    //musicEnjoyTitle2.innerText = PLAYBACK_current_song_title;
     musicEnjoyArtist.innerText = PLAYBACK_current_song_artist
 
     updateStateOfMusicEnjoyLoopButton();

@@ -625,6 +625,82 @@
     display: flex;
 
     color: var(--PV-text);
+
+    .img-button-interacter {
+        position: relative;
+        height: 100%;
+        max-height: 2rem;
+        max-width: 3rem;
+        aspect-ratio: 1/1;
+        left: 0.5rem;
+        border-radius: 2px;
+        margin-right: 1rem;
+
+        img {
+            position: relative;
+            height: 100%;
+            max-height: 2rem;
+            aspect-ratio: 1/1;
+            left: 0.5rem;
+            border-radius: 2px;
+            margin-right: 1rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        button {
+            position: absolute;
+            height: 2rem;
+            aspect-ratio: 1/1;
+            left: 0.5rem;
+            pointer-events: auto;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 15px 30px -6px inset, rgba(0, 0, 0, 0.3) 0px 9px 18px -9px inset;
+
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 2px;
+            background-color: transparent;
+
+            opacity: 0;
+            z-index: 2;
+
+            img {
+                position: absolute;
+                height: 60%;
+                top: 20%;
+                left: 20%;
+                aspect-ratio: 1/1;
+                align-self: center;
+                justify-self: center;
+            }
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+
+
+        /*
+
+        */
+    }
+
+
+
+    .songTitle {
+        position: relative;
+        top: 16%;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+}
+
+.PROJECTview-projectTable-rowContainer:hover .img-button-interacter>button {
+    opacity: 1;
 }
 
 .PROJECTview-projectTable-rowItem-Title,
@@ -632,17 +708,8 @@
     color: var(--PV-text-third);
 }
 
-.PROJECTview-projectTable-rowItem-1 img {
-    position: relative;
-    height: 100%;
-    max-height: 2rem;
-    aspect-ratio: 1/1;
-    left: 0.5rem;
-    border-radius: 2px;
-    margin-right: 1rem;
-}
 
-.PROJECTview-projectTable-rowItem-1 div,
+
 .PROJECTview-projectTable-rowItem-2 div,
 .PROJECTview-projectTable-rowItem-3 div,
 .PROJECTview-projectTable-rowItem-4 div {

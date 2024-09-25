@@ -671,9 +671,15 @@ function loadInTable() {
         if (target.tagName === 'BUTTON') {
             const rowContainer = target.closest('.PROJECTview-projectTable-rowContainer');
 
-            if (rowContainer) {
-                const rowId = rowContainer.getAttribute('data-row-id');
+            // add in data-type for menu and for play back
+            const buttonType = target.closest("[data-button-type]").getAttribute("data-button-type");
+
+
+            if ((rowContainer) && buttonType == "menu") {
                 displayMenuForRow(event);
+            } else if ((rowContainer) && buttonType == "playback") {
+                const rowId = rowContainer.getAttribute('data-row-id');
+                startPlaybackFromThisSong(rowId);
             }
         }
     });
@@ -722,6 +728,26 @@ function loadInTable() {
         });
 
     });
+}
+
+// The function that enables playback from a specific song in a project
+function startPlaybackFromThisSong(songId) {
+    let DetailsCopy = structuredClone(Details);
+
+    // extract songSequence
+    const songIDarray = songId.split("-");
+    const SongSequence = songIDarray[0];
+    const SongSequenceCorrected = SongSequence - 1;
+
+    // if SongSequenceCorrected is 0, then just play the whole thing
+    if (SongSequenceCorrected == 0) {} else {
+        // else cut the correct number of songs 
+        const individualSongInformation = DetailsCopy.ProjectJSON.slice(SongSequenceCorrected);
+        DetailsCopy.ProjectJSON = [];
+        DetailsCopy.ProjectJSON = individualSongInformation;
+
+    }
+    PLAYBACK_handle_input_project_details_array_with_start_playback(DetailsCopy);
 }
 
 function displayMenuForRow(event) {
