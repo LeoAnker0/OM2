@@ -76,7 +76,7 @@ function loadLoginForm() {
 
             if (authenticated) {
                 signedIn = true;
-                HandleCreateNotification("Login Successful", "success")
+                HandleCreateNotification("Login Successful!", "success")
                 main()
                 hideContainer();
 
