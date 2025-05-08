@@ -234,7 +234,7 @@ function focusSong(dataRowID) {
     }
 }
 
-/*  A collection of event listeners that areall here, instead of being in a milliondifferent functions
+/*  A collection of event listeners that are all here, instead of being in a milliondifferent functions
 
     */
 
@@ -750,70 +750,173 @@ function startPlaybackFromThisSong(songId) {
     PLAYBACK_handle_input_project_details_array_with_start_playback(DetailsCopy);
 }
 
-function displayMenuForRow(event) {
+async function displayMenuForRow(event) {
     event.stopPropagation();
     const clickedItem = event.target;
-    const songID_version = clickedItem.parentElement.parentElement.getAttribute("data-row-id");
-    const songName_text = clickedItem.parentElement.parentElement.firstElementChild.lastElementChild.innerText;
+    const songID_version =
+        clickedItem.parentElement.parentElement.getAttribute("data-row-id");
+    const songName_text =
+        clickedItem.parentElement.parentElement.firstElementChild
+            .lastElementChild.innerText;
     let params;
 
     if (UserIsEditor == true) {
-        params = [{
-                displayText: 'Play Next',
-                optionalSVG: 'icons_playlist',
-                function: "PROJECT_VIEW_add_song_to_queue",
-                optionalParams: {
-                    songID: songID_version,
-                    queuePosition: "next"
-                }
-            },
+        params = [
             {
-                displayText: 'Play Later',
-                optionalSVG: 'icons_playlist',
-                function: "PROJECT_VIEW_add_song_to_queue",
+                displayText: "Play Next",
+                optionalSVG: "icons_playlist",
+                function: "True",
+                condition: "PROJECT_VIEW_add_song_to_queue",
                 optionalParams: {
                     songID: songID_version,
-                    queuePosition: "later"
-                }
-            },
-            {
-                displayText: 'Delete',
-                optionalSVG: 'None',
-                function: 'PROJECT_VIEW_delete_song',
-                optionalParams: {
-                    songID: songID_version,
-                    songName: songName_text
+                    queuePosition: "next",
                 },
-                colour: "var(--whoopsie)"
-            }
-        ]
-    } else {
-        params = [{
-                displayText: 'Play Next',
-                optionalSVG: 'icons_playlist',
-                function: "PROJECT_VIEW_add_song_to_queue",
-                optionalParams: {
-                    songID: songID_version,
-                    queuePosition: "next"
-                }
             },
             {
-                displayText: 'Play Later',
-                optionalSVG: 'icons_playlist',
-                function: "PROJECT_VIEW_add_song_to_queue",
+                displayText: "Play Later",
+                optionalSVG: "icons_playlist",
+                function: "True",
+                condition: "PROJECT_VIEW_add_song_to_queue",
                 optionalParams: {
                     songID: songID_version,
-                    queuePosition: "later"
-                }
-            }
-        ]
+                    queuePosition: "later",
+                },
+            },
+            {
+                displayText: "Download Original",
+                optionalSVG: "None",
+                function: "True",
+                condition: "Download",
+                optionalParams: {
+                    songID: songID_version,
+                    quality: "original"
+                },
+            },
+            {
+                displayText: "Download High Quality",
+                optionalSVG: "None",
+                function: "True",
+                condition: "Download",
+                optionalParams: {
+                    songID: songID_version,
+                    quality: "high"
+                },
+            },
+            {
+                displayText: "Delete",
+                optionalSVG: "None",
+                function: "True",
+                condition: "PROJECT_VIEW_delete_song",
+                optionalParams: {
+                    songID: songID_version,
+                    songName: songName_text,
+                },
+                colour: "var(--whoopsie)",
+            },
+        ];
+    } else {
+        params = [
+            {
+                displayText: "Play Next",
+                optionalSVG: "icons_playlist",
+                function: "True",
+                condition: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "next",
+                },
+            },
+            {
+                displayText: "Play Later",
+                optionalSVG: "icons_playlist",
+                function: "True",
+                condition: "PROJECT_VIEW_add_song_to_queue",
+                optionalParams: {
+                    songID: songID_version,
+                    queuePosition: "later",
+                },
+            },
+        ];
     }
 
-    MENUdisplay(params, event);
+    const result = await MENUdisplay(params, event, "return_promise");
+
+    if (result.condition == "Download") {
+        const songId = result.optionalParams.songID;
+        const requestedDownloadQuality = result.optionalParams.quality;
+
+        const songIDarray = songId.split("-");
+        const SongSequence = songIDarray[0];
+        const SongSequenceCorrected = SongSequence - 1;
+
+        const fileURL = Details.ProjectJSON[SongSequenceCorrected].URL;
+        let fileName = Details.ProjectJSON[SongSequenceCorrected].SongName;
+        let qualityMarker;
+
+
+        if (requestedDownloadQuality === "original") {
+            qualityMarker = 0;
+            fileName = `${fileName} (Original)`;
+        } else if (requestedDownloadQuality === "high") {
+            qualityMarker = 3;
+        }
+
+        const downloadURL = `/media/${fileURL}/${qualityMarker}`
+
+        downloadFileViaFetch(downloadURL, fileName);
+
+    } else if (result.condition == "PROJECT_VIEW_add_song_to_queue") {
+
+        // extract songSequence
+        const songIDarray = result.optionalParams.songID.split("-");
+        const SongSequence = songIDarray[0];
+        const queuePosition = result.optionalParams.queuePosition;
+
+        // Prepare the details for playback.js
+        let DetailsCopy = structuredClone(Details);
+        const individualSongInformation =
+            DetailsCopy.ProjectJSON[SongSequence - 1];
+        DetailsCopy.ProjectJSON = [];
+        DetailsCopy.ProjectJSON[0] = individualSongInformation;
+
+        // Send the data to playback.js so that it can be added to the queue
+        PLAYBACK_handle_add_song_to_queue(DetailsCopy, queuePosition);
+
+    } else if (result.condition == "PROJECT_VIEW_delete_song") {
+        /* ensure that the user actually wants to delete the song */
+        // get confirmation.
+        const confirmMessage = `Are you sure that you want to delete <em><strong>${result.optionalParams.songName}</strong></em>? This action is not reversable.`;
+        const action = await CONFIRM_action_modal(confirmMessage);
+
+        if (action === "delete") {
+            await deleteSongFromProject(Details.ProjectID, result.optionalParams.songID);
+            PROJECTVIEW_update();
+        }
+    }
+
+    menuHide_foreign();
     return;
 }
 
-/* function that handles a menu for adding an individual song to a queue */
+async function downloadFileViaFetch(url, fileName) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = fileName || 'downloaded-file';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(objectUrl); // Clean up
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+}
+
+// legacy function to add song to queue
 export function PROJECTVIEW_handle_add_song_to_queue(params) {
     // extract songSequence
     const songIDarray = params.songID.split("-");
@@ -830,6 +933,7 @@ export function PROJECTVIEW_handle_add_song_to_queue(params) {
     PLAYBACK_handle_add_song_to_queue(DetailsCopy, queuePosition);
 }
 
+// legacy function to delete a song
 export async function PROJECTVIEW_handle_delete_song(params) {
     /* ensure that the user actually wants to delete the song */
     // get confirmation.
