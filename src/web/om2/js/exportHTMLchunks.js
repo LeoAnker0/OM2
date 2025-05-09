@@ -27,7 +27,7 @@ export function loadMAINtopright() {
     return
 }
 
-export function loadQUEUEbody() {
+export async function loadQUEUEbody() {
     let IDofElement = "MAINcontentContainer";
 
     let replacedContent = queueBody;
