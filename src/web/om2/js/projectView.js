@@ -1,4 +1,4 @@
-import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically, replaceSVGplaceholdersForAddressFromString, REGEXreplaceInString } from './om2.js';
+import { is_mobile, formatTimeDaysDelta, formatTimeDaysToHuman, formatFileSizeBytes, getPositionInParentElement, is_odd, debounce, changeColourOnHover, getHexColorFromCssVariable, is_dark, changeColourByOrder, isElementVisibleVertically, replaceSVGplaceholdersForAddressFromString, REGEXreplaceInString, DownloadFileViaFetch } from './om2.js';
 import { PLAYBACK_handle_input_project_details_array_with_start_playback, PLAYBACK_handle_input_project_details_array_with_start_playback_and_shuffle, PLAYBACK_handle_add_song_to_queue } from './playback.js';
 import { display_upload_indicator, hide_upload_indicator, updateProgress_upload_indicator } from './file_upload_indicator.js';
 import { updateProjectDetails, getProjectDetails, deleteSongFromProject } from './network_requests.js';
@@ -853,7 +853,6 @@ async function displayMenuForRow(event) {
         let fileName = Details.ProjectJSON[SongSequenceCorrected].SongName;
         let qualityMarker;
 
-
         if (requestedDownloadQuality === "original") {
             qualityMarker = 0;
             fileName = `${fileName} (Original)`;
@@ -863,7 +862,7 @@ async function displayMenuForRow(event) {
 
         const downloadURL = `/media/${fileURL}/${qualityMarker}`
 
-        downloadFileViaFetch(downloadURL, fileName);
+        DownloadFileViaFetch(downloadURL, fileName);
 
     } else if (result.condition == "PROJECT_VIEW_add_song_to_queue") {
 
@@ -898,23 +897,6 @@ async function displayMenuForRow(event) {
     return;
 }
 
-async function downloadFileViaFetch(url, fileName) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
-
-    const anchor = document.createElement('a');
-    anchor.href = objectUrl;
-    anchor.download = fileName || 'downloaded-file';
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    URL.revokeObjectURL(objectUrl); // Clean up
-  } catch (error) {
-    console.error('Download failed:', error);
-  }
-}
 
 // legacy function to add song to queue
 export function PROJECTVIEW_handle_add_song_to_queue(params) {

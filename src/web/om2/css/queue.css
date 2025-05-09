@@ -24,19 +24,20 @@
 .QUEUE-container {
     position: absolute;
     width: var(--width-of-left-bar-fortop);
-    height: calc((100% - var(--height-of-top)) - 2rem);
+    height: calc(100% - var(--height-of-top));
     z-index: 20;
-    top: calc((var(--height-of-top) / 3) + 2.1rem);
-    right: 1.5rem;
-    border-radius: 8px;
+    top: var(--height-of-top);
+    right: 0rem;
     pointer-events: visible;
     overflow: hidden;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
+    /*
     border-right: 1px solid var(--text-secondary);
     border-bottom: 1px solid var(--text-secondary);
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    */
+    box-shadow: rgba(50, 50, 93, 0.15) 0px 13px 15px -5px, rgba(0, 0, 0, 0.2) 0px 8px 16px -8px;
     background-color: var(--background-transparent);
 }
 
@@ -62,7 +63,7 @@
     height: var(--QUEUE-top-width);
     width: 100%;
 
-    background-color: var(--transparent-overlay);
+    background-color: var(--lgrey-transparent);
 }
 
 .QUEUE-top-text {

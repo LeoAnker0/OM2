@@ -109,18 +109,37 @@ export function formatTimeDaysDelta(milliSeconds) {
         return checkedIndicator;
     } else if (differenceDays < 29) {
         const noWeeks = Math.floor(differenceDays / 7);
-        checkedIndicator = noWeeks + "w";
+        checkedIndicator = noWeeks + "W";
         return checkedIndicator;
     } else if (differenceDays < 365) {
         const noMonths = Math.floor(differenceDays / 28);
-        checkedIndicator = noMonths + "m";
+        checkedIndicator = noMonths + "M";
         return checkedIndicator;
     } else {
         const noYears = Math.floor(differenceDays / 365);
-        checkedIndicator = noYears + "y";
+        checkedIndicator = noYears + "Y";
         return checkedIndicator;
     }
 }
+
+export async function DownloadFileViaFetch(url, fileName) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = fileName || 'downloaded-file';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(objectUrl); // Clean up
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+}
+
 
 export function formatTimeDaysToHuman(milliSeconds) {
     const now = Date.now();
