@@ -7,7 +7,6 @@ import { updateQueue } from './queue.js';
 
 import PlaybackEventsEmitter from './eventsManager.js';
 
-
 export let PLAYBACK_songs_array = [];
 export let PLAYBACK_songs_copy_array = [];
 export let PLAYBACK_songs_array_index = 0;
